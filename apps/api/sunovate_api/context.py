@@ -1,23 +1,26 @@
-"""Application context: explicit dependency wiring for the modular monolith."""
+"""Application wiring: one AppRuntime per app, one AppContext per request."""
 
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date
 
 from .authz.service import AuthorizationService
 from .core.config import Settings
 from .core.security import DevTokenSigner
 from .hermes.gateway import HermesGateway
+from .providers.development import DevelopmentIdentityProvider
 from .providers.registry import Providers, build_providers
-from .store.simulated import SimulatedStore
+from .store.records import User
+from .store.repository import DataBackend, Repository
+from .store.simulated import SimulatedBackend, SimulatedStore
 
 
 @dataclass
 class AppContext:
     settings: Settings
-    store: SimulatedStore
+    store: Repository
     authz: AuthorizationService
     signer: DevTokenSigner
     providers: Providers
@@ -25,28 +28,58 @@ class AppContext:
     clock: Callable[[], date]
 
 
-def build_context(
+@dataclass
+class AppRuntime:
+    """Per-process state stored in `app.state.runtime`."""
+
+    settings: Settings
+    backend: DataBackend
+    signer: DevTokenSigner  # created once: the ephemeral dev secret must not change per request
+    providers: Providers  # identity is rebound to the request repository in request_context()
+    clock: Callable[[], date]
+
+    def request_context(self, repo: Repository) -> AppContext:
+        authz = AuthorizationService(repo)
+        providers = replace(
+            self.providers, identity=DevelopmentIdentityProvider(repo.user_by_email)
+        )
+        hermes = HermesGateway(
+            store=repo,
+            authz=authz,
+            client=providers.hermes,
+            max_classification=self.settings.hermes_max_classification,
+            enabled=(
+                self.settings.hermes_mode != "disabled" and self.settings.ai_provider != "disabled"
+            ),
+        )
+        return AppContext(
+            settings=self.settings,
+            store=repo,
+            authz=authz,
+            signer=self.signer,
+            providers=providers,
+            hermes=hermes,
+            clock=self.clock,
+        )
+
+
+def _no_user(_email: str) -> User | None:
+    return None
+
+
+def build_runtime(
     settings: Settings,
     *,
-    store: SimulatedStore | None = None,
+    backend: DataBackend | None = None,
     clock: Callable[[], date] = date.today,
-) -> AppContext:
-    store = store or SimulatedStore()
-    authz = AuthorizationService(store)
-    providers = build_providers(settings, store)
-    hermes = HermesGateway(
-        store=store,
-        authz=authz,
-        client=providers.hermes,
-        max_classification=settings.hermes_max_classification,
-        enabled=settings.hermes_mode != "disabled" and settings.ai_provider != "disabled",
-    )
-    return AppContext(
+) -> AppRuntime:
+    """The only place where the data backend is chosen (only `simulated` exists today)."""
+    if backend is None:
+        backend = SimulatedBackend(SimulatedStore())
+    return AppRuntime(
         settings=settings,
-        store=store,
-        authz=authz,
+        backend=backend,
         signer=DevTokenSigner(settings.dev_auth_secret, settings.dev_auth_token_ttl_minutes),
-        providers=providers,
-        hermes=hermes,
+        providers=build_providers(settings, _no_user),
         clock=clock,
     )

@@ -16,8 +16,8 @@ from ..authz.dependencies import Ctx, CurrentPrincipal
 from ..context import AppContext
 from ..core.errors import ApiError, invalid_state, not_found, permission_denied
 from ..core.responses import ApiModel, Pagination, envelope, paginated
-from ..store.records import ApprovalRequest, utcnow
-from ._common import governed_view, touch
+from ..store.records import ApprovalRequest, KnowledgeEntry, utcnow
+from ._common import governed_view
 
 router = APIRouter(prefix="/approvals", tags=["approvals"])
 
@@ -38,9 +38,10 @@ def list_approvals(
 ) -> dict[str, Any]:
     if not (principal.has("approval:decide") or principal.has("approval:request")):
         ctx.authz.require(principal, "approval:request", resource="approval_request")
+    # No read scope: requesters see their own requests without can_read (design 6.3).
     items = [
         a
-        for a in ctx.store.approvals.values()
+        for a in ctx.store.list_governed(ApprovalRequest)
         if a.requested_by == principal.user_id
         or (principal.has("approval:decide") and ctx.authz.can_read(principal, a))
     ]
@@ -54,17 +55,16 @@ def decide(
     approval_id: UUID, body: DecisionRequest, ctx: Ctx, principal: CurrentPrincipal
 ) -> dict[str, Any]:
     ctx.authz.require(principal, "approval:decide", resource="approval_request")
-    with ctx.store.lock:
-        request = ctx.store.approvals.get(approval_id)
+    with ctx.store.transaction():
+        request = ctx.store.get_governed(ApprovalRequest, approval_id)
         if request is None or not ctx.authz.can_read(principal, request):
             raise not_found("Approval")
         if request.requested_by == principal.user_id:
-            ctx.store.audit(
+            ctx.store.audit_denial(
                 actor_user_id=principal.user_id,
                 action="ACCESS_DENIED",
                 entity_type="approval_request",
                 entity_id=request.id,
-                outcome="DENIED",
                 detail={"reason": "separation_of_duties"},
             )
             raise ApiError(
@@ -73,12 +73,12 @@ def decide(
         if request.status != "PENDING":
             raise invalid_state("Approval sudah diputuskan atau tidak aktif")
         approve = body.decision == "APPROVE"
-        entry = None
+        entry: KnowledgeEntry | None = None
         if request.request_type == "KNOWLEDGE_PUBLICATION":
             if approve and not principal.has("knowledge:publish"):
                 ctx.authz.require(principal, "knowledge:publish", resource="knowledge_entry")
             entry = (
-                ctx.store.knowledge.get(request.target_entity_id)
+                ctx.store.get_governed(KnowledgeEntry, request.target_entity_id)
                 if request.target_entity_id
                 else None
             )
@@ -86,22 +86,44 @@ def decide(
                 raise invalid_state("Knowledge target tidak dalam status IN_REVIEW")
             if not ctx.authz.can_write(principal, entry):
                 raise permission_denied("Knowledge target di luar cakupan Anda")
-        touch(request, principal, body.revision)
-        request.status = "APPROVED" if approve else "REJECTED"
-        request.decided_by = principal.user_id
-        request.decided_at = utcnow()
-        request.decision_reason = body.reason
+        # (1) The decision itself, guarded by the client's approval revision.
+        decided = ctx.store.update_revisioned(
+            ApprovalRequest,
+            request.id,
+            expected_revision=body.revision,
+            changes={
+                "status": "APPROVED" if approve else "REJECTED",
+                "decided_by": principal.user_id,
+                "decided_at": utcnow(),
+                "decision_reason": body.reason,
+            },
+            actor_id=principal.user_id,
+            expected_state={"status": "PENDING"},
+        )
+        # (2) The knowledge target, in the same transaction.
         if entry is not None:
-            entry.lifecycle_status = "PUBLISHED" if approve else "DRAFT"
-            entry.revision += 1
-            entry.updated_at = utcnow()
-            entry.updated_by = principal.user_id
-            entry.published_at = utcnow() if approve else entry.published_at
-    ctx.store.audit(
-        actor_user_id=principal.user_id,
-        action="APPROVE" if approve else "REJECT",
-        entity_type="approval_request",
-        entity_id=request.id,
-        detail={"requestType": request.request_type},
-    )
-    return envelope(_view(ctx, request))
+            try:
+                ctx.store.update_revisioned(
+                    KnowledgeEntry,
+                    entry.id,
+                    expected_revision=entry.revision,
+                    changes={
+                        "lifecycle_status": "PUBLISHED" if approve else "DRAFT",
+                        "published_at": utcnow() if approve else entry.published_at,
+                    },
+                    actor_id=principal.user_id,
+                    expected_state={"lifecycle_status": "IN_REVIEW"},
+                )
+            except ApiError as exc:
+                if exc.code != "REVISION_CONFLICT":
+                    raise
+                # Never leak the knowledge revision as if it were the approval revision.
+                raise invalid_state("Knowledge target tidak dalam status IN_REVIEW") from exc
+        ctx.store.audit(
+            actor_user_id=principal.user_id,
+            action="APPROVE" if approve else "REJECT",
+            entity_type="approval_request",
+            entity_id=decided.id,
+            detail={"requestType": decided.request_type},
+        )
+    return envelope(_view(ctx, decided))

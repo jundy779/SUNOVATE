@@ -10,7 +10,7 @@ from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from .context import AppContext, build_context
+from .context import AppRuntime, build_runtime
 from .core.config import Settings, get_settings
 from .core.errors import error_body, register_error_handlers
 from .core.logging import configure_logging, request_id_var
@@ -19,7 +19,7 @@ from .modules import build_api_router
 _REQUEST_ID_MAX = 128
 
 
-def create_app(settings: Settings | None = None, context: AppContext | None = None) -> FastAPI:
+def create_app(settings: Settings | None = None, runtime: AppRuntime | None = None) -> FastAPI:
     settings = settings or get_settings()
     logger = configure_logging(settings.log_level)
     app = FastAPI(
@@ -30,7 +30,7 @@ def create_app(settings: Settings | None = None, context: AppContext | None = No
             "SIMULATED_DATA and production integrations are disabled."
         ),
     )
-    app.state.ctx = context or build_context(settings)
+    app.state.runtime = runtime or build_runtime(settings)
 
     app.add_middleware(
         CORSMiddleware,

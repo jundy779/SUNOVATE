@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable, Mapping
 from typing import Annotated, Any
 from uuid import UUID
 
@@ -13,7 +14,7 @@ from ..authz.principal import Principal
 from ..context import AppContext
 from ..core.errors import ApiError, not_found
 from ..core.responses import ApiModel, Pagination, envelope, paginated, serialize
-from ..store.records import DocumentReference, DocumentVersion
+from ..store.records import DocumentReference, DocumentVersion, KnowledgeEntry
 from ._common import governed_view
 
 router = APIRouter(prefix="/documents", tags=["document metadata and versions"])
@@ -26,10 +27,16 @@ class VersionCreate(ApiModel):
     size_bytes: int | None = Field(default=None, ge=0)
 
 
-def document_readable(ctx: AppContext, principal: Principal, doc: DocumentReference) -> bool:
+def document_readable(
+    ctx: AppContext,
+    principal: Principal,
+    doc: DocumentReference,
+    parents: Mapping[UUID, KnowledgeEntry],
+) -> bool:
+    """Readable directly, or through a readable parent knowledge entry (`parents`)."""
     if ctx.authz.can_read(principal, doc):
         return True
-    entry = ctx.store.knowledge.get(doc.knowledge_entry_id) if doc.knowledge_entry_id else None
+    entry = parents.get(doc.knowledge_entry_id) if doc.knowledge_entry_id else None
     return (
         entry is not None
         and doc.deleted_at is None
@@ -38,9 +45,15 @@ def document_readable(ctx: AppContext, principal: Principal, doc: DocumentRefere
     )
 
 
+def _parents(ctx: AppContext, docs: Iterable[DocumentReference]) -> dict[UUID, KnowledgeEntry]:
+    return ctx.store.get_governed_many(
+        KnowledgeEntry, {d.knowledge_entry_id for d in docs if d.knowledge_entry_id is not None}
+    )
+
+
 def _get(ctx: AppContext, principal: Principal, document_id: UUID) -> DocumentReference:
-    doc = ctx.store.documents.get(document_id)
-    if doc is None or not document_readable(ctx, principal, doc):
+    doc = ctx.store.get_governed(DocumentReference, document_id)
+    if doc is None or not document_readable(ctx, principal, doc, _parents(ctx, [doc])):
         raise not_found("Dokumen")
     return doc
 
@@ -56,7 +69,12 @@ def list_documents(
     principal: Annotated[Principal, Depends(require("document:read", resource="document"))],
     pagination: Annotated[Pagination, Depends()],
 ) -> dict[str, Any]:
-    docs = [d for d in ctx.store.documents.values() if document_readable(ctx, principal, d)]
+    # Never list_readable here: documents may be readable through their parent knowledge.
+    docs = ctx.store.list_governed(
+        DocumentReference, scope=ctx.authz.read_scope(principal, DocumentReference)
+    )
+    parents = _parents(ctx, docs)
+    docs = [d for d in docs if document_readable(ctx, principal, d, parents)]
     docs.sort(key=lambda d: d.title)
     page, meta = paginated(docs, pagination)
     return envelope([_view(ctx, d) for d in page], **meta)
@@ -89,7 +107,7 @@ def register_version(
     ctx: Ctx,
     principal: Annotated[Principal, Depends(require("document:version", resource="document"))],
 ) -> dict[str, Any]:
-    with ctx.store.lock:
+    with ctx.store.transaction():
         doc = _get(ctx, principal, document_id)
         if not ctx.authz.can_write(principal, doc):
             ctx.authz.deny_write(principal, doc, "document_reference")
@@ -114,12 +132,12 @@ def register_version(
             created_by=principal.user_id,
             data_origin="USER_ENTERED",
         )
-        ctx.store.versions[version.id] = version
-    ctx.store.audit(
-        actor_user_id=principal.user_id,
-        action="VERSION_REGISTER",
-        entity_type="document_version",
-        entity_id=version.id,
-        detail={"documentReferenceId": str(doc.id)},
-    )
+        ctx.store.insert(version)
+        ctx.store.audit(
+            actor_user_id=principal.user_id,
+            action="VERSION_REGISTER",
+            entity_type="document_version",
+            entity_id=version.id,
+            detail={"documentReferenceId": str(doc.id)},
+        )
     return envelope(serialize(version))

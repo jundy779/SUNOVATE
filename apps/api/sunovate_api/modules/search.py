@@ -31,10 +31,12 @@ def search(
     query_terms = terms(q)
     retrieval = RetrievalService(ctx.store, ctx.authz)
     hits: list[dict[str, Any]] = []
-    for entry in retrieval.authorized_entries(principal):
+    entries = retrieval.authorized_entries(principal)
+    chunks = ctx.store.chunks_of_entries([e.id for e in entries])
+    for entry in entries:
         entry_terms = terms(f"{entry.title} {entry.summary}")
         best_section, best_snippet, best = None, entry.summary, len(query_terms & entry_terms)
-        for chunk in ctx.store.chunks_of_entry(entry.id):
+        for chunk in chunks.get(entry.id, []):
             matched = len(query_terms & (entry_terms | terms(chunk.content)))
             if matched > best:
                 best_section, best_snippet, best = chunk.section_label, chunk.content, matched

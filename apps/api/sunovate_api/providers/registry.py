@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 
 from ..core.config import Settings
 from ..hermes.text import normalize_term
-from ..store.simulated import SimulatedStore
+from ..store.records import User
 from .development import (
     DevelopmentExtractiveAIProvider,
     DevelopmentHermesClient,
@@ -58,7 +59,8 @@ class Providers:
         ]
 
 
-def build_providers(settings: Settings, store: SimulatedStore) -> Providers:
+def build_providers(settings: Settings, lookup: Callable[[str], User | None]) -> Providers:
+    """`lookup` resolves a SIMULATED user by email; providers never receive a data store."""
     ai: AIProvider = (
         DevelopmentExtractiveAIProvider(normalize_term)
         if settings.ai_provider == "development_extractive"
@@ -68,7 +70,7 @@ def build_providers(settings: Settings, store: SimulatedStore) -> Providers:
         ai=ai,
         embedding=DisabledEmbeddingProvider(),
         document=LocalDocumentProvider(),
-        identity=DevelopmentIdentityProvider(store.user_by_email),
+        identity=DevelopmentIdentityProvider(lookup),
         notification=DisabledNotificationProvider(),
         hermes=DevelopmentHermesClient(ai),
     )

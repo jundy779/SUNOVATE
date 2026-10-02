@@ -13,6 +13,14 @@ from fastapi import APIRouter, Depends
 from ..authz.dependencies import Ctx, require
 from ..authz.principal import Principal
 from ..domain import CLOSED_STATUSES, TASK_STATUSES
+from ..store.records import (
+    ApprovalRequest,
+    FollowUp,
+    KnowledgeEntry,
+    PendingMatter,
+    Task,
+    WorkOutput,
+)
 from .work import task_view, with_deadline
 
 router = APIRouter(tags=["dashboard"])
@@ -26,27 +34,21 @@ def dashboard_summary(
     principal: Annotated[Principal, Depends(require("work:read", resource="dashboard"))],
 ) -> dict[str, Any]:
     store, authz = ctx.store, ctx.authz
-    outputs = authz.readable(principal, store.work_outputs.values())
-    tasks = [task_view(ctx, t) for t in authz.readable(principal, store.tasks.values())]
+    outputs = authz.list_readable(principal, WorkOutput)
+    tasks = [task_view(ctx, t) for t in authz.list_readable(principal, Task)]
     pending = (
-        authz.readable(principal, store.pending_matters.values())
-        if principal.has("pending:read")
-        else []
+        authz.list_readable(principal, PendingMatter) if principal.has("pending:read") else []
     )
     follow_ups = (
         [
             with_deadline(ctx, f, f.due_date, f.status)
-            for f in authz.readable(principal, store.follow_ups.values())
+            for f in authz.list_readable(principal, FollowUp)
         ]
         if principal.has("pending:read")
         else []
     )
     knowledge = (
-        [
-            k
-            for k in authz.readable(principal, store.knowledge.values())
-            if k.lifecycle_status == "PUBLISHED"
-        ]
+        authz.list_readable(principal, KnowledgeEntry, where={"lifecycle_status": "PUBLISHED"})
         if principal.has("knowledge:read")
         else []
     )
@@ -68,11 +70,7 @@ def dashboard_summary(
     counts = Counter(t["status"] for t in tasks)
     states = Counter(t["deadlineState"] for t in tasks)
     pending_approvals = (
-        [
-            a
-            for a in store.approvals.values()
-            if a.status == "PENDING" and authz.can_read(principal, a)
-        ]
+        authz.list_readable(principal, ApprovalRequest, where={"status": "PENDING"})
         if principal.has("approval:decide")
         else []
     )

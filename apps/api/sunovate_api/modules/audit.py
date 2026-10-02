@@ -20,9 +20,6 @@ def list_audit_logs(
     pagination: Annotated[Pagination, Depends()],
     action: Annotated[str | None, Query(max_length=32)] = None,
 ) -> dict[str, Any]:
-    with ctx.store.lock:
-        logs = list(reversed(ctx.store.audit_logs))
-    if action:
-        logs = [entry for entry in logs if entry.action == action]
+    logs = ctx.store.audit_logs(action)  # newest first
     page, meta = paginated(logs, pagination)
     return envelope([serialize(entry) for entry in page], **meta)

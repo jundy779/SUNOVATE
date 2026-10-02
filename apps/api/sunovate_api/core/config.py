@@ -14,6 +14,8 @@ from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 AppEnv = Literal["development", "test", "staging", "production"]
+# Runtime data backends. Only the in-memory SIMULATED_DATA store is implemented.
+DataBackendName = Literal["simulated"]
 
 # Repository-root `.env` first, then `apps/api/.env` (later files override earlier ones).
 _ROOT_ENV = Path(__file__).resolve().parents[4] / ".env"
@@ -31,7 +33,7 @@ class Settings(BaseSettings):
     api_prefix: str = "/api/v1"
 
     # Runtime data backend. Only the in-memory SIMULATED_DATA store is implemented.
-    data_backend: Literal["simulated"] = "simulated"
+    data_backend: DataBackendName = "simulated"
     database_url: str = "postgresql+asyncpg://sunovate:sunovate_local@localhost:5432/sunovate"
 
     dev_auth_enabled: bool = True

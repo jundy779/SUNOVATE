@@ -7,10 +7,11 @@ from typing import Any
 
 from fastapi.testclient import TestClient
 
-from .context import build_context
+from .context import build_runtime
 from .core.config import Settings
 from .main import create_app
 from .store.dataset import REFERENCE_DATE
+from .store.simulated import SimulatedBackend, SimulatedStore
 
 TEST_SECRET = "test-only-secret-not-for-production"  # noqa: S105 - test fixture value
 
@@ -27,7 +28,10 @@ def make_settings(**overrides: Any) -> Settings:
 
 def make_client(today: date = REFERENCE_DATE, **overrides: Any) -> TestClient:
     settings = make_settings(**overrides)
-    app = create_app(settings, build_context(settings, clock=lambda: today))
+    runtime = build_runtime(
+        settings, backend=SimulatedBackend(SimulatedStore()), clock=lambda: today
+    )
+    app = create_app(settings, runtime)
     return TestClient(app)
 
 
