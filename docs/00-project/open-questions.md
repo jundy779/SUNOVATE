@@ -42,7 +42,7 @@ Prioritas di bawah adalah usulan pengembang (PROPOSED).
 
 ## Urutan Pembahasan yang Disarankan
 
-**PROPOSED** Bahas pertanyaan prioritas Tinggi terlebih dahulu pada sesi mentor berikutnya: OQ-02, OQ-03, OQ-04, OQ-05, OQ-07, OQ-11. Pertanyaan ini memengaruhi pekerjaan bulan 2 dan 3 pada [product-roadmap.md](../01-product/product-roadmap.md).
+**PROPOSED** Bahas pertanyaan prioritas Tinggi terlebih dahulu pada sesi mentor berikutnya: OQ-02, OQ-03, OQ-04, OQ-05, OQ-07, OQ-11. Agenda dan skrip demo: [mentor-session-01-agenda.md](mentor-session-01-agenda.md). Pertanyaan ini memengaruhi pekerjaan bulan 2 dan 3 pada [product-roadmap.md](../01-product/product-roadmap.md).
 
 ## Cara Mencatat Jawaban
 
