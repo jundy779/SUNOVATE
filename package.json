@@ -28,6 +28,7 @@
     "db:seed": "uv run --directory apps/api --extra dev python -m sunovate_api.db.seed",
     "db:sql": "uv run --directory apps/api --extra dev alembic upgrade head --sql",
     "db:check": "uv run --no-project --python 3.12 --with pgserver python scripts/validation/db_check_pgserver.py",
+    "db:test": "uv run --no-project --python 3.12 --with pgserver python scripts/validation/db_test_pgserver.py",
     "compose:check": "docker compose config --quiet"
   }
 }

@@ -73,9 +73,15 @@ def build_runtime(
     backend: DataBackend | None = None,
     clock: Callable[[], date] = date.today,
 ) -> AppRuntime:
-    """The only place where the data backend is chosen (only `simulated` exists today)."""
+    """The only place where the data backend is chosen."""
     if backend is None:
-        backend = SimulatedBackend(SimulatedStore())
+        if settings.data_backend == "postgres":
+            # Lazy import: the simulated mode never loads the PostgreSQL driver.
+            from .store.postgres import PostgresBackend
+
+            backend = PostgresBackend(settings.database_url)
+        else:
+            backend = SimulatedBackend(SimulatedStore())
     return AppRuntime(
         settings=settings,
         backend=backend,
