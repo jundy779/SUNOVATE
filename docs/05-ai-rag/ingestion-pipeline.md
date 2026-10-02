@@ -1,0 +1,99 @@
+# Ingestion Pipeline
+
+**Status:** PROPOSED
+**Last Updated:** 2026-10-01
+
+## Purpose
+
+Menjelaskan alur usulan untuk memasukkan dokumen ke knowledge repository dan indeks retrieval Hermes, mulai dari registrasi referensi sampai publikasi, termasuk penanganan kegagalan.
+
+## Confirmed Information
+
+- **CONFIRMED** File tidak disimpan sebagai BLOB; SUNOVATE hanya menyimpan referensi, metadata, checksum SHA-256, versi, klasifikasi, dan lokasi provider (sumber: ADR-003).
+- **CONFIRMED** Duplikasi ingestion diblokir oleh unique constraint (`document_reference_id`, `checksum_sha256`); API mengembalikan `DUPLICATE_CHECKSUM` (409) (sumber: fact sheet bagian 6 dan 9).
+- **CONFIRMED** Nilai `extraction_status`: PENDING, EXTRACTED, FAILED, QUARANTINED, NOT_APPLICABLE (sumber: fact sheet bagian 6).
+- **CONFIRMED** Hanya knowledge berstatus PUBLISHED yang masuk pencarian default dan retrieval Hermes (sumber: fact sheet bagian 6).
+- **CONFIRMED** Duplikasi ingestion termasuk skenario uji wajib (sumber: Proposal v2.4, slide 20).
+
+## Status implementasi
+
+- **IMPLEMENTED** Registrasi versi dokumen melalui `POST /api/v1/documents/{id}/versions` dengan permission `document:version`, penolakan checksum ganda, dan audit `VERSION_REGISTER`.
+- **IMPLEMENTED** Chunk pada scaffold berasal dari dataset SIMULATED_DATA yang dimuat ke simulated store; tidak ada ekstraksi file nyata.
+- **PROPOSED** Seluruh tahap ekstraksi, normalisasi, chunking otomatis, pengisian FTS di PostgreSQL, embedding, dan OCR.
+
+## Alur usulan
+
+```mermaid
+flowchart TD
+    A["Registrasi referensi dokumen"] --> B["Validasi tipe, ukuran, klasifikasi"]
+    B -->|tidak valid| Q["QUARANTINED"]
+    B -->|valid| C["Hitung checksum SHA-256"]
+    C -->|checksum sudah ada| D["Tolak DUPLICATE_CHECKSUM 409"]
+    C -->|baru| E["Ekstraksi teks (OCR fase lanjutan)"]
+    E -->|gagal| F["FAILED"]
+    E -->|berhasil| G["Normalisasi teks"]
+    G --> H["Review metadata oleh manusia"]
+    H -->|perlu perbaikan| H
+    H --> I["Chunking berbasis struktur"]
+    I --> J["Isi search_vector FTS"]
+    J --> K["Embedding (jika provider diaktifkan)"]
+    K --> L["Publikasi melalui approval"]
+```
+
+## Tahapan
+
+1. **Registrasi referensi.** Pengguna dengan `document:create` mendaftarkan referensi, metadata awal, klasifikasi, tim pemilik, dan `sharing_scope`. File tetap di lokasi provider (`DOCUMENT_PROVIDER=local` pada pengembangan).
+2. **Validasi.** Tipe file, ukuran, dan klasifikasi diperiksa. Dokumen dengan klasifikasi di atas `HERMES_MAX_CLASSIFICATION` tetap dapat tercatat di repository sesuai hak akses, tetapi tidak diindeks untuk Hermes. Daftar format yang disetujui dan batas ukuran adalah **OPEN QUESTION** OQ-04.
+3. **Dedupe checksum.** Checksum SHA-256 dihitung; pasangan referensi dan checksum yang sama ditolak.
+4. **Ekstraksi.** Teks diekstrak dari format yang didukung. **PROPOSED** OCR untuk dokumen hasil pindai ditambahkan pada fase lanjutan setelah alat dan lokasi pemrosesan disetujui (OQ-11).
+5. **Normalisasi.** Membersihkan header/footer berulang, nomor halaman, dan spasi; mempertahankan penanda struktur seperti Pasal, ayat, langkah, dan bagian.
+6. **Review metadata manusia.** Knowledge owner atau reviewer memeriksa judul, jenis knowledge, klasifikasi, tim pemilik, versi, dan relasi regulasi. Penunjukan orangnya adalah **OPEN QUESTION** OQ-09.
+7. **Chunking.** Mengikuti [chunking-strategy.md](./chunking-strategy.md).
+8. **FTS.** `document_chunks.search_vector` diisi dan diindeks GIN.
+9. **Embedding.** Hanya jika `EMBEDDING_PROVIDER` diaktifkan setelah model disetujui; hasil disimpan di `embedding_references` dengan `model_name` dan `dimensions` (ADR-009).
+10. **Publikasi.** Knowledge masuk retrieval hanya setelah berstatus PUBLISHED melalui approval request bertipe `KNOWLEDGE_PUBLICATION`.
+
+## Penanganan kegagalan
+
+| Kondisi | Status | Tindak lanjut usulan |
+|---|---|---|
+| Tipe, ukuran, atau klasifikasi tidak valid | QUARANTINED | Tidak diproses lebih lanjut; dicatat sebagai `data_quality_issues` |
+| Teks menyerupai instruksi untuk AI terdeteksi | QUARANTINED | Ditinjau manusia sebelum dipakai (lihat [prompt-injection-defense.md](./prompt-injection-defense.md)) |
+| Ekstraksi gagal | FAILED | Dapat diulang setelah perbaikan; tidak masuk indeks |
+| Checksum ganda | Ditolak | Respons `DUPLICATE_CHECKSUM` (409) |
+| File tanpa teks yang relevan | NOT_APPLICABLE | Referensi tetap ada, tidak diindeks |
+
+Chunk dari dokumen berstatus FAILED atau QUARANTINED tidak pernah masuk retrieval.
+
+## Data pengembangan
+
+- **CONFIRMED** Hanya SIMULATED_DATA yang digunakan pada pengembangan; data internal atau keuangan asli tidak boleh dimasukkan (sumber: AGENTS.md, [simulated-data-policy.md](../04-data/simulated-data-policy.md)).
+- **CONFIRMED** File sumber PDF/PPTX di root dikecualikan dari git sampai klasifikasinya dikonfirmasi (sumber: ADR-014). Penyimpanan di repository Git adalah **OPEN QUESTION** OQ-18.
+
+## Open Questions
+
+- OQ-04 Dokumen dan format apa yang boleh masuk repository dan RAG.
+- OQ-05 Klasifikasi tiap jenis dokumen.
+- OQ-06 SharePoint sebagai sumber utama atau hanya referensi.
+- OQ-09 Knowledge owner dan reviewer per tim.
+- OQ-11 Alat ekstraksi/OCR dan embedding yang diizinkan serta lokasi pemrosesan.
+
+## Risks
+
+- R-03 Data asli/sensitif masuk repository atau log.
+- R-07 Prompt injection dari dokumen.
+- R-11 Kualitas metadata rendah sehingga retrieval buruk.
+
+## Acceptance Criteria
+
+- Unggahan ulang file dengan checksum sama pada referensi yang sama ditolak dengan 409.
+- Dokumen FAILED atau QUARANTINED tidak muncul di pencarian maupun Hermes.
+- Tidak ada chunk masuk retrieval sebelum knowledge berstatus PUBLISHED.
+
+## Related Documents
+
+- [document-lifecycle.md](../02-business/document-lifecycle.md)
+- [metadata-schema.md](../04-data/metadata-schema.md)
+- [data-quality.md](../04-data/data-quality.md)
+- [chunking-strategy.md](./chunking-strategy.md)
+- [rag-architecture.md](./rag-architecture.md)

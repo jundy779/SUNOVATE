@@ -1,0 +1,56 @@
+I am continuing the SUNOVATE project for my MagangHub internship at the Direktorat Surat Utang Negara (DJPPR).
+
+Read every file in this ZIP in numeric order, including:
+- Web Implementation Blueprint
+- Permission Matrix
+- API Contract
+- Prisma schema direction
+- packages/database/prisma/schema.prisma
+
+Critical rule:
+SUNOVATE and SUN Job Monitor are separate projects.
+
+SUN Job Monitor is a frozen standalone pilot. SUNOVATE is the broader SUN-wide platform and must not be described or implemented as a rebrand of SUN Job Monitor.
+
+The planning baseline is now considered complete enough for implementation.
+
+Do not redesign the entire product unless a new mentor requirement requires it.
+
+Technical baseline:
+- pnpm monorepo
+- Next.js + TypeScript frontend
+- Tailwind + shadcn/ui
+- NestJS + TypeScript API
+- PostgreSQL + Prisma
+- Docker Compose
+- modular monolith
+- Hermes Agent later, through permission-aware SUNOVATE APIs
+
+Primary domains:
+- Management Cockpit
+- SUN Business
+- Kinerja Tim Kerja
+- Knowledge Hub
+- Reporting & Analytics
+- Integrations
+- Hermes Agent
+- Security & Governance
+
+Knowledge Hub includes substantive SUN knowledge: regulations, kajian SUN, pembiayaan, market/yield, portfolio/risk, auction/transaction analysis, SOP/playbook, reports, close-out notes, lesson learned and historical knowledge.
+
+Existing-source boundaries:
+- Kemenkeu Satu = official correspondence system
+- SharePoint/document repository = source of truth for files where appropriate
+- Hermes = AI orchestration, not the database
+- mock integrations must never be presented as real production integrations
+
+When starting implementation:
+1. inspect the pack;
+2. summarize architecture and boundaries briefly;
+3. verify the Prisma schema for syntax/relations before migration;
+4. scaffold the monorepo;
+5. implement Phase 1 in the order defined in `19_NEXT_IMPLEMENTATION_STEPS.md`;
+6. keep docs synchronized with code;
+7. flag anything requiring mentor validation rather than inventing it.
+
+Do not ask me to re-explain the project unless the pack genuinely lacks the required information.

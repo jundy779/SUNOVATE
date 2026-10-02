@@ -1,0 +1,60 @@
+[project]
+name = "sunovate-api"
+version = "0.1.0"
+description = "SUNOVATE modular monolith API scaffold (development only, SIMULATED_DATA)"
+requires-python = ">=3.12,<3.15"
+dependencies = [
+  "alembic>=1.17,<2",
+  "asyncpg>=0.31,<1",
+  "fastapi>=0.118,<1",
+  "pgvector>=0.4,<1",
+  "pydantic-settings>=2.11,<3",
+  "sqlalchemy[asyncio]>=2.0,<3",
+  "uvicorn[standard]>=0.37,<1",
+]
+
+[project.optional-dependencies]
+dev = [
+  "httpx>=0.28,<1",
+  "mypy>=1.18,<2",
+  "pytest>=8.4,<9",
+  "pytest-asyncio>=1.2,<2",
+  "ruff>=0.13,<1",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+asyncio_mode = "auto"
+testpaths = ["tests", "../../tests"]
+filterwarnings = [
+  # Starlette's TestClient warns about httpx; harmless for the test suite.
+  "ignore::DeprecationWarning:fastapi.testclient",
+  "ignore:Using `httpx` with `starlette.testclient`",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["alembic/versions"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "S", "BLE", "SIM"]
+ignore = ["S101"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S105", "S106"]
+"../../tests/**" = ["S105", "S106"]
+"../../scripts/**" = ["S603"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["sunovate_api"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+plugins = ["pydantic.mypy"]
+exclude = ["alembic/versions/"]
+
+[[tool.mypy.overrides]]
+module = ["pgvector.*", "asyncpg.*"]
+ignore_missing_imports = true

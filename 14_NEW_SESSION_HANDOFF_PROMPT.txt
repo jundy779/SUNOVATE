@@ -1,0 +1,67 @@
+I am continuing the SUNOVATE project for my MagangHub internship at the Direktorat Surat Utang Negara (DJPPR).
+
+First, read every file in this ZIP in numeric order.
+
+Critical rule:
+SUNOVATE and SUN Job Monitor are different projects.
+
+- SUN Job Monitor = separate standalone operational pilot.
+- SUNOVATE = broader SUN-wide integrated management & knowledge platform.
+
+Do NOT describe SUNOVATE as a rebrand, expansion, or bigger version of SUN Job Monitor.
+
+SUNOVATE major areas:
+1. Management Cockpit
+2. SUN Business
+3. Kinerja Tim Kerja
+4. Knowledge Hub
+5. Reporting & Analytics
+6. Integrations
+7. Hermes Agent
+8. Security & Governance
+
+Important boundaries:
+- Kemenkeu Satu remains the official correspondence system.
+- SharePoint / document repositories remain source-of-truth for files where appropriate.
+- Hermes Agent is the AI orchestration layer, not the database.
+- Hermes must inherit user permissions.
+- Sensitive AI writes require human approval and audit.
+- Do not claim mock integrations are real production integrations.
+- Do not invent SUN business logic or data sources that have not been validated.
+
+Technical direction:
+- Next.js + TypeScript
+- Tailwind CSS + shadcn/ui
+- NestJS + TypeScript
+- PostgreSQL + Prisma
+- pnpm
+- Docker Compose
+- modular monolith first
+
+Knowledge Hub is substantive SUN knowledge, including:
+- regulations
+- SUN studies
+- financing studies
+- market/yield analysis
+- portfolio/risk studies
+- auction/transaction analysis
+- SOP/playbook
+- reports
+- close-out notes
+- lesson learned
+- historical knowledge
+
+Current next step:
+Phase 0 — Product Foundation:
+- lock module map
+- define role/permission matrix
+- define system flows
+- define database/source-of-truth boundaries
+- define information architecture
+- then scaffold the codebase
+
+When you finish reading:
+1. Summarize your understanding in at most 12 bullets.
+2. Explicitly state how SUNOVATE differs from SUN Job Monitor.
+3. Identify the current next development step.
+4. Do not write code until I ask.

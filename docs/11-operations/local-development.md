@@ -1,0 +1,114 @@
+# Pengembangan Lokal
+
+**Status:** DRAFT
+
+**Last Updated:** 2026-10-01
+
+## Purpose
+
+Panduan menyiapkan dan menjalankan SUNOVATE di mesin pengembang, termasuk login pengembangan dengan pengguna simulasi.
+
+## Prasyarat
+
+| Alat | Versi | Keterangan |
+|---|---|---|
+| Node.js | 22 atau lebih baru | Versi yang dipakai pada scaffold: 24.19.0 |
+| pnpm | 11.4 | Package manager workspace |
+| Python | 3.12–3.14 | Versi yang dipakai pada scaffold: 3.14.4 |
+| uv | Terbaru yang kompatibel | Versi yang dipakai pada scaffold: 0.11.6; mengelola environment Python di `apps/api` |
+| Docker | Opsional | Hanya untuk PostgreSQL lokal lewat Docker Compose |
+
+- **CONFIRMED**: Versi yang dipakai sesuai daftar di atas (sumber: implementasi scaffold sesi 2026-10-01).
+- **CONFIRMED**: Docker tidak terpasang di mesin pengembangan saat ini; jalur Docker Compose belum divalidasi di mesin tersebut (sumber: implementasi scaffold sesi 2026-10-01).
+- **CONFIRMED**: Runtime API memakai `DATA_BACKEND=simulated`, sehingga web dan API dapat dijalankan tanpa PostgreSQL (sumber: ADR-007).
+
+## Langkah Menjalankan
+
+1. Salin `.env.example` menjadi `.env` di root lalu sesuaikan nilai lokal. Jangan commit `.env` (lihat [environment-configuration.md](environment-configuration.md)).
+2. Pasang dependensi JavaScript:
+
+   ```powershell
+   pnpm install
+   ```
+
+3. Siapkan environment Python backend (menjalankan `uv sync` di `apps/api`):
+
+   ```powershell
+   pnpm api:setup
+   ```
+
+4. Jalankan API di terminal pertama (port 8000):
+
+   ```powershell
+   pnpm api:dev
+   ```
+
+5. Jalankan web di terminal kedua (port 3000):
+
+   ```powershell
+   pnpm dev
+   ```
+
+6. Buka `http://localhost:3000/login` untuk aplikasi dan `http://localhost:8000/docs` untuk dokumentasi OpenAPI.
+
+## Database Lokal (Opsional)
+
+Database hanya dibutuhkan untuk memvalidasi skema, migration, dan seed. Runtime API saat ini belum membacanya.
+
+```powershell
+pnpm compose:check
+pnpm db:up
+pnpm db:migrate
+pnpm db:seed
+```
+
+- Tanpa Docker: `pwsh scripts/validation/db-check-pgserver.ps1` (lihat [integration-testing.md](../10-testing/integration-testing.md)).
+- Endpoint `GET /api/v1/health/database` dapat dipakai untuk memeriksa koneksi database.
+
+## Login Pengembangan
+
+- **PROPOSED**: Login pengembangan memakai token bertanda tangan (HMAC) yang diterbitkan oleh `POST /api/v1/auth/dev/login` untuk pengguna simulasi yang di-seed. Fitur ini nonaktif di luar development (sumber: ADR-005).
+- **CONFIRMED**: Halaman `/login` menyimpan token di cookie httpOnly; server component memanggil API dengan token tersebut (sumber: implementasi scaffold sesi 2026-10-01).
+
+Pengguna simulasi (semua fiktif, domain `@sunovate.local`):
+
+| Email | Role | Tim | Clearance |
+|---|---|---|---|
+| `sim.admin@sunovate.local` | system_admin | Semua tim lewat scope | INTERNAL |
+| `sim.coordinator@sunovate.local` | knowledge_coordinator | Semua tim | RESTRICTED |
+| `sim.lead.psun@sunovate.local` | team_lead | PSUN | RESTRICTED |
+| `sim.owner.ppsun@sunovate.local` | knowledge_owner | PPSUN | INTERNAL |
+| `sim.reviewer.akpsun@sunovate.local` | reviewer | AKPSUN | INTERNAL |
+| `sim.staff.pppsun@sunovate.local` | staff | PPPSUN | INTERNAL |
+| `sim.auditor@sunovate.local` | auditor | Semua tim | RESTRICTED |
+| `sim.readonly.dhtv@sunovate.local` | read_only | DHTV | INTERNAL |
+
+- **PROPOSED**: Role dan matriks permission adalah usulan pengembangan; lihat [permission-matrix.md](../06-security/permission-matrix.md).
+- **CONFIRMED**: Akun ini hanya untuk data `SIMULATED_DATA` dan tidak mewakili pegawai atau jabatan nyata (sumber: brief sesi 2026-10-01).
+
+## Port dan Alamat
+
+| Komponen | Alamat |
+|---|---|
+| Web (Next.js) | `http://localhost:3000` |
+| API (FastAPI) | `http://localhost:8000`, prefix `/api/v1` |
+| OpenAPI | `http://localhost:8000/docs` |
+| PostgreSQL (opsional) | Sesuai `DATABASE_URL` |
+
+## Pemeriksaan Sebelum Handoff
+
+```powershell
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm build
+```
+
+Atau sekaligus dengan `pnpm validate`. Untuk backend saja: `pnpm api:lint`, `pnpm api:typecheck`, `pnpm api:test`. End-to-end: `pnpm e2e` saat web dan API berjalan. Hasil terbaru: lihat laporan validasi terbaru di CHANGELOG.md.
+
+## Related Documents
+
+- [environment-configuration.md](environment-configuration.md)
+- [troubleshooting.md](troubleshooting.md)
+- [migration-guide.md](migration-guide.md)
+- [developer-handover.md](../13-handover/developer-handover.md)

@@ -1,0 +1,33 @@
+{
+  "name": "sunovate",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@11.4.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @sunovate/web dev",
+    "build": "pnpm --filter @sunovate/web build",
+    "lint": "pnpm web:lint && pnpm api:lint",
+    "typecheck": "pnpm web:typecheck && pnpm api:typecheck",
+    "test": "pnpm web:test && pnpm api:test",
+    "validate": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "e2e": "pnpm --filter @sunovate/web e2e",
+    "web:lint": "pnpm --filter @sunovate/web lint",
+    "web:typecheck": "pnpm --filter @sunovate/web typecheck",
+    "web:test": "pnpm --filter @sunovate/web test",
+    "api:setup": "uv sync --directory apps/api --extra dev",
+    "api:dev": "uv run --directory apps/api --extra dev uvicorn sunovate_api.main:app --reload --port 8000",
+    "api:lint": "uv run --directory apps/api --extra dev ruff check . ../../tests ../../scripts",
+    "api:typecheck": "uv run --directory apps/api --extra dev mypy sunovate_api",
+    "api:test": "uv run --directory apps/api --extra dev pytest -q",
+    "db:up": "docker compose up -d postgres",
+    "db:down": "docker compose down",
+    "db:migrate": "uv run --directory apps/api --extra dev alembic upgrade head",
+    "db:seed": "uv run --directory apps/api --extra dev python -m sunovate_api.db.seed",
+    "db:sql": "uv run --directory apps/api --extra dev alembic upgrade head --sql",
+    "db:check": "uv run --no-project --python 3.12 --with pgserver python scripts/validation/db_check_pgserver.py",
+    "compose:check": "docker compose config --quiet"
+  }
+}

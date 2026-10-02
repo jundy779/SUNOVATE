@@ -1,0 +1,41 @@
+# Dependencies and build output
+node_modules/
+.next/
+dist/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+
+# Test output
+playwright-report/
+test-results/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Local document storage (references only; never commit files)
+infrastructure/local/documents/*
+!infrastructure/local/documents/.gitkeep
+references/source/*
+!references/source/.gitkeep
+
+# Root source documents: excluded until repository storage is confirmed (ADR-014, OQ-18)
+/*.pdf
+/*.pptx
+/*.docx
+/*.xlsx
+
+# OS
+.DS_Store
+Thumbs.db
