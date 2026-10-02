@@ -1,7 +1,7 @@
 # Asumsi
 
 **Status:** NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -21,7 +21,7 @@ Dokumen ini mencatat asumsi kerja yang dipakai untuk membangun scaffold SUNOVATE
 | A-03 | Fungsi SUN Tematik belum diketahui sehingga tim ini hanya ada sebagai entitas tim tanpa perilaku khusus. | Bila ada proses khusus, perlu tambahan knowledge type, alur kerja, atau dashboard. | Mentor | OQ-01 | OPEN |
 | A-04 | Identitas pengembangan memakai token HMAC dari `POST /api/v1/auth/dev/login` untuk pengguna simulasi; dimatikan di luar development, dan aplikasi menolak start bila `APP_ENV=production` dengan dev auth aktif. | Bila mekanisme login organisasi berbeda jauh, modul identitas dan alur sesi frontend perlu diganti. | Mentor | OQ-07, ADR-005 | OPEN |
 | A-05 | Tidak ada integrasi produksi (SharePoint, SSO, Power BI, Telegram, WhatsApp, Kemenkeu Satu, data pasar) selama MVP; semua provider produksi berupa placeholder nonaktif. | Bila integrasi wajib untuk MVP, jadwal bulan 5 dan kesiapan akses harus dihitung ulang. | Mentor | OQ-06, OQ-08, R-05 | OPEN |
-| A-06 | Runtime scaffold memakai `DATA_BACKEND=simulated`, yaitu penyimpanan in-memory yang dimuat dari dataset yang sama dengan seed database. Data hilang saat API restart. | Bila dianggap persistence produksi, perubahan pengguna hilang; repository SQLAlchemy harus diprioritaskan. | Mentor | ADR-007, R-10 | OPEN |
+| A-06 | Runtime scaffold memakai `DATA_BACKEND=simulated`, yaitu penyimpanan in-memory yang dimuat dari dataset yang sama dengan seed database. Data hilang saat API restart. | Bila dianggap persistence produksi, perubahan pengguna hilang; mode persisten `DATA_BACKEND=postgres` tersedia sebagai PROPOSED (ADR-015). | Mentor | ADR-007, ADR-015, R-10 | OPEN |
 | A-07 | Provider AI pengembangan bersifat deterministik dan ekstraktif (`development_extractive`): jawaban disusun hanya dari chunk terotorisasi, tanpa model eksternal dan tanpa jaringan. | Kualitas jawaban di demo tidak mewakili model generatif; evaluasi ulang diperlukan setelah model disetujui. | Mentor | OQ-11, ADR-008 | OPEN |
 | A-08 | Provider embedding nonaktif; pencarian semantik belum berjalan, dan kolom vektor tidak bertipe tetap serta tanpa indeks ANN sampai model dan dimensi disetujui. | Target retrieval semantik pada bulan 3 bergeser bila model tidak segera disetujui. | Mentor | OQ-11, ADR-009 | OPEN |
 | A-09 | Klasifikasi data memakai usulan empat tingkat PUBLIC, INTERNAL, RESTRICTED, CONFIDENTIAL, dengan `HERMES_MAX_CLASSIFICATION=RESTRICTED` di development. | Bila skema resmi Kemenkeu berbeda, tabel `data_classifications`, matriks akses, dan uji keamanan harus diubah. | Mentor | OQ-05, R-09 | OPEN |
@@ -57,4 +57,4 @@ Dokumen ini mencatat asumsi kerja yang dipakai untuk membangun scaffold SUNOVATE
 
 ## Last Updated
 
-2026-10-01
+2026-10-02

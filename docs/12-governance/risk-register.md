@@ -1,7 +1,7 @@
 # Register Risiko
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -30,7 +30,7 @@ Seluruh penilaian di bawah PROPOSED. Pemilik "Pengembang" berarti peserta magang
 | R-07 | Prompt injection dari isi dokumen | Hermes menjalankan instruksi tersembunyi atau membocorkan data | Sedang | Tinggi | Filter injeksi pada chunk; karantina; CitationValidator; Hermes tanpa akses DB dan tanpa aksi tulis otomatis | Pengembang | Termitigasi sebagian |
 | R-08 | Ketergantungan pada satu pengembang | Sistem sulit dilanjutkan setelah magang | Tinggi | Tinggi | Dokumentasi, ADR, decision log, uji otomatis, panduan handover | Pengembang; penerima handover OPEN QUESTION | Terbuka |
 | R-09 | Klasifikasi tidak sesuai skema resmi | Kontrol akses tidak selaras kebijakan instansi | Sedang | Tinggi | Klasifikasi sebagai data konfigurasi; validasi OQ-05 sebelum data riil | Mentor | Terbuka |
-| R-10 | Simulated store disangka persistence produksi | Data hilang saat restart; ekspektasi keliru | Sedang | Sedang | `DATA_BACKEND=simulated` terdokumentasi; `meta.dataLabel`; repository SQLAlchemy sebagai langkah berikut (ADR-007) | Pengembang | Terbuka |
+| R-10 | Simulated store disangka persistence produksi | Data hilang saat restart; ekspektasi keliru | Sedang | Sedang | `DATA_BACKEND=simulated` terdokumentasi; `meta.dataLabel`; backend persisten `DATA_BACKEND=postgres` tersedia (ADR-007, ADR-015 PROPOSED) | Pengembang | Terbuka |
 | R-11 | Kualitas metadata rendah | Retrieval dan sitasi buruk | Tinggi | Sedang | Standar metadata minimum; review sebelum publikasi; `data_quality_issues`; evaluasi RAG | Pengembang; knowledge owner per tim OPEN QUESTION (OQ-09) | Terbuka |
 | R-12 | Perbedaan daftar tim kerja | Lingkup akses dan dashboard keliru | Sedang | Sedang | Seed hanya enam tim brief; tabel `teams` dapat diperluas; OQ-02 diajukan | Mentor | Terbuka |
 

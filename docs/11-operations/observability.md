@@ -2,7 +2,7 @@
 
 **Status:** DRAFT
 
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -36,7 +36,7 @@ sequenceDiagram
 | Endpoint | Fungsi | Catatan |
 |---|---|---|
 | `GET /api/v1/health` | Proses API hidup | Tidak bergantung pada database |
-| `GET /api/v1/health/database` | Koneksi ke PostgreSQL | Runtime saat ini tetap memakai store simulasi (ADR-007) |
+| `GET /api/v1/health/database` | Koneksi ke PostgreSQL | Konektivitas saja; backend runtime terlihat di field `dataBackend` pada `GET /api/v1/health` (`simulated` default, `postgres` per ADR-015, PROPOSED) |
 
 - **CONFIRMED**: Service `postgres` di Docker Compose memiliki healthcheck (sumber: implementasi scaffold sesi 2026-10-01).
 
@@ -45,7 +45,7 @@ sequenceDiagram
 | Aspek | Audit log | Log aplikasi |
 |---|---|---|
 | Tujuan | Jejak aksi pengguna untuk akuntabilitas | Diagnosis teknis |
-| Penyimpanan | Tabel `audit_logs` (runtime saat ini: store simulasi) | Output proses (stdout) |
+| Penyimpanan | Tabel `audit_logs` bila `DATA_BACKEND=postgres` (persisten, append-only); store simulasi in-memory bila `DATA_BACKEND=simulated` (default) | Output proses (stdout) |
 | Sifat | Append-only | Dapat dirotasi |
 | Pembaca | Role dengan `audit:read` lewat `GET /api/v1/audit-logs` | Pengembang atau administrator sistem |
 | Contoh isi | Aksi `LOGIN`, `CREATE`, `UPDATE`, `SUBMIT`, `APPROVE`, `REJECT`, `ACCESS_DENIED`, `AI_QUERY`, `AI_FEEDBACK`, `VERSION_REGISTER` | Method, path, status, durasi, `request_id` |

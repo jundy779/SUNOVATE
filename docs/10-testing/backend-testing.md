@@ -2,7 +2,7 @@
 
 **Status:** DRAFT
 
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -13,7 +13,8 @@ Menjelaskan cara menguji API `apps/api` (FastAPI), termasuk pengujian negatif ot
 - **CONFIRMED**: Backend memakai Python 3.12–3.14, FastAPI, Pydantic v2, SQLAlchemy 2, dan Alembic (sumber: brief sesi 2026-10-01).
 - **CONFIRMED**: Alat uji: pytest dengan FastAPI TestClient; lint dengan Ruff; pemeriksaan tipe dengan mypy mode strict (sumber: implementasi scaffold sesi 2026-10-01).
 - **CONFIRMED**: Pengujian berlokasi di `apps/api/tests/` (sumber: implementasi scaffold sesi 2026-10-01).
-- **CONFIRMED**: Runtime scaffold memakai `DATA_BACKEND=simulated` (store in-memory dari dataset SIMULATED_DATA yang sama dengan seed database). Repository berbasis SQLAlchemy belum diimplementasikan (sumber: ADR-007).
+- **CONFIRMED**: Default runtime dan default test memakai `DATA_BACKEND=simulated` (store in-memory dari dataset SIMULATED_DATA yang sama dengan seed database) (sumber: ADR-007).
+- **CONFIRMED (implementasi)**: Backend `postgres` (repository SQLAlchemy sinkron di `store/postgres.py`) sudah diimplementasikan; `pnpm db:test` menjalankan seluruh suite pytest dengan `SUNOVATE_TEST_BACKEND=postgres` pada PostgreSQL sementara (ADR-015, PROPOSED; lihat [integration-testing.md](integration-testing.md)).
 - **CONFIRMED**: Hasil eksekusi tidak dicatat di sini; lihat laporan validasi terbaru di CHANGELOG.md.
 
 ## Perintah

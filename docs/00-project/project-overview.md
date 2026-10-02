@@ -1,7 +1,7 @@
 # Ringkasan Proyek SUNOVATE
 
 **Status:** DRAFT
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -62,7 +62,7 @@ flowchart LR
 
 - **CONFIRMED** Modular monolith; frontend Next.js App Router, TypeScript strict, Tailwind; backend FastAPI, Pydantic v2, SQLAlchemy 2, Alembic; PostgreSQL dengan pgvector dan full-text search; Docker Compose untuk lokal; pnpm workspace (sumber: brief sesi 2026-10-01).
 - **CONFIRMED** Hermes hanya menerima konteks yang sudah diotorisasi melalui HermesGateway (ADR-004).
-- **PROPOSED** Runtime scaffold memakai `DATA_BACKEND=simulated` (penyimpanan in-memory dari dataset `SIMULATED_DATA`). Skema PostgreSQL, migrasi, dan seed sudah ada dan tervalidasi, tetapi repository berbasis SQLAlchemy belum diimplementasikan (ADR-007).
+- **PROPOSED** Default runtime scaffold memakai `DATA_BACKEND=simulated` (penyimpanan in-memory dari dataset `SIMULATED_DATA`, ADR-007). Dengan `DATA_BACKEND=postgres`, runtime memakai repository SQLAlchemy sinkron di belakang interface `Repository` yang sama, sehingga data bertahan setelah restart (ADR-015).
 
 Rincian di [container-architecture.md](../03-architecture/container-architecture.md) dan [architecture-decisions.md](../03-architecture/architecture-decisions.md).
 
@@ -98,4 +98,4 @@ Register lengkap di [risk-register.md](../12-governance/risk-register.md).
 
 ## Last Updated
 
-2026-10-01
+2026-10-02

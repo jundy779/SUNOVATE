@@ -2,7 +2,7 @@
 
 **Status:** DRAFT
 
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -52,15 +52,15 @@ Kumpulan masalah umum pada pengembangan lokal SUNOVATE beserta penyebab dan lang
 
 - Gejala: `pnpm db:migrate` gagal saat membuat ekstensi `vector`.
 - Penyebab: PostgreSQL yang dipakai tidak memiliki pgvector.
-- Penanganan: gunakan service `postgres` dari Docker Compose (image `pgvector/pgvector:pg17`) melalui `pnpm db:up`, atau jalankan `pwsh scripts/validation/db-check-pgserver.ps1` untuk validasi tanpa Docker. Pastikan `DATABASE_URL` menunjuk ke database tersebut.
+- Penanganan: gunakan service `postgres` dari Docker Compose (image `pgvector/pgvector:pg17`) melalui `pnpm db:up`, atau jalankan `pnpm db:check` untuk validasi tanpa Docker. Pastikan `DATABASE_URL` menunjuk ke database tersebut.
 
 ## 6. Docker Tidak Terpasang di Windows
 
 - Gejala: `pnpm db:up` atau `pnpm compose:check` gagal karena perintah `docker` tidak dikenali.
 - Konteks: Docker belum terpasang di mesin pengembangan saat ini (sumber: implementasi scaffold sesi 2026-10-01).
 - Penanganan:
-  - Database tidak wajib untuk menjalankan web dan API karena runtime memakai `DATA_BACKEND=simulated`.
-  - Untuk validasi skema tanpa Docker, gunakan `pwsh scripts/validation/db-check-pgserver.ps1`.
+  - Database tidak wajib untuk menjalankan web dan API karena default runtime memakai `DATA_BACKEND=simulated`. Mode `DATA_BACKEND=postgres` memerlukan database (ADR-015, PROPOSED).
+  - Untuk validasi skema tanpa Docker, gunakan `pnpm db:check`; untuk seluruh suite test pada PostgreSQL sementara, gunakan `pnpm db:test`.
   - Memasang Docker di perangkat instansi memerlukan izin pengelola perangkat (OPEN QUESTION).
 
 ## 7. `pnpm install` Diblokir oleh `minimumReleaseAge`

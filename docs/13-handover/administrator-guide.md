@@ -2,7 +2,7 @@
 
 **Status:** DRAFT
 
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -40,7 +40,8 @@ Menjelaskan tugas administrasi yang dapat dilakukan pada scaffold pengembangan d
 
 ### Mengatur ulang data runtime
 
-- Store simulasi berada di memori; restart `pnpm api:dev` mengembalikan data ke dataset awal. Semua perubahan yang dibuat lewat API ikut hilang.
+- `DATA_BACKEND=simulated` (default): store simulasi berada di memori; restart `pnpm api:dev` mengembalikan data ke dataset awal. Semua perubahan yang dibuat lewat API ikut hilang.
+- `DATA_BACKEND=postgres` (ADR-015, PROPOSED): data bertahan setelah restart. Untuk kembali ke dataset awal, bentuk ulang database lokal (`uv run alembic downgrade base` dari `apps/api`, lalu `pnpm db:migrate` dan `pnpm db:seed`); seed saja tidak menghapus perubahan yang sudah ada.
 
 ### Database lokal
 

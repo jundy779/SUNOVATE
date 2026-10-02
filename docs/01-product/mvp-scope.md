@@ -1,7 +1,7 @@
 # Scope MVP
 
 **Status:** NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -46,7 +46,7 @@ Kolom "Scaffold" berarti ada implementasi awal yang berjalan dengan `DATA_BACKEN
 | M-02 Pencarian | `GET /search?q=` atas simulated store dengan filter otorisasi sebelum penilaian. | Pencarian FTS PostgreSQL di runtime; pencarian semantik (embedding provider nonaktif, tanpa indeks ANN). |
 | M-03 Hermes | Pipeline lengkap: ScopeGuard, otorisasi, retrieval, rerank leksikal, filter injection, provider ekstraktif deterministik, CitationValidator, OutputGuard, audit; niat tulis menjadi approval PENDING; umpan balik. | Model generatif yang disetujui; evaluasi RAG dengan set uji tervalidasi; ingestion dokumen nyata. |
 | M-04 RBAC dan klasifikasi | AuthorizationService dengan permission, team scope, clearance; 404 untuk record tak terbaca; delapan pengguna simulasi. | Identitas produksi (OQ-07); skema klasifikasi resmi (OQ-05). |
-| M-05 Audit | Aksi LOGIN, CREATE, UPDATE, SUBMIT, APPROVE, REJECT, ACCESS_DENIED, AI_QUERY, AI_FEEDBACK, VERSION_REGISTER, SEARCH; trigger append-only di skema PostgreSQL. | Audit tersimpan permanen di runtime (masih in-memory); kebijakan retensi (OQ-13). |
+| M-05 Audit | Aksi LOGIN, CREATE, UPDATE, SUBMIT, APPROVE, REJECT, ACCESS_DENIED, AI_QUERY, AI_FEEDBACK, VERSION_REGISTER, SEARCH; trigger append-only di skema PostgreSQL. | Audit permanen pada default runtime (`DATA_BACKEND=simulated` masih in-memory; `DATA_BACKEND=postgres` menyimpan ke `audit_logs`, ADR-015, PROPOSED); kebijakan retensi (OQ-13). |
 | M-06 Monitoring kerja | Daftar work output, tugas, milestone, pending matter, follow-up; pembaruan tugas; status tenggat dihitung backend. | Pembuatan work output dan tugas; pengelolaan pending matter dari UI. |
 | M-07 Dashboard | `GET /dashboard/summary` dan halaman dashboard dengan grafik status. | Indikator tervalidasi (OQ-10). |
 | Frontend | Rute `/login`, `/dashboard`, `/knowledge`, `/knowledge/[id]`, `/search`, `/work-monitoring`, `/hermes`, `/admin`, `/unauthorized`, serta state not-found, error, loading. | Formulir lengkap untuk membuat dan mengubah seluruh entitas; uji aksesibilitas manual. |
@@ -85,4 +85,4 @@ Kolom "Scaffold" berarti ada implementasi awal yang berjalan dengan `DATA_BACKEN
 
 ## Last Updated
 
-2026-10-01
+2026-10-02

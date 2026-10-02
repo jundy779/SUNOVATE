@@ -1,7 +1,7 @@
 # Data Retention
 
 **Status:** NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 Mencatat mekanisme teknis yang mendukung retensi. Tidak ada periode retensi yang ditetapkan karena kebijakannya belum diketahui.
@@ -16,7 +16,7 @@ Mencatat mekanisme teknis yang mendukung retensi. Tidak ada periode retensi yang
 | Knowledge | status ARCHIVED dan SUPERSEDED | Nilai status ada; alur arsip belum dibuat |
 | File dokumen | tetap di document provider; SUNOVATE hanya referensi | Prinsip CONFIRMED |
 | Audit log | append-only; tidak ada penghapusan via aplikasi | Trigger ada |
-| Percakapan Hermes | `ai_conversations`, `ai_messages` | Disimpan in-memory pada scaffold; hilang saat restart |
+| Percakapan Hermes | `ai_conversations`, `ai_messages` | `DATA_BACKEND=simulated` (default): in-memory, hilang saat restart; `DATA_BACKEND=postgres`: tersimpan di tabel tersebut (ADR-015, PROPOSED); retensi belum ditetapkan |
 | Chunk dan embedding | turunan; dapat dihapus dan dibangun ulang | PROPOSED |
 
 ## Usulan (PROPOSED)
