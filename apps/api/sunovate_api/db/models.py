@@ -20,6 +20,7 @@ from sqlalchemy import (
     DateTime,
     Float,
     ForeignKey,
+    Identity,
     Index,
     Integer,
     MetaData,
@@ -281,11 +282,14 @@ class KnowledgeTag(Base, TimestampMixin):
     __tablename__ = "knowledge_tags"
     __table_args__ = (
         UniqueConstraint("knowledge_entry_id", "tag_id", name="uq_knowledge_tags_entry_tag"),
+        CheckConstraint("position >= 0", name="position"),
     )
     knowledge_entry_id: Mapped[uuid.UUID] = _fk(
         "knowledge_entries.id", nullable=False, ondelete="CASCADE"
     )
     tag_id: Mapped[uuid.UUID] = _fk("tags.id", nullable=False, ondelete="CASCADE")
+    # Revision 0002: urutan tag sesuai input (0-based).
+    position: Mapped[int] = mapped_column(Integer, server_default="0")
 
 
 class RegulationRelation(Base, TimestampMixin):
@@ -435,6 +439,8 @@ class AuditLog(Base):
 
     __tablename__ = "audit_logs"
     id: Mapped[uuid.UUID] = _uuid_pk()
+    # Revision 0002: urutan insert deterministik; tidak pernah dikirim saat insert.
+    seq: Mapped[int] = mapped_column(BigInteger, Identity(always=True), unique=True)
     occurred_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), index=True
     )

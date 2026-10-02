@@ -57,9 +57,15 @@ async def main():
             "select count(*) from knowledge_entries where data_origin <> 'SIMULATED_DATA'"
         ))).scalar_one()
         print("non-simulated knowledge rows:", labels)
-        await c.execute(text(
-            "insert into audit_logs (action, entity_type) values ('CHECK', 'validation')"))
+        seq = (await c.execute(text(
+            "insert into audit_logs (action, entity_type) values ('CHECK', 'validation') "
+            "returning seq"))).scalar_one()
         await c.commit()
+        print("audit seq:", seq)
+        ktags = (await c.execute(text("select count(*) from knowledge_tags"))).scalar_one()
+        ktags_pos0 = (await c.execute(text(
+            "select count(*) from knowledge_tags where position = 0"))).scalar_one()
+        print("knowledge_tags rows:", ktags, "position 0:", ktags_pos0)
         try:
             await c.execute(text("update audit_logs set action = 'TAMPER'"))
             print("append-only: FAILED (update allowed)")
@@ -70,6 +76,8 @@ async def main():
     assert tables == 30, tables
     assert hits >= 1
     assert labels == 0
+    assert seq is not None
+    assert ktags >= 1 and ktags_pos0 == ktags, (ktags, ktags_pos0)
 
 asyncio.run(main())
 """
