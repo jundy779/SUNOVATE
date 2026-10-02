@@ -1,28 +1,33 @@
-"""Repository contract (design 5.1). Parametrized per backend; postgres is added later."""
+"""Repository contract (design 5.1), run on both backends (postgres only under db:test)."""
 
 import threading
 from collections.abc import Iterator
 from uuid import uuid4
 
 import pytest
+from sqlalchemy.exc import SQLAlchemyError
 
 from sunovate_api.core.errors import ApiError
 from sunovate_api.store.dataset import sid
 from sunovate_api.store.records import KnowledgeEntry, Task
 from sunovate_api.store.repository import Repository
 from sunovate_api.store.simulated import SimulatedBackend, SimulatedStore
+from sunovate_api.testing import requires_postgres, shared_postgres_backend
 
 T4 = sid("task:T4")
 K2 = sid("knowledge:K2")
 ACTOR = sid("user:sim.owner.ppsun")
 
 
-@pytest.fixture(params=["simulated"])
+@pytest.fixture(params=["simulated", pytest.param("postgres", marks=requires_postgres)])
 def repo(request: pytest.FixtureRequest) -> Iterator[Repository]:
-    assert request.param == "simulated"
+    if request.param == "postgres":
+        with shared_postgres_backend().session() as session:
+            yield session
+        return
     backend = SimulatedBackend(SimulatedStore())
-    with backend.session() as session:
-        yield session
+    with backend.session() as simulated:
+        yield simulated
 
 
 def _entry() -> KnowledgeEntry:
@@ -135,3 +140,26 @@ def test_transaction_depth_is_thread_local() -> None:
         release.set()
         worker.join(timeout=10)
     assert not worker.is_alive()
+
+
+@requires_postgres
+def test_failed_rollback_keeps_the_original_error(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A rollback that fails itself must not replace the ApiError that caused it (rule 5.1)."""
+    rollbacks: list[str] = []
+
+    def broken_rollback() -> None:
+        rollbacks.append("called")
+        raise SQLAlchemyError("simulated rollback failure")
+
+    with shared_postgres_backend().session() as repo:
+        monkeypatch.setattr(repo._session, "rollback", broken_rollback)
+        with pytest.raises(ApiError) as caught, repo.transaction():
+            repo.update_revisioned(
+                Task, T4, expected_revision=7, changes={"progress": 10}, actor_id=ACTOR
+            )
+    assert rollbacks == ["called"]
+    assert (caught.value.status_code, caught.value.code) == (409, "REVISION_CONFLICT")
+    assert caught.value.details == {"currentRevision": 1}
+    with shared_postgres_backend().session() as fresh:
+        task = fresh.get_governed(Task, T4)
+    assert task is not None and task.revision == 1
