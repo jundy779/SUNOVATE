@@ -2,7 +2,7 @@
 
 **Status:** DRAFT
 
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -20,7 +20,8 @@ Panduan menyiapkan dan menjalankan SUNOVATE di mesin pengembang, termasuk login 
 
 - **CONFIRMED**: Versi yang dipakai sesuai daftar di atas (sumber: implementasi scaffold sesi 2026-10-01).
 - **CONFIRMED**: Docker tidak terpasang di mesin pengembangan saat ini; jalur Docker Compose belum divalidasi di mesin tersebut (sumber: implementasi scaffold sesi 2026-10-01).
-- **CONFIRMED**: Runtime API memakai `DATA_BACKEND=simulated`, sehingga web dan API dapat dijalankan tanpa PostgreSQL (sumber: ADR-007).
+- **CONFIRMED**: Default runtime API adalah `DATA_BACKEND=simulated`, sehingga web dan API dapat dijalankan tanpa PostgreSQL (sumber: ADR-007, `core/config.py`).
+- **PROPOSED (ADR-015)**: `DATA_BACKEND=postgres` membuat runtime membaca dan menulis PostgreSQL sehingga data bertahan setelah API di-restart (lihat bagian "Menjalankan API dengan PostgreSQL").
 
 ## Langkah Menjalankan
 
@@ -53,7 +54,7 @@ Panduan menyiapkan dan menjalankan SUNOVATE di mesin pengembang, termasuk login 
 
 ## Database Lokal (Opsional)
 
-Database hanya dibutuhkan untuk memvalidasi skema, migration, dan seed. Runtime API saat ini belum membacanya.
+Database dibutuhkan untuk memvalidasi skema, migration, dan seed, serta untuk menjalankan API dengan `DATA_BACKEND=postgres`. Mode default `simulated` tidak membacanya.
 
 ```powershell
 pnpm compose:check
@@ -62,8 +63,40 @@ pnpm db:migrate
 pnpm db:seed
 ```
 
-- Tanpa Docker: `pwsh scripts/validation/db-check-pgserver.ps1` (lihat [integration-testing.md](../10-testing/integration-testing.md)).
+- Tanpa Docker: `pnpm db:check` memvalidasi migration dan seed pada PostgreSQL sementara (pgserver), dan `pnpm db:test` menjalankan seluruh suite pytest pada backend postgres (lihat [integration-testing.md](../10-testing/integration-testing.md)).
 - Endpoint `GET /api/v1/health/database` dapat dipakai untuk memeriksa koneksi database.
+
+## Menjalankan API dengan PostgreSQL
+
+**PROPOSED (ADR-015)**. Hanya untuk `SIMULATED_DATA` di mesin pengembang.
+
+1. Siapkan database PostgreSQL lokal (Docker Compose di atas, atau server PostgreSQL lokal lain) dan isi `DATABASE_URL` di `.env` dengan skema `postgresql+asyncpg://` atau `postgresql+psycopg://`. Skema `postgresql://` polos ditolak.
+2. Jalankan migration dan seed:
+
+   ```powershell
+   pnpm db:migrate
+   pnpm db:seed
+   ```
+
+3. Set `DATA_BACKEND=postgres` di `.env`, lalu jalankan `pnpm api:dev`.
+4. Periksa `GET http://localhost:8000/api/v1/health`: `data.dataBackend` harus `postgres`. Data yang dibuat lewat API tetap ada setelah API di-restart.
+
+Catatan:
+
+- Bila database tidak terjangkau, API tetap start dan `/api/v1/health` tetap 200, tetapi endpoint data (termasuk login dev) mengembalikan 503 `DATABASE_UNAVAILABLE`.
+- `pnpm db:seed` idempoten (baris yang sudah ada dilewati) dan menolak `APP_ENV=production`.
+- Batasan yang diketahui (KL-24 di [known-limitations.md](../13-handover/known-limitations.md)): `sunovate_api/main.py` membuat app saat diimpor. Bila `.env` berisi `DATA_BACKEND=postgres` dengan `DATABASE_URL` yang skemanya tidak diizinkan, impor `sunovate_api.main` gagal dengan `ValueError` (tanpa URL). Hal ini juga membuat koleksi `pnpm test` gagal, karena `sunovate_api.testing` mengimpor `main`. Perbaikannya adalah memperbaiki skema `DATABASE_URL` atau mengembalikan `DATA_BACKEND=simulated`.
+
+## Test pada PostgreSQL (`pnpm db:test`)
+
+```powershell
+pnpm api:setup
+pnpm db:test
+```
+
+- Menjalankan PostgreSQL sementara lewat pgserver (tanpa Docker), `alembic upgrade head`, seed, lalu seluruh `pytest -q` (API, security, RAG golden set, integration, dan test khusus postgres) dengan `SUNOVATE_TEST_BACKEND=postgres`. Database direset (`TRUNCATE` + seed) sebelum setiap test.
+- Exit code sama dengan exit code pytest. Direktori data sementara dihapus setelahnya; URL database tidak dicetak.
+- Butuh beberapa menit (sekitar 4 sampai 5 menit di mesin pengembang Windows) karena reset per test. `pnpm test` tetap memakai backend simulated dan tidak butuh PostgreSQL.
 
 ## Login Pengembangan
 

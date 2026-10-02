@@ -1,7 +1,7 @@
 # Retrieval Strategy
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -34,7 +34,7 @@ Konsekuensi: pengguna dengan clearance INTERNAL tidak pernah menerima chunk REST
 
 ## Scoring saat ini (IMPLEMENTED)
 
-- Retrieval leksikal atas chunk PUBLISHED terotorisasi di simulated store (`DATA_BACKEND=simulated`).
+- Retrieval leksikal atas chunk PUBLISHED terotorisasi, identik pada kedua backend (`DATA_BACKEND=simulated` dan `DATA_BACKEND=postgres`). Pada postgres, SQL hanya mempersempit kandidat menurut otorisasi; scoring tetap di Python (`terms()`) dan `meta.mode` tetap `lexical`. FTS `search_vector` tidak dipakai karena konfigurasi `simple` tanpa stemming dapat menurunkan recall (ADR-015). Golden set RAG lulus pada kedua backend (`pnpm test` dan `pnpm db:test`).
 - Rerank leksikal terhadap kandidat.
 - Filter injeksi dokumen mengeluarkan chunk yang berisi teks menyerupai instruksi, setelah rerank dan sebelum penyusunan jawaban.
 - Tidak ada embedding, tidak ada model eksternal, tidak ada panggilan jaringan.
@@ -56,7 +56,7 @@ Kasus golden set RAG-16 (query yang hanya cocok dengan judul dan label "Langkah"
 
 ## Desain hybrid (PROPOSED)
 
-Berlaku setelah repository SQLAlchemy diimplementasikan dan model embedding disetujui (OQ-11).
+Repository SQLAlchemy sudah tersedia (ADR-015, mode `postgres`). Desain ini berlaku setelah model embedding disetujui (OQ-11) dan kanal FTS diuji tidak menurunkan recall golden set.
 
 ```mermaid
 flowchart LR

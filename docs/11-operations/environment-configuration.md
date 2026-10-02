@@ -2,7 +2,7 @@
 
 **Status:** DRAFT
 
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -31,11 +31,23 @@ Kolom "Default" berisi nilai pengembangan. Bila tertulis "lihat `.env.example`",
 
 | Variabel | Default | Arti | Nilai yang diizinkan |
 |---|---|---|---|
-| `DATA_BACKEND` | `simulated` | Sumber data runtime API | `simulated` (satu-satunya yang diimplementasikan; backend database PROPOSED) |
-| `DATABASE_URL` | Lihat `.env.example` | Connection string PostgreSQL untuk Alembic, seed, dan health database | URL PostgreSQL |
+| `DATA_BACKEND` | `simulated` | Sumber data runtime API (ADR-007, ADR-015) | `simulated` (in-memory, hilang saat restart; ditolak di production) atau `postgres` (runtime membaca dan menulis `DATABASE_URL`); nilai lain ditolak saat startup |
+| `DATABASE_URL` | Lihat `.env.example` | Connection string PostgreSQL untuk runtime `postgres`, Alembic, seed, dan health database | URL PostgreSQL dengan skema `postgresql+asyncpg` atau `postgresql+psycopg`; `postgresql` polos ditolak. Dinormalisasi oleh `db/urls.py` (runtime memakai psycopg, Alembic/seed/health memakai asyncpg) |
 | `POSTGRES_DB` | Lihat `.env.example` | Nama database service `postgres` di Docker Compose | Teks |
 | `POSTGRES_USER` | Lihat `.env.example` | User database Docker Compose | Teks |
 | `POSTGRES_PASSWORD` | Lihat `.env.example` | Password database Docker Compose; hanya untuk lokal | Rahasia, tidak di-commit selain nilai contoh lokal |
+
+- **CONFIRMED (implementasi)**: Bila `DATA_BACKEND=postgres` dan `DATABASE_URL` tidak dapat di-parse atau memakai skema yang tidak diizinkan, API gagal start dengan `ValueError` yang tidak memuat URL. Pada `DATA_BACKEND=simulated`, URL tidak divalidasi saat startup. Bila database tidak terjangkau, API tetap start; endpoint data mengembalikan 503 `DATABASE_UNAVAILABLE` tanpa detail koneksi.
+
+### Test (hanya diset oleh tooling test)
+
+Variabel berikut tidak dimasukkan ke `.env.example` karena hanya dipakai oleh test dan skrip `pnpm db:test`.
+
+| Variabel | Default | Arti | Nilai yang diizinkan |
+|---|---|---|---|
+| `SUNOVATE_TEST_BACKEND` | `simulated` | Backend yang dipakai `sunovate_api.testing.make_client()` untuk seluruh suite pytest | `simulated` atau `postgres`; nilai lain membuat impor `sunovate_api.testing` gagal |
+| `SUNOVATE_TEST_DATABASE_URL` | Tidak diset | URL database sementara untuk test postgres dan `tests/integration` | URL dengan skema yang diizinkan; wajib bila `SUNOVATE_TEST_BACKEND=postgres` |
+| `SUNOVATE_DB_RESET_ALLOWED` | Tidak diset | Mengizinkan reset `TRUNCATE` + seed per test | Hanya `1`, dan hanya berlaku bersama `APP_ENV=test`; diset oleh `scripts/validation/db_test_pgserver.py` pada database pgserver sementara. Jangan diset terhadap database yang berisi data yang ingin disimpan |
 
 ### Autentikasi Pengembangan
 
@@ -68,7 +80,7 @@ Kolom "Default" berisi nilai pengembangan. Bila tertulis "lihat `.env.example`",
 
 ## Aturan Keamanan Konfigurasi
 
-1. **Diimplementasikan**: Settings menolak start bila `APP_ENV=production` dengan `DEV_AUTH_ENABLED=true` atau `DATA_BACKEND=simulated` (ADR-005, ADR-007); diuji di `apps/api/tests/test_health_auth.py`. Skenario terkait: SEC-12 di [security-testing.md](../10-testing/security-testing.md).
+1. **Diimplementasikan**: Settings menolak start bila `APP_ENV=production` dengan `DEV_AUTH_ENABLED=true` atau `DATA_BACKEND=simulated` (ADR-005, ADR-007); kombinasi `APP_ENV=production`, `DATA_BACKEND=postgres`, `DEV_AUTH_ENABLED=false` valid (ADR-015). Diuji di `apps/api/tests/test_health_auth.py` dan `apps/api/tests/test_backend_config.py`. Skenario terkait: SEC-12 di [security-testing.md](../10-testing/security-testing.md).
 2. **PROPOSED**: `DEV_AUTH_ENABLED` wajib `false` di semua lingkungan selain development, termasuk UAT.
 3. **PROPOSED**: Rahasia (`DEV_AUTH_SECRET`, `POSTGRES_PASSWORD`, kredensial di `DATABASE_URL`) tidak pernah di-commit, tidak dicetak ke log, dan tidak ditempel di issue atau chat.
 4. **PROPOSED**: `.env` tetap di-ignore git. Periksa `git status` sebelum commit.

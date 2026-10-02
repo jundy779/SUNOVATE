@@ -2,7 +2,7 @@
 
 **Status:** DRAFT
 
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -13,7 +13,7 @@ Titik awal bagi pengembang yang melanjutkan SUNOVATE: peta repository, organisas
 - **CONFIRMED**: SUNOVATE adalah SUN Integrated Management and Knowledge Platform untuk Direktorat Surat Utang Negara, DJPPR, Kementerian Keuangan RI (sumber: brief sesi 2026-10-01).
 - **CONFIRMED**: Arsitektur modular monolith: Next.js App Router (TypeScript strict, Tailwind) dan FastAPI (Pydantic v2, SQLAlchemy 2, Alembic) dengan PostgreSQL + pgvector + full-text search (sumber: brief sesi 2026-10-01, ADR-001, ADR-002, ADR-003).
 - **CONFIRMED**: SUNOVATE bukan SUN Job Monitor; file tetap berupa referensi eksternal; Hermes tidak pernah mengakses database secara langsung (sumber: AGENTS.md, ADR-004).
-- **CONFIRMED**: Runtime scaffold memakai store simulasi in-memory (`DATA_BACKEND=simulated`); repository SQLAlchemy belum ada (sumber: ADR-007). Baca [known-limitations.md](known-limitations.md) sebelum mulai.
+- **CONFIRMED (implementasi)**: Runtime memakai interface `Repository` (`store/repository.py`) dengan dua backend: store simulasi in-memory (`DATA_BACKEND=simulated`, default) dan repository SQLAlchemy sinkron di PostgreSQL (`DATA_BACKEND=postgres`, status keputusan PROPOSED, ADR-015). Sumber: ADR-007, ADR-015, `context.py`. Baca [known-limitations.md](known-limitations.md) sebelum mulai.
 
 ## Peta Repository
 
@@ -37,22 +37,24 @@ Titik awal bagi pengembang yang melanjutkan SUNOVATE: peta repository, organisas
 | Lapisan | Lokasi di `sunovate_api` | Tanggung jawab |
 |---|---|---|
 | core | `core` | Konfigurasi, log JSON dengan `request_id`, error, envelope respons |
-| db | `db` | Model SQLAlchemy dan session |
+| db | `db` | Model SQLAlchemy, session async (seed), seed, aturan `DATABASE_URL` (`urls`), reset database test (`testing_reset`) |
 | authz | `authz` | Principal, `AuthorizationService`, dependency FastAPI |
 | providers | `providers` | Interface provider, implementasi development, placeholder produksi nonaktif |
-| store | `store` | Store simulasi in-memory dan dataset SIMULATED |
+| store | `store` | Interface `Repository`, dataset SIMULATED, backend `simulated` (in-memory) dan `postgres` (SQLAlchemy sinkron + psycopg 3) |
 | modules | `modules` | health, auth, identity, knowledge, documents, search, work, pending, audit, approvals, hermes, providers |
 
 ```mermaid
 flowchart LR
     R["Router modul"] --> Z["Dependency authz"]
     Z --> S["Service modul"]
-    S --> D["Store simulasi"]
+    S --> D["Repository per request"]
+    D --> DS["Store simulasi"]
+    D --> DP["PostgreSQL"]
     S --> P["Provider"]
     S --> AU["Audit"]
 ```
 
-- **PROPOSED**: Saat repository SQLAlchemy dibuat, service tetap memakai antarmuka yang sama dan hanya sumber data yang berganti; lihat [future-development.md](future-development.md).
+- **PROPOSED (ADR-015)**: Modul dan service hanya memakai method `Repository` (`ctx.store`); jangan menambah akses langsung ke struktur internal backend. Setiap write (termasuk audit suksesnya) wajib di dalam `with ctx.store.transaction():`; write di luar transaksi ditolak `RuntimeError` di kedua backend. Method repository baru harus diimplementasikan di `store/simulated.py` dan `store/postgres.py` sekaligus, dan diuji di `apps/api/tests/test_repository_contract.py` (berjalan pada kedua backend lewat `pnpm db:test`).
 
 ## Mulai dari Mana
 

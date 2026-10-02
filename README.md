@@ -27,7 +27,7 @@ docs/           dokumentasi 00-project sampai 13-handover
 
 ## Prasyarat
 Node.js 22+ (diuji 24.19), pnpm 11.4, Python 3.12 sampai 3.14 (diuji 3.14.4), uv 0.11+.
-Docker opsional, hanya untuk PostgreSQL lokal. API berjalan tanpa database (store simulasi in-memory).
+Docker opsional, hanya untuk PostgreSQL lokal. Secara default API berjalan tanpa database (store simulasi in-memory).
 
 ## Menjalankan
 
@@ -44,6 +44,12 @@ Masuk di `/login` dengan salah satu akun simulasi, misalnya `sim.staff.pppsun@su
 
 PostgreSQL (opsional): `pnpm db:up`, `pnpm db:migrate`, `pnpm db:seed`. Tanpa Docker: `pnpm db:check`.
 
+Mode PostgreSQL (PROPOSED, ADR-015): set `DATA_BACKEND=postgres` dan `DATABASE_URL`
+(skema `postgresql+asyncpg://` atau `postgresql+psycopg://`) di `.env`, jalankan `pnpm db:migrate` dan
+`pnpm db:seed`, lalu `pnpm api:dev`. Data yang dibuat lewat API tetap ada setelah restart, dan
+`GET /api/v1/health` melaporkan `dataBackend: "postgres"`. Default tetap `DATA_BACKEND=simulated`.
+Rincian di `docs/11-operations/local-development.md`.
+
 ## Validasi
 
 ```bash
@@ -53,6 +59,8 @@ pnpm test         # Vitest + pytest (apps/api/tests dan tests/)
 pnpm build        # next build
 pnpm e2e          # Playwright; butuh pnpm api:dev berjalan
 pnpm db:sql       # render SQL migrasi tanpa database
+pnpm db:check     # migrasi + seed pada PostgreSQL sementara (pgserver, tanpa Docker)
+pnpm db:test      # seluruh pytest pada backend postgres (pgserver sementara, beberapa menit)
 ```
 
 Hasil validasi terakhir dicatat di `CHANGELOG.md`. Mulai membaca dokumentasi dari `docs/README.md`.
