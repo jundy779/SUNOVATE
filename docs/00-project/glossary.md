@@ -1,7 +1,7 @@
 # Glosarium
 
 **Status:** DRAFT
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-06
 
 ## Purpose
 
@@ -15,25 +15,29 @@ Sumber singkatan:
 
 ## Istilah Domain SUN
 
+Format sumber kompilasi: `Kompilasi Peraturan SUN, <regulasi>, Pasal X, hal. N` (hal. = halaman PDF 1 sampai 199). Istilah yang hanya ada di deck [Pengayaan] diberi label **NOT VERIFIABLE FROM COMPILATION**: itu bukan berarti salah, hanya tidak dapat diverifikasi dari kompilasi. Status berlaku regulasi tidak dapat diturunkan dari kompilasi.
+
 | Istilah | Definisi ringkas | Sumber |
 |---|---|---|
-| SUN (Surat Utang Negara) | Surat berharga berupa surat pengakuan utang dalam mata uang rupiah maupun valuta asing yang dijamin pembayaran bunga dan pokoknya oleh Negara Republik Indonesia sesuai masa berlakunya. | **CONFIRMED** (sumber: [Pengayaan], mengutip Pasal 1 UU 24/2002) |
-| SPN (Surat Perbendaharaan Negara) | Jenis SUN berjangka pendek, dibedakan dari Obligasi Negara berdasarkan jangka waktu. Ketentuan rinci mengacu UU 24/2002. | **CONFIRMED** (sumber: [Pengayaan]) |
-| Obligasi Negara | Jenis SUN berjangka waktu lebih panjang dari SPN. Ketentuan rinci mengacu UU 24/2002. | **CONFIRMED** (sumber: [Pengayaan]) |
-| SBN (Surat Berharga Negara) | Istilah payung untuk surat berharga yang diterbitkan negara; dipakai antara lain pada PMK 165/2022 tentang Transaksi SBN di Pasar Sekunder. Cakupan persisnya mengacu regulasi terkait. | **CONFIRMED** sebagai istilah (sumber: [Kompilasi]) |
-| SUN ritel | SUN yang ditawarkan kepada investor individu. | **CONFIRMED** (sumber: [Pengayaan]) |
-| ORI | Obligasi Negara Ritel, salah satu jenis SUN ritel. | **CONFIRMED** (sumber: [Pengayaan]) |
-| SBR | Savings Bond Ritel, salah satu jenis SUN ritel. | **CONFIRMED** (sumber: [Pengayaan]) |
-| Dealer Utama | Pihak yang terlibat dalam penerbitan dan perdagangan SUN sesuai ketentuan. Hak dan kewajiban rinci mengacu regulasi. | **CONFIRMED** sebagai pihak (sumber: [Pengayaan]) |
-| Bank Indonesia | Berperan sebagai agen penatausaha dan agen lelang SUN. | **CONFIRMED** (sumber: [Pengayaan]) |
-| BEI | Bursa Efek Indonesia, salah satu pihak dalam ekosistem SUN. | **CONFIRMED** sebagai pihak (sumber: [Pengayaan]) |
-| Mitra Distribusi | Pihak yang terlibat dalam distribusi SUN ritel. | **CONFIRMED** sebagai pihak (sumber: [Pengayaan]) |
-| Lelang | Cara penerbitan SUN melalui lelang. | **CONFIRMED** (sumber: [Pengayaan]) |
-| Private placement | Cara penerbitan SUN melalui penempatan langsung kepada pihak tertentu. | **CONFIRMED** (sumber: [Pengayaan]) |
-| Bookbuilding | Cara penerbitan SUN melalui pengumpulan minat pemesanan. | **CONFIRMED** (sumber: [Pengayaan]) |
-| Buyback (cash buyback) | Pembelian kembali SUN oleh pemerintah dengan pembayaran tunai; diatur antara lain PMK 114/2023 tentang Pembelian Kembali SUN di Pasar Sekunder. | **CONFIRMED** (sumber: [Pengayaan]; [Kompilasi]) |
-| Debt switch | Transaksi penukaran SUN dengan SUN lain. | **CONFIRMED** sebagai jenis transaksi (sumber: [Pengayaan]) |
-| Setelmen | Penyelesaian transaksi, yaitu penyerahan surat berharga dan pembayaran. Data setelmen tidak dimodelkan di SUNOVATE (ADR-013). | **PROPOSED** definisi kerja |
+| SUN (Surat Utang Negara) | Surat berharga berupa surat pengakuan utang dalam mata uang rupiah maupun valuta asing yang dijamin pembayaran bunga dan pokoknya oleh Negara Republik Indonesia sesuai masa berlakunya. | **CONFIRMED** (sumber: [Kompilasi], UU 24/2002, Pasal 1 angka 1, hal. 4; [Pengayaan]) |
+| SPN (Surat Perbendaharaan Negara) | Jenis SUN berjangka pendek dengan pembayaran bunga secara diskonto; dibedakan dari Obligasi Negara berdasarkan jangka waktu. Batas jangka waktu mengacu UU 24/2002 Pasal 3 ayat (2). Singkatan SPN dipakai pada PMK 51/2019 (Pasal 6 ayat (3) huruf a, hal. 67); UU 24/2002 dan PMK 111/2024 memakai nama lengkap. | **CONFIRMED** (sumber: [Kompilasi], UU 24/2002, Pasal 3 ayat (2), hal. 5; PMK 51/2019, Pasal 6 ayat (3) huruf a, hal. 67) |
+| Obligasi Negara | Jenis SUN berjangka lebih panjang daripada SPN, dengan kupon dan/atau pembayaran bunga secara diskonto. Batas jangka waktu mengacu UU 24/2002 Pasal 3 ayat (3). | **CONFIRMED** (sumber: [Kompilasi], UU 24/2002, Pasal 3 ayat (3), hal. 5) |
+| SBN (Surat Berharga Negara) | Dipakai dalam percakapan dan deck sebagai istilah payung. Kompilasi memakai "surat berharga negara" tanpa definisi payung dan tanpa singkatan SBN (contoh pemakaian: PMK 165/2022, Pasal 3 huruf c, hal. 52); SBSN didefinisikan sebagai surat berharga negara berdasarkan prinsip syariah (PMK 114/2023, Pasal 1 angka 2, hal. 118). Definisi SBN: **OPEN QUESTION**. Judul PMK 165/2022 pada naskahnya adalah "Transaksi Surat Utang Negara Secara Langsung", bukan transaksi SBN di pasar sekunder (lihat [sun-domain-overview.md](../02-business/sun-domain-overview.md)). | **NOT VERIFIABLE FROM COMPILATION** untuk singkatan dan definisi payung (sumber: [Pengayaan]; [Kompilasi]) |
+| SUN ritel | SUN yang dijual Pemerintah kepada investor ritel (individu) di pasar perdana domestik. | **CONFIRMED** (sumber: [Kompilasi], PMK 27/2020, Pasal 1 angka 8 dan 12, hal. 178-179; [Pengayaan]) |
+| ORI | Obligasi Negara Ritel, salah satu jenis SUN ritel (klaim deck). Kompilasi hanya menyebut SUN Ritel dalam bentuk dapat atau tidak dapat diperdagangkan (PMK 27/2020, Pasal 2 ayat (2), hal. 181). | **NOT VERIFIABLE FROM COMPILATION** untuk nama produk dan pemetaannya (sumber: [Pengayaan]) |
+| SBR | Savings Bond Ritel, salah satu jenis SUN ritel (klaim deck). Lihat catatan ORI. | **NOT VERIFIABLE FROM COMPILATION** untuk nama produk dan pemetaannya (sumber: [Pengayaan]) |
+| Dealer Utama | Bank atau perusahaan efek yang ditunjuk Menteri sebagai Dealer Utama. Peraturan Menteri khusus Dealer Utama dirujuk tetapi tidak ada di kompilasi. | **CONFIRMED** (sumber: [Kompilasi], PMK 114/2023, Pasal 1 angka 15, hal. 119; [Pengayaan]) |
+| Bank Indonesia | Melaksanakan penatausahaan SUN (pencatatan kepemilikan, kliring dan setelmen, agen pembayar bunga dan pokok) dan dapat ditunjuk Menteri sebagai agen lelang. | **CONFIRMED** (sumber: [Kompilasi], UU 24/2002, Pasal 12 ayat (1) dan Pasal 13 ayat (1)-(2), hal. 7-8; PMK 111/2024, Pasal 19 ayat (4), hal. 43; [Pengayaan]) |
+| BEI | Bursa Efek Indonesia, disebut deck sebagai salah satu pihak dalam ekosistem SUN. BEI tidak disebut di kompilasi; kompilasi hanya menyatakan perdagangan SUN dapat melalui bursa dan/atau di luar bursa (PMK 111/2024, Pasal 4 ayat (4), hal. 37). | **NOT VERIFIABLE FROM COMPILATION** (sumber: [Pengayaan]) |
+| Mitra Distribusi | Bank, Perusahaan Efek, Perusahaan Financial Technology dan/atau Penyelenggara Perdagangan Melalui Sistem Elektronik yang ditetapkan Pemerintah untuk membantu pemasaran SUN Ritel. | **CONFIRMED** (sumber: [Kompilasi], PMK 27/2020, Pasal 1 angka 13, hal. 179; [Pengayaan]) |
+| Lelang | Penjualan SUN di pasar perdana domestik yang diikuti Peserta Lelang SUN. | **CONFIRMED** (sumber: [Kompilasi], PMK 168/2019, Pasal 1 angka 7, hal. 142; PMK 111/2024, Pasal 14 ayat (1)-(2), hal. 40-41; [Pengayaan]) |
+| Private placement | Cara penjualan SUN tanpa lelang melalui transaksi bilateral antara Pemerintah dan Pihak, dengan ketentuan sesuai kesepakatan. Dibedakan dari transaksi langsung, yang merupakan metode tanpa lelang lain. | **CONFIRMED** (sumber: [Kompilasi], PMK 111/2024, Pasal 14 ayat (5) huruf a dan c, hal. 41; PMK 51/2019, Pasal 1 angka 7, hal. 62) |
+| Bookbuilding | Cara penjualan (atau pembelian kembali) SUN tanpa lelang melalui pengumpulan pemesanan dalam periode yang ditentukan. Pemesanan yang telah disampaikan tidak dapat dibatalkan menurut PMK 114/2023 (Pasal 11 ayat (3), hal. 125), sehingga bukan sekadar pengumpulan minat. | **CONFIRMED** (sumber: [Kompilasi], PMK 111/2024, Pasal 14 ayat (5) huruf b, hal. 41; PMK 114/2023, Pasal 2 ayat (2) huruf b angka 1, hal. 121; PMK 128/PMK.08/2012, Pasal 1 angka 7, hal. 170) |
+| Pembelian kembali (buyback) | Pembelian kembali SUN oleh Pemerintah di Pasar Sekunder sebelum jatuh tempo, dengan cara tunai dan/atau penukaran. "Cash buyback" adalah cara tunai; istilah itu tidak dipakai teks regulasi. Diatur antara lain PMK 114/2023 tentang Pembelian Kembali Surat Utang Negara di Pasar Sekunder. | **CONFIRMED** (sumber: [Kompilasi], PMK 114/2023, Pasal 2 ayat (1), (3) dan (4), hal. 121); istilah "cash buyback" dari [Pengayaan], **NOT VERIFIABLE FROM COMPILATION** sebagai istilah |
+| Penukaran | Cara pembelian kembali SUN dengan penyerahan SUN atau SBSN sebagai seri penukar; selisih nilai penyelesaian dapat dibayar tunai. | **CONFIRMED** (sumber: [Kompilasi], PMK 114/2023, Pasal 2 ayat (3) huruf b dan ayat (5)-(6), hal. 121) |
+| Debt switch | Istilah deck untuk transaksi penukaran SUN dengan SUN lain. Istilah ini tidak ada di kompilasi. **PROPOSED**: dipetakan ke "penukaran" (dasar: PMK 114/2023, Pasal 2 ayat (3) huruf b, hal. 121). Pemetaan ini perlu validasi mentor. | **NOT VERIFIABLE FROM COMPILATION** untuk istilahnya (sumber: [Pengayaan]) |
+| Transaksi SUN secara langsung | Transaksi SUN antara Pemerintah dan Bank Indonesia, Lembaga Penjamin Simpanan, BUMN, BLU, dan/atau Dealer Utama secara langsung melalui sarana yang ditentukan. | **CONFIRMED** (sumber: [Kompilasi], PMK 165/2022, Pasal 1 angka 16, hal. 51) |
+| Setelmen | Penyelesaian transaksi SUN yang terdiri dari setelmen dana dan/atau setelmen kepemilikan SUN. Data setelmen tidak dimodelkan di SUNOVATE (ADR-013). | **CONFIRMED** (sumber: [Kompilasi], PMK 111/2024, Pasal 1 angka 8, hal. 36) |
 
 **OUT OF SCOPE** SUNOVATE tidak menyimpan data instrumen, lelang, transaksi, yield, atau setelmen (ADR-013).
 
@@ -93,4 +97,4 @@ Sumber singkatan:
 
 ## Last Updated
 
-2026-10-01
+2026-10-06

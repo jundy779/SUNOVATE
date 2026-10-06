@@ -1,7 +1,7 @@
 # Dashboard Requirements
 
 **Status:** PROPOSED | NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-06
 
 ## Purpose
 
@@ -41,7 +41,7 @@ Menetapkan persyaratan dashboard SUNOVATE: isi per role, bagian "Perlu perhatian
 | Indikator | Status | Yang belum diketahui |
 |---|---|---|
 | Yield | Diminta (CONFIRMED, knowledge owner); diblokir | Sumber data otoritatif, definisi, periode, siapa yang boleh melihat (OQ-21) |
-| Kepemilikan SBN | Diminta (CONFIRMED, knowledge owner); diblokir | Sumber data otoritatif, definisi, tingkat agregasi, siapa yang boleh melihat (OQ-21) |
+| Kepemilikan SBN | Diminta (CONFIRMED, knowledge owner); diblokir | Sumber data otoritatif, definisi, tingkat agregasi, siapa yang boleh melihat (OQ-21). Regulasi dalam kompilasi memakai istilah "kepemilikan SUN", bukan "kepemilikan SBN" (CONFIRMED, sumber: Kompilasi Peraturan SUN, PMK 111/2024, Pasal 26 ayat (3), hal. 45); laporan itu bukan sumber data bagi SUNOVATE |
 
 - **PROPOSED:** Sampai OQ-21 dijawab, dashboard tidak menampilkan kedua indikator dan tidak membuat angka contoh berlabel seolah-olah resmi. Bila diperlukan untuk demo tata letak, hanya placeholder kosong berlabel `SIMULATED_DATA` tanpa angka yang menyerupai data nyata.
 - **PROPOSED:** Bila sumbernya ternyata sistem resmi di luar SUNOVATE, pola yang mungkin adalah tautan atau referensi, bukan menyalin data (lihat [Power BI Proposal](../08-integrations/power-bi-proposal.md)); belum diputuskan.

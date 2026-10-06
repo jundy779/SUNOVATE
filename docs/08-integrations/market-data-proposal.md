@@ -1,7 +1,7 @@
 # Market Data Proposal
 
 **Status:** PROPOSED | NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-06
 
 ## Purpose
 
@@ -36,8 +36,8 @@ Menetapkan batas dan usulan awal bila SUNOVATE kelak menampilkan data pasar SUN 
 
 | Kandidat | Catatan |
 |---|---|
-| Bank Indonesia | **CONFIRMED:** berperan sebagai agen penatausaha dan agen lelang SUN dalam konteks domain (sumber: Pengayaan Kelas Magang 6 Mei 2026). **OPEN QUESTION:** apakah ada data yang boleh diakses SUNOVATE; memerlukan perjanjian. |
-| Sistem internal Dit. SUN atau DJPPR | **OPEN QUESTION:** keberadaan, pemilik, dan izin akses belum diketahui. |
+| Bank Indonesia | **CONFIRMED:** berperan sebagai agen penatausaha dan agen lelang SUN dalam konteks domain (sumber: Pengayaan Kelas Magang 6 Mei 2026; Kompilasi Peraturan SUN, UU 24/2002, Pasal 12 ayat (1) dan Pasal 13 ayat (1)-(2), hal. 7-8: penatausahaan dilaksanakan Bank Indonesia, dan Menteri menunjuk atau dapat menunjuk Bank Indonesia sebagai agen lelang). **OPEN QUESTION:** apakah ada data yang boleh diakses SUNOVATE; memerlukan perjanjian. |
+| Sistem internal Dit. SUN atau DJPPR | **OPEN QUESTION:** keberadaan, pemilik, dan izin akses belum diketahui. **CONFIRMED** hanya bahwa Direktur Jenderal wajib memublikasikan informasi pengelolaan SUN secara berkala melalui sarana publik, termasuk laman Direktorat Jenderal (sumber: Kompilasi Peraturan SUN, PMK 111/2024, Pasal 28 ayat (1)-(2), hal. 46). Ini bukan izin atau sumber data bagi SUNOVATE. |
 | Penyedia data pihak ketiga | **OPEN QUESTION:** memerlukan perjanjian lisensi dan kajian keamanan. |
 
 ### Alur data (usulan)

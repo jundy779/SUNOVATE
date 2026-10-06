@@ -1,7 +1,7 @@
 # Integration Overview
 
 **Status:** PROPOSED | NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-06
 
 ## Purpose
 
@@ -31,7 +31,7 @@ Catatan:
 
 - **CONFIRMED:** Kemenkeu Satu adalah sistem korespondensi resmi; SUNOVATE tidak menggantikannya (sumber: `14_NEW_SESSION_HANDOFF_PROMPT.txt`, `20_NEW_CHAT_MASTER_PROMPT.txt`).
 - **CONFIRMED:** SharePoint atau document repository menjadi source of truth untuk file bila sesuai; SUNOVATE menyimpan referensi, metadata, checksum SHA-256, versi, klasifikasi, dan lokasi provider, bukan BLOB file (sumber: brief sesi 2026-10-01; ADR-003).
-- **CONFIRMED:** Bank Indonesia berperan sebagai agen penatausaha dan agen lelang SUN dalam konteks domain (sumber: Pengayaan Kelas Magang 6 Mei 2026). Peran ini tidak berarti ada akses data untuk SUNOVATE.
+- **CONFIRMED:** Bank Indonesia berperan sebagai agen penatausaha dan agen lelang SUN dalam konteks domain (sumber: Pengayaan Kelas Magang 6 Mei 2026; Kompilasi Peraturan SUN, UU 24/2002, Pasal 12 ayat (1) dan Pasal 13 ayat (1)-(2), hal. 7-8). Peran ini tidak berarti ada akses data untuk SUNOVATE.
 - **PROPOSED:** Interface AI (`AIProvider`, `EmbeddingProvider`, `HermesClient`) dibahas di [Hermes Overview](../05-ai-rag/hermes-overview.md) dan [Provider Abstraction](../03-architecture/provider-abstraction.md), bukan di dokumen ini.
 
 ## Prinsip integrasi
