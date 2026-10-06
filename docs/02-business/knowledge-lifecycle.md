@@ -1,7 +1,7 @@
 # Siklus Hidup Knowledge
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-06
 
 ## Purpose
 
@@ -69,14 +69,17 @@ Semua penetapan pelaku di bawah adalah PROPOSED dan berbasis role pengembangan, 
 
 | Tahap | Role pengembangan yang dapat bertindak |
 |---|---|
-| Tangkap | knowledge_owner, staff, team_lead, knowledge_coordinator |
-| Validasi | reviewer, team_lead, knowledge_coordinator (tidak boleh pengaju sendiri) |
-| Organisasikan | knowledge_owner, team_lead, knowledge_coordinator |
+| Tangkap | Menurut jawaban knowledge owner: knowledge_owner (PIC), team_lead (ketua tim), knowledge_coordinator (tingkat PMP). Pada matriks saat ini `staff` juga dapat (belum sesuai jawaban, PD-1) |
+| Validasi | reviewer, team_lead, knowledge_coordinator (tidak boleh pengaju sendiri). Reviewer per tim menurut jawaban: ketua tim dan PIC |
+| Organisasikan | knowledge_owner, team_lead, knowledge_coordinator. `staff` saat ini juga memiliki `knowledge:update` (belum sesuai jawaban, PD-1) |
 | Temukan / Gunakan | Semua role dengan `search:query` / `hermes:query` sesuai lingkup dan klasifikasi |
 | Pelajari | Pengguna Hermes (feedback), knowledge_coordinator (kualitas data, arsip) |
 
 - **OPEN QUESTION (OQ-12)**: Siapa yang berwenang memutuskan publikasi knowledge, dan apakah team_lead boleh mempublikasikan.
 - **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Knowledge owner dan reviewer per tim adalah ketua tim dan PIC yang ditunjuk (OQ-09). **OPEN QUESTION**: penunjukan orangnya dan pemetaan ke role sistem (OQ-25).
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Yang dapat mengubah data atau mengunggah adalah ketua tim, kasubdit PMP, Kasi MP, dan PIC yang ditunjuk (OQ-05). Tahap Tangkap, Organisasikan, dan pengajuan review pada tabel di atas hanya dilakukan oleh pihak-pihak ini (BR-33). **Belum sesuai** pada kode: `staff` masih dapat membuat, mengubah, dan mengajukan knowledge (FR-50, PD-1); belum diterapkan.
+- **PROPOSED**: Bila pengaju adalah ketua tim atau PIC, reviewer tim adalah orang lain di antara keduanya; approver tidak pernah sama dengan pengaju (BR-06). Aturan untuk tim yang hanya memiliki satu penunjuk adalah OPEN QUESTION (OQ-12).
+- **CONFIRMED**: Slide 6 (enam tahap siklus) dan slide 12 tidak berubah pada deck `v1_`; yang berubah hanya pelaku.
 - **OPEN QUESTION (OQ-13)**: Retensi knowledge yang `SUPERSEDED` atau `ARCHIVED`.
 
 ## Jenis Knowledge

@@ -1,7 +1,7 @@
 # Siklus Hidup Dokumen
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-06
 
 ## Purpose
 
@@ -12,6 +12,10 @@ Dokumen ini menjelaskan alur dokumen dari masuk hingga dimanfaatkan, struktur da
 - **CONFIRMED**: File tidak disimpan sebagai BLOB di database. Sistem hanya menyimpan referensi, metadata, checksum SHA-256, versi, klasifikasi, dan lokasi provider (sumber: brief sesi 2026-10-01; ADR-003).
 - **CONFIRMED**: Repository dokumen eksternal (misalnya SharePoint) menjadi sumber kebenaran file bila sesuai; integrasi produksinya belum tersedia (sumber: 20_NEW_CHAT_MASTER_PROMPT.txt; OQ-06).
 - **CONFIRMED**: Alur intake dokumen pada Proposal v2.4 terdiri atas tahap masuk, validasi, ekstraksi, review, index, dan pemanfaatan (sumber: Proposal v2.4, slide 12, sebagaimana dirangkum dalam brief penulisan dokumentasi).
+
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Dokumen yang boleh masuk repository dan RAG adalah "semua dokumen yang diusulkan tim kerja" (OQ-04, DEC-20261002-02). Yang dapat mengubah data atau mengunggah adalah ketua tim, kasubdit PMP, Kasi MP, dan PIC yang ditunjuk (OQ-05, DEC-20261002-03). Pengakuan mentor tertunda (OQ-24).
+- **CONFIRMED**: Slide 12 (alur dokumen) tidak berubah pada deck `v1_`; tahap Masuk, Validasi, Ekstraksi, Review, Index, dan Pemanfaatan di bawah tetap sama. Yang berubah hanya pelaku dan syarat masuk (bagian "Pelaku dan Gerbang Intake").
+- **PROPOSED**: Jawaban "semua dokumen" adalah jawaban cakupan, bukan izin memuat data asli. Dokumen asli tetap memerlukan klasifikasi (OQ-05) dan persetujuan eksplisit; `CONFIDENTIAL` tidak diproses Hermes; sampai itu hanya `SIMULATED_DATA` yang dimuat (FR-53, BR-35).
 
 ## Alur Intake
 
@@ -82,9 +86,56 @@ Rincian kolom: [database-schema](../04-data/database-schema.md) dan [metadata-sc
 - **PROPOSED**: Penghapusan memakai soft delete (`deleted_at`). Retensi file dan referensi adalah OQ-13.
 - **OPEN QUESTION**: Apakah pendaftaran versi untuk dokumen `PUBLISHED` memerlukan `approval_requests` bertipe `DOCUMENT_VERSION` pada setiap kasus.
 
+## Pelaku dan Gerbang Intake
+
+Tabel di bawah memetakan tahap alur ke pelaku menurut jawaban knowledge owner dan membandingkannya dengan kode per 2026-10-06. Pemetaan jabatan ke role sistem adalah **PROPOSED** (OQ-25).
+
+| Tahap | Pelaku menurut jawaban | Label | Keadaan kode saat ini |
+|---|---|---|---|
+| Masuk (mendaftarkan dokumen atau versi) | Ketua tim, kasubdit PMP, Kasi MP, PIC yang ditunjuk | CONFIRMED (knowledge owner, deck v1_ slide 24, OQ-05) | Hanya registrasi versi (`POST /documents/{id}/versions`, `document:version`, referensi `local://`) yang ada; `staff` tidak memiliki `document:version`. Endpoint membuat referensi dokumen dan unggah file belum ada (KL-07); `staff` memiliki `document:create` pada matriks tetapi tanpa endpoint. Belum sesuai: `staff` masih dapat membuat knowledge (PD-1) |
+| Validasi (sumber, pemilik, tipe, versi, klasifikasi) | Pengunggah dan pengelola knowledge atau owner | PROPOSED (slide 12 tidak berubah) | Klasifikasi dibatasi clearance pembuat; checksum ganda ditolak; belum ada gerbang persetujuan intake |
+| Review | Ketua tim dan PIC tim pemilik (knowledge owner dan reviewer per tim) | CONFIRMED (peran, OQ-09); role sistem PROPOSED | Submit membuat approval `KNOWLEDGE_PUBLICATION`; penunjukan ketua tim dan PIC per tim belum dicatat (FR-51) |
+| Keputusan publikasi | Belum ditentukan | OPEN QUESTION (OQ-12) | Saat ini hanya `knowledge_coordinator` yang dapat menyetujui (memerlukan `approval:decide` dan `knowledge:publish`); pemutus tidak boleh sama dengan pengaju |
+| Ekstraksi dan index | Sistem | PROPOSED | Belum ada pipeline; chunk berasal dari dataset `SIMULATED_DATA` |
+| Pemanfaatan | Pengguna sesuai scope dan clearance; Hermes lewat HermesGateway | CONFIRMED (prinsip) | Berjalan; knowledge baru yang dibuat lewat API tidak memiliki chunk sehingga dapat ditemukan di `GET /search` (judul dan ringkasan) tetapi tidak diambil Hermes (retrieval Hermes bekerja pada chunk) |
+
+- **PROPOSED**: Bila ketua tim dan PIC adalah reviewer sekaligus pengunggah, review atas unggahan sendiri melanggar separation of duties (BR-06). Reviewer harus orang lain di antara ketua tim dan PIC tim yang sama atau peran lintas tim; aturan pastinya adalah OPEN QUESTION bersama OQ-12.
+- **PROPOSED**: Gerbang intake menahan dokumen sampai klasifikasi ada dan, untuk dokumen asli, persetujuan eksplisit tercatat. Dokumen tahanan tidak diekstrak, tidak diindeks, dan tidak diambil Hermes.
+
+## Alur Ujung ke Ujung (PROPOSED)
+
+Diagram berikut adalah alur sasaran. Catatan pada diagram menandai bagian yang belum diimplementasikan; tidak ada integrasi dokumen produksi yang diklaim tersedia.
+
+```mermaid
+sequenceDiagram
+    actor U as Pengunggah berwenang
+    participant API as SUNOVATE API
+    participant CL as Gerbang klasifikasi
+    actor R as Reviewer tim
+    actor P as Pemutus publikasi
+    participant IX as Ekstraksi dan index
+    participant H as HermesGateway
+    U->>API: Daftarkan dokumen atau versi
+    Note over U,API: Sebagian ada - hanya registrasi versi lokal, tanpa unggah file
+    API->>CL: Periksa klasifikasi dan persetujuan intake
+    Note over CL: BELUM ADA - gerbang intake dan skema klasifikasi resmi OQ-05
+    CL-->>API: Lolos atau ditahan
+    API->>R: Ajukan review knowledge
+    R->>API: Setujui atau minta perubahan
+    Note over R,API: Submit ada - penunjukan ketua tim dan PIC per tim BELUM ADA
+    API->>P: Permintaan publikasi
+    P->>API: Keputusan publikasi
+    Note over P,API: Ada - pemutus resmi OPEN QUESTION OQ-12
+    API->>IX: Ekstraksi, chunking, index
+    Note over IX: BELUM ADA - pipeline ingestion KL-07
+    API->>H: Chunk PUBLISHED yang boleh dibaca pengguna
+    Note over H: Ada untuk data simulasi - tanpa akses database langsung
+```
+
 ## Risks
 
 - R-03 Data asli atau sensitif masuk repository atau log.
+- R-14 Cakupan "semua dokumen yang diusulkan tim kerja" berjalan tanpa klasifikasi dan persetujuan per dokumen.
 - R-07 Prompt injection dari dokumen.
 - R-11 Kualitas metadata rendah.
 

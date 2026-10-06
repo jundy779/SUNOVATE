@@ -1,7 +1,7 @@
 # User Stories
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-06
 
 ## Purpose
 
@@ -22,7 +22,7 @@ Format: "Sebagai [persona], saya ingin [kebutuhan], agar [manfaat]." Persona mer
 
 | ID | Story | Petunjuk penerimaan | Prioritas |
 |---|---|---|---|
-| US-05 | Sebagai anggota tim, saya ingin membuat knowledge entry berstatus DRAFT, agar pengetahuan dapat mulai didokumentasikan. | `POST /knowledge` membuat entri dengan `revision` 1 dan entri audit CREATE. | P0 |
+| US-05 | Sebagai pihak yang berwenang mengubah data (ketua tim, PIC yang ditunjuk, atau peran tingkat PMP; lihat US-35), saya ingin membuat knowledge entry berstatus DRAFT, agar pengetahuan dapat mulai didokumentasikan. | `POST /knowledge` membuat entri dengan `revision` 1 dan entri audit CREATE. Catatan: pada matriks saat ini role `staff` juga lolos; pembatasan sesuai jawaban knowledge owner belum diterapkan (PD-1). | P0 |
 | US-06 | Sebagai pemilik knowledge, saya ingin memperbarui draf tanpa menimpa perubahan orang lain, agar data tetap konsisten. | `PATCH /knowledge/{id}` dengan revision basi menghasilkan 409 `REVISION_CONFLICT`. | P0 |
 | US-07 | Sebagai pemilik knowledge, saya ingin mengajukan draf untuk review, agar dapat dipublikasikan. | `POST /knowledge/{id}/submit` mengubah status ke IN_REVIEW dan mencatat audit SUBMIT; publikasi hanya terjadi melalui approval request `KNOWLEDGE_PUBLICATION` yang disetujui. | P0 |
 | US-08 | Sebagai peninjau, saya ingin menyetujui atau menolak permintaan publikasi, agar hanya konten tervalidasi yang terbit. | `POST /approvals/{id}/decision`; pengaju tidak dapat memutuskan permintaannya sendiri. | P0 |
@@ -90,6 +90,19 @@ Format: "Sebagai [persona], saya ingin [kebutuhan], agar [manfaat]." Persona mer
 | US-33 | Sebagai anggota tim, saya ingin menerima pengingat tenggat melalui kanal pesan yang disetujui instansi. | Hanya setelah kanal diizinkan dan provider divalidasi. | P2 |
 | US-34 | Sebagai anggota tim, saya ingin bertanya ke Hermes melalui kanal pesan yang disetujui dengan otorisasi yang sama seperti web. | Otorisasi tetap melalui HermesGateway; tidak ada jalur pintas. | P2 |
 
+## Epic 10: Jawaban Knowledge Owner (deck v1_ slide 24)
+
+Semua story di epic ini **PROPOSED**, diturunkan dari jawaban yang berlabel **CONFIRMED (knowledge owner, deck v1_ slide 24)**; pengakuan mentor tertunda (OQ-24). Persona merujuk peran, bukan orang.
+
+| ID | Story | Petunjuk penerimaan | Prioritas |
+|---|---|---|---|
+| US-35 | Sebagai knowledge owner tim, saya ingin hak mengubah dan mengunggah data terbatas pada ketua tim, kasubdit PMP, Kasi MP, dan PIC yang ditunjuk, agar setiap perubahan dapat dipertanggungjawabkan. | Role di luar keempat sebutan ditolak 403 untuk `POST /knowledge`, `PATCH /knowledge/{id}`, dan `POST /knowledge/{id}/submit` (FR-50, AC-16 sampai AC-18). Belum diterapkan (PD-1). | P0 |
+| US-36 | Sebagai Pengelola Knowledge, saya ingin melihat dan menetapkan ketua tim dan PIC untuk setiap tim, agar jelas siapa knowledge owner dan reviewer pada tim tersebut. | Penunjukan tercatat per tim dan hanya berlaku untuk tim itu (FR-51, AC-19). Mekanisme belum ada; opsi di [logical-data-model.md](../04-data/logical-data-model.md). | P0 |
+| US-37 | Sebagai peserta pilot dari salah satu dari enam tim, saya ingin hanya melihat data timnya dan konten direktorat yang terbit, agar pilot tidak membocorkan data antar tim. | Isolasi tim pada daftar, pencarian, dashboard, dan Hermes (FR-52, AC-20). | P0 |
+| US-38 | Sebagai Pengelola Knowledge, saya ingin dokumen yang diusulkan tim melewati pemeriksaan klasifikasi dan persetujuan sebelum masuk repository dan RAG, agar dokumen sensitif tidak terpapar. | Dokumen asli tidak masuk sebelum klasifikasi dan persetujuan ada; `CONFIDENTIAL` tidak diproses Hermes (FR-53, AC-21). Belum ada gerbang intake. | P0 |
+| US-39 | Sebagai Pimpinan, saya ingin indikator yield dan kepemilikan SBN hanya tampil bila ada sumber data resmi, agar tidak ada angka yang dikira resmi. | Sampai OQ-21 dijawab, dashboard menunjukkan "sumber data belum tersedia" tanpa angka (FR-54, AC-22). | P1 |
+| US-40 | Sebagai administrator server pilot, saya ingin server dapat dipulihkan dari backup dan tidak membuka layanan yang tidak perlu, agar pilot aman dan data tidak hilang. | Latihan backup dan restore berhasil; pemeriksaan paparan jaringan lulus (NFR-39 sampai NFR-44, AC-24, AC-25). | P0 |
+
 ## Story yang Tidak Dibuat
 
 - **OPEN QUESTION** Story khusus SUN Tematik (OQ-01).
@@ -103,4 +116,4 @@ Format: "Sebagai [persona], saya ingin [kebutuhan], agar [manfaat]." Persona mer
 
 ## Last Updated
 
-2026-10-02
+2026-10-06

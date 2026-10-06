@@ -1,7 +1,7 @@
 # Aturan Bisnis
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-06
 
 ## Purpose
 
@@ -75,9 +75,33 @@ Dokumen ini menghimpun aturan bisnis SUNOVATE dalam bentuk bernomor agar dapat d
 | BR-31 | Setiap query Hermes dan feedback dicatat di audit (`AI_QUERY`, `AI_FEEDBACK`). | PROPOSED | Keputusan desain sesi 2026-10-01 |
 | BR-32 | Jawaban Hermes adalah bantuan penelusuran, bukan keputusan atau fakta resmi. | PROPOSED | Risiko R-04 |
 
+## Jawaban Knowledge Owner (deck v1_ slide 24)
+
+Aturan BR-33 sampai BR-39 berasal dari jawaban knowledge owner (**CONFIRMED (knowledge owner, deck v1_ slide 24)**; pengakuan mentor tertunda, OQ-24). Kolom Label memisahkan isi jawaban dari penegakannya. Kolom Konflik menandai pertentangan dengan matriks atau kode saat ini.
+
+| ID | Aturan | Label | Sumber | Konflik |
+|---|---|---|---|---|
+| BR-33 | Yang dapat mengubah data atau mengunggah (membuat, mengubah, dan mengajukan knowledge; mendaftarkan dokumen dan versi) hanyalah ketua tim, kasubdit PMP, Kasi MP, dan PIC yang ditunjuk. Berlaku bersama BR-18 (permission AND lingkup tim AND klasifikasi). | CONFIRMED (knowledge owner) untuk siapa yang berwenang; PROPOSED untuk pemetaan role (`team_lead`, `knowledge_owner`, `knowledge_coordinator`) dan penegakan di API | Deck v1_ slide 24, pertanyaan 3 (OQ-05); DEC-20261002-03 | Konflik: `staff` memiliki `knowledge:create`, `knowledge:update`, `knowledge:submit`, dan `document:create` pada matriks saat ini. Belum diterapkan (PD-1, FR-50, R-17). Cakupan "data" untuk data kerja: OPEN QUESTION (OQ-25) |
+| BR-34 | Knowledge owner dan reviewer pada setiap tim adalah ketua tim dan PIC yang ditunjuk untuk tim itu. Penunjukan berlaku per tim; penunjukan untuk satu tim tidak memberi hak atas tim lain. | CONFIRMED (knowledge owner) untuk peran; PROPOSED untuk sifat per tim dan pencatatannya | Deck v1_ slide 24, pertanyaan 7 (OQ-09); DEC-20261002-07 | Konflik: belum ada pencatatan penunjukan; role berlaku global karena `user_roles.team_id` tidak diperiksa saat resolusi permission (FR-51). `knowledge_owner` belum memiliki `knowledge:review` atau `approval:decide` |
+| BR-35 | Cakupan dokumen yang boleh masuk repository dan RAG adalah yang diusulkan tim kerja, tetapi dokumen asli hanya boleh masuk setelah klasifikasi ditetapkan (OQ-05) dan persetujuan eksplisit ada. Konten `CONFIDENTIAL` tidak diproses Hermes. Sampai itu, hanya `SIMULATED_DATA` yang dimuat. | CONFIRMED (knowledge owner) untuk cakupan; CONFIRMED (aturan proyek) untuk larangan data asli tanpa persetujuan; PROPOSED untuk gerbang intake | Deck v1_ slide 24, pertanyaan 2 (OQ-04); AGENTS.md; BR-16, BR-22; DEC-20261002-02 | Belum ada gerbang intake; tidak ada pipeline ingestion (KL-07, FR-53) |
+| BR-36 | Indikator tanpa sumber data otoritatif (saat ini "yield" dan "kepemilikan SBN") tidak menampilkan angka; dashboard menyatakan sumber data belum tersedia. SUNOVATE tidak menyimpan data transaksi, yield, atau lelang dan tidak membuat tabel bisnis SUN. | CONFIRMED (knowledge owner) untuk indikator yang diminta; PROPOSED untuk perilaku blokir; OUT OF SCOPE untuk data bisnis SUN (ADR-013) | Deck v1_ slide 24, pertanyaan 8 (OQ-10); ADR-013; DEC-20261002-08 | Tidak ada konflik kode (tidak ada angka); teks "sumber data belum tersedia" belum ada di UI (FR-54). Sumber dan definisi: OPEN QUESTION (OQ-21) |
+| BR-37 | Pilot berjalan pada satu komputer khusus sebagai server. Sebelum data non-simulasi masuk: `DATA_BACKEND=postgres`, dev auth tidak terbuka ke jaringan, secret di luar repository, backup di luar host dengan uji restore, dan administrator serta akses server ditetapkan. | CONFIRMED (knowledge owner) untuk hosting; PROPOSED untuk syarat yang menyertainya | Deck v1_ slide 24, pertanyaan 5 (OQ-07); NFR-39 sampai NFR-44; DEC-20261002-05 | Mekanisme login belum dijawab dan `APP_ENV=production` menolak dev auth, sehingga server pada mode production belum dapat dipakai login (OQ-07, OQ-23, PD-3) |
+| BR-38 | Telegram dan WhatsApp tidak diaktifkan dan tidak diklaim tersedia (P2). Bila dilanjutkan: otorisasi tetap lewat HermesGateway seperti web, dan konten `RESTRICTED` ke atas tidak dikirim ke kanal eksternal secara default (lihat BR-03 dan BR-25). | CONFIRMED (knowledge owner) untuk "bisa" penggunaan internal; PROPOSED untuk batasan | Deck v1_ slide 24, pertanyaan 6 (OQ-08); DEC-20261002-06; PD-6 | Tidak ada konflik kode: tidak ada kode kanal (FR-55) |
+| BR-39 | Pilot mencakup enam tim. Tim di luar enam tim tidak dibuat sampai nama resmi dan tim tambahan dikonfirmasi; isolasi antar tim mengikuti BR-07 dan BR-18. | CONFIRMED (knowledge owner) untuk "6 tim"; PROPOSED untuk identitas keenam tim | Deck v1_ slide 24, pertanyaan 1 (OQ-03); DEC-20261002-01 | Tidak ada konflik: enam tim seed; nama resmi dan tim tambahan OPEN QUESTION (OQ-02) |
+
+Konflik dengan aturan yang sudah ada:
+
+- BR-33 bertentangan dengan matriks role `staff` (bukan dengan BR-18); hingga PD-1 diterapkan, perilaku API lebih longgar daripada BR-33.
+- BR-05 dan BR-06 tidak berubah; siapa yang memutuskan publikasi tetap OQ-12.
+- BR-23 tetap: `APP_ENV=production` dengan dev auth aktif ditolak. BR-37 menambahkan konsekuensi untuk server pilot.
+
 ## Open Questions Terkait
 
 - OQ-05 Pemetaan klasifikasi ke skema resmi Kemenkeu (BR-21, BR-22).
+- OQ-25 Pemetaan "ketua tim", "kasubdit PMP", "Kasi MP", dan "PIC" ke role sistem (BR-33, BR-34).
+- OQ-21 Sumber data otoritatif "yield" dan "kepemilikan SBN" (BR-36).
+- OQ-23 Persyaratan server khusus (BR-37).
+- OQ-24 Pengakuan mentor atas jawaban knowledge owner (BR-33 sampai BR-39).
 - OQ-12 Pemutus publikasi (BR-05, BR-06).
 - OQ-13 Retensi (BR-14, BR-15).
 - OQ-14 Berbagi lintas tim (BR-07).

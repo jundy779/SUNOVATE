@@ -1,7 +1,7 @@
 # Product Requirements Document (PRD) SUNOVATE
 
 **Status:** NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-06
 
 ## Purpose
 
@@ -43,7 +43,7 @@ PRD ini merangkum masalah, tujuan, pengguna, scope, fitur per prioritas, non-goa
 
 ## Scope
 
-Ringkasan scope dan batasan ada di [scope-and-boundaries.md](../00-project/scope-and-boundaries.md). Enam tim kerja awal: PPSUN, AKPSUN, PSUN, PPPSUN, DHTV, SUN Tematik (sumber: brief sesi 2026-10-01; fungsi SUN Tematik OQ-01).
+Ringkasan scope dan batasan ada di [scope-and-boundaries.md](../00-project/scope-and-boundaries.md). Enam tim kerja awal: PPSUN, AKPSUN, PSUN, PPPSUN, DHTV, SUN Tematik (sumber: brief sesi 2026-10-01; fungsi SUN Tematik OQ-01). Pilot mencakup "6 tim" (CONFIRMED, knowledge owner, deck v1_ slide 24, OQ-03; kesamaannya dengan enam tim di atas PROPOSED, OQ-02). Kebutuhan turunan jawaban knowledge owner ada di FR-50 sampai FR-55 ([functional-requirements.md](functional-requirements.md)) dan NFR-39 sampai NFR-44.
 
 ## Fitur per Prioritas
 
@@ -92,12 +92,14 @@ SharePoint production sync, SSO organisasi, Power BI, Telegram dan WhatsApp, dat
 
 | Ketergantungan | Dampak | Terkait |
 |---|---|---|
-| Validasi daftar tim dan pilot | Seed data, UAT | OQ-02, OQ-03 |
+| Validasi daftar tim dan pilot | Seed data, UAT; pilot mencakup "6 tim" (knowledge owner, OQ-03) | OQ-02, OQ-03 |
 | Keputusan dokumen yang boleh masuk RAG | Ingestion dan Hermes | OQ-04 |
 | Skema klasifikasi resmi | Kontrol akses | OQ-05 |
+| Pemetaan "ketua tim, kasubdit PMP, Kasi MP, PIC" ke role sistem | Pembatasan hak ubah/unggah (FR-50), penunjukan ketua tim dan PIC per tim (FR-51) | OQ-05, OQ-25, OQ-24 |
+| Sumber data dan definisi yield dan kepemilikan SBN | Indikator dashboard (FR-54) | OQ-10, OQ-21 |
 | Mekanisme login dan hosting | Pengganti dev auth, deployment | OQ-07 (hosting dijawab: komputer tersendiri sebagai server; login belum), OQ-23 |
 | Model AI dan embedding yang diizinkan | Pencarian semantik, Hermes generatif | OQ-11 |
-| Repository SQLAlchemy | Persistence nyata menggantikan simulated store | ADR-007 |
+| Repository SQLAlchemy | Persistence nyata; backend `DATA_BACKEND=postgres` sudah diimplementasikan (ADR-015, PROPOSED), default runtime tetap `simulated` | ADR-007, ADR-015 |
 | Lingkungan UAT | Bulan 6 | OQ-20 |
 
 ## Open Questions
@@ -117,4 +119,4 @@ R-01, R-02, R-04, R-06, R-07, R-10 di [risk-register.md](../12-governance/risk-r
 
 ## Last Updated
 
-2026-10-02
+2026-10-06

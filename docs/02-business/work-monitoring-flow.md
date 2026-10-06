@@ -1,7 +1,7 @@
 # Alur Monitoring Pekerjaan
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-06
 
 ## Purpose
 
@@ -78,6 +78,14 @@ Diadopsi dari blueprint lama (sumber: SUNOVATE_WEB_IMPLEMENTATION_BLUEPRINT_v0.1
 | `GET /dashboard/summary` | sesuai permission baca | Ringkasan hanya dari record yang boleh dibaca pengguna |
 
 - **PROPOSED**: Pembuatan output dan pengelolaan pending matters (`work:create`, `pending:manage`) belum memiliki endpoint tulis di scaffold.
+
+## Pelaku dan Batas Data (jawaban knowledge owner)
+
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Yang dapat mengubah data atau mengunggah adalah ketua tim, kasubdit PMP, Kasi MP, dan PIC yang ditunjuk (OQ-05). Deck tidak menyebut apakah "data" mencakup work output, tugas, dan pending matters atau hanya knowledge dan dokumen.
+- **OPEN QUESTION (OQ-25)**: Cakupan "mengubah data" untuk data kerja. Sampai dijawab, alur pada dokumen ini tidak diubah: role `staff` masih memiliki `work:update` (dipakai `PATCH /tasks/{id}`) dan `work:create`, dan usulan PD-1 tidak mencabut keduanya.
+- **PROPOSED**: Ketua tim memantau output, tugas, milestone, dan pending matters timnya (slide 9 `v1_`: "Ketua tim kerja ... pemantauan output sesuai proses masing-masing"). Pembuatan output dan pengelolaan pending matters belum memiliki endpoint tulis di scaffold, sehingga tidak ada perubahan perilaku yang perlu dipetakan sekarang.
+- **CONFIRMED**: Slide 11 (kinerja dan pending matters dasar sebagai P0) tidak berubah pada deck `v1_`.
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Indikator dashboard yang diminta adalah "yield" dan "kepemilikan SBN" (OQ-10). **OPEN QUESTION**: sumber data, definisi, dan hak lihat (OQ-21). Sesuai BR-36 dan ADR-013 keduanya tidak dihitung dari `work_outputs`, `tasks`, atau tabel lain, dan tidak ditampilkan sebagai angka; dashboard seharusnya hanya menyatakan sumber data belum tersedia (PROPOSED, FR-54; teks itu belum ada di UI). Deadline state di atas tidak berhubungan dengan kedua indikator.
 
 ## Item Perhatian Dashboard
 

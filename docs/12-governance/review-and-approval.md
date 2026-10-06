@@ -1,7 +1,7 @@
 # Review dan Approval
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-06
 
 ## Purpose
 
@@ -92,6 +92,24 @@ sequenceDiagram
 - **PROPOSED**: Role dengan `approval:decide`: `knowledge_coordinator`, `team_lead`, `reviewer`. Publikasi knowledge saat ini memerlukan `knowledge:publish`, yang hanya dimiliki `knowledge_coordinator`.
 - **OPEN QUESTION (OQ-12)**: Apakah `team_lead` boleh mempublikasikan, dan siapa pemutus resmi.
 - **PROPOSED**: `auditor` dan `system_admin` tidak memutuskan approval.
+
+## Pelaku Menurut Jawaban Knowledge Owner
+
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Knowledge owner dan reviewer pada setiap tim adalah ketua tim dan PIC yang ditunjuk (OQ-09). Yang dapat mengubah data atau mengunggah adalah ketua tim, kasubdit PMP, Kasi MP, dan PIC yang ditunjuk (OQ-05). Pengakuan mentor tertunda (OQ-24).
+- **PROPOSED**: Pengaju permintaan `KNOWLEDGE_PUBLICATION` adalah salah satu dari keempat sebutan tersebut (BR-33). Pada kode saat ini `staff` juga dapat mengajukan karena memiliki `knowledge:submit` dan `approval:request`; belum sesuai jawaban (PD-1).
+- **PROPOSED**: Reviewer tim adalah ketua tim atau PIC yang bukan pengaju. Keputusan menyetujui publikasi tetap mengikuti separation of duties (BR-06).
+- **OPEN QUESTION (OQ-12)**: Siapa yang memutuskan publikasi. Jawaban OQ-05 dan OQ-09 menyebut peran yang mengubah dan meninjau, tetapi tidak menyebut pemutus. Dokumen ini tidak menyimpulkannya. Keadaan kode: hanya `knowledge_coordinator` yang dapat menyetujui publikasi; `team_lead` dan `reviewer` hanya dapat menolak (ada uji `test_reviewer_can_reject_but_not_approve_publication`).
+- **OPEN QUESTION (OQ-25)**: Apakah kasubdit PMP dan Kasi MP bertindak sebagai pengaju, reviewer, atau pemutus, dan apakah lintas tim atau per tim.
+- **PROPOSED**: Penunjukan ketua tim dan PIC per tim perlu dicatat agar antrean review dan pemeriksaan "bukan pengaju" dapat dikaitkan ke tim yang benar; belum ada entitas penunjukan (FR-51).
+
+| Peristiwa | Pelaku menurut jawaban | Keadaan kode |
+|---|---|---|
+| Menyusun dan mengajukan knowledge | Ketua tim, PIC, kasubdit PMP, Kasi MP | Ada, tetapi `staff` juga lolos (belum sesuai) |
+| Meninjau | Ketua tim dan PIC tim pemilik | Permission `knowledge:review` dan `approval:decide` ada pada `team_lead` dan `reviewer`; `knowledge_owner` tidak memilikinya |
+| Memutuskan publikasi | Tidak ditentukan (OQ-12) | Hanya `knowledge_coordinator` |
+| Aksi tulis dari Hermes | Tidak berubah: wajib persetujuan manusia | Berjalan |
+
+Catatan: `knowledge_owner` (representasi PIC) tidak memiliki `approval:decide` atau `knowledge:review` pada matriks saat ini, sehingga PIC belum dapat bertindak sebagai reviewer menurut jawaban OQ-09. Ini celah antara jawaban dan matriks yang perlu diputuskan bersama OQ-25; tidak ada perubahan matriks di dokumen ini.
 
 ## Kedaluwarsa
 

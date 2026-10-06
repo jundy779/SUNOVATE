@@ -1,7 +1,7 @@
 # Scope MVP
 
 **Status:** NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-06
 
 ## Purpose
 
@@ -36,19 +36,19 @@ Dokumen ini menetapkan apa yang termasuk dan tidak termasuk dalam MVP SUNOVATE, 
 | Data instrumen, lelang, transaksi, yield, setelmen | Tidak dijadwalkan | OUT OF SCOPE (ADR-013) |
 | Perilaku khusus SUN Tematik | Tidak dijadwalkan | OPEN QUESTION (OQ-01) |
 
-## Status Saat Ini di Scaffold (2026-10-01)
+## Status Saat Ini di Scaffold (diperiksa ulang 2026-10-06)
 
 Kolom "Scaffold" berarti ada implementasi awal yang berjalan dengan `DATA_BACKEND=simulated` dan `SIMULATED_DATA`. Ini bukan kesiapan produksi.
 
 | Kemampuan | Sudah ada di scaffold | Belum ada |
 |---|---|---|
-| M-01 Repository | Endpoint knowledge (daftar, detail, buat, ubah, ajukan) dan dokumen (daftar, detail, versi, registrasi versi); checksum ganda ditolak; revision conflict 409. Skema 30 tabel dan migrasi `0001_initial_schema` tervalidasi. | Repository SQLAlchemy (persistence nyata); unggah file ke document provider produksi; endpoint relasi antarperaturan. |
+| M-01 Repository | Endpoint knowledge (daftar, detail, buat, ubah, ajukan) dan dokumen (daftar, detail, versi, registrasi versi); checksum ganda ditolak; revision conflict 409. Skema 30 tabel dan migrasi `0001_initial_schema` serta `0002_ordering_columns` tervalidasi; backend `DATA_BACKEND=postgres` tersedia (ADR-015, PROPOSED). | Unggah file ke document provider produksi dan pipeline ingestion (KL-07); endpoint relasi antarperaturan; pembatasan hak ubah/unggah sesuai jawaban knowledge owner (FR-50, PD-1). |
 | M-02 Pencarian | `GET /search?q=` atas simulated store dengan filter otorisasi sebelum penilaian. | Pencarian FTS PostgreSQL di runtime; pencarian semantik (embedding provider nonaktif, tanpa indeks ANN). |
 | M-03 Hermes | Pipeline lengkap: ScopeGuard, otorisasi, retrieval, rerank leksikal, filter injection, provider ekstraktif deterministik, CitationValidator, OutputGuard, audit; niat tulis menjadi approval PENDING; umpan balik. | Model generatif yang disetujui; evaluasi RAG dengan set uji tervalidasi; ingestion dokumen nyata. |
-| M-04 RBAC dan klasifikasi | AuthorizationService dengan permission, team scope, clearance; 404 untuk record tak terbaca; delapan pengguna simulasi. | Identitas produksi (OQ-07); skema klasifikasi resmi (OQ-05). |
+| M-04 RBAC dan klasifikasi | AuthorizationService dengan permission, team scope, clearance; 404 untuk record tak terbaca; delapan pengguna simulasi. | Identitas produksi (OQ-07); skema klasifikasi resmi (OQ-05); hak ubah/unggah terbatas pada ketua tim, kasubdit PMP, Kasi MP, dan PIC (FR-50; `staff` masih dapat membuat knowledge, PD-1); penunjukan ketua tim dan PIC per tim (FR-51). |
 | M-05 Audit | Aksi LOGIN, CREATE, UPDATE, SUBMIT, APPROVE, REJECT, ACCESS_DENIED, AI_QUERY, AI_FEEDBACK, VERSION_REGISTER, SEARCH; trigger append-only di skema PostgreSQL. | Audit permanen pada default runtime (`DATA_BACKEND=simulated` masih in-memory; `DATA_BACKEND=postgres` menyimpan ke `audit_logs`, ADR-015, PROPOSED); kebijakan retensi (OQ-13). |
 | M-06 Monitoring kerja | Daftar work output, tugas, milestone, pending matter, follow-up; pembaruan tugas; status tenggat dihitung backend. | Pembuatan work output dan tugas; pengelolaan pending matter dari UI. |
-| M-07 Dashboard | `GET /dashboard/summary` dan halaman dashboard dengan grafik status. | Indikator tervalidasi (OQ-10). |
+| M-07 Dashboard | `GET /dashboard/summary` dan halaman dashboard dengan grafik status. | Indikator tervalidasi (OQ-10); indikator yield dan kepemilikan SBN diblokir tanpa sumber data (FR-54, OQ-21). |
 | Frontend | Rute `/login`, `/dashboard`, `/knowledge`, `/knowledge/[id]`, `/search`, `/work-monitoring`, `/hermes`, `/admin`, `/unauthorized`, serta state not-found, error, loading. | Formulir lengkap untuk membuat dan mengubah seluruh entitas; uji aksesibilitas manual. |
 
 ## Definition of Done MVP
@@ -85,4 +85,4 @@ Kolom "Scaffold" berarti ada implementasi awal yang berjalan dengan `DATA_BACKEN
 
 ## Last Updated
 
-2026-10-02
+2026-10-06

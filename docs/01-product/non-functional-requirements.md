@@ -1,7 +1,7 @@
 # Kebutuhan Non-Fungsional
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-06
 
 ## Purpose
 
@@ -61,7 +61,7 @@ Pemeriksaan otomatis (lint, Testing Library, Playwright) hanya menangkap sebagia
 | NFR-24 | Endpoint `GET /health` dan `GET /health/database` tersedia untuk pemeriksaan kesehatan. | PROPOSED |
 | NFR-25 | Backup dan restore database didefinisikan sebelum ada data non-simulasi. | PROPOSED (lihat [backup-and-restore.md](../11-operations/backup-and-restore.md)) |
 
-Catatan: dengan `DATA_BACKEND=simulated`, data runtime hilang saat API restart (ADR-007, R-10).
+Catatan: dengan `DATA_BACKEND=simulated`, data runtime hilang saat API restart (ADR-007, R-10). Dengan `DATA_BACKEND=postgres` data bertahan (ADR-015, PROPOSED); kebutuhan khusus server pilot ada di bagian "Server Khusus Pilot".
 
 ## Observability
 
@@ -89,6 +89,19 @@ Catatan: dengan `DATA_BACKEND=simulated`, data runtime hilang saat API restart (
 | NFR-35 | Konfigurasi sepenuhnya melalui environment variable (lihat `.env.example`). | PROPOSED |
 | NFR-36 | Target hosting produksi. | PARTIAL: komputer tersendiri sebagai server (CONFIRMED, knowledge owner, deck v1_ slide 24); persyaratan server OPEN QUESTION (OQ-07, OQ-23) |
 
+## Server Khusus Pilot
+
+**CONFIRMED (knowledge owner, deck v1_ slide 24)** Hosting pilot adalah "komputer tersendiri sebagai server" (OQ-07, DEC-20261002-05). Jawaban itu tidak menyebut lokasi, jaringan, sistem operasi, backup, administrator, siapa yang boleh mengakses, TLS, atau mekanisme login (OQ-23). Pengakuan mentor tertunda (OQ-24). NFR-39 sampai NFR-44 di bawah adalah turunan pengembang berstatus **PROPOSED**; sebelum ini NFR-25 dan NFR-36 hanya menyebut backup dan hosting secara umum.
+
+| ID | Kebutuhan | Label |
+|---|---|---|
+| NFR-39 | Ketersediaan: satu host adalah titik kegagalan tunggal (R-13). Target ketersediaan, recovery point objective, dan recovery time objective ditetapkan bersama pemilik server; sampai itu tidak ada komitmen ketersediaan yang boleh dinyatakan. | PROPOSED; angka OPEN QUESTION (OQ-23) |
+| NFR-40 | Persistence: pilot pada server memakai `DATA_BACKEND=postgres` (ADR-015). Mode `simulated` tidak persisten (data hilang saat API restart, KL-01) dan sudah ditolak kode bila `APP_ENV=production` (`core/config.py`). Pilot tetap hanya `SIMULATED_DATA` sampai FR-53 terpenuhi. | PROPOSED (rekomendasi); penolakan `simulated` saat production: CONFIRMED (implementasi) |
+| NFR-41 | Backup di luar host yang sama dan uji restore yang pernah berhasil sebelum ada data non-simulasi (memperkuat NFR-25). Backup tidak disimpan di dalam folder repository dan tidak di-commit. | PROPOSED ([backup-and-restore.md](../11-operations/backup-and-restore.md)); lokasi, frekuensi, enkripsi, dan retensi OPEN QUESTION (OQ-13, OQ-23) |
+| NFR-42 | Paparan jaringan: hanya reverse proxy atau web yang menerima koneksi dari pengguna internal; API dan PostgreSQL tidak dipaparkan langsung (PostgreSQL hanya ke loopback atau host, seperti `127.0.0.1:5432` pada `docker-compose.yml`); `CORS_ORIGINS` hanya berisi origin yang diperlukan; secret di luar repository; dev auth nonaktif. | PROPOSED; TLS, akses jaringan, dan daftar yang boleh mengakses OPEN QUESTION (OQ-23) |
+| NFR-43 | Login: pengguna pilot hanya masuk lewat mekanisme yang disetujui dan `POST /auth/dev/login` tidak terbuka ke jaringan. Fakta saat ini: `APP_ENV=production` mewajibkan dev auth nonaktif, sedangkan satu-satunya `IdentityProvider` adalah `development`, sehingga server pada mode production belum memiliki cara login. | Fakta: CONFIRMED (implementasi). Mekanisme login: OPEN QUESTION (OQ-07, PD-3) |
+| NFR-44 | Administrasi: ada administrator server yang ditunjuk, jadwal patching sistem operasi dan dependensi, serta catatan siapa yang mengakses server. Tidak ada orang atau jabatan yang diasumsikan. | PROPOSED; penunjukan OPEN QUESTION (OQ-23) |
+
 ## Antarmuka
 
 | ID | Kebutuhan | Label |
@@ -105,4 +118,4 @@ Catatan: dengan `DATA_BACKEND=simulated`, data runtime hilang saat API restart (
 
 ## Last Updated
 
-2026-10-02
+2026-10-06

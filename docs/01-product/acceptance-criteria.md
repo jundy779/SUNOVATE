@@ -1,7 +1,7 @@
 # Kriteria Penerimaan
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-06
 
 ## Purpose
 
@@ -157,10 +157,113 @@ Terkait: FR-21, FR-33, FR-42.
 
 Terkait: NFR-20.
 
+## Skenario dari Jawaban Knowledge Owner (deck v1_ slide 24)
+
+AC-16 sampai AC-25 diturunkan dari jawaban knowledge owner (**CONFIRMED (knowledge owner, deck v1_ slide 24)**; pengakuan mentor tertunda, OQ-24). Skenarionya **PROPOSED**. Setiap skenario diberi "Status terhadap kode saat ini" berdasarkan pembacaan `apps/api/sunovate_api` dan uji yang ada serta satu pengecekan manual pada 2026-10-06 dengan pengguna simulasi. Status "GAGAL" berarti skenario akan gagal bila dijalankan terhadap kode hari ini sampai PD-1 diterapkan; itu bukan klaim bahwa ada uji otomatis yang gagal. Belum ada uji otomatis untuk skenario yang ditandai "belum ada uji".
+
+## AC-16 Pihak berwenang dapat membuat dan mengubah knowledge timnya
+
+- **Given** `sim.owner.ppsun` (role `knowledge_owner`, representasi PIC, tim PPSUN), `sim.lead.psun` (role `team_lead`, representasi ketua tim, tim PSUN), atau `sim.coordinator` (role `knowledge_coordinator`, representasi tingkat PMP)
+- **When** ia memanggil `POST /knowledge` untuk tim dalam scope-nya dengan klasifikasi tidak melebihi clearance, lalu `PATCH /knowledge/{id}` dengan `revision` benar
+- **Then** API mengembalikan 201 dan 200, dan audit `CREATE` serta `UPDATE` tercatat.
+
+Status terhadap kode saat ini: lulus (diuji di `apps/api/tests/test_knowledge_workflow.py`, mis. `test_create_update_and_revision_conflict`). Pemetaan role ke sebutan jabatan adalah PROPOSED (OQ-25). Terkait: FR-50, US-35.
+
+## AC-17 Staff tidak dapat membuat, mengubah, atau mengajukan knowledge
+
+- **Given** `sim.staff.pppsun` (role `staff`, tim PPPSUN, clearance INTERNAL) dan PD-1 sudah disetujui serta diterapkan
+- **When** ia memanggil `POST /knowledge` (tim PPPSUN, klasifikasi INTERNAL), `PATCH /knowledge/{id}`, atau `POST /knowledge/{id}/submit`
+- **Then** API mengembalikan 403 dengan `code` = `PERMISSION_DENIED`
+- **And** entri audit `ACCESS_DENIED` tercatat dengan `requestId` yang sama
+- **And** `GET /auth/me` untuk `staff` tidak memuat `knowledge:create`, `knowledge:update`, maupun `knowledge:submit`.
+
+Status terhadap kode saat ini: **GAGAL**. Pengecekan manual 2026-10-06 menunjukkan `POST /knowledge` oleh `sim.staff.pppsun` mengembalikan 201, `PATCH` 200, dan `submit` 200, karena `staff` memiliki ketiga permission tersebut. Belum ada uji otomatis. Terkait: FR-50, US-35, PD-1, R-17.
+
+## AC-18 Staff tidak dapat mendaftarkan dokumen atau versi
+
+- **Given** `sim.staff.pppsun`
+- **When** ia memanggil `POST /documents/{id}/versions` untuk dokumen timnya
+- **Then** API mengembalikan 403 dengan `code` = `PERMISSION_DENIED` dan audit `ACCESS_DENIED` tercatat.
+
+Status terhadap kode saat ini: lulus untuk `POST /documents/{id}/versions` (pengecekan manual 2026-10-06: 403; `staff` tidak memiliki `document:version`), belum ada uji otomatis. Pembuatan referensi dokumen (`document:create`, yang dimiliki `staff` pada matriks) tidak memiliki endpoint, sehingga bagian itu belum dapat diuji sampai endpoint dibuat; karena itu `document:create` untuk `staff` adalah celah matriks, bukan celah perilaku API saat ini. Terkait: FR-50, US-35.
+
+## AC-19 Penunjukan ketua tim dan PIC berlaku hanya untuk timnya
+
+- **Given** PIC yang ditunjuk untuk tim PPSUN (`sim.owner.ppsun`)
+- **When** ia memanggil `POST /knowledge` dengan `ownerTeamId` tim PSUN
+- **Then** API mengembalikan 403 dengan pesan di luar cakupan tim.
+- **Given** penunjukan PIC untuk sebuah tim dicabut atau melewati masa berlaku (PROPOSED, memerlukan entitas penunjukan)
+- **When** ia membuat atau mengubah knowledge tim tersebut
+- **Then** API mengembalikan 403.
+
+Status terhadap kode saat ini: bagian pertama lulus (`test_cannot_create_for_other_team_or_above_clearance` di `apps/api/tests/test_knowledge_workflow.py`). Bagian kedua belum dapat diuji: tidak ada entitas penunjukan, dan role diterapkan global karena `user_roles.team_id` tidak diperiksa saat resolusi permission (lihat [logical-data-model.md](../04-data/logical-data-model.md)). Terkait: FR-51, US-36.
+
+## AC-20 Visibilitas pilot enam tim
+
+- **Given** data pilot `SIMULATED_DATA` untuk enam tim
+- **When** `sim.staff.pppsun` memanggil `GET /teams`
+- **Then** respons berisi tepat enam kode: AKPSUN, DHTV, PPPSUN, PPSUN, PSUN, SUN_TEMATIK
+- **And** `GET /knowledge`, `GET /search`, dan `GET /dashboard/summary` miliknya hanya memuat record PPPSUN dan konten `DIRECTORATE` yang `PUBLISHED`
+- **And** tidak ada record kerja atau knowledge untuk SUN_TEMATIK (OQ-01).
+
+Status terhadap kode saat ini: lulus untuk daftar tim dan isolasi tim (`test_teams_are_the_six_confirmed_codes`, `test_listing_respects_team_scope_and_sharing`, `test_cross_team_detail_returns_404_not_403`). Belum ada uji khusus bahwa SUN_TEMATIK tidak memiliki record. Nama resmi dan tim tambahan tetap OPEN QUESTION (OQ-02). Terkait: FR-52, US-37, AC-03.
+
+## AC-21 Intake dokumen dibatasi klasifikasi dan persetujuan
+
+- **Given** dokumen yang diusulkan tim kerja dan belum memiliki klasifikasi atau persetujuan eksplisit
+- **When** dokumen itu diajukan masuk ke repository dan RAG
+- **Then** dokumen ditahan dan tidak diindeks, tidak muncul di `GET /search`, dan tidak diambil Hermes
+- **And** konten `CONFIDENTIAL` tidak pernah diambil Hermes, apa pun persetujuannya (lihat AC-05)
+- **And** sebelum klasifikasi (OQ-05) dan persetujuan ada, hanya record `SIMULATED_DATA` yang ada di lingkungan.
+
+Status terhadap kode saat ini: bagian `CONFIDENTIAL` lulus (AC-05; kasus golden set RAG-07). Gerbang intake belum ada: tidak ada pipeline ingestion atau unggah file (KL-07), sehingga bagian pertama belum ada uji. Terkait: FR-53, US-38, R-14.
+
+## AC-22 Indikator yield dan kepemilikan SBN tanpa sumber data
+
+- **Given** sumber data otoritatif belum ditetapkan (OQ-21)
+- **When** pengguna membuka `/dashboard` dan memanggil `GET /dashboard/summary`
+- **Then** respons tidak memuat angka atau field untuk yield atau kepemilikan SBN
+- **And** halaman menampilkan "sumber data belum tersedia" untuk kedua indikator
+- **And** tidak ada tabel bisnis SUN di skema (ADR-013).
+
+Status terhadap kode saat ini: bagian respons API dan skema lulus secara struktural (pengecekan manual 2026-10-06: field respons hanya `attention`, `metrics`, `recentKnowledge`, `referenceDate`, `scope`, `tasksByStatus`; skema 30 tabel tanpa tabel yield), belum ada uji otomatis. Teks "sumber data belum tersedia" belum ada di UI, sehingga bagian itu belum sesuai. Terkait: FR-54, US-39, R-15.
+
+## AC-23 Telegram dan WhatsApp tidak aktif
+
+- **Given** konfigurasi default dan `NOTIFICATION_PROVIDER=disabled`
+- **When** `sim.admin` memanggil `GET /providers`
+- **Then** `meta.productionIntegrations` = `DISABLED` dan tidak ada provider kanal pesan berstatus aktif
+- **And** tidak ada route webhook kanal (mis. `POST /webhooks/telegram` mengembalikan 404).
+
+Status terhadap kode saat ini: lulus (`test_providers_report_no_production_integration`; route webhook dicek manual 2026-10-06: 404, belum ada uji otomatis). Jawaban "bisa" (OQ-08) tidak mengaktifkan apa pun. Terkait: FR-55, FR-48, US-33.
+
+## AC-24 Latihan backup dan restore di server pilot
+
+- **Given** server pilot dengan `DATA_BACKEND=postgres` dan hanya `SIMULATED_DATA`
+- **When** administrator membuat backup ke lokasi di luar host, lalu memulihkannya ke database terpisah
+- **Then** revision Alembic hasil restore sama dengan sumber (saat ini `0002_ordering_columns`), trigger append-only `audit_logs` masih menolak UPDATE, jumlah baris tabel utama sama, dan `GET /api/v1/health/database` sukses saat `DATABASE_URL` diarahkan ke database hasil restore
+- **And** tanggal, ukuran, durasi, dan hasil latihan dicatat.
+
+Status terhadap kode saat ini: prosedur ada sebagai usulan di [backup-and-restore.md](../11-operations/backup-and-restore.md); belum pernah dijalankan dan belum ada skrip. Server dan lokasi backup belum ditetapkan (OQ-23). Terkait: NFR-39, NFR-41, US-40, R-13.
+
+## AC-25 Paparan server pilot diperiksa
+
+- **Given** konfigurasi server pilot
+- **When** pemeriksaan paparan dijalankan
+- **Then** aplikasi menolak start bila `APP_ENV=production` dengan dev auth aktif atau `DATA_BACKEND=simulated`
+- **And** `POST /auth/dev/login` mengembalikan 404 `DEV_AUTH_DISABLED` dari jaringan pengguna
+- **And** hanya port web atau reverse proxy yang dapat dijangkau dari jaringan pengguna; port API dan PostgreSQL tidak
+- **And** `CORS_ORIGINS` hanya berisi origin yang diperlukan dan secret berada di luar repository.
+
+Status terhadap kode saat ini: dua bagian pertama lulus terhadap kode (`test_production_refuses_dev_auth_and_simulated_backend`, `test_production_refuses_simulated_backend`, `test_dev_auth_disabled_blocks_login_and_access`). Bagian jaringan, CORS, dan secret adalah pemeriksaan manual pada server yang belum ada. Catatan: `APP_ENV=production` mewajibkan dev auth nonaktif, sedangkan belum ada mekanisme login lain (OQ-07, PD-3), sehingga server pada mode production belum dapat dipakai login. Terkait: NFR-42, NFR-43, US-40.
+
 ## Open Questions
 
 - Kode error untuk pelanggaran separation of duties belum dikunci di dokumentasi API; perlu diselaraskan dengan [error-format.md](../07-api/error-format.md).
 - OQ-12 dapat mengubah siapa yang berhak memutuskan pada AC-11.
+- OQ-25 menentukan role yang menjadi pelaku pada AC-16 sampai AC-19 dan apakah staf biasa boleh menyusun draf; AC-17 berlaku hanya setelah PD-1 disetujui.
+- OQ-21 menentukan kapan AC-22 dapat diganti dengan skenario angka.
+- OQ-23 menentukan lingkungan untuk AC-24 dan AC-25.
 
 ## Related Documents
 
@@ -171,4 +274,4 @@ Terkait: NFR-20.
 
 ## Last Updated
 
-2026-10-01
+2026-10-06
