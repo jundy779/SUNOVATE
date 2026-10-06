@@ -2,7 +2,7 @@
 
 **Status:** DRAFT
 
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-06
 
 ## Purpose
 
@@ -62,6 +62,23 @@ Otorisasi = permission DAN team scope DAN klasifikasi data, deny by default (sum
 | Deadline state | Dihitung backend: SAFE, DUE_SOON, DUE_TODAY, OVERDUE, COMPLETED dengan `DEADLINE_DUE_SOON_DAYS` | Fact sheet bagian 6 |
 | Validasi input | 422 `VALIDATION_ERROR`; `pageSize` di luar 1–100 ditolak | Fact sheet bagian 9 |
 | Dev auth dimatikan | `POST /auth/dev/login` mengembalikan 404 `DEV_AUTH_DISABLED` | ADR-005 |
+
+## Kasus Terencana dari Jawaban Knowledge Owner (PLANNED)
+
+Semua baris **PLANNED** kecuali bila kolom Status menyebut uji yang ada. Rujukan ID dan skenario rinci: [security-testing.md](security-testing.md) dan [acceptance-criteria.md](../01-product/acceptance-criteria.md) (AC-16 sampai AC-25).
+
+| Kasus | Contoh pengguna simulasi | Hasil yang diharapkan | Status |
+|---|---|---|---|
+| `staff` membuat, mengubah, mengajukan knowledge (setelah PD-1) | `sim.staff.pppsun` | 403 `PERMISSION_DENIED`, audit `ACCESS_DENIED` (SEC-40, AC-17) | PLANNED; hari ini 201/200/200 |
+| Ketua tim, PIC, tingkat PMP menulis dalam scope | `sim.lead.psun`, `sim.owner.ppsun`, `sim.coordinator` | 201/200 (SEC-41, AC-16) | Ada sebagian di `test_knowledge_workflow.py` |
+| `staff` mendaftarkan versi dokumen | `sim.staff.pppsun` | 403 (SEC-44, AC-18) | PLANNED |
+| Penunjukan per tim dan kedaluwarsa | Pengguna tambahan (usulan) | 403 di luar tim atau setelah berakhir (SEC-42, SEC-43) | SEC-42 ada; SEC-43 PLANNED |
+| Dashboard tanpa yield dan kepemilikan SBN | Semua pengguna simulasi | Tidak ada field atau angka (SEC-60) | PLANNED |
+| Route kanal pesan tidak ada | `sim.admin` | 404 untuk webhook kanal (SEC-80) | PLANNED |
+| Konfigurasi production | Tanpa login | Ditolak bila dev auth aktif atau `simulated` (SEC-70) | Ada |
+
+- **PLANNED**: Uji otorisasi tulis dijalankan pada kedua backend (`pnpm test` dan `pnpm db:test`) karena pilot memakai `DATA_BACKEND=postgres`; uji penerapan PD-1 pada database yang sudah di-seed (SEC-45) hanya bermakna pada PostgreSQL.
+- **PROPOSED**: Bila matriks izin berubah (PD-1), uji dan dokumentasi diperbarui bersamaan, dan uji yang ada yang terdampak tercatat di bagian "Uji yang Ada dan Hubungannya dengan PD-1" pada [security-testing.md](security-testing.md).
 
 ## Pengujian Pipeline Hermes
 

@@ -1,7 +1,7 @@
 # Security Checklist
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-06
 
 ## Purpose
 
@@ -47,6 +47,13 @@ Daftar periksa keamanan yang dijalankan sebelum merge dan sebelum rilis (termasu
 - [ ] `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm api:lint`, `pnpm api:typecheck`, `pnpm api:test` lulus untuk area yang diubah.
 - [ ] Integrasi produksi tetap nonaktif kecuali sudah divalidasi.
 
+### Hak ubah/unggah dan intake (jawaban knowledge owner, PROPOSED)
+- [ ] Endpoint tulis baru (membuat, mengubah, mengajukan, mendaftarkan dokumen atau versi) hanya mensyaratkan permission yang dimiliki ketua tim, kasubdit PMP, Kasi MP, dan PIC yang ditunjuk; role `staff` tidak diberi permission tulis knowledge atau dokumen (BR-33; status matriks saat ini: belum sesuai, PD-1).
+- [ ] Perubahan katalog permission disertai langkah data untuk database yang sudah di-seed (seed hanya menambah baris) dan uji 403 untuk role yang kehilangan izin.
+- [ ] Penunjukan ketua tim dan PIC berlaku per tim; penulisan di tim lain tetap ditolak.
+- [ ] Tidak ada dokumen asli, data pribadi, atau angka SUN asli yang dimuat tanpa klasifikasi resmi dan persetujuan eksplisit; `CONFIDENTIAL` tidak diproses Hermes (BR-35).
+- [ ] Tidak ada angka atau tabel untuk yield atau kepemilikan SBN tanpa sumber data otoritatif (BR-36, ADR-013).
+- [ ] Tidak ada kode kanal Telegram atau WhatsApp yang aktif; `NOTIFICATION_PROVIDER=disabled` (BR-38).
 ## Pre-release
 
 - [ ] Seluruh item pre-merge terpenuhi untuk perubahan dalam rilis.
@@ -63,8 +70,20 @@ Daftar periksa keamanan yang dijalankan sebelum merge dan sebelum rilis (termasu
 - [ ] [threat-model](threat-model.md) dan [risk-register](../12-governance/risk-register.md) ditinjau untuk perubahan dalam rilis.
 - [ ] Untuk integrasi baru: [integration-readiness-checklist](../08-integrations/integration-readiness-checklist.md) lengkap dan disetujui.
 
+## Server Pilot (komputer tersendiri sebagai server, PROPOSED)
+
+- [ ] `DATA_BACKEND=postgres` dan hanya `SIMULATED_DATA` sampai klasifikasi dan persetujuan ada (NFR-40, BR-37).
+- [ ] Hanya web atau reverse proxy yang terjangkau dari jaringan pengguna; port API dan PostgreSQL tidak dipaparkan (NFR-42, SEC-71).
+- [ ] TLS terpasang sesuai persyaratan server (OQ-23) dan `CORS_ORIGINS` hanya berisi origin yang diperlukan (SEC-72).
+- [ ] `POST /auth/dev/login` tidak dapat dijangkau pengguna; mekanisme login yang disetujui dipakai (OQ-07, SEC-73).
+- [ ] Secret di luar repository dan berbeda dari `.env.example` (SEC-74).
+- [ ] Backup di luar host dan latihan restore terakhir berhasil, dicatat tanggal dan hasilnya (SEC-75, AC-24).
+- [ ] Administrator server, jadwal patching, dan daftar yang boleh mengakses sudah ditetapkan (NFR-44).
+- [ ] Hak `TRUNCATE` dan hak administrasi database dibatasi dan diketahui (T-24, KL-21).
+
 ## Open Questions
 
+- **OPEN QUESTION** OQ-23 Persyaratan server pilot dan OQ-25 pemetaan peran yang berwenang mengubah/mengunggah menentukan item di atas.
 - **OPEN QUESTION** OQ-20 Lingkungan UAT dan pihak yang menandatangani pre-release.
 - **OPEN QUESTION** Apakah instansi mewajibkan uji keamanan pihak ketiga sebelum rilis.
 

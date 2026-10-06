@@ -1,7 +1,7 @@
 # Threat Model
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-06
 
 ## Purpose
 
@@ -30,7 +30,7 @@ Mengidentifikasi ancaman utama terhadap aset SUNOVATE menggunakan kategori STRID
 | T-02 | Spoofing | A4 | Dev auth aktif di produksi | API menolak start jika `APP_ENV=production` dan `DEV_AUTH_ENABLED=true` | Implemented |
 | T-03 | Spoofing | A4 | Pencurian token melalui skrip di browser | Cookie httpOnly SameSite=Lax; panggilan API dari server Next.js | Implemented |
 | T-04 | Tampering | A1 | Konflik atau penimpaan pembaruan bersamaan | `revision`; pembaruan basi menghasilkan 409 `REVISION_CONFLICT` | Implemented |
-| T-05 | Tampering | A3 | Pengubahan atau penghapusan audit log | Trigger PostgreSQL menolak UPDATE/DELETE pada `audit_logs` | Implemented (skema); runtime memakai simulated store |
+| T-05 | Tampering | A3 | Pengubahan atau penghapusan audit log | Trigger PostgreSQL menolak UPDATE/DELETE pada `audit_logs` | Implemented (skema dan backend `postgres`, ADR-015); mode default `simulated` tidak persisten; `TRUNCATE` tidak dicegah (T-24) |
 | T-06 | Tampering | A1 | Duplikasi ingestion dokumen | Unique (`document_reference_id`, `checksum_sha256`); 409 `DUPLICATE_CHECKSUM` | Implemented |
 | T-07 | Repudiation | A3 | Pengguna menyangkal aksi | Audit action LOGIN, CREATE, UPDATE, SUBMIT, APPROVE, REJECT, ACCESS_DENIED, AI_QUERY, AI_FEEDBACK, VERSION_REGISTER, SEARCH; `X-Request-ID` | Implemented |
 | T-08 | Information disclosure | A1 | IDOR: menebak id rekaman tim lain | Pemeriksaan team scope dan klasifikasi per rekaman; rekaman tak terbaca menghasilkan 404 | Implemented |
@@ -45,6 +45,13 @@ Mengidentifikasi ancaman utama terhadap aset SUNOVATE menggunakan kategori STRID
 | T-17 | Elevation of privilege | A1 | Hermes mengeksekusi aksi tulis | Write intent menjadi `REQUIRES_HUMAN_APPROVAL`; tidak pernah dieksekusi | Implemented |
 | T-18 | Tampering | Supply chain | Dependency berbahaya atau typosquatting | Lockfile (`uv.lock`, pnpm lockfile); versi terkunci; dependency baru harus punya kebutuhan konkret | Implemented (lockfile); audit dependency otomatis Proposed |
 | T-19 | Information disclosure | A1 | Data asli masuk repository | Hanya `SIMULATED_DATA`; file sumber PDF/PPTX dikecualikan via `.gitignore` | Implemented |
+| T-20 | Elevation of privilege | A1, A2 | Hak ubah/unggah terlalu luas: role `staff` masih dapat membuat, mengubah, dan mengajukan knowledge (jawaban knowledge owner membatasi ke ketua tim, kasubdit PMP, Kasi MP, PIC; OQ-05) | Cabut `knowledge:create/update/submit` dan `document:create` dari `staff` (PD-1); uji 403 (SEC-40); langkah data pada database yang sudah di-seed (SEC-45) | Proposed; belum sesuai pada kode (R-17) |
+| T-21 | Elevation of privilege | A2 | Role berlaku global karena `user_roles.team_id` tidak diperiksa; pengguna dengan beberapa keanggotaan tim dapat menulis di semua timnya; penunjukan ketua tim dan PIC tidak tercatat | Penunjukan per tim dengan masa berlaku (opsi di [logical-data-model](../04-data/logical-data-model.md)); `can_write` memeriksa penunjukan; SEC-42, SEC-43 | Proposed; team scope dan klasifikasi sudah berjalan |
+| T-22 | Information disclosure | A1, A5 | Cakupan "semua dokumen yang diusulkan tim kerja" (OQ-04) membawa dokumen RESTRICTED atau CONFIDENTIAL atau data pribadi ke repository dan RAG tanpa klasifikasi dan persetujuan (R-14) | Hanya `SIMULATED_DATA` sampai klasifikasi (OQ-05) dan persetujuan eksplisit ada; `HERMES_MAX_CLASSIFICATION`; gerbang intake dan karantina; SEC-50 sampai SEC-53 | Sebagian: plafon klasifikasi Hermes Implemented; gerbang intake Proposed (tidak ada pipeline ingestion, KL-07) |
+| T-23 | Spoofing, Tampering, Information disclosure, Denial of service | A1 sampai A4 | Server tunggal khusus (OQ-07, R-13): API atau PostgreSQL terpapar ke jaringan, dev auth terbuka pada `APP_ENV` selain production, secret di host, akses fisik, backup di host yang sama, satu titik kegagalan | NFR-39 sampai NFR-44; reverse proxy dan TLS; port database hanya loopback; dev auth nonaktif; secret di luar repository; backup di luar host dan uji restore; SEC-70 sampai SEC-76 | Proposed; server belum ada. Penolakan start `production` + dev auth atau `simulated` Implemented |
+| T-24 | Tampering | A3 | Pengguna dengan hak TRUNCATE pada database menghapus `audit_logs` (trigger hanya menolak UPDATE/DELETE per baris, KL-21); pada server tunggal administrator host dan database kemungkinan orang yang sama | Pemisahan hak database, backup audit di luar host; penutupan celah di luar cakupan saat ini | Accepted limitation (OUT OF SCOPE, KL-21) |
+| T-25 | Information disclosure | A1, A5 | Kanal eksternal (Telegram, WhatsApp; OQ-08 "bisa") membawa konten RESTRICTED ke atas keluar jaringan instansi | Tidak diaktifkan (P2); bila dilanjutkan, otorisasi lewat HermesGateway dan tidak ada RESTRICTED ke atas secara default (PD-6); SEC-80, SEC-81 | Proposed; tidak ada kode kanal |
+| T-26 | Information disclosure | A1 | Indikator "yield" dan "kepemilikan SBN" (OQ-10) ditampilkan tanpa sumber otoritatif sehingga angka tidak akurat atau dikira resmi (R-15) | Tanpa angka dan tanpa tabel bisnis SUN (ADR-013); placeholder "sumber data belum tersedia"; SEC-60, SEC-61 | Angka tidak ada (Implemented secara struktural); placeholder Proposed |
 
 Status Implemented berarti kontrol ada pada scaffold (sumber: fact sheet bagian 3 dan 9; implementasi scaffold sesi 2026-10-01). Seluruh kontrol berjalan pada simulated store (`DATA_BACKEND=simulated`); kontrol yang sama wajib diterapkan ulang saat repository SQLAlchemy dibuat (ADR-007).
 
@@ -72,7 +79,8 @@ Detail pertahanan ada di [prompt-injection-defense](../05-ai-rag/prompt-injectio
 
 ## Open Questions
 
-- **OPEN QUESTION** OQ-07 Hosting yang disetujui; menentukan ancaman jaringan dan TLS.
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)** Hosting pilot: komputer tersendiri sebagai server (OQ-07). **OPEN QUESTION** OQ-23 persyaratan server (jaringan, TLS, administrator, akses) dan mekanisme login; ancaman T-23 dinilai ulang saat persyaratan dijawab. Pengakuan mentor tertunda (OQ-24).
+- **OPEN QUESTION** OQ-25 Pemetaan peran yang berwenang mengubah/mengunggah; menentukan penutupan T-20 dan T-21.
 - **OPEN QUESTION** OQ-11 Model AI dan lokasi pemrosesan; menentukan ancaman exfiltration melalui provider AI.
 
 ## Risks

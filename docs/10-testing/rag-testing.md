@@ -2,7 +2,7 @@
 
 **Status:** PROPOSED
 
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-06
 
 ## Purpose
 
@@ -73,6 +73,32 @@ Metrik diturunkan dari ukuran keberhasilan retrieval, citation, access control, 
 
 - **PROPOSED**: Teks kasus tidak boleh memuat angka SUN asli, nama pegawai asli, atau isi dokumen internal.
 - **PROPOSED**: Kasus yang gagal karena bug tidak dihapus; perbaiki kodenya, lalu kasus tetap sebagai regresi.
+
+## Rencana Perluasan Golden Set per Tim (PLANNED)
+
+Golden set saat ini berisi 16 kasus (RAG-01 sampai RAG-16) atas delapan knowledge simulasi K1 sampai K8 pada lima tim; SUN_TEMATIK tidak memiliki knowledge (OQ-01). Jawaban knowledge owner: pilot mencakup "6 tim" (OQ-03) dan dokumen yang boleh masuk adalah "semua dokumen yang diusulkan tim kerja" (OQ-04), keduanya **CONFIRMED (knowledge owner, deck v1_ slide 24)**; pengakuan mentor tertunda (OQ-24). Rencana di bawah **PLANNED**, belum ada kasus yang ditambahkan.
+
+| Tim | Kasus yang direncanakan (semua `SIMULATED_DATA`) | Campuran klasifikasi |
+|---|---|---|
+| PPSUN, PSUN, AKPSUN, PPPSUN, DHTV | Minimal satu kasus `ANSWERED` dari knowledge terbit milik tim, satu kasus `INSUFFICIENT_EVIDENCE` dari tim lain (kebocoran lintas tim), dan satu kasus knowledge non-`PUBLISHED` tim sendiri | PUBLIC, INTERNAL, RESTRICTED masing-masing minimal satu; satu CONFIDENTIAL yang harus tidak pernah muncul |
+| SUN_TEMATIK | Hanya kasus isolasi (pengguna tim ini tidak boleh memperoleh sitasi tim lain); tidak ada kasus `ANSWERED` sampai fungsinya dikonfirmasi | Tidak ada knowledge, sehingga tidak ada campuran |
+| Lintas tim | Pasangan pengguna dan pertanyaan sama dengan hasil berbeda menurut tim dan clearance; `sharing_scope` DIRECTORATE terbit versus TEAM | Sesuai kebutuhan kasus |
+
+- **PLANNED**: Setiap kasus mencatat `category`, pengguna, tim, dan klasifikasi; aturan kasus baru di bagian "Cara Menambah Kasus" tetap berlaku (dataset simulasi yang sama dengan seed, tanpa angka SUN asli).
+- **PLANNED**: Bila pengguna simulasi tambahan ditambahkan (usulan di [logical-data-model.md](../04-data/logical-data-model.md)), kasus dijalankan sebagai PIC dan ketua tim tiap tim agar kebocoran diukur terhadap hak akses peran yang benar-benar menulis.
+- **Keterbatasan**: Knowledge yang dibuat lewat API tidak memiliki chunk (belum ada pipeline ingestion, KL-07); retrieval Hermes bekerja pada chunk. Kasus `ANSWERED` baru memerlukan chunk dari dataset simulasi, bukan dari unggahan lewat API.
+- **PLANNED**: Gate kebocoran tetap nol. Kasus tim yang ditambahkan ikut gate; satu kebocoran adalah bug P0 (bug-severity).
+
+## Prosedur Pengujian dengan Dokumen Asli (hanya setelah persetujuan)
+
+Prosedur ini **PROPOSED** dan tidak berlaku sekarang. Sampai semua syarat terpenuhi, hanya `SIMULATED_DATA` yang dipakai (AGENTS.md).
+
+1. Persetujuan eksplisit tertulis atas dokumen tertentu dari pihak yang berwenang (siapa: OPEN QUESTION, OQ-05 dan OQ-24), dengan klasifikasi resmi yang sudah ditetapkan (OQ-05). "Semua dokumen yang diusulkan tim kerja" (OQ-04) tidak menggantikan persetujuan per dokumen.
+2. `CONFIDENTIAL` dikecualikan dari Hermes dan dari uji RAG (BR-22).
+3. Lingkungan uji terpisah dari repository Git (dokumen asli tidak pernah menjadi fixture, seed, atau commit; ADR-014); lingkungan dan hostnya mengikuti OQ-20 dan OQ-23.
+4. Hasil uji dicatat tanpa isi dokumen: hanya id kasus, keputusan Hermes, jumlah sitasi, dan ada atau tidaknya kebocoran. Jawaban yang dihasilkan tidak disalin ke register bug atau CHANGELOG.
+5. Setelah uji, data asli di lingkungan uji dihapus sesuai kebijakan retensi yang berlaku (OQ-13) dan penghapusan dicatat.
+6. Kebocoran, bagaimanapun kecilnya, diproses sebagai P0 dan insiden ([incident-response.md](../06-security/incident-response.md)).
 
 ## Batasan Evaluasi Saat Ini
 

@@ -2,7 +2,7 @@
 
 **Status:** DRAFT
 
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-06
 
 ## Purpose
 
@@ -53,6 +53,13 @@ Menjelaskan cara menguji aplikasi web `apps/web` (Next.js App Router), mencakup 
 
 - **CONFIRMED**: Penyembunyian menu di frontend hanya kosmetik; otorisasi ditegakkan di API (sumber: ADR-006). Karena itu e2e tidak menggantikan pengujian otorisasi backend.
 - **CONFIRMED**: Token login pengembangan disimpan di cookie httpOnly dan Hermes diproksikan lewat route handler `/api/hermes` (sumber: implementasi scaffold sesi 2026-10-01). E2E sebaiknya memverifikasi token tidak terbaca dari JavaScript halaman (PROPOSED).
+
+## Tambahan dari Jawaban Knowledge Owner (PLANNED)
+
+- **PLANNED**: Unit test atau e2e memastikan `/dashboard` tidak memuat angka yield atau kepemilikan SBN dan menampilkan "sumber data belum tersedia" untuk kedua indikator (FR-54, AC-22). Teks itu belum ada di UI, sehingga uji ini akan gagal sampai diimplementasikan.
+- **PROPOSED**: Frontend saat ini tidak memiliki formulir pembuatan atau pengubahan knowledge (pencarian `knowledge:create` pada `apps/web/src` tidak menemukan hasil), sehingga pembatasan hak ubah/unggah (FR-50) tidak dapat diuji dari UI; pengujiannya di API (SEC-40). Bila formulir dibuat, menu tetap hanya kosmetik dan e2e tidak menggantikan uji API (ADR-006).
+- **PLANNED**: Tidak ada tombol atau rute kanal Telegram/WhatsApp (FR-55).
+- **OPEN QUESTION**: Pengujian aksesibilitas manual pada server pilot belum terjadwal (OQ-20).
 
 ## Aturan Pengujian Frontend
 

@@ -2,7 +2,7 @@
 
 **Status:** NEEDS MENTOR VALIDATION
 
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-06
 
 ## Purpose
 
@@ -13,7 +13,8 @@ Menyusun kerangka UAT SUNOVATE: skenario per persona, peserta, lingkungan, sign-
 - **PROPOSED**: UAT direncanakan pada Bulan 6 (Implementasi) bersama security test, bug fixing, dokumentasi, dan handover (sumber: Proposal v2.4, slide 21).
 - **OPEN QUESTION**: Peserta UAT dan pengguna uji yang ditunjuk (OQ-20).
 - **OPEN QUESTION**: Lingkungan UAT (OQ-20) dan hosting (OQ-07).
-- **OPEN QUESTION**: Tim kerja dan proses yang menjadi pilot pertama (OQ-03).
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Pilot mencakup "6 tim" (OQ-03); nama tim dianggap enam tim brief (PROPOSED, OQ-02). **OPEN QUESTION**: proses yang dipilot dan pengakuan mentor (OQ-24).
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Hosting pilot adalah komputer tersendiri sebagai server (OQ-07); lingkungan UAT dan persyaratan server tetap OPEN QUESTION (OQ-20, OQ-23).
 
 ## Prinsip
 
@@ -27,7 +28,7 @@ Persona dan role mengikuti role pengembangan usulan. Pengguna simulasi di kolom 
 
 | ID | Persona (role) | Skenario | Hasil yang diharapkan | Pengguna simulasi |
 |---|---|---|---|---|
-| UAT-01 | staff | Membuat draft knowledge lalu mengajukan review | Status `IN_REVIEW`, tercatat di audit | `sim.staff.pppsun` |
+| UAT-01 | staff | Membuat draft knowledge lalu mengajukan review. **Bertentangan dengan jawaban knowledge owner** (hak ubah/unggah hanya ketua tim, kasubdit PMP, Kasi MP, PIC; PD-1). Berlaku hanya pada matriks saat ini; setelah PD-1 diganti UAT-12 dan UAT-13 | Status `IN_REVIEW`, tercatat di audit (matriks saat ini) | `sim.staff.pppsun` |
 | UAT-02 | staff | Mencari dokumen dan membuka hasil | Hanya hasil yang boleh dibaca yang tampil | `sim.staff.pppsun` |
 | UAT-03 | knowledge_owner | Memperbarui knowledge yang sedang dibuka pengguna lain | Konflik terdeteksi, tidak ada perubahan yang tertimpa diam-diam | `sim.owner.ppsun` |
 | UAT-04 | knowledge_owner | Mendaftarkan versi dokumen baru | Versi tercatat dengan checksum; duplikasi ditolak | `sim.owner.ppsun` |
@@ -38,6 +39,11 @@ Persona dan role mengikuti role pengembangan usulan. Pengguna simulasi di kolom 
 | UAT-09 | read_only | Membuka dashboard dan bertanya ke Hermes | Jawaban bersitasi atau penolakan yang jelas; tidak ada tombol ubah | `sim.readonly.dhtv` |
 | UAT-10 | staff | Bertanya ke Hermes di luar domain SUN dan meminta aksi tulis | Ditolak atau `REQUIRES_HUMAN_APPROVAL`; tidak ada aksi dieksekusi | `sim.staff.pppsun` |
 | UAT-11 | system_admin | Melihat pengguna, tim, role, dan status provider | Data tampil sesuai permission; provider produksi berstatus nonaktif | `sim.admin` |
+| UAT-12 | staff (setelah PD-1) | Mencoba membuat atau mengajukan knowledge | Ditolak dengan pesan jelas; hanya membaca, mencari, bertanya ke Hermes, dan memperbarui tugas. PLANNED, hari ini akan gagal | `sim.staff.pppsun` |
+| UAT-13 | team_lead atau knowledge_owner | Membuat dan mengajukan knowledge tim sendiri; mencoba tim lain | Tim sendiri berhasil; tim lain ditolak. Ketua tim dan PIC menjadi reviewer satu sama lain, bukan atas unggahan sendiri | `sim.lead.psun`, `sim.owner.ppsun` |
+| UAT-14 | Enam tim | Peserta tiap tim membuka daftar, pencarian, dashboard, dan Hermes | Hanya data timnya dan konten direktorat terbit; pengguna SUN_TEMATIK tanpa data tim lain. PLANNED, memerlukan pengguna simulasi tambahan | Pengguna per tim (usulan) |
+| UAT-15 | Semua | Membuka `/dashboard` | Indikator yield dan kepemilikan SBN tidak berangka; tampil "sumber data belum tersedia". PLANNED, teks belum ada | Semua |
+| UAT-16 | system_admin / administrator server | Latihan backup dan restore serta pemeriksaan paparan di server pilot | Restore berhasil; hanya port web atau proxy terjangkau. PLANNED, server belum ada (OQ-23) | `sim.admin` |
 
 - **OPEN QUESTION**: Skenario untuk SUN Tematik tidak disusun karena fungsinya belum dikonfirmasi (OQ-01).
 - **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Knowledge owner dan reviewer pada setiap tim adalah ketua tim dan PIC yang ditunjuk (OQ-09); penunjukan orangnya **OPEN QUESTION**. Alur persetujuan publikasi tetap **OPEN QUESTION** (OQ-12).

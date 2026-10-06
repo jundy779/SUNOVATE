@@ -2,7 +2,7 @@
 
 **Status:** NEEDS MENTOR VALIDATION
 
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-06
 
 ## Purpose
 
@@ -49,6 +49,25 @@ Ekspektasi berikut adalah usulan untuk periode pengembangan oleh satu pengembang
 | P2 | Pesan error tidak jelas, tetapi `requestId` tersedia |
 | P3 | Warna tidak sesuai token desain, teks terpotong, ejaan |
 
+### Contoh dari Jawaban Knowledge Owner (PROPOSED)
+
+Contoh berikut diturunkan dari jawaban yang berlabel **CONFIRMED (knowledge owner, deck v1_ slide 24)**; pengakuan mentor tertunda (OQ-24). Definisi P0 sampai P3 tidak berubah: slide 20 tidak berubah pada deck `v1_`. Yang bertambah hanya contoh.
+
+| Severity | Contoh | Catatan |
+|---|---|---|
+| P0 | Dokumen asli (bukan `SIMULATED_DATA`) masuk repository, indeks, atau RAG tanpa klasifikasi dan persetujuan eksplisit (FR-53, BR-35) | Kelas paparan data (slide 20: kebocoran data); diproses sesuai [incident-response.md](../06-security/incident-response.md) |
+| P0 | Konten `CONFIDENTIAL` diambil atau dikutip Hermes karena jawaban "semua dokumen" dianggap izin | Pelanggaran plafon klasifikasi (BR-22) |
+| P0 | Pengguna di luar tim membaca atau menulis data tim pilot lain karena peran berlaku global atau penunjukan salah | Pelanggaran team scope (BR-07, BR-18, T-21) |
+| P0 | API atau PostgreSQL server pilot terjangkau dari jaringan tanpa kontrol, atau dev auth terbuka ke jaringan | Paparan server (NFR-42, T-23) |
+| P1 | `staff` masih dapat membuat, mengubah, atau mengajukan knowledge setelah PD-1 disetujui dan dinyatakan diterapkan (FR-50, BR-33) | Sebelum PD-1 disetujui ini celah persyaratan (lihat [bug-register.md](bug-register.md), REQ-GAP-01), bukan bug fungsional; menjadi P1 bila kontrol otorisasi yang ditetapkan tidak berlaku |
+| P1 | Ketua tim atau PIC yang berwenang ditolak menulis di timnya sendiri | Fungsi utama gagal untuk pengguna yang berhak |
+| P1 | Perubahan katalog permission tidak sampai ke database yang sudah di-seed sehingga `/roles` berbeda dari dokumentasi | Seed hanya menambah baris (lihat logical-data-model) |
+| P1 | Indikator yield atau kepemilikan SBN tampil dengan angka tanpa sumber otoritatif (FR-54, BR-36) | Angka yang menyesatkan dan melampaui batas ADR-013 |
+| P2 | Teks "sumber data belum tersedia" tidak muncul, tetapi tidak ada angka | Fungsi terganggu; data tidak salah |
+| P2 | Backup server pilot tidak pernah diuji restore | Risiko R-13; menjadi P1 bila backup terbukti rusak |
+| P2 | Pilot enam tim: satu tim tidak memiliki pengguna uji sehingga isolasi tim itu tidak teruji | Lubang cakupan uji, bukan cacat produk |
+| P3 | Penamaan tim pada tampilan berbeda dari nama resmi (OQ-02) | Minor sampai nama resmi dikonfirmasi |
+
 - **PROPOSED**: Bila ragu antara dua severity, pilih yang lebih tinggi sampai triase.
 
 ## Register Bug (PROPOSED)
@@ -71,9 +90,11 @@ Ekspektasi berikut adalah usulan untuk periode pengembangan oleh satu pengembang
 
 - **PROPOSED**: Register tidak boleh memuat data asli, data pribadi, atau isi dokumen internal.
 - **OPEN QUESTION**: Alat untuk menyimpan register bug belum ditetapkan.
+- **PROPOSED**: Sampai alat ditetapkan, register sementara berupa dokumen: [bug-register.md](bug-register.md). Isinya hanya cacat yang dapat ditelusuri di riwayat repository dan catatan review, dengan severity usulan menurut dokumen ini.
 
 ## Related Documents
 
+- [bug-register.md](bug-register.md)
 - [test-strategy.md](test-strategy.md)
 - [uat-plan.md](uat-plan.md)
 - [incident-response.md](../06-security/incident-response.md)

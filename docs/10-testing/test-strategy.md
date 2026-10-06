@@ -2,7 +2,7 @@
 
 **Status:** PROPOSED
 
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-06
 
 ## Purpose
 
@@ -48,6 +48,13 @@ Skenario berikut wajib memiliki pengujian otomatis atau skenario UAT sebelum ril
 | Sitasi keliru | Setiap `[n]` harus memetakan ke chunk yang diotorisasi; jika tidak, jawaban diblok | Backend, RAG |
 | Duplikasi ingestion | 409 `DUPLICATE_CHECKSUM` untuk checksum SHA-256 yang sama pada dokumen yang sama | Backend, integration |
 | Konflik pembaruan | 409 `REVISION_CONFLICT` untuk `revision` yang usang | Backend |
+
+## Tambahan dari Jawaban Knowledge Owner (PLANNED)
+
+- **CONFIRMED**: Slide 20 (P0 sampai P3, lapisan uji, dan enam skenario wajib) tidak berubah pada deck `v1_`; strategi di atas tidak digeser. Dampak jawaban knowledge owner pada slide 24 (pilot "6 tim", "semua dokumen", hak ubah/unggah, hosting server khusus, "bisa" untuk Telegram/WhatsApp, siapa knowledge owner, indikator "yield" dan "kepemilikan SBN") hanya menambah skenario turunan. Pengakuan mentor tertunda (OQ-24).
+- **PLANNED**: Skenario turunan dan statusnya ada di [security-testing.md](security-testing.md) (SEC-40 sampai SEC-91), [rag-testing.md](rag-testing.md) (rencana golden set per tim dan prosedur dokumen asli), [backend-testing.md](backend-testing.md), [frontend-testing.md](frontend-testing.md), dan [uat-plan.md](uat-plan.md) (UAT-12 sampai UAT-16). Tidak satu pun yang berstatus PLANNED boleh dilaporkan sebagai ada atau lulus.
+- **PROPOSED**: Hasil uji pada `DATA_BACKEND=simulated` tidak membuktikan perilaku server pilot. Pilot pada komputer server khusus memakai `DATA_BACKEND=postgres`, sehingga suite yang relevan dijalankan juga lewat `pnpm db:test` (ADR-015) dan latihan backup-restore dicatat (AC-24).
+- **PROPOSED**: Bug yang bersumber dari jawaban ini (mis. `staff` masih dapat mengunggah setelah PD-1 disetujui) diklasifikasikan menurut [bug-severity.md](bug-severity.md) dan dicatat di [bug-register.md](bug-register.md).
 
 ## Kriteria Masuk
 
