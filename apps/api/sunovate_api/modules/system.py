@@ -11,6 +11,7 @@ from pydantic.alias_generators import to_camel
 from ..authz.dependencies import Ctx, require
 from ..authz.principal import Principal
 from ..core.responses import Pagination, envelope, paginated
+from ..store.records import DataQualityIssue
 from ._common import governed_view
 
 router = APIRouter(tags=["providers and data quality"])
@@ -32,6 +33,6 @@ def list_data_quality(
     ],
     pagination: Annotated[Pagination, Depends()],
 ) -> dict[str, Any]:
-    items = ctx.authz.readable(principal, ctx.store.data_quality_issues.values())
+    items = ctx.authz.list_readable(principal, DataQualityIssue)
     page, meta = paginated(items, pagination)
     return envelope([governed_view(ctx, i) for i in page], **meta)

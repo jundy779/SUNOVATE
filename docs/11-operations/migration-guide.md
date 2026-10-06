@@ -2,7 +2,7 @@
 
 **Status:** DRAFT
 
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -13,7 +13,8 @@ Menjelaskan cara menjalankan, membuat, meninjau, dan membatalkan migration Alemb
 - **CONFIRMED**: Migration dikelola dengan Alembic di `apps/api` (sumber: brief sesi 2026-10-01).
 - **CONFIRMED**: Revision awal `0001_initial_schema` mendefinisikan 30 tabel (sumber: fact sheet bagian 6; status skema PROPOSED).
 - **CONFIRMED**: Migration, seed, dan downgrade sudah divalidasi terhadap PostgreSQL sementara melalui `pgserver`; jalur Docker belum divalidasi di mesin pengembangan saat ini (sumber: implementasi scaffold sesi 2026-10-01).
-- **CONFIRMED**: Runtime API belum memakai database (`DATA_BACKEND=simulated`, ADR-007).
+- **CONFIRMED (implementasi)**: Revision `0002_ordering_columns` menambah `audit_logs.seq` dan `knowledge_tags.position`; `0001_initial_schema` tidak diedit (ADR-015, PROPOSED; lihat [database-schema.md](../04-data/database-schema.md)).
+- **CONFIRMED (implementasi)**: Default runtime tetap `DATA_BACKEND=simulated` (ADR-007). Dengan `DATA_BACKEND=postgres`, runtime API membaca dan menulis database `DATABASE_URL`, sehingga database harus di-migrate ke head dan di-seed lebih dulu (ADR-015, PROPOSED).
 
 ## Perintah
 
@@ -24,7 +25,7 @@ Menjelaskan cara menjalankan, membuat, meninjau, dan membatalkan migration Alemb
 | Memuat seed SIMULATED_DATA | `pnpm db:seed` | Root |
 | Render SQL offline untuk review | `pnpm db:sql` | Root |
 | Membuat revision baru | `uv run alembic revision -m "deskripsi singkat"` | `apps/api` |
-| Validasi tanpa Docker | `pwsh scripts/validation/db-check-pgserver.ps1` | Root |
+| Validasi tanpa Docker | `pnpm db:check` | Root |
 
 `pnpm db:migrate` dan `pnpm db:seed` memakai `DATABASE_URL` (lihat [environment-configuration.md](environment-configuration.md)).
 
@@ -35,7 +36,7 @@ Menjelaskan cara menjalankan, membuat, meninjau, dan membatalkan migration Alemb
 3. Tulis fungsi `upgrade()` dan `downgrade()` secara eksplisit. Downgrade harus membalik upgrade sepenuhnya.
 4. Perbarui model SQLAlchemy yang terkait pada perubahan yang sama.
 5. Jalankan `pnpm db:sql` dan tinjau SQL hasil render.
-6. Jalankan upgrade, seed, dan downgrade terhadap database uji (Docker Compose atau skrip pgserver).
+6. Jalankan upgrade, seed, dan downgrade terhadap database uji (Docker Compose atau `pnpm db:check`).
 7. Perbarui [database-schema.md](../04-data/database-schema.md) dan catat di CHANGELOG.md.
 
 ## Aturan Review (PROPOSED)

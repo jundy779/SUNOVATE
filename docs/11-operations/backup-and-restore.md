@@ -17,7 +17,8 @@ Mengusulkan pendekatan backup dan restore database SUNOVATE untuk pengembangan l
 ## Confirmed Information
 
 - **CONFIRMED**: Database adalah PostgreSQL dengan pgvector; file dokumen tidak disimpan di database. Database hanya menyimpan referensi, metadata, checksum SHA-256, versi, klasifikasi, dan lokasi provider (sumber: ADR-003).
-- **CONFIRMED**: Runtime scaffold memakai store simulasi in-memory; data yang dibuat lewat API saat ini hilang ketika API dihentikan dan tidak tercakup backup database (sumber: ADR-007).
+- **CONFIRMED**: Default runtime memakai store simulasi in-memory (`DATA_BACKEND=simulated`); pada mode ini data yang dibuat lewat API hilang ketika API dihentikan dan tidak tercakup backup database (sumber: ADR-007).
+- **CONFIRMED (implementasi)**: Dengan `DATA_BACKEND=postgres`, data yang dibuat lewat API disimpan di PostgreSQL `DATABASE_URL` dan tercakup backup database (ADR-015, PROPOSED).
 - **CONFIRMED**: Database lokal dapat dibentuk ulang kapan saja dari migration dan seed SIMULATED_DATA (`pnpm db:migrate`, `pnpm db:seed`).
 
 ## Cakupan Backup

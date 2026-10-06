@@ -29,7 +29,7 @@ flowchart TB
 | No | Langkah | Bulan roadmap | Bergantung pada | Status |
 |---|---|---|---|---|
 | 1 | Validasi mentor: pengakuan atas jawaban knowledge owner (OQ-24) dan sisa pertanyaan (nama tim resmi, skema klasifikasi, mekanisme login, persyaratan server, pemetaan peran, alur publikasi, model AI). Pilot ("6 tim"), hosting (komputer tersendiri sebagai server), dan knowledge owner/reviewer (ketua tim dan PIC) sudah dijawab knowledge owner | Bulan 1–2 | OQ-02, OQ-05, OQ-07, OQ-11, OQ-12, OQ-23, OQ-24, OQ-25 | PROPOSED |
-| 2 | Implementasi repository SQLAlchemy untuk semua modul, dengan antarmuka service yang sama, lalu jalankan ulang test API terhadap PostgreSQL | Bulan 2 | Skema `0001_initial_schema` | PROPOSED |
+| 2 | Implementasi repository SQLAlchemy untuk semua modul, dengan antarmuka service yang sama, lalu jalankan ulang test API terhadap PostgreSQL | Bulan 2 | Skema `0001_initial_schema` | PROPOSED, diimplementasikan 2026-10-02 (ADR-015: `DATA_BACKEND=postgres`, revisi `0002_ordering_columns`, `pnpm db:test`); review disetujui dan digabung ke main |
 | 3 | Validasi jalur Docker Compose di mesin yang memiliki Docker | Bulan 2 | Izin perangkat | PROPOSED |
 | 4 | Pipeline ingestion: registrasi file dari provider yang disetujui, ekstraksi, chunking, status `extraction_status`, karantina | Bulan 3 | OQ-04, OQ-06 | PROPOSED |
 | 5 | Embedding dan retrieval semantik dengan model yang disetujui; tetapkan tipe dimensi kolom vektor dan indeks ANN lewat migration baru | Bulan 3 | OQ-11 | PROPOSED |
@@ -53,6 +53,18 @@ Semua item di bawah berstatus **PROPOSED** dan belum diimplementasikan. Sumber: 
 | PD-4 | Klarifikasi "Sandbox server" sebelum memilih document provider pilot. | OQ-06, OQ-22 | PROPOSED |
 | PD-5 | Definisikan indikator "yield" dan "kepemilikan SBN" setelah sumber data otoritatif dan siapa yang boleh melihatnya diketahui; tidak ada tabel bisnis SUN (ADR-013) sebelum itu. | OQ-10, OQ-21 | PROPOSED |
 | PD-6 | Aturan untuk Telegram dan WhatsApp bila dilanjutkan (P2): kajian keamanan, konten RESTRICTED ke atas tidak dikirim ke kanal eksternal secara default. | OQ-08 | PROPOSED |
+
+## Backlog Persistence PostgreSQL
+
+**PROPOSED** (dari ADR-015; tidak dikerjakan pada perubahan persistence):
+
+| Butir | Alasan ditunda | Rujukan |
+|---|---|---|
+| Validasi `DATABASE_URL` secara lazy pada `session()` pertama `PostgresBackend` | Mengubah perilaku fail-fast saat startup; untuk sekarang dimitigasi dengan dokumentasi | KL-24 |
+| Mengakhiri transaksi baca (`repo.end_read()`) sebelum `HermesClient.answer` | Generasi saat ini lokal; dipertimbangkan bersama provider AI remote (OUT OF SCOPE saat ini) | KL-23 |
+| Engine kecil terpisah untuk `audit_denial` | Mitigasi risiko pool koneksi kedua; tidak realistis pada skala `SIMULATED_DATA` | KL-22 |
+| Menutup celah `TRUNCATE` pada trigger append-only | OUT OF SCOPE requirements persistence | KL-21 |
+| Prefilter FTS `search_vector` untuk search dan retrieval | Konfigurasi `simple` tanpa stemming dapat menurunkan recall dibanding pencarian leksikal saat ini | [retrieval-strategy.md](../05-ai-rag/retrieval-strategy.md) |
 
 ## Kandidat yang Ditunda
 

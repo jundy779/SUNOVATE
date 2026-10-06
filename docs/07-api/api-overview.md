@@ -1,7 +1,7 @@
 # API Overview
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -13,7 +13,7 @@ Memberikan gambaran API SUNOVATE: gaya, prefix, modul, dokumentasi OpenAPI, dan 
 - **CONFIRMED** API bergaya REST dengan prefix `/api/v1` (sumber: fact sheet bagian 9).
 - **CONFIRMED** OpenAPI dihasilkan FastAPI; UI interaktif di `/docs` saat `pnpm api:dev` berjalan pada port 8000 (sumber: fact sheet bagian 9).
 - **CONFIRMED** Skema JSON OpenAPI tersedia di `/openapi.json` (default FastAPI; sumber: implementasi scaffold sesi 2026-10-01).
-- **CONFIRMED** Seluruh endpoint pada [endpoint-catalog](endpoint-catalog.md) berjalan terhadap simulated store (`DATA_BACKEND=simulated`); repository SQLAlchemy belum diimplementasikan (sumber: ADR-007).
+- **CONFIRMED** Secara default seluruh endpoint pada [endpoint-catalog](endpoint-catalog.md) berjalan terhadap simulated store (`DATA_BACKEND=simulated`) (sumber: ADR-007). Dengan `DATA_BACKEND=postgres` endpoint yang sama berjalan terhadap PostgreSQL lewat interface `Repository` yang sama; kontrak API tidak berubah (ADR-015, PROPOSED).
 - **CONFIRMED** Setiap respons sukses membawa `meta.dataLabel` = `SIMULATED_DATA`, dan setiap respons membawa header `X-Request-ID` (sumber: fact sheet bagian 9).
 - **CONFIRMED** Hermes diakses hanya melalui API (`/hermes/...`) dan `HermesGateway`; tidak ada akses langsung Hermes ke database (sumber: ADR-004).
 

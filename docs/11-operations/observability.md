@@ -2,7 +2,7 @@
 
 **Status:** DRAFT
 
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -35,9 +35,11 @@ sequenceDiagram
 
 | Endpoint | Fungsi | Catatan |
 |---|---|---|
-| `GET /api/v1/health` | Proses API hidup | Tidak bergantung pada database |
-| `GET /api/v1/health/database` | Koneksi ke PostgreSQL | Runtime saat ini tetap memakai store simulasi (ADR-007) |
+| `GET /api/v1/health` | Proses API hidup | Tidak bergantung pada database. `dataBackend` adalah backend yang benar-benar terpasang pada runtime (bukan nilai `DATA_BACKEND` di konfigurasi) |
+| `GET /api/v1/health/database` | Koneksi ke PostgreSQL | Konektivitas saja; backend runtime terlihat di field `dataBackend` pada `GET /api/v1/health` (`simulated` default, `postgres` per ADR-015, PROPOSED) |
 
+- **CONFIRMED (implementasi, PROPOSED ADR-015)**: Pada `DATA_BACKEND=postgres`, kegagalan database dicatat dengan `code` dan `sqlstate`: `DATABASE_UNAVAILABLE` (koneksi gagal, pool habis) berbeda dari `DATABASE_BUSY` (SQLSTATE 57014, 55P03, 40P01, 40001). Lihat [error-format.md](../07-api/error-format.md).
+- **CONFIRMED (implementasi, PROPOSED ADR-015)**: Saat API dimatikan, lifespan FastAPI memanggil `DataBackend.close()`; backend PostgreSQL membuang engine dan pool koneksinya, backend simulasi tidak melakukan apa pun.
 - **CONFIRMED**: Service `postgres` di Docker Compose memiliki healthcheck (sumber: implementasi scaffold sesi 2026-10-01).
 
 ## Audit Log dan Log Aplikasi
@@ -45,7 +47,7 @@ sequenceDiagram
 | Aspek | Audit log | Log aplikasi |
 |---|---|---|
 | Tujuan | Jejak aksi pengguna untuk akuntabilitas | Diagnosis teknis |
-| Penyimpanan | Tabel `audit_logs` (runtime saat ini: store simulasi) | Output proses (stdout) |
+| Penyimpanan | Tabel `audit_logs` bila `DATA_BACKEND=postgres` (persisten, append-only); store simulasi in-memory bila `DATA_BACKEND=simulated` (default) | Output proses (stdout) |
 | Sifat | Append-only | Dapat dirotasi |
 | Pembaca | Role dengan `audit:read` lewat `GET /api/v1/audit-logs` | Pengembang atau administrator sistem |
 | Contoh isi | Aksi `LOGIN`, `CREATE`, `UPDATE`, `SUBMIT`, `APPROVE`, `REJECT`, `ACCESS_DENIED`, `AI_QUERY`, `AI_FEEDBACK`, `VERSION_REGISTER` | Method, path, status, durasi, `request_id` |
@@ -57,6 +59,7 @@ sequenceDiagram
 - **PROPOSED**: Token, header otorisasi, cookie, `DEV_AUTH_SECRET`, password, dan connection string berkredensial.
 - **PROPOSED**: Isi dokumen, isi chunk, dan teks lengkap jawaban Hermes di log aplikasi.
 - **PROPOSED**: Data pribadi dan data keuangan.
+- **CONFIRMED (implementasi, PROPOSED ADR-015)**: Error tak tertangani dicatat tanpa pesan exception dan tanpa rantai penyebabnya. Log hanya memuat `errorType`, `sqlstate` (bila error database), `stack` (daftar `berkas:baris fungsi`), dan `requestId`. Pesan driver PostgreSQL (mis. `DETAIL: Key (kolom)=(nilai)`), teks SQL, dan parameter terikat tidak masuk log. Teruji di `apps/api/tests/test_runtime_hardening.py`.
 - **PROPOSED**: Stack trace tidak dikirim ke klien; respons `INTERNAL_ERROR` hanya memuat `code`, `message`, dan `requestId`.
 - **OPEN QUESTION**: Apakah teks pertanyaan Hermes boleh disimpan di audit dan berapa lama (OQ-13).
 

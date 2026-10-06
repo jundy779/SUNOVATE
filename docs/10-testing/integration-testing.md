@@ -2,19 +2,19 @@
 
 **Status:** DRAFT
 
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
-Menjelaskan pengujian yang membutuhkan PostgreSQL nyata: migration upgrade dan downgrade, seed SIMULATED_DATA, dan pemeriksaan full-text search.
+Menjelaskan pengujian yang membutuhkan PostgreSQL nyata: migration upgrade dan downgrade, seed SIMULATED_DATA, pemeriksaan full-text search, dan seluruh suite API pada backend `postgres`.
 
 ## Confirmed Information
 
-- **CONFIRMED**: Skema fisik 30 tabel didefinisikan pada revision Alembic `0001_initial_schema` (sumber: fact sheet bagian 6; status skema PROPOSED).
+- **CONFIRMED**: Skema fisik 30 tabel didefinisikan pada revision Alembic `0001_initial_schema`, ditambah kolom urutan pada `0002_ordering_columns` (sumber: fact sheet bagian 6, `apps/api/alembic/versions/`; status skema PROPOSED).
 - **CONFIRMED**: PostgreSQL adalah satu-satunya store: relasional, full-text search (tsvector, GIN), dan pgvector (sumber: ADR-003).
 - **CONFIRMED**: Suite berlokasi di `tests/integration/` dan hanya berjalan bila `SUNOVATE_TEST_DATABASE_URL` diisi; jika tidak, test dilewati (sumber: implementasi scaffold sesi 2026-10-01).
 - **CONFIRMED**: Docker tidak terpasang di mesin pengembangan saat ini. Migration divalidasi memakai PostgreSQL lokal sementara melalui paket Python `pgserver`, yang hanya alat bantu validasi dan bukan dependensi proyek (sumber: implementasi scaffold sesi 2026-10-01).
-- **CONFIRMED**: Runtime API belum membaca database; repository SQLAlchemy belum diimplementasikan (sumber: ADR-007). Pengujian ini memvalidasi skema, bukan perilaku endpoint terhadap database.
+- **CONFIRMED (implementasi)**: Runtime API dapat membaca dan menulis database dengan `DATA_BACKEND=postgres` (ADR-015, PROPOSED). Perilaku endpoint terhadap database diuji lewat `pnpm db:test` (Jalur C); `tests/integration/` tetap memvalidasi skema.
 - **CONFIRMED**: Hasil eksekusi tidak dicatat di sini; lihat laporan validasi terbaru di CHANGELOG.md.
 
 ## Cakupan
@@ -46,11 +46,23 @@ pnpm db:seed
 ## Jalur B: Tanpa Docker (opsional)
 
 ```powershell
-pwsh scripts/validation/db-check-pgserver.ps1
+pnpm db:check
 ```
 
-- **CONFIRMED**: Skrip ini menjalankan migrate, seed, dan downgrade terhadap PostgreSQL sementara tanpa Docker (sumber: implementasi scaffold sesi 2026-10-01).
+- **CONFIRMED**: `scripts/validation/db_check_pgserver.py` menjalankan migrate (termasuk `0002_ordering_columns`), `alembic check`, seed dua kali, pemeriksaan FTS dan trigger append-only, lalu downgrade terhadap PostgreSQL sementara tanpa Docker (sumber: `scripts/validation/db_check_pgserver.py`).
 - **PROPOSED**: Jalur ini hanya untuk validasi skema lokal. Paket `pgserver` tidak boleh ditambahkan sebagai dependensi proyek.
+
+## Jalur C: Seluruh suite pada backend postgres (`pnpm db:test`)
+
+```powershell
+pnpm api:setup
+pnpm db:test
+```
+
+- **CONFIRMED (implementasi)**: `scripts/validation/db_test_pgserver.py` menjalankan pgserver sementara, `alembic upgrade head`, seed, lalu `pytest -q` di `apps/api` (testpaths `tests` dan `../../tests`) dengan `SUNOVATE_TEST_BACKEND=postgres`, `SUNOVATE_TEST_DATABASE_URL`, `SUNOVATE_DB_RESET_ALLOWED=1`, dan `APP_ENV=test`. Exit code sama dengan pytest; direktori sementara dihapus; URL tidak dicetak (sumber: skrip tersebut, ADR-015).
+- **CONFIRMED (implementasi)**: Fixture autouse `_reset_backend_state` di `apps/api/tests/conftest.py` dan `tests/conftest.py` mereset database (`TRUNCATE ... RESTART IDENTITY CASCADE` + seed) sebelum setiap test. Reset menolak berjalan kecuali `APP_ENV=test` dan `SUNOVATE_DB_RESET_ALLOWED=1`.
+- **CONFIRMED (implementasi)**: Pada jalur ini test `tests/integration/` ikut berjalan (tidak di-skip), begitu pula test khusus postgres di `apps/api/tests/postgres/` dan instance postgres dari `apps/api/tests/test_repository_contract.py`: pemetaan constraint ke 409 `DUPLICATE_CHECKSUM` / 403 `SEPARATION_OF_DUTIES`, revision atomik dan konkuren, rollback multi-langkah, audit persisten dan append-only, paritas respons dengan backend simulated per persona, persistence lintas instance backend, dan jumlah statement yang tidak bertambah dengan data. Pada `pnpm test` (simulated) test tersebut di-skip.
+- **PROPOSED**: Jalur ini hanya untuk database sementara. Jangan menjalankan reset terhadap database yang berisi data yang ingin disimpan.
 
 ## Render SQL Offline
 

@@ -3,26 +3,42 @@
 from __future__ import annotations
 
 import time
-from collections.abc import Awaitable, Callable
+from collections.abc import AsyncIterator, Awaitable, Callable
+from contextlib import asynccontextmanager
 from uuid import uuid4
 
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from starlette.concurrency import run_in_threadpool
 
-from .context import AppContext, build_context
+from .context import AppRuntime, build_runtime
 from .core.config import Settings, get_settings
-from .core.errors import error_body, register_error_handlers
+from .core.errors import error_body, log_unhandled_error, register_error_handlers
 from .core.logging import configure_logging, request_id_var
 from .modules import build_api_router
 
 _REQUEST_ID_MAX = 128
 
 
-def create_app(settings: Settings | None = None, context: AppContext | None = None) -> FastAPI:
+def create_app(settings: Settings | None = None, runtime: AppRuntime | None = None) -> FastAPI:
     settings = settings or get_settings()
     logger = configure_logging(settings.log_level)
+    runtime = runtime or build_runtime(settings)
+
+    @asynccontextmanager
+    async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
+        try:
+            yield
+        finally:
+            # Release the backend (connection pool) when the application shuts down.
+            try:
+                await run_in_threadpool(runtime.backend.close)
+            except Exception as exc:  # noqa: BLE001 - shutdown must not raise
+                logger.warning("backend close gagal", extra={"errorType": type(exc).__name__})
+
     app = FastAPI(
+        lifespan=lifespan,
         title=settings.app_name,
         version=settings.app_version,
         description=(
@@ -30,7 +46,7 @@ def create_app(settings: Settings | None = None, context: AppContext | None = No
             "SIMULATED_DATA and production integrations are disabled."
         ),
     )
-    app.state.ctx = context or build_context(settings)
+    app.state.runtime = runtime
 
     app.add_middleware(
         CORSMiddleware,
@@ -51,8 +67,8 @@ def create_app(settings: Settings | None = None, context: AppContext | None = No
         try:
             try:
                 response = await call_next(request)
-            except Exception:
-                logger.exception("Unhandled application error")
+            except Exception as exc:  # noqa: BLE001 - last resort: sanitized log + generic 500
+                log_unhandled_error(exc)
                 response = JSONResponse(
                     error_body("INTERNAL_ERROR", "Terjadi kesalahan internal"), 500
                 )

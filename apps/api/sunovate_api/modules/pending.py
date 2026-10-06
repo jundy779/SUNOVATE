@@ -9,6 +9,7 @@ from fastapi import APIRouter, Depends
 from ..authz.dependencies import Ctx, require
 from ..authz.principal import Principal
 from ..core.responses import Pagination, envelope, paginated
+from ..store.records import FollowUp, PendingMatter
 from .work import with_deadline
 
 router = APIRouter(tags=["pending matters and follow-ups"])
@@ -21,7 +22,7 @@ def list_pending(
     pagination: Annotated[Pagination, Depends()],
 ) -> dict[str, Any]:
     items = sorted(
-        ctx.authz.readable(principal, ctx.store.pending_matters.values()),
+        ctx.authz.list_readable(principal, PendingMatter),
         key=lambda p: (p.due_date is None, p.due_date),
     )
     page, meta = paginated(items, pagination)
@@ -35,7 +36,7 @@ def list_follow_ups(
     pagination: Annotated[Pagination, Depends()],
 ) -> dict[str, Any]:
     items = sorted(
-        ctx.authz.readable(principal, ctx.store.follow_ups.values()),
+        ctx.authz.list_readable(principal, FollowUp),
         key=lambda f: (f.due_date is None, f.due_date),
     )
     page, meta = paginated(items, pagination)

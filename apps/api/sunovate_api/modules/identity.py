@@ -20,21 +20,18 @@ def list_users(
     pagination: Annotated[Pagination, Depends()],
 ) -> dict[str, Any]:
     store = ctx.store
+    roles_by_user = store.role_codes_by_user()
+    teams_by_user = store.team_ids_by_user()
     rows = []
-    for user in sorted(store.users.values(), key=lambda u: u.email):
-        role_ids = {ur.role_id for ur in store.user_roles if ur.user_id == user.id}
+    for user in sorted(store.users(), key=lambda u: u.email):
         rows.append(
             {
                 **serialize(user),
-                "roles": sorted(store.roles[r].code for r in role_ids),
+                "roles": sorted(roles_by_user.get(user.id, frozenset())),
                 "teamCodes": sorted(
                     filter(
                         None,
-                        (
-                            store.team_code(m.team_id)
-                            for m in store.memberships
-                            if m.user_id == user.id
-                        ),
+                        (store.team_code(t) for t in teams_by_user.get(user.id, frozenset())),
                     )
                 ),
             }
@@ -47,7 +44,7 @@ def list_users(
 def list_teams(
     ctx: Ctx, _p: Annotated[Principal, Depends(require("team:read", resource="team"))]
 ) -> dict[str, Any]:
-    teams = sorted(ctx.store.teams.values(), key=lambda t: t.code)
+    teams = sorted(ctx.store.teams(), key=lambda t: t.code)
     return envelope([serialize(t) for t in teams], total=len(teams))
 
 
@@ -56,14 +53,10 @@ def list_roles(
     ctx: Ctx, _p: Annotated[Principal, Depends(require("role:read", resource="role"))]
 ) -> dict[str, Any]:
     store = ctx.store
+    codes_by_role = store.permission_codes_by_role()
     rows = [
-        {
-            **serialize(role),
-            "permissions": sorted(
-                store.permissions[p].code for p in store.role_permissions.get(role.id, set())
-            ),
-        }
-        for role in store.roles.values()
+        {**serialize(role), "permissions": sorted(codes_by_role.get(role.id, frozenset()))}
+        for role in store.roles()
     ]
     return envelope(rows, total=len(rows), status="PROPOSED")
 
@@ -72,11 +65,11 @@ def list_roles(
 def list_permissions(
     ctx: Ctx, _p: Annotated[Principal, Depends(require("role:read", resource="permission"))]
 ) -> dict[str, Any]:
-    rows = [serialize(p) for p in sorted(ctx.store.permissions.values(), key=lambda p: p.code)]
+    rows = [serialize(p) for p in sorted(ctx.store.permissions(), key=lambda p: p.code)]
     return envelope(rows, total=len(rows), status="PROPOSED")
 
 
 @router.get("/classifications")
 def list_classifications(ctx: Ctx, _principal: CurrentPrincipal) -> dict[str, Any]:
-    rows = [serialize(c) for c in sorted(ctx.store.classifications.values(), key=lambda c: c.rank)]
+    rows = [serialize(c) for c in sorted(ctx.store.classifications(), key=lambda c: c.rank)]
     return envelope(rows, total=len(rows), status="NEEDS_MENTOR_VALIDATION")

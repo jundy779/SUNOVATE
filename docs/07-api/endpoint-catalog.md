@@ -1,10 +1,12 @@
 # Endpoint Catalog
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
-Daftar seluruh endpoint `/api/v1` yang diimplementasikan (scaffold, data dari simulated store). Sumber: `apps/api/sunovate_api/modules/`. OpenAPI hidup: `http://localhost:8000/docs`.
+Daftar seluruh endpoint `/api/v1` yang diimplementasikan (scaffold, data dari backend `DATA_BACKEND`: `simulated` default atau `postgres`; kontrak identik pada keduanya, ADR-015). Sumber: `apps/api/sunovate_api/modules/`. OpenAPI hidup: `http://localhost:8000/docs`.
+
+- **PROPOSED (ADR-015)** Pada mode `postgres`, database yang tidak terjangkau menghasilkan 503 `DATABASE_UNAVAILABLE` pada endpoint data, sedangkan timeout, deadlock, atau serialization failure menghasilkan 503 `DATABASE_BUSY` dengan header `Retry-After`; `/health` tetap 200. Urutan key objek JSON bukan bagian kontrak.
 
 "Auth" = cukup login. Endpoint yang mengembalikan satu record mengembalikan 404 bila record di luar scope.
 
@@ -21,8 +23,8 @@ Daftar seluruh endpoint `/api/v1` yang diimplementasikan (scaffold, data dari si
 | GET | `/classifications` | Auth | empat tingkat |
 | GET | `/knowledge` | `knowledge:read` | filter `q`, `status`, `type`, `teamCode`; paginasi |
 | GET | `/knowledge/{id}` | `knowledge:read` | detail + dokumen + bagian teks |
-| POST | `/knowledge` | `knowledge:create` | draf baru untuk tim dalam scope |
-| PATCH | `/knowledge/{id}` | `knowledge:update` | hanya DRAFT; wajib `revision` |
+| POST | `/knowledge` | `knowledge:create` | draf baru untuk tim dalam scope; `tags` duplikat dibuang (kemunculan pertama dipertahankan) |
+| PATCH | `/knowledge/{id}` | `knowledge:update` | hanya DRAFT; wajib `revision`; `null` berarti field tidak diubah; `tags` didedupe seperti POST |
 | POST | `/knowledge/{id}/submit` | `knowledge:submit` + `approval:request` | DRAFT ke IN_REVIEW, membuat approval `KNOWLEDGE_PUBLICATION` |
 | GET | `/documents` | `document:read` | referensi yang terbaca |
 | GET | `/documents/{id}` | `document:read` | detail + status provider |
@@ -33,7 +35,7 @@ Daftar seluruh endpoint `/api/v1` yang diimplementasikan (scaffold, data dari si
 | GET | `/work-outputs` | `work:read` | filter `teamCode`; `deadlineState` |
 | GET | `/work-outputs/{id}` | `work:read` | + tugas + milestone |
 | GET | `/tasks` | `work:read` | filter `status`, `deadlineState`, `teamCode` |
-| PATCH | `/tasks/{id}` | `work:update` | `status`, `progress`; wajib `revision` |
+| PATCH | `/tasks/{id}` | `work:update` | `status`, `progress`; wajib `revision`; `null` berarti field tidak diubah |
 | GET | `/milestones` | `work:read` | |
 | GET | `/pending-matters` | `pending:read` | |
 | GET | `/follow-ups` | `pending:read` | |

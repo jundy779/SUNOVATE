@@ -45,6 +45,30 @@ def test_create_update_and_revision_conflict() -> None:
     assert stale.json()["details"] == {"currentRevision": 2}
 
 
+def test_duplicate_tags_are_dropped_keeping_first_occurrence() -> None:
+    client = make_client()
+    owner = login(client, "sim.owner.ppsun")
+    entry = _create(client, owner, tags=["b", "a", "b"])
+    assert entry["tags"] == ["b", "a"]
+
+    detail = client.get(f"{API}/knowledge/{entry['id']}", headers=owner)
+    assert detail.json()["data"]["tags"] == ["b", "a"]
+    listed = client.get(f"{API}/knowledge", params={"pageSize": 100}, headers=owner)
+    by_id = {item["id"]: item for item in listed.json()["data"]}
+    assert by_id[entry["id"]]["tags"] == ["b", "a"]
+
+
+def test_patch_null_means_unchanged() -> None:
+    client = make_client()
+    owner = login(client, "sim.owner.ppsun")
+    entry = _create(client, owner)
+    response = client.patch(f"{API}/knowledge/{entry['id']}", headers=owner,
+                            json={"revision": 1, "title": None})
+    assert response.status_code == 200, response.text
+    assert response.json()["data"]["title"] == entry["title"]
+    assert response.json()["data"]["revision"] == 2
+
+
 def test_cannot_create_for_other_team_or_above_clearance() -> None:
     client = make_client()
     owner = login(client, "sim.owner.ppsun")

@@ -1,7 +1,7 @@
 # Manajemen Perubahan
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -48,7 +48,7 @@ flowchart LR
 ### Migrasi Database
 
 - **PROPOSED**: Perubahan skema selalu melalui revisi Alembic baru; revisi yang sudah dibagikan tidak diedit.
-- **PROPOSED**: Setiap revisi memiliki `downgrade` dan divalidasi dengan `pnpm db:migrate` atau `scripts/validation/db-check-pgserver.ps1` (migrate, seed, downgrade).
+- **PROPOSED**: Setiap revisi memiliki `downgrade` dan divalidasi dengan `pnpm db:migrate` atau `pnpm db:check` (migrate, seed, downgrade).
 - **PROPOSED**: Seed diperbarui bersama skema dan tetap berlabel `SIMULATED_DATA`.
 - **PROPOSED**: Trigger append-only `audit_logs` tidak boleh dilemahkan oleh migrasi.
 - Panduan: [migration-guide](../11-operations/migration-guide.md).

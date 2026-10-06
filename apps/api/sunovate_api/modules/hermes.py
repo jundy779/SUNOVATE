@@ -70,8 +70,8 @@ def feedback(
     ctx: Ctx,
     principal: Annotated[Principal, Depends(require("hermes:feedback", resource="hermes"))],
 ) -> dict[str, Any]:
-    message = ctx.store.messages.get(message_id)
-    conversation = ctx.store.conversations.get(message.conversation_id) if message else None
+    message = ctx.store.message(message_id)
+    conversation = ctx.store.conversation(message.conversation_id) if message else None
     if (
         message is None
         or conversation is None
@@ -86,13 +86,13 @@ def feedback(
         comment=body.comment,
         data_origin="USER_ENTERED",
     )
-    with ctx.store.lock:
-        ctx.store.feedback.append(item)
-    ctx.store.audit(
-        actor_user_id=principal.user_id,
-        action="AI_FEEDBACK",
-        entity_type="ai_message",
-        entity_id=message.id,
-        detail={"rating": body.rating},
-    )
+    with ctx.store.transaction():
+        ctx.store.insert(item)
+        ctx.store.audit(
+            actor_user_id=principal.user_id,
+            action="AI_FEEDBACK",
+            entity_type="ai_message",
+            entity_id=message.id,
+            detail={"rating": body.rating},
+        )
     return envelope({"id": item.id, "messageId": message.id, "rating": item.rating})

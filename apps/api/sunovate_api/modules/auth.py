@@ -42,11 +42,10 @@ def dev_login(body: DevLoginRequest, ctx: Ctx) -> dict[str, Any]:
         raise ApiError(404, "DEV_AUTH_DISABLED", "Login pengembangan tidak tersedia")
     user_id = ctx.providers.identity.resolve_login(body.email)
     if user_id is None:
-        ctx.store.audit(
+        ctx.store.audit_denial(
             actor_user_id=None,
             action="LOGIN",
             entity_type="user",
-            outcome="DENIED",
             detail={"reason": "unknown_simulated_user"},
         )
         raise unauthenticated("Pengguna simulasi tidak dikenal")

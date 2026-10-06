@@ -1,7 +1,7 @@
 # Prototype Notes
 
 **Status:** DRAFT | NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -29,7 +29,7 @@ Daftar ini mengikuti fact sheet sesi; verifikasi terhadap kode terbaru sebelum d
 
 ## Bagian yang masih placeholder
 
-- **CONFIRMED:** Seluruh data berasal dari dataset SIMULATED_DATA dengan `DATA_BACKEND=simulated` (in-memory); repository berbasis SQLAlchemy belum diimplementasikan (sumber: ADR-007).
+- **CONFIRMED:** Seluruh data berasal dari dataset SIMULATED_DATA; default `DATA_BACKEND=simulated` (in-memory) (sumber: ADR-007). Dengan `DATA_BACKEND=postgres` data yang sama dibaca dari PostgreSQL dan bertahan setelah restart (ADR-015, PROPOSED).
 - **CONFIRMED:** Jawaban Hermes disusun secara ekstraktif dan deterministik dari chunk yang diizinkan; tidak ada model AI eksternal (sumber: ADR-008).
 - **CONFIRMED:** Pencarian semantik belum aktif karena provider embedding dinonaktifkan (sumber: ADR-008).
 - **CONFIRMED:** Login memakai token pengembangan; SSO organisasi belum tersedia (sumber: ADR-005; [Identity Provider Proposal](../08-integrations/identity-provider-proposal.md)).

@@ -5,6 +5,9 @@ Flow: scope guard -> authorization context -> retrieval of authorized passages
 citation validation -> output guard -> audit -> response.
 
 Hermes (HermesClient) receives only authorized passages and never touches the store.
+The gateway reads through the permission-checked application services first and
+writes everything (conversation, messages, citations, approval, audit) in one
+transaction afterwards, so nothing is held open during generation.
 """
 
 from __future__ import annotations
@@ -17,7 +20,7 @@ from ..authz.service import AuthorizationService
 from ..core.errors import ApiError, not_found
 from ..providers.interfaces import ContextPassage, GenerationRequest, HermesClient
 from ..store.records import AiCitation, AiConversation, AiMessage, ApprovalRequest
-from ..store.simulated import SimulatedStore
+from ..store.repository import Repository
 from .guards import CitationValidator, OutputGuard
 from .retrieval import LexicalReranker, RetrievalService, RetrievedChunk, exclude_instruction_like
 from .scope_guard import ScopeGuard
@@ -65,7 +68,7 @@ class HermesGateway:
     def __init__(
         self,
         *,
-        store: SimulatedStore,
+        store: Repository,
         authz: AuthorizationService,
         client: HermesClient,
         max_classification: str,
@@ -80,7 +83,6 @@ class HermesGateway:
         self._retrieval = RetrievalService(store, authz)
         self._reranker = LexicalReranker()
         self._citations = CitationValidator()
-        self._output = OutputGuard({c.code: c.rank for c in store.classifications.values()})
 
     # Helpers -----------------------------------------------------------------
 
@@ -89,19 +91,18 @@ class HermesGateway:
         user_rank = self._store.classification_rank(principal.clearance_code) or 0
         hermes_rank = self._store.classification_rank(self._max_classification) or 0
         target = min(user_rank, hermes_rank)
-        return next(c.code for c in self._store.classifications.values() if c.rank == target)
+        return next(c.code for c in self._store.classifications() if c.rank == target)
 
     def _conversation(
         self, principal: Principal, conversation_id: UUID | None, question: str
-    ) -> AiConversation:
+    ) -> tuple[AiConversation, bool]:
+        """Existing conversation of the caller (404 otherwise) or a new, unsaved one."""
         if conversation_id is not None:
-            existing = self._store.conversations.get(conversation_id)
+            existing = self._store.conversation(conversation_id)
             if existing is None or existing.user_id != principal.user_id:
                 raise not_found("Percakapan")
-            return existing
-        conversation = AiConversation(user_id=principal.user_id, title=question[:80])
-        self._store.conversations[conversation.id] = conversation
-        return conversation
+            return existing, False
+        return AiConversation(user_id=principal.user_id, title=question[:80]), True
 
     def _select(
         self, items: list[RetrievedChunk], query_terms: frozenset[str]
@@ -123,10 +124,11 @@ class HermesGateway:
         chosen = [i for i in items if i.coverage >= MIN_COVERAGE and i.score >= floor]
         return chosen[:MAX_PASSAGES]
 
-    def _approval_for_write(self, principal: Principal, question: str) -> UUID | None:
+    def _approval_for_write(self, principal: Principal, question: str) -> ApprovalRequest | None:
+        """Builds (does not save) the human-approval request. Execution is never implemented."""
         if not principal.has("approval:request") or not principal.team_ids:
             return None
-        request = ApprovalRequest(
+        return ApprovalRequest(
             request_type="HERMES_WRITE_ACTION",
             target_entity_type="hermes_proposed_action",
             target_entity_id=None,
@@ -138,15 +140,6 @@ class HermesGateway:
             payload={"proposedActionText": question[:500], "executed": False},
             data_origin="USER_ENTERED",
         )
-        self._store.approvals[request.id] = request
-        self._store.audit(
-            actor_user_id=principal.user_id,
-            action="CREATE",
-            entity_type="approval_request",
-            entity_id=request.id,
-            detail={"requestType": request.request_type},
-        )
-        return request.id
 
     # Pipeline ----------------------------------------------------------------
 
@@ -155,108 +148,125 @@ class HermesGateway:
     ) -> HermesResult:
         if not self._enabled:
             raise ApiError(503, "HERMES_DISABLED", "Hermes dinonaktifkan pada lingkungan ini")
-        with self._store.lock:
-            conversation = self._conversation(principal, conversation_id, question)
-            user_message = AiMessage(conversation_id=conversation.id, role="USER", content=question)
-            self._store.messages[user_message.id] = user_message
+        classifications = self._store.classifications()
+        output_guard = OutputGuard({c.code: c.rank for c in classifications})
 
-            decision, reason, answer = "ANSWERED", "ok", ""
-            citations: tuple[HermesCitation, ...] = ()
-            excluded = 0
-            approval_id: UUID | None = None
+        # Read phase: no writes; every record below is built in memory.
+        conversation, is_new = self._conversation(principal, conversation_id, question)
+        user_message = AiMessage(conversation_id=conversation.id, role="USER", content=question)
 
-            scope = self._scope.evaluate(question)
-            if scope.decision is not None:
-                decision, reason, answer = scope.decision, scope.reason, scope.message
-                if decision == "REQUIRES_HUMAN_APPROVAL":
-                    approval_id = self._approval_for_write(principal, question)
-                    if approval_id is None:
-                        answer += " Anda tidak memiliki izin untuk mengajukan approval."
-            else:
-                ceiling = self._ceiling(principal)
-                query_terms = terms(question)
-                ranked = self._reranker.rerank(
-                    query_terms,
-                    self._retrieval.candidates(principal, query_terms, max_classification=ceiling),
+        decision, reason, answer = "ANSWERED", "ok", ""
+        citations: tuple[HermesCitation, ...] = ()
+        excluded = 0
+        approval: ApprovalRequest | None = None
+
+        scope = self._scope.evaluate(question)
+        if scope.decision is not None:
+            decision, reason, answer = scope.decision, scope.reason, scope.message
+            if decision == "REQUIRES_HUMAN_APPROVAL":
+                approval = self._approval_for_write(principal, question)
+                if approval is None:
+                    answer += " Anda tidak memiliki izin untuk mengajukan approval."
+        else:
+            ceiling = self._ceiling(principal)
+            query_terms = terms(question)
+            ranked = self._reranker.rerank(
+                query_terms,
+                self._retrieval.candidates(principal, query_terms, max_classification=ceiling),
+            )
+            safe, excluded = exclude_instruction_like(ranked)
+            selected = self._select(safe, query_terms)
+            if not selected:
+                decision, reason, answer = (
+                    "INSUFFICIENT_EVIDENCE",
+                    "low_coverage",
+                    (INSUFFICIENT_MESSAGE),
                 )
-                safe, excluded = exclude_instruction_like(ranked)
-                selected = self._select(safe, query_terms)
-                if not selected:
+            else:
+                citation_map = {n: item for n, item in enumerate(selected, start=1)}
+                passages = [
+                    ContextPassage(n, i.entry.title, i.chunk.section_label, i.chunk.content)
+                    for n, i in citation_map.items()
+                ]
+                draft = self._client.answer(GenerationRequest(question, passages, query_terms))
+                check = self._citations.validate(
+                    draft.text, citation_map, frozenset(i.chunk.id for i in safe)
+                )
+                guard = output_guard.check(
+                    draft.text,
+                    [
+                        citation_map[n].entry.classification_code
+                        for n in check.used_indexes
+                        if n in citation_map
+                    ],
+                    ceiling=ceiling,
+                )
+                if not check.valid:
                     decision, reason, answer = (
                         "INSUFFICIENT_EVIDENCE",
-                        "low_coverage",
+                        check.reason,
                         (INSUFFICIENT_MESSAGE),
                     )
+                elif not guard.allowed:
+                    decision, reason, answer = (
+                        "BLOCKED_BY_OUTPUT_GUARD",
+                        guard.reason,
+                        (BLOCKED_MESSAGE),
+                    )
                 else:
-                    citation_map = {n: item for n, item in enumerate(selected, start=1)}
-                    passages = [
-                        ContextPassage(n, i.entry.title, i.chunk.section_label, i.chunk.content)
-                        for n, i in citation_map.items()
-                    ]
-                    draft = self._client.answer(GenerationRequest(question, passages, query_terms))
-                    check = self._citations.validate(
-                        draft.text, citation_map, frozenset(i.chunk.id for i in safe)
+                    answer = draft.text
+                    citations = tuple(
+                        HermesCitation(
+                            index=n,
+                            knowledge_entry_id=citation_map[n].entry.id,
+                            document_chunk_id=citation_map[n].chunk.id,
+                            title=citation_map[n].entry.title,
+                            section_label=citation_map[n].chunk.section_label,
+                            version_label=citation_map[n].entry.version_label,
+                            knowledge_type=citation_map[n].entry.knowledge_type,
+                            classification_code=citation_map[n].entry.classification_code,
+                        )
+                        for n in check.used_indexes
                     )
-                    guard = self._output.check(
-                        draft.text,
-                        [
-                            citation_map[n].entry.classification_code
-                            for n in check.used_indexes
-                            if n in citation_map
-                        ],
-                        ceiling=ceiling,
-                    )
-                    if not check.valid:
-                        decision, reason, answer = (
-                            "INSUFFICIENT_EVIDENCE",
-                            check.reason,
-                            (INSUFFICIENT_MESSAGE),
-                        )
-                    elif not guard.allowed:
-                        decision, reason, answer = (
-                            "BLOCKED_BY_OUTPUT_GUARD",
-                            guard.reason,
-                            (BLOCKED_MESSAGE),
-                        )
-                    else:
-                        answer = draft.text
-                        citations = tuple(
-                            HermesCitation(
-                                index=n,
-                                knowledge_entry_id=citation_map[n].entry.id,
-                                document_chunk_id=citation_map[n].chunk.id,
-                                title=citation_map[n].entry.title,
-                                section_label=citation_map[n].chunk.section_label,
-                                version_label=citation_map[n].entry.version_label,
-                                knowledge_type=citation_map[n].entry.knowledge_type,
-                                classification_code=citation_map[n].entry.classification_code,
-                            )
-                            for n in check.used_indexes
-                        )
 
-            cited_ranks = [
-                self._store.classification_rank(c.classification_code) or 0 for c in citations
-            ]
-            message_rank = max(cited_ranks, default=1)
-            assistant = AiMessage(
-                conversation_id=conversation.id,
-                role="ASSISTANT",
-                content=answer,
-                decision=decision,
-                classification_code=next(
-                    c.code for c in self._store.classifications.values() if c.rank == message_rank
-                ),
+        cited_ranks = [
+            self._store.classification_rank(c.classification_code) or 0 for c in citations
+        ]
+        message_rank = max(cited_ranks, default=1)
+        assistant = AiMessage(
+            conversation_id=conversation.id,
+            role="ASSISTANT",
+            content=answer,
+            decision=decision,
+            classification_code=next(c.code for c in classifications if c.rank == message_rank),
+        )
+        citation_records = [
+            AiCitation(
+                message_id=assistant.id,
+                citation_index=citation.index,
+                knowledge_entry_id=citation.knowledge_entry_id,
+                document_chunk_id=citation.document_chunk_id,
+                score=0.0,
             )
-            self._store.messages[assistant.id] = assistant
-            for citation in citations:
-                self._store.citations.append(
-                    AiCitation(
-                        message_id=assistant.id,
-                        citation_index=citation.index,
-                        knowledge_entry_id=citation.knowledge_entry_id,
-                        document_chunk_id=citation.document_chunk_id,
-                        score=0.0,
-                    )
+            for citation in citations
+        ]
+
+        # Write phase: all or nothing.
+        with self._store.transaction():
+            if is_new:
+                self._store.insert(conversation)
+            self._store.insert(user_message)
+            self._store.insert(assistant)
+            for record in citation_records:
+                self._store.insert(record)
+            if approval is not None:
+                self._store.insert(approval)
+                self._store.audit(
+                    actor_user_id=principal.user_id,
+                    action="CREATE",
+                    entity_type="approval_request",
+                    entity_id=approval.id,
+                    detail={"requestType": approval.request_type},
                 )
             self._store.audit(
                 actor_user_id=principal.user_id,
@@ -272,13 +282,13 @@ class HermesGateway:
                     "questionLength": len(question),
                 },
             )
-            return HermesResult(
-                conversation.id,
-                assistant.id,
-                decision,
-                reason,
-                answer,
-                citations,
-                excluded,
-                approval_id,
-            )
+        return HermesResult(
+            conversation.id,
+            assistant.id,
+            decision,
+            reason,
+            answer,
+            citations,
+            excluded,
+            approval.id if approval is not None else None,
+        )

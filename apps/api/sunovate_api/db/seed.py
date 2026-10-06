@@ -13,7 +13,7 @@ from dataclasses import fields
 from typing import Any
 
 from sqlalchemy.dialects.postgresql import insert
-from sqlalchemy.ext.asyncio import AsyncConnection
+from sqlalchemy.engine import Connection
 
 from ..core.config import Settings, get_settings
 from ..store.dataset import Dataset, build_dataset, sid
@@ -34,12 +34,10 @@ def _rows(model: type[m.Base], records: Iterable[object]) -> list[dict[str, Any]
     return rows
 
 
-async def _insert(
-    conn: AsyncConnection, model: type[m.Base], rows: Sequence[dict[str, Any]]
-) -> int:
+def _insert(conn: Connection, model: type[m.Base], rows: Sequence[dict[str, Any]]) -> int:
     if not rows:
         return 0
-    result = await conn.execute(insert(model).values(list(rows)).on_conflict_do_nothing())
+    result = conn.execute(insert(model).values(list(rows)).on_conflict_do_nothing())
     return int(result.rowcount or 0)
 
 
@@ -51,9 +49,10 @@ def plan(ds: Dataset) -> list[tuple[type[m.Base], list[dict[str, Any]]]]:
             "id": sid(f"ktag:{entry.id}:{t}"),
             "knowledge_entry_id": entry.id,
             "tag_id": sid(f"tag:{t}"),
+            "position": position,
         }
         for entry in ds.knowledge
-        for t in entry.tags
+        for position, t in enumerate(entry.tags)
     ]
     role_permissions = [
         {"id": sid(f"rp:{role_id}:{perm_id}"), "role_id": role_id, "permission_id": perm_id}
@@ -84,15 +83,21 @@ def plan(ds: Dataset) -> list[tuple[type[m.Base], list[dict[str, Any]]]]:
     ]
 
 
+def apply_plan(conn: Connection) -> dict[str, int]:
+    """Insert the SIMULATED_DATA plan on a sync connection; returns rows inserted per table."""
+    inserted: dict[str, int] = {}
+    for model, rows in plan(build_dataset()):
+        inserted[model.__tablename__] = _insert(conn, model, rows)
+    return inserted
+
+
 async def seed(settings: Settings) -> dict[str, int]:
     if settings.app_env == "production":
         raise SystemExit("Refusing to seed SIMULATED_DATA when APP_ENV=production")
     engine = make_engine(settings.database_url)
-    inserted: dict[str, int] = {}
     try:
         async with engine.begin() as conn:
-            for model, rows in plan(build_dataset()):
-                inserted[model.__tablename__] = await _insert(conn, model, rows)
+            inserted = await conn.run_sync(apply_plan)
     finally:
         await engine.dispose()
     return inserted

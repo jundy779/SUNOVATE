@@ -11,13 +11,14 @@ from sqlalchemy.ext.asyncio import create_async_engine
 from alembic import context
 from sunovate_api.core.config import get_settings
 from sunovate_api.db.models import Base
+from sunovate_api.db.urls import async_database_url
 
 config = context.config
 if config.config_file_name:
     fileConfig(config.config_file_name)
 
 target_metadata = Base.metadata
-DATABASE_URL = get_settings().database_url
+DATABASE_URL = async_database_url(get_settings().database_url)
 
 
 def run_migrations_offline() -> None:

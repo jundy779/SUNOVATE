@@ -2,7 +2,7 @@ import pytest
 from pydantic import ValidationError
 
 from sunovate_api.core.config import Settings
-from sunovate_api.testing import login, make_client
+from sunovate_api.testing import TEST_BACKEND, login, make_client
 
 
 def test_health_is_public_and_labelled() -> None:
@@ -11,7 +11,7 @@ def test_health_is_public_and_labelled() -> None:
     assert response.status_code == 200
     body = response.json()
     assert body["data"]["status"] == "ok"
-    assert body["data"]["dataBackend"] == "simulated"
+    assert body["data"]["dataBackend"] == TEST_BACKEND
     assert body["meta"]["dataLabel"] == "SIMULATED_DATA"
     assert response.headers["X-Request-ID"]
 

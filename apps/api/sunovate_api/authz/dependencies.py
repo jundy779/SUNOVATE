@@ -2,18 +2,24 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from typing import Annotated, cast
 
 from fastapi import Depends, Header, Request
 
-from ..context import AppContext
+from ..context import AppContext, AppRuntime
 from ..core.errors import unauthenticated
 from .principal import Principal
 
 
-def get_ctx(request: Request) -> AppContext:
-    return cast(AppContext, request.app.state.ctx)
+def get_ctx(request: Request) -> Iterator[AppContext]:
+    """One repository session per request; cached by FastAPI for all dependencies.
+
+    Exit never commits: commits happen only inside `repo.transaction()` in handlers.
+    """
+    runtime = cast(AppRuntime, request.app.state.runtime)
+    with runtime.backend.session() as repo:
+        yield runtime.request_context(repo)
 
 
 Ctx = Annotated[AppContext, Depends(get_ctx)]

@@ -1,7 +1,7 @@
 # RAG Architecture
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -69,7 +69,7 @@ Catatan alur:
 | Rerank | IMPLEMENTED | Leksikal |
 | Penyusun jawaban | IMPLEMENTED | `development_extractive`, deterministik, tanpa model eksternal dan tanpa jaringan (ADR-008) |
 | Filter injeksi, CitationValidator, OutputGuard, audit | IMPLEMENTED | Lihat dokumen terkait |
-| Repository berbasis SQLAlchemy | PROPOSED | Skema, migrasi, dan seed ada dan sudah divalidasi, tetapi repository belum diimplementasikan (ADR-007) |
+| Repository berbasis SQLAlchemy | IMPLEMENTED (ADR-015, PROPOSED) | `DATA_BACKEND=postgres`; `simulated` tetap default. Retrieval Hermes tetap leksikal pada kedua backend; FTS dan pgvector belum dipakai runtime |
 | Embedding dan semantic retrieval | PROPOSED | `EMBEDDING_PROVIDER=disabled` |
 | Hybrid FTS + vektor dengan reciprocal rank fusion | PROPOSED | Lihat [retrieval-strategy.md](./retrieval-strategy.md) |
 | Cross-encoder rerank | PROPOSED | Menunggu persetujuan model (OQ-11) |

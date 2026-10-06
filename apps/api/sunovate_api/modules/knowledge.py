@@ -6,15 +6,15 @@ from typing import Annotated, Any, Literal
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Query
-from pydantic import Field
+from pydantic import Field, field_validator
 
 from ..authz.dependencies import Ctx, require
 from ..authz.principal import Principal
 from ..context import AppContext
 from ..core.errors import ApiError, invalid_state, permission_denied
 from ..core.responses import ApiModel, Pagination, envelope, paginated, serialize
-from ..store.records import ApprovalRequest, KnowledgeEntry
-from ._common import governed_view, readable_or_404, touch
+from ..store.records import ApprovalRequest, DocumentReference, KnowledgeEntry
+from ._common import governed_view, readable_or_404
 
 router = APIRouter(prefix="/knowledge", tags=["knowledge entries"])
 
@@ -50,6 +50,16 @@ class KnowledgeCreate(ApiModel):
         default_factory=list, max_length=20
     )
 
+    @field_validator("tags", mode="after")
+    @classmethod
+    def _dedupe_tags(cls, value: list[str]) -> list[str]:
+        return _dedupe(value)
+
+
+def _dedupe(value: list[str]) -> list[str]:
+    """Duplicate tags are dropped; first occurrence wins, case-sensitive (ADR-015)."""
+    return list(dict.fromkeys(value))
+
 
 class KnowledgeUpdate(ApiModel):
     revision: int = Field(ge=1)
@@ -61,6 +71,11 @@ class KnowledgeUpdate(ApiModel):
         default=None, max_length=20
     )
 
+    @field_validator("tags", mode="after")
+    @classmethod
+    def _dedupe_tags(cls, value: list[str] | None) -> list[str] | None:
+        return None if value is None else _dedupe(value)
+
 
 class KnowledgeSubmit(ApiModel):
     revision: int = Field(ge=1)
@@ -70,11 +85,9 @@ class KnowledgeSubmit(ApiModel):
 def _view(ctx: AppContext, entry: KnowledgeEntry, *, detail: bool = False) -> dict[str, Any]:
     view = governed_view(ctx, entry)
     if detail:
-        docs = [
-            d
-            for d in ctx.store.documents.values()
-            if d.knowledge_entry_id == entry.id and d.deleted_at is None
-        ]
+        docs = ctx.store.list_governed(
+            DocumentReference, where={"knowledge_entry_id": entry.id, "deleted_at": None}
+        )
         view["documents"] = [serialize(d, exclude=("deleted_at",)) for d in docs]
         view["sections"] = [
             {"index": c.chunk_index, "sectionLabel": c.section_label, "content": c.content}
@@ -86,7 +99,7 @@ def _view(ctx: AppContext, entry: KnowledgeEntry, *, detail: bool = False) -> di
 def _check_target(
     ctx: AppContext, principal: Principal, team_id: UUID, classification: str
 ) -> None:
-    if team_id not in ctx.store.teams:
+    if ctx.store.team(team_id) is None:
         raise ApiError(422, "VALIDATION_ERROR", "Tim pemilik tidak dikenal")
     if not ctx.authz.team_in_scope(principal, team_id):
         raise permission_denied("Anda hanya dapat membuat knowledge untuk tim Anda")
@@ -104,7 +117,7 @@ def list_knowledge(
     knowledge_type: Annotated[KnowledgeType | None, Query(alias="type")] = None,
     team_code: Annotated[str | None, Query(alias="teamCode", max_length=32)] = None,
 ) -> dict[str, Any]:
-    items = ctx.authz.readable(principal, ctx.store.knowledge.values())
+    items = ctx.authz.list_readable(principal, KnowledgeEntry)
     if q:
         needle = q.lower()
         items = [e for e in items if needle in f"{e.title} {e.summary}".lower()]
@@ -125,7 +138,7 @@ def get_knowledge(
     ctx: Ctx,
     principal: Annotated[Principal, Depends(require("knowledge:read", resource="knowledge"))],
 ) -> dict[str, Any]:
-    entry = readable_or_404(ctx, principal, ctx.store.knowledge, entry_id, "Knowledge")
+    entry = readable_or_404(ctx, principal, KnowledgeEntry, entry_id, "Knowledge")
     return envelope(_view(ctx, entry, detail=True))
 
 
@@ -149,14 +162,14 @@ def create_knowledge(
         tags=body.tags,
         data_origin="USER_ENTERED",
     )
-    with ctx.store.lock:
-        ctx.store.knowledge[entry.id] = entry
-    ctx.store.audit(
-        actor_user_id=principal.user_id,
-        action="CREATE",
-        entity_type="knowledge_entry",
-        entity_id=entry.id,
-    )
+    with ctx.store.transaction():
+        ctx.store.insert(entry)
+        ctx.store.audit(
+            actor_user_id=principal.user_id,
+            action="CREATE",
+            entity_type="knowledge_entry",
+            entity_id=entry.id,
+        )
     return envelope(_view(ctx, entry))
 
 
@@ -167,26 +180,32 @@ def update_knowledge(
     ctx: Ctx,
     principal: Annotated[Principal, Depends(require("knowledge:update", resource="knowledge"))],
 ) -> dict[str, Any]:
-    with ctx.store.lock:
-        entry = readable_or_404(ctx, principal, ctx.store.knowledge, entry_id, "Knowledge")
+    with ctx.store.transaction():
+        entry = readable_or_404(ctx, principal, KnowledgeEntry, entry_id, "Knowledge")
         if not ctx.authz.can_write(principal, entry):
             ctx.authz.deny_write(principal, entry, "knowledge_entry")
         if entry.lifecycle_status != "DRAFT":
             raise invalid_state("Hanya knowledge berstatus DRAFT yang dapat diubah")
         if body.classification_code:
             _check_target(ctx, principal, entry.owner_team_id, body.classification_code)
-        changes = body.model_dump(exclude_unset=True, exclude={"revision"})
-        touch(entry, principal, body.revision)
-        for field_name, value in changes.items():
-            setattr(entry, field_name, value)
-    ctx.store.audit(
-        actor_user_id=principal.user_id,
-        action="UPDATE",
-        entity_type="knowledge_entry",
-        entity_id=entry.id,
-        detail={"fields": sorted(changes)},
-    )
-    return envelope(_view(ctx, entry))
+        # Explicit null means "unchanged" (ADR-015).
+        changes = body.model_dump(exclude_unset=True, exclude_none=True, exclude={"revision"})
+        updated = ctx.store.update_revisioned(
+            KnowledgeEntry,
+            entry.id,
+            expected_revision=body.revision,
+            changes=changes,
+            actor_id=principal.user_id,
+            expected_state={"lifecycle_status": "DRAFT"},
+        )
+        ctx.store.audit(
+            actor_user_id=principal.user_id,
+            action="UPDATE",
+            entity_type="knowledge_entry",
+            entity_id=updated.id,
+            detail={"fields": sorted(changes)},
+        )
+    return envelope(_view(ctx, updated))
 
 
 @router.post("/{entry_id}/submit")
@@ -199,32 +218,38 @@ def submit_knowledge(
         Depends(require("knowledge:submit", "approval:request", resource="knowledge")),
     ],
 ) -> dict[str, Any]:
-    with ctx.store.lock:
-        entry = readable_or_404(ctx, principal, ctx.store.knowledge, entry_id, "Knowledge")
+    with ctx.store.transaction():
+        entry = readable_or_404(ctx, principal, KnowledgeEntry, entry_id, "Knowledge")
         if not ctx.authz.can_write(principal, entry):
             ctx.authz.deny_write(principal, entry, "knowledge_entry")
         if entry.lifecycle_status != "DRAFT":
             raise invalid_state("Hanya knowledge berstatus DRAFT yang dapat diajukan")
-        touch(entry, principal, body.revision)
-        entry.lifecycle_status = "IN_REVIEW"
+        updated = ctx.store.update_revisioned(
+            KnowledgeEntry,
+            entry.id,
+            expected_revision=body.revision,
+            changes={"lifecycle_status": "IN_REVIEW"},
+            actor_id=principal.user_id,
+            expected_state={"lifecycle_status": "DRAFT"},
+        )
         request = ApprovalRequest(
             request_type="KNOWLEDGE_PUBLICATION",
             target_entity_type="knowledge_entry",
-            target_entity_id=entry.id,
+            target_entity_id=updated.id,
             requested_by=principal.user_id,
-            owner_team_id=entry.owner_team_id,
+            owner_team_id=updated.owner_team_id,
             owner_user_id=principal.user_id,
-            classification_code=entry.classification_code,
+            classification_code=updated.classification_code,
             created_by=principal.user_id,
-            payload={"knowledgeRevision": entry.revision, "note": body.note},
+            payload={"knowledgeRevision": updated.revision, "note": body.note},
             data_origin="USER_ENTERED",
         )
-        ctx.store.approvals[request.id] = request
-    ctx.store.audit(
-        actor_user_id=principal.user_id,
-        action="SUBMIT",
-        entity_type="knowledge_entry",
-        entity_id=entry.id,
-        detail={"approvalRequestId": str(request.id)},
-    )
-    return envelope({"knowledge": _view(ctx, entry), "approvalRequestId": request.id})
+        ctx.store.insert(request)
+        ctx.store.audit(
+            actor_user_id=principal.user_id,
+            action="SUBMIT",
+            entity_type="knowledge_entry",
+            entity_id=updated.id,
+            detail={"approvalRequestId": str(request.id)},
+        )
+    return envelope({"knowledge": _view(ctx, updated), "approvalRequestId": request.id})

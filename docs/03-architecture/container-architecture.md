@@ -1,7 +1,7 @@
 # Container Architecture
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 Menjelaskan unit yang dapat dijalankan (container) dan cara keduanya berkomunikasi.
@@ -21,8 +21,9 @@ flowchart TB
     PG[("PostgreSQL 17 + pgvector<br/>skema 30 tabel")]
     B -->|HTTPS| W
     W -->|"REST + Bearer token, server-side"| A
-    A -->|"runtime saat ini"| ST
-    A -.->|"migrasi, seed, /health/database"| PG
+    A -->|"runtime DATA_BACKEND=simulated (default)"| ST
+    A -->|"runtime DATA_BACKEND=postgres (psycopg)"| PG
+    A -.->|"migrasi, seed, /health/database (asyncpg)"| PG
 ```
 
 ## Container
@@ -30,14 +31,14 @@ flowchart TB
 |---|---|---|
 | `apps/web` | UI, login dev (server action), memanggil API dari server; proxy `/api/hermes` | Implemented (scaffold) |
 | `apps/api` | Validasi, otorisasi, use case, audit, Hermes pipeline, OpenAPI | Implemented (scaffold) |
-| Simulated store | Data runtime in-memory yang dimuat ulang tiap restart | Implemented (ADR-007) |
-| PostgreSQL | Skema, migrasi, seed, FTS, pgvector | Skema tervalidasi; belum dipakai runtime |
+| Simulated store | Data runtime in-memory yang dimuat ulang tiap restart; default `DATA_BACKEND=simulated` | Implemented (ADR-007) |
+| PostgreSQL | Skema, migrasi, seed, FTS, pgvector; dipakai runtime bila `DATA_BACKEND=postgres` | Implemented (ADR-015, PROPOSED); FTS dan pgvector belum dipakai runtime |
 
-- **PROPOSED** Langkah berikut: repository SQLAlchemy menggantikan simulated store tanpa mengubah kontrak API.
+- **PROPOSED (ADR-015)** Kedua backend berada di belakang interface `Repository` yang sama; kontrak API tidak berubah. Lihat [component-architecture.md](component-architecture.md).
 - **CONFIRMED (implementasi)** Browser tidak memanggil API langsung dan tidak membaca token; seluruh panggilan berasal dari server Next.js.
 
 ## Risks
-R-10 simulated store disangka persistence produksi. Mitigasi: label `dataBackend` di `/health`, `meta.dataLabel` di setiap respons, config menolak `DATA_BACKEND=simulated` di production.
+R-10 simulated store disangka persistence produksi. Mitigasi: label `dataBackend` di `/health` (`simulated` atau `postgres`), `meta.dataLabel` di setiap respons, config menolak `DATA_BACKEND=simulated` di production. Mode postgres tetap hanya berisi `SIMULATED_DATA` dan bukan deployment production.
 
 ## Related Documents
 - [component-architecture.md](component-architecture.md)
