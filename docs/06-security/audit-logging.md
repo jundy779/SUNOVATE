@@ -97,6 +97,9 @@ sequenceDiagram
 - UPDATE atau DELETE terhadap `audit_logs` di PostgreSQL gagal.
 - Tidak ada token, secret, atau isi dokumen dalam audit log maupun log aplikasi pada uji.
 
+## Kebersihan Log Aplikasi
+- **CONFIRMED (implementasi, PROPOSED ADR-015)**: Log aplikasi untuk error tak tertangani tidak memuat pesan exception, nilai baris, teks SQL, atau parameter; hanya tipe error, SQLSTATE, dan lokasi stack. Audit log tetap satu-satunya catatan akuntabilitas; lihat [observability.md](../11-operations/observability.md).
+
 ## Related Documents
 
 - [data-retention](../04-data/data-retention.md)

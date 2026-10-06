@@ -37,7 +37,8 @@ Format error yang konsisten untuk semua endpoint `/api/v1` (implementasi: `apps/
 | 409 | `INVALID_STATE` | transisi status tidak sah (mis. mengubah knowledge PUBLISHED, memutuskan approval yang sudah diputuskan) |
 | 422 | `VALIDATION_ERROR` | body/query tidak valid atau field tidak dikenal |
 | 500 | `INTERNAL_ERROR` | error tak tertangani |
-| 503 | `DATABASE_UNAVAILABLE` | `/health/database` tidak dapat menjangkau PostgreSQL |
+| 503 | `DATABASE_UNAVAILABLE` | `/health/database` tidak dapat menjangkau PostgreSQL; pada `DATA_BACKEND=postgres`, koneksi gagal atau database tidak terjangkau |
+| 503 | `DATABASE_BUSY` | pada `DATA_BACKEND=postgres`, database terjangkau tetapi menolak atau membatalkan permintaan secara sementara: statement timeout, lock timeout, deadlock, atau serialization failure. Respons memuat header `Retry-After: 5`; klien boleh mengulang |
 | 503 | `HERMES_DISABLED` | `HERMES_MODE=disabled` atau `AI_PROVIDER=disabled` |
 
 ## Detail validasi

@@ -6,7 +6,7 @@
 ## Purpose
 Daftar seluruh endpoint `/api/v1` yang diimplementasikan (scaffold, data dari backend `DATA_BACKEND`: `simulated` default atau `postgres`; kontrak identik pada keduanya, ADR-015). Sumber: `apps/api/sunovate_api/modules/`. OpenAPI hidup: `http://localhost:8000/docs`.
 
-- **PROPOSED (ADR-015)** Pada mode `postgres`, database yang tidak terjangkau menghasilkan 503 `DATABASE_UNAVAILABLE` pada endpoint data; `/health` tetap 200. Urutan key objek JSON bukan bagian kontrak.
+- **PROPOSED (ADR-015)** Pada mode `postgres`, database yang tidak terjangkau menghasilkan 503 `DATABASE_UNAVAILABLE` pada endpoint data, sedangkan timeout, deadlock, atau serialization failure menghasilkan 503 `DATABASE_BUSY` dengan header `Retry-After`; `/health` tetap 200. Urutan key objek JSON bukan bagian kontrak.
 
 "Auth" = cukup login. Endpoint yang mengembalikan satu record mengembalikan 404 bila record di luar scope.
 

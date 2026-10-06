@@ -15,6 +15,22 @@
 - `tags` duplikat pada POST/PATCH knowledge dibuang (kemunculan pertama dipertahankan); `null` pada PATCH knowledge/task berarti tidak diubah.
 - Production: `DATA_BACKEND=postgres` diizinkan bila `DEV_AUTH_ENABLED=false`; `simulated` dan dev auth tetap ditolak.
 
+### Perbaikan temuan review (NIT, PROPOSED ADR-015)
+- Log error tak tertangani (`log_unhandled_error` di `core/errors.py`, dipakai handler `Exception` dan fallback middleware `main.py`) tidak lagi memuat pesan exception, `DETAIL` driver, SQL, atau parameter. Hanya `errorType`, `sqlstate`, `stack` (`berkas:baris fungsi`), dan `requestId`. Respons klien tetap 500 `INTERNAL_ERROR`.
+- `GET /api/v1/health` melaporkan backend yang benar-benar terpasang (`AppContext.data_backend` dari `AppRuntime.backend.name`), bukan nilai `DATA_BACKEND` di settings.
+- `OperationalError` diklasifikasi lewat SQLSTATE: 57014, 55P03, 40P01, 40001 menjadi 503 `DATABASE_BUSY` (pesan "sibuk atau melewati batas waktu", header `Retry-After: 5`); kegagalan koneksi tetap 503 `DATABASE_UNAVAILABLE`. `ApiError` kini mendukung `headers`. Kode baru didokumentasikan di `docs/07-api/error-format.md`.
+- `DataBackend.close()` (no-op pada backend simulasi, `dispose()` engine pada PostgreSQL) dipanggil oleh lifespan FastAPI saat shutdown.
+- Test baru: `apps/api/tests/test_runtime_hardening.py` (20 test, tanpa database) dan 3 test di `tests/postgres/test_postgres_backend.py` (health postgres, dispose saat shutdown, statement timeout nyata menjadi `DATABASE_BUSY`). Tidak ada dependency baru dan tidak ada perubahan skema.
+### Hasil validasi perbaikan temuan review (Windows, PowerShell 7, Python 3.12)
+| Perintah | Hasil |
+|---|---|
+| `pnpm lint` | ESLint tanpa temuan; Ruff "All checks passed!"; exit 0 |
+| `pnpm typecheck` | tsc tanpa error; mypy strict "Success: no issues found in 53 source files"; exit 0 |
+| `pnpm test` (simulated) | Vitest 12 passed; pytest 171 passed, 39 skipped in 26.39s; exit 0 (baseline 151 passed, 36 skipped) |
+| `pnpm build` | next build berhasil; exit 0 |
+| `pnpm db:sql` | SQL offline ter-render sampai `0002_ordering_columns`; exit 0 |
+| `pnpm db:check` | "DATABASE CHECK PASSED"; exit 0 |
+| `pnpm db:test` | pytest "210 passed in 201.81s (0:03:21)"; exit 0 (baseline 187 passed) |
 ### Hasil validasi aktual (2026-10-02, Windows, PowerShell 7, Python 3.12.13, branch `feat/postgres-persistence`)
 | Perintah | Hasil |
 |---|---|
