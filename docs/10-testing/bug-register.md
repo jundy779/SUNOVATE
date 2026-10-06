@@ -9,7 +9,7 @@ Register sementara cacat SUNOVATE yang dapat ditelusuri di riwayat Git dan catat
 
 ## Sumber dan Aturan
 
-- **CONFIRMED (riwayat repository)**: Hanya cacat yang dapat dirujuk ke commit, `CHANGELOG.md`, `docs/13-handover/known-limitations.md`, atau catatan review yang dicatat di sini. Setiap SHA diperiksa dengan `git cat-file -e <sha>^{commit}` pada 2026-10-06.
+- **CONFIRMED (riwayat repository)**: Cacat BUG-001 sampai BUG-013 dan REQ-GAP dirujuk ke commit, `CHANGELOG.md`, `docs/13-handover/known-limitations.md`, atau catatan review yang disebut di sini. Setiap SHA diperiksa dengan `git cat-file -e <sha>^{commit}` pada 2026-10-06. BUG-014 sampai BUG-018 bersumber dari pengamatan pengembang pada sesi pembangunan (bagian "Cacat Tambahan dari Sesi Pengembangan") dan tidak meninggalkan catatan selain commit perbaikannya.
 - **Catatan review (tidak masuk Git)**: `.agents/tasks/postgres-persistence/review.md` dan `review.json` (review implementasi, 2026-10-02, verdict APPROVED dengan empat temuan NIT) serta `design-review.md` (review desain sebelum kode). Berkas tersebut adalah catatan kerja lokal yang tidak di-commit; dirujuk sebagai catatan, bukan sumber yang dapat diverifikasi dari repository. Temuan `design-review.md` adalah temuan desain sebelum ada kode (satu MEDIUM dan dua belas NIT, seluruhnya diselesaikan di desain atau kode sebelum review implementasi) dan tidak dihitung sebagai cacat kode.
 - **PROPOSED**: Severity adalah usulan menurut [bug-severity.md](bug-severity.md); definisi P0 sampai P3 berasal dari Proposal v2.4 slide 20 (tidak berubah pada deck `v1_`). "NIT" pada kolom deskripsi adalah skala reviewer, bukan P0 sampai P3.
 - Hanya `SIMULATED_DATA`. Tidak ada data asli, data pribadi, atau isi dokumen di register ini.
@@ -50,12 +50,21 @@ Celah antara jawaban knowledge owner (deck `v1_` slide 24, **CONFIRMED (knowledg
 | REQ-GAP-02 | 2026-10-06 | Otorisasi, data | Peran `knowledge_owner` (representasi PIC) tidak memiliki `knowledge:review` maupun `approval:decide`, dan penunjukan ketua tim dan PIC per tim tidak tercatat; role berlaku global karena `user_roles.team_id` tidak diperiksa (FR-51, BR-34) | P2 (usulan) | Inspeksi kode (`authz/catalog.py`, `principal_facts`) | OPEN (OQ-25) | Belum ada | Belum ada; SEC-43 PLANNED |
 | REQ-GAP-03 | 2026-10-06 | Deployment | `APP_ENV=production` mewajibkan dev auth nonaktif, sedangkan `IdentityProvider` hanya `development`; server pilot pada mode production belum punya cara login (NFR-43) | P2 (usulan) | Inspeksi kode (`core/config.py`, `modules/auth.py`) | OPEN (OQ-07, PD-3) | Belum ada | Belum ada; SEC-76 belum dapat ditulis |
 
+## Cacat Tambahan dari Sesi Pengembangan
+
+Cacat berikut tidak meninggalkan catatan di riwayat Git (riwayat sebelum fitur PostgreSQL hanya satu commit, `357df94`, tertanggal 2026-10-02). Sumbernya adalah pengamatan langsung pengembang pada sesi pembangunan fondasi, yaitu keluaran perintah validasi dan tinjauan tangkapan layar pada aplikasi yang berjalan. Pengamatan itu tidak dapat diverifikasi ulang dari repository, sehingga kolom "Ditemukan lewat" menyebut sumbernya dan rujukan perbaikan hanya menunjuk commit yang memuat perbaikannya.
+
+| ID | Ditemukan | Area | Deskripsi | Severity (PROPOSED) | Ditemukan lewat | Status | Rujukan perbaikan | Uji yang mencakup |
+|---|---|---|---|---|---|---|---|---|
+| BUG-014 | Sesi pembangunan fondasi, sebelum `357df94` | Pengujian API | Uji API scaffold awal gagal pada tahap pengumpulan (pytest menghentikan proses dengan error pengumpulan) sehingga suite tidak dapat berjalan | P2 | Keluaran `pytest` saat inspeksi scaffold (pengamatan pengembang) | Selesai | `357df94` | Seluruh suite `pnpm test` (lihat CHANGELOG untuk hasil terbaru) |
+| BUG-015 | Sama dengan BUG-014 | Kualitas kode | `mypy` gagal memuat plugin SQLAlchemy (`sqlalchemy.ext.mypy.plugin`) sehingga pemeriksaan tipe tidak berjalan; Ruff juga melaporkan belasan temuan. Konfigurasi diganti ke `plugins = ["pydantic.mypy"]` dan temuan diperbaiki | P3 | Keluaran `mypy` dan `ruff` saat inspeksi scaffold (pengamatan pengembang) | Selesai | `357df94` | `pnpm typecheck` dan `pnpm lint` |
+| BUG-016 | Sesi pembangunan fondasi, sebelum `357df94` | Frontend, dashboard | Label sumbu x grafik "Tugas per status" saling tumpang tindih sehingga tidak terbaca. Grafik diganti batang horizontal dengan label di sumbu y | P3 | Tinjauan tangkapan layar pada aplikasi berjalan (pengamatan pengembang) | Selesai | `357df94` | Tidak ada uji visual otomatis; teks setara untuk pembaca layar diuji tidak langsung lewat komponen |
+| BUG-017 | Sama dengan BUG-016 | Frontend, Hermes | Nomor sitasi `[n]` tidak tampil pada daftar sumber jawaban Hermes, sehingga pengguna tidak dapat memetakan penanda di teks jawaban ke sumbernya. Nomor kini ditampilkan di daftar sumber | P2 | Tinjauan tangkapan layar pada aplikasi berjalan (pengamatan pengembang) | Selesai | `357df94` | `apps/web/src/components/hermes-chat.test.tsx` (menguji tautan sumber, bukan nomor sitasi) |
+| BUG-018 | Sama dengan BUG-016 | Frontend, tata letak | Panel sidebar tidak setinggi layar penuh ketika konten panjang. Kini memakai `.sidebar-inner` dengan `position: sticky` | P3 | Tinjauan tangkapan layar pada aplikasi berjalan (pengamatan pengembang) | Selesai | `357df94` | Tidak ada uji visual otomatis |
+
 ## Kandidat yang Tidak Dicatat
 
-Kandidat berikut diminta untuk diperiksa tetapi **tidak dapat ditelusuri** di riwayat Git, `CHANGELOG.md`, known-limitations, atau catatan review yang tersedia (riwayat sebelum fitur PostgreSQL hanya satu commit, `357df94`). Tidak dicatat sebagai cacat sampai ada bukti; bila ada tangkapan layar atau catatan review asli, tambahkan dengan ID berikutnya.
-
-- Uji API yang gagal dan plugin mypy yang hilang pada scaffold awal. Berkas `apps/api/pyproject.toml` kini memuat `plugins = ["pydantic.mypy"]` dan suite lulus pada `357df94`, tetapi tidak ada catatan bahwa keduanya pernah menjadi cacat yang ditemukan.
-- Label sumbu x grafik dashboard yang tumpang tindih, indeks sitasi Hermes yang tidak terlihat, dan sidebar yang tidak setinggi layar penuh. Kode CSS saat ini memuat `.sidebar { min-height: 100vh }` dan `.sidebar-inner { position: sticky }`, tetapi tidak ada catatan review visual atau commit yang menyebut temuan tersebut.
+Tidak ada. Dua kandidat yang sebelumnya tidak dapat ditelusuri dari riwayat Git kini dicatat di bagian "Cacat Tambahan dari Sesi Pengembangan" dengan sumber pengamatannya yang eksplisit.
 
 ## Related Documents
 
