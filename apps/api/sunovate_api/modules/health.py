@@ -25,7 +25,7 @@ def health(ctx: Ctx) -> dict[str, Any]:
             "service": "sunovate-api",
             "version": ctx.settings.app_version,
             "environment": ctx.settings.app_env,
-            "dataBackend": ctx.settings.data_backend,
+            "dataBackend": ctx.data_backend,
         }
     )
 
@@ -49,6 +49,6 @@ async def health_database(ctx: Ctx) -> dict[str, Any]:
     return envelope(
         {
             "status": "ok",
-            "note": "Konektivitas saja; runtime memakai DATA_BACKEND=" + ctx.settings.data_backend,
+            "note": "Konektivitas saja; runtime memakai DATA_BACKEND=" + ctx.data_backend,
         }
     )

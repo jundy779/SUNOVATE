@@ -407,3 +407,6 @@ class SimulatedBackend:
     @contextmanager
     def session(self) -> Iterator[SimulatedStore]:
         yield self.store
+
+    def close(self) -> None:
+        """Nothing to release: the in-memory store has no pool."""

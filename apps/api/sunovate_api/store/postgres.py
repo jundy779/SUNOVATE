@@ -46,7 +46,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.sql import Executable
 
 from ..core.config import DataBackendName
-from ..core.errors import ApiError, invalid_state, not_found, revision_conflict
+from ..core.errors import ApiError, invalid_state, not_found, revision_conflict, sqlstate_of
 from ..core.logging import request_id_var
 from ..db import models as m
 from ..db.urls import sync_database_url
@@ -190,13 +190,40 @@ def _integrity_error(exc: IntegrityError) -> ApiError | None:
     return None
 
 
+# SQLSTATE of transient, retryable conditions that are not connectivity failures:
+# 57014 query_canceled (statement_timeout), 55P03 lock_not_available (lock_timeout),
+# 40P01 deadlock_detected, 40001 serialization_failure.
+_BUSY_SQLSTATES: Final = frozenset({"57014", "55P03", "40P01", "40001"})
+_RETRY_AFTER_SECONDS: Final = "5"
+
+
+def database_error_to_api(exc: Exception) -> ApiError:
+    """Classify a driver/pool error: busy/timeout (DATABASE_BUSY) or unreachable (default).
+
+    Never includes driver text; the client only sees stable codes and fixed messages.
+    """
+    if isinstance(exc, OperationalError) and sqlstate_of(exc) in _BUSY_SQLSTATES:
+        return ApiError(
+            503,
+            "DATABASE_BUSY",
+            "Database sedang sibuk atau permintaan melewati batas waktu. Silakan coba lagi",
+            headers={"Retry-After": _RETRY_AFTER_SECONDS},
+        )
+    return ApiError(503, "DATABASE_UNAVAILABLE", "Database tidak dapat dijangkau")
+
+
 def _run[T](fn: Callable[[], T]) -> T:
-    """Run a database call; connectivity failures become 503 without driver details."""
+    """Run a database call; driver failures become 503 without driver details."""
     try:
         return fn()
     except (OperationalError, InterfaceError, PoolTimeoutError) as exc:
-        logger.error("database tidak dapat dijangkau", extra={"errorType": type(exc).__name__})
-        raise ApiError(503, "DATABASE_UNAVAILABLE", "Database tidak dapat dijangkau") from None
+        error = database_error_to_api(exc)
+        extra: dict[str, object] = {"errorType": type(exc).__name__, "code": error.code}
+        state = sqlstate_of(exc)
+        if state is not None:
+            extra["sqlstate"] = state
+        logger.error("database error", extra=extra)
+        raise error from None
 
 
 class PostgresRepository:
@@ -752,3 +779,6 @@ class PostgresBackend:
 
     def dispose(self) -> None:
         self._engine.dispose()
+
+    def close(self) -> None:
+        self.dispose()

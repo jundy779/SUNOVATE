@@ -6,6 +6,9 @@ Envelope: {"code", "message", "details", "requestId"}. Stack traces are never re
 from __future__ import annotations
 
 import logging
+import os
+import re
+import traceback
 
 from fastapi import FastAPI, Request
 from fastapi.encoders import jsonable_encoder
@@ -20,13 +23,19 @@ logger = logging.getLogger("sunovate")
 
 class ApiError(Exception):
     def __init__(
-        self, status_code: int, code: str, message: str, details: object | None = None
+        self,
+        status_code: int,
+        code: str,
+        message: str,
+        details: object | None = None,
+        headers: dict[str, str] | None = None,
     ) -> None:
         super().__init__(message)
         self.status_code = status_code
         self.code = code
         self.message = message
         self.details = details
+        self.headers = headers
 
 
 def unauthenticated(message: str = "Autentikasi diperlukan") -> ApiError:
@@ -63,6 +72,40 @@ def error_body(code: str, message: str, details: object | None = None) -> dict[s
     }
 
 
+_SQLSTATE = re.compile(r"[0-9A-Z]{5}")
+_MAX_STACK_FRAMES = 25
+
+
+def sqlstate_of(exc: BaseException) -> str | None:
+    """SQLSTATE of a database error (DBAPIError.orig or the driver error itself), else None.
+
+    Only a well-formed 5-character code is returned, never driver message text.
+    """
+    for candidate in (getattr(exc, "orig", None), exc):
+        code = getattr(candidate, "sqlstate", None)
+        if isinstance(code, str) and _SQLSTATE.fullmatch(code):
+            return code
+    return None
+
+
+def log_unhandled_error(exc: BaseException) -> None:
+    """Log an unhandled error without its message or chained causes.
+
+    Driver messages can carry row values (psycopg `DETAIL: Key (col)=(value)`), so only the
+    exception type, the SQLSTATE and the stack locations (file:line function) are recorded.
+    `exc_info` is deliberately not passed: the formatter would render the message.
+    """
+    stack = [
+        f"{os.path.basename(frame.filename)}:{frame.lineno} {frame.name}"
+        for frame in traceback.extract_tb(exc.__traceback__)[-_MAX_STACK_FRAMES:]
+    ]
+    extra: dict[str, object] = {"errorType": type(exc).__name__, "stack": stack}
+    state = sqlstate_of(exc)
+    if state is not None:
+        extra["sqlstate"] = state
+    logger.error("Unhandled application error", extra=extra)
+
+
 _STATUS_CODES = {
     400: "BAD_REQUEST",
     401: "UNAUTHENTICATED",
@@ -75,7 +118,9 @@ _STATUS_CODES = {
 def register_error_handlers(app: FastAPI) -> None:
     @app.exception_handler(ApiError)
     async def _api_error(_request: Request, exc: ApiError) -> JSONResponse:
-        return JSONResponse(error_body(exc.code, exc.message, exc.details), exc.status_code)
+        return JSONResponse(
+            error_body(exc.code, exc.message, exc.details), exc.status_code, exc.headers
+        )
 
     @app.exception_handler(RequestValidationError)
     async def _validation(_request: Request, exc: RequestValidationError) -> JSONResponse:
@@ -97,5 +142,5 @@ def register_error_handlers(app: FastAPI) -> None:
 
     @app.exception_handler(Exception)
     async def _unhandled(_request: Request, exc: Exception) -> JSONResponse:
-        logger.exception("Unhandled application error", extra={"errorType": type(exc).__name__})
+        log_unhandled_error(exc)
         return JSONResponse(error_body("INTERNAL_ERROR", "Terjadi kesalahan internal"), 500)

@@ -7,7 +7,7 @@ from dataclasses import dataclass, replace
 from datetime import date
 
 from .authz.service import AuthorizationService
-from .core.config import Settings
+from .core.config import DataBackendName, Settings
 from .core.security import DevTokenSigner
 from .hermes.gateway import HermesGateway
 from .providers.development import DevelopmentIdentityProvider
@@ -20,6 +20,7 @@ from .store.simulated import SimulatedBackend, SimulatedStore
 @dataclass
 class AppContext:
     settings: Settings
+    data_backend: DataBackendName  # the wired backend, not the configured one
     store: Repository
     authz: AuthorizationService
     signer: DevTokenSigner
@@ -54,6 +55,7 @@ class AppRuntime:
         )
         return AppContext(
             settings=self.settings,
+            data_backend=self.backend.name,
             store=repo,
             authz=authz,
             signer=self.signer,

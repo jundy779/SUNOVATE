@@ -154,3 +154,7 @@ class DataBackend(Protocol):
     name: DataBackendName
 
     def session(self) -> AbstractContextManager[Repository]: ...
+
+    def close(self) -> None:
+        """Release process-level resources (connection pool) at application shutdown."""
+        ...

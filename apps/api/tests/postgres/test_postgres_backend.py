@@ -15,6 +15,7 @@ from contextlib import contextmanager
 from dataclasses import fields
 from datetime import datetime
 from typing import Any
+from unittest.mock import patch
 from uuid import UUID
 
 import pytest
@@ -787,3 +788,41 @@ def test_reset_b_starts_clean() -> None:
     }
     assert _RESET_TITLE not in titles
     assert _scalar("SELECT count(*) FROM knowledge_entries WHERE title = :t", t=_RESET_TITLE) == 0
+
+
+# Review NIT fixes: wired backend in /health, pool disposal, real SQLSTATE classes ----------
+
+
+def test_health_reports_postgres_when_postgres_is_wired() -> None:
+    client = make_client()
+    assert client.get(f"{API}/health").json()["data"]["dataBackend"] == "postgres"
+
+    # Settings say simulated but the wired backend is PostgreSQL: /health follows the wiring.
+    settings = make_settings(data_backend="simulated")
+    other = TestClient(create_app(settings, build_runtime(settings, backend=_backend())))
+    assert other.get(f"{API}/health").json()["data"]["dataBackend"] == "postgres"
+
+
+def test_application_shutdown_disposes_the_engine() -> None:
+    assert TEST_DATABASE_URL
+    fresh = PostgresBackend(TEST_DATABASE_URL)
+    settings = make_settings()
+    app = create_app(settings, build_runtime(settings, backend=fresh))
+    with patch.object(fresh.engine, "dispose", wraps=fresh.engine.dispose) as dispose:
+        with TestClient(app) as client:
+            assert client.get(f"{API}/knowledge", headers=login(client, OWNER)).status_code == 200
+            dispose.assert_not_called()
+        dispose.assert_called_once_with()
+
+
+def test_real_statement_timeout_maps_to_database_busy() -> None:
+    """57014 from a real server-side cancel is DATABASE_BUSY, not DATABASE_UNAVAILABLE."""
+    backend = _backend()
+    with backend.session() as repo:
+        session = repo._session  # noqa: SLF001 - observe the real driver error class
+        session.execute(text("SET LOCAL statement_timeout = 50"))
+        with pytest.raises(ApiError) as caught:
+            repo._execute(text("SELECT pg_sleep(2)"))  # noqa: SLF001
+    assert (caught.value.status_code, caught.value.code) == (503, "DATABASE_BUSY")
+    assert caught.value.headers == {"Retry-After": "5"}
+
