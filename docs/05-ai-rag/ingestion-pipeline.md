@@ -1,7 +1,7 @@
 # Ingestion Pipeline
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-06
 
 ## Purpose
 
@@ -46,7 +46,7 @@ flowchart TD
 2. **Validasi.** Tipe file, ukuran, dan klasifikasi diperiksa. Dokumen dengan klasifikasi di atas `HERMES_MAX_CLASSIFICATION` tetap dapat tercatat di repository sesuai hak akses, tetapi tidak diindeks untuk Hermes. Daftar format yang disetujui dan batas ukuran adalah **OPEN QUESTION** OQ-04.
 3. **Dedupe checksum.** Checksum SHA-256 dihitung; pasangan referensi dan checksum yang sama ditolak.
 4. **Ekstraksi.** Teks diekstrak dari format yang didukung. **PROPOSED** OCR untuk dokumen hasil pindai ditambahkan pada fase lanjutan setelah alat dan lokasi pemrosesan disetujui (OQ-11).
-5. **Normalisasi.** Membersihkan header/footer berulang, nomor halaman, dan spasi; mempertahankan penanda struktur seperti Pasal, ayat, langkah, dan bagian.
+5. **Normalisasi.** Membersihkan header/footer berulang, nomor halaman, kata penyambung halaman, dan spasi; mempertahankan penanda struktur seperti Pasal, ayat, langkah, dan bagian. **PROPOSED** Penanda pada teks ekstraksi tidak dapat diasumsikan bersih: telaah Kompilasi Peraturan SUN menemukan spasi hilang ("Pasal29", "Pasal30", PMK 168/2019, hal. 155; "Pasal42", PMK 215/2019, hal. 112), kata penyambung halaman berulang ("(2) Surat...", UU 24/2002, hal. 5), dan galat karakter. Deteksi penanda Pasal dan ayat karena itu toleran terhadap spasi hilang dan galat OCR, dan hasil deteksi penanda ditinjau manusia sebelum chunking. Rincian pola: [chunking-strategy.md](./chunking-strategy.md).
 6. **Review metadata manusia.** Knowledge owner atau reviewer memeriksa judul, jenis knowledge, klasifikasi, tim pemilik, versi, dan relasi regulasi. Knowledge owner dan reviewer per tim adalah ketua tim dan PIC yang ditunjuk (**CONFIRMED (knowledge owner, deck v1_ slide 24)**, OQ-09); penunjukan orangnya adalah **OPEN QUESTION**.
 7. **Chunking.** Mengikuti [chunking-strategy.md](./chunking-strategy.md).
 8. **FTS.** `document_chunks.search_vector` diisi dan diindeks GIN.
@@ -77,6 +77,9 @@ Chunk dari dokumen berstatus FAILED atau QUARANTINED tidak pernah masuk retrieva
 - OQ-06 SharePoint sebagai sumber utama atau hanya referensi.
 - OQ-09 Knowledge owner dan reviewer per tim.
 - OQ-11 Alat ekstraksi/OCR dan embedding yang diizinkan serta lokasi pemrosesan.
+- OQ-30 Pemetaan rujukan tak bernomor dalam regulasi ke regulasi bernomor.
+- OQ-31 Regulasi tambahan di luar kompilasi yang perlu dimasukkan dan penyedia teks resminya.
+- OQ-32 Validasi teks ekstraksi regulasi terhadap PDF atau sumber resmi, dan apakah teks yang belum divalidasi boleh dikutip Hermes.
 
 ## Risks
 

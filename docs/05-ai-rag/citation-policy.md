@@ -1,7 +1,7 @@
 # Citation Policy
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-06
 
 ## Purpose
 
@@ -43,13 +43,23 @@ Untuk knowledge berjenis REGULATION, sitasi menampilkan status berlaku:
 
 | Tampilan | Dasar |
 |---|---|
-| Berlaku | Tidak ada relasi `REVOKES` atau `SUPERSEDES` yang mengarah ke regulasi tersebut, dan status knowledge PUBLISHED |
+| Berlaku | Tidak ada relasi `REVOKES` atau `SUPERSEDES` yang mengarah ke regulasi tersebut, dan status knowledge PUBLISHED. Ini bukan bukti bahwa regulasi berlaku; lihat catatan di bawah tabel |
 | Diubah | Ada relasi `AMENDS` yang mengarah ke regulasi tersebut; tampilkan regulasi pengubah |
-| Dicabut atau digantikan | Ada relasi `REVOKES` atau `SUPERSEDES`, atau status knowledge SUPERSEDED |
+| Dicabut atau digantikan | Ada relasi `REVOKES` atau `SUPERSEDES` yang mencakup seluruh regulasi, atau status knowledge SUPERSEDED. Pencabutan sebagian ditangani oleh catatan di bawah tabel |
 
 - **PROPOSED** Bila sitasi menunjuk regulasi yang dicabut atau digantikan, jawaban wajib menyebutkannya secara eksplisit dan menampilkan regulasi penggantinya bila tersedia di konteks terotorisasi.
-- **OPEN QUESTION** Penetapan status hukum suatu regulasi pada repository memerlukan validasi pemilik konten (OQ-09). Status penggunaan PMK 128/PMK.08/2012 pada kompilasi regulasi adalah OQ-17.
+- **OPEN QUESTION** Penetapan status hukum suatu regulasi pada repository memerlukan validasi pemilik konten (OQ-09, OQ-26). Status berlaku saat ini tidak dapat diturunkan dari kompilasi: kompilasi tidak menyatakan status berlaku saat ini untuk regulasi mana pun (sumber: telaah Kompilasi Peraturan SUN, 2026-10-06).
+- **PROPOSED** Tampilan "Berlaku" hanya berarti tidak ada pencabutan yang tercatat di repository. Selama pemilik konten belum memvalidasi, sitasi menyertakan keterangan "status berlaku belum diverifikasi". Ketiadaan relasi tidak membuktikan regulasi berlaku; contoh: PMK 128/PMK.08/2012 tidak memiliki relasi dengan regulasi lain di kompilasi, tetapi status berlakunya tidak diketahui (BR-40).
+- **PROPOSED** Pencabutan sebagian tidak diperlakukan sebagai pencabutan seluruh regulasi. Sitasi menampilkan "Dicabut sebagian (Pasal/ayat ...)" dengan cakupan dari relasi. Contoh CONFIRMED: PMK 111/2024 mencabut ketentuan tertentu pada PMK 168/2019, PMK 165/2022, dan PMK 114/2023 (sumber: Kompilasi Peraturan SUN, PMK 111/2024, Pasal 30 angka 2 sampai 4, hal. 47). Ketentuan peralihan (contoh: PMK 168/2019, Pasal 28, hal. 154-155) tidak menurunkan status menjadi "dicabut" dan tidak menjadi bukti "berlaku". Status akhir: **NEEDS LEGAL CONFIRMATION** (OQ-29).
+- **OPEN QUESTION** PMK 128/PMK.08/2012 (penjualan SUN dalam valuta asing di pasar perdana domestik dengan cara bookbuilding, hal. 168-175) adalah regulasi yang dimuat kompilasi sebagai pengganti "PMK 128 tahun 2019". Kompilasi tidak menjelaskan penggantian itu (catatan sampul, hal. 1). Hermes tidak boleh menyajikan "PMK 128 tahun 2019" sebagai regulasi yang ada; status penggunaan adalah OQ-17.
 - **CONFIRMED** Relasi yang tersedia: AMENDS, REVOKES, IMPLEMENTS, REFERENCES, SUPERSEDES (sumber: fact sheet bagian 6).
+
+## Format sitasi regulasi (PROPOSED)
+
+- **PROPOSED** Label bagian untuk knowledge berjenis REGULATION memuat regulasi, Pasal, ayat bila ada, dan halaman: `<regulasi>, Pasal X ayat (Y), hal. N`. Contoh untuk kompilasi: `Kompilasi Peraturan SUN, UU 24/2002, Pasal 3 ayat (2), hal. 5`. Contoh ini hanya ilustrasi format.
+- **PROPOSED** `hal.` adalah nomor halaman PDF berkas, bukan nomor cetak peraturan (halaman PDF 4 UU 24/2002 memuat nomor cetak "- 2 -"). Nomor cetak disimpan terpisah bila perlu agar sitasi tidak ambigu.
+- **PROPOSED** Penjelasan dan Lampiran disitasi dengan penanda sendiri (mis. `Penjelasan Pasal X` atau `Lampiran A`) karena bukan bagian batang tubuh. Penjelasan hanya ada untuk UU 24/2002 dan PP 76/2005 pada kompilasi.
+- **PROPOSED** Chunk regulasi yang teksnya belum divalidasi terhadap PDF atau sumber resmi diberi penanda "teks butuh verifikasi". Kebijakan apakah Hermes boleh mengutipnya adalah OQ-32.
 
 ## Contoh format (SIMULATED_DATA)
 
@@ -69,6 +79,7 @@ Contoh di atas fiktif dan hanya menunjukkan format.
 - R-04 Jawaban AI dianggap fakta/keputusan.
 - R-02 Kebocoran data melalui sitasi.
 - R-11 Metadata buruk sehingga sitasi kurang informatif.
+- R-18 Status berlaku regulasi tidak dapat diturunkan dari kompilasi sehingga "Berlaku" dapat menyesatkan.
 
 ## Acceptance Criteria
 

@@ -1,7 +1,7 @@
 # Chunking Strategy
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-06
 
 ## Purpose
 
@@ -23,7 +23,7 @@ Menetapkan usulan cara memotong dokumen menjadi chunk agar retrieval akurat dan 
 
 | Jenis knowledge | Unit struktur | Aturan |
 |---|---|---|
-| REGULATION | Pasal, lalu ayat | Satu Pasal per chunk bila muat. Pasal panjang dipecah per ayat dengan judul Bab dan nomor Pasal diulang di awal setiap chunk. Penjelasan Pasal disimpan sebagai chunk terpisah yang menunjuk Pasal yang sama. Konsiderans dan ketentuan umum (definisi) dijadikan chunk tersendiri. |
+| REGULATION | Hierarki BAB, Bagian, Pasal, ayat, huruf/angka (tingkat Bagian ada pada sebagian regulasi saja) | Satu Pasal per chunk bila muat. Pasal panjang dipecah per ayat (Pasal definisi per angka) dengan label induk (regulasi, BAB, Bagian bila ada, Pasal) diulang di awal setiap chunk. Lampiran (tabel, format surat, rumus) menjadi unit tersendiri yang menunjuk Pasal yang merujuknya. Penjelasan hanya ada untuk UU 24/2002 dan PP 76/2005; penjelasan berisi uraian menjadi chunk terpisah yang menunjuk Pasal yang sama, sedangkan entri "Cukup jelas" cukup berupa penanda pada chunk Pasal. Konsiderans dan ketentuan umum (definisi) dijadikan chunk tersendiri. |
 | SOP, PLAYBOOK | Langkah atau tahapan | Satu tahapan beserta langkah-langkahnya per chunk. Daftar langkah tidak dipotong di tengah; bila terlalu panjang, dipecah per kelompok langkah dengan judul tahapan diulang. |
 | STUDY (kajian), REPORT | Bagian dan subbagian | Potong per heading. Ringkasan eksekutif dan kesimpulan dijadikan chunk tersendiri. |
 | MEETING_MATERIAL, DECISION_RECORD, CLOSE_OUT_NOTE, LESSON_LEARNED, TACIT_KNOWLEDGE | Bagian template | Potong per bagian template (mis. konteks, keputusan, tindak lanjut). Template resmi adalah **OPEN QUESTION** OQ-16. |
@@ -32,6 +32,28 @@ Menetapkan usulan cara memotong dokumen menjadi chunk agar retrieval akurat dan 
 Contoh label bagian untuk regulasi: "UU 24/2002, Pasal 1" (dokumen sumber tercantum di `Kompilasi_Peraturan_SUN_formal.pdf`). Contoh ini hanya ilustrasi format label, bukan isi chunk.
 
 Tabel memakai satu chunk per tabel bila muat; bila tidak, dipecah per kelompok baris dengan header tabel diulang.
+## Struktur regulasi pada Kompilasi Peraturan SUN (PROPOSED)
+
+Pola di bawah teramati pada teks ekstraksi Kompilasi Peraturan SUN (ekstraksi tanpa OCR, tidak dibandingkan dengan gambar PDF). Format sumber: `Kompilasi Peraturan SUN, <regulasi>, <bagian>, hal. N` (hal. = halaman PDF). Usulan strategi tetap **PROPOSED**.
+
+| Elemen | Pola teramati (CONFIRMED) | Contoh |
+|---|---|---|
+| BAB | Baris "BAB" dan angka Romawi, judul pada baris berikutnya (sering dua baris) | UU 24/2002, hal. 4 |
+| Bagian | "Bagian Kesatu/Kedua/Ketiga" diikuti judul, di antara BAB dan Pasal | PMK 114/2023, hal. 125 |
+| Pasal, ayat, huruf | Baris "Pasal N"; ayat diawali "(1)"; huruf diawali "a." | UU 24/2002, Pasal 3, hal. 5 |
+| Angka definisi | "1.", "2." pada Pasal 1; rujukan "angka" dan "butir" dipakai bergantian | UU 24/2002, Pasal 1, hal. 4 |
+| Lampiran | Dirujuk dari Pasal; "bagian tidak terpisahkan dari Peraturan Menteri ini" | PMK 51/2019, Pasal 6 ayat (4), hal. 68 |
+| Penjelasan | "Pasal demi Pasal", lalu "Pasal N", "Ayat (1)", "Cukup jelas"; hanya pada UU dan PP | UU 24/2002, hal. 13-20; PP 76/2005, hal. 29-33 |
+
+Kerusakan ekstraksi yang harus ditoleransi pendeteksi penanda (**CONFIRMED** teramati di teks ekstraksi):
+
+- Spasi hilang pada penanda ("Pasal29", "Pasal30" di PMK 168/2019, hal. 155; "Pasal42" di PMK 215/2019, hal. 112).
+- Spasi disisipkan atau kata terpecah ("( 1)" di PMK 114/2023, hal. 122).
+- Salah baca karakter ("PMK.OS" untuk "PMK.08"; "Basil" untuk "Hasil" di PMK 114/2023, hal. 129).
+- Kata penyambung halaman berulang di awal halaman ("(2) Surat..." di UU 24/2002, hal. 5) dan nomor cetak pada baris sendiri ("- 2 -", hal. 4).
+- Rujukan ayat yang keliru pada teks sumber; chunk menyimpan teks apa adanya dan tidak mengoreksinya.
+
+Usulan: deteksi penanda Pasal dan ayat toleran terhadap spasi hilang dan galat OCR, kata penyambung halaman dibuang, dan hasil deteksi penanda ditinjau manusia sebelum chunking (lihat [ingestion-pipeline.md](./ingestion-pipeline.md)). Pasal yang melintas halaman tidak dipotong di batas halaman. Ketentuan peralihan dan penutup diberi jenis khusus agar relasi dapat ditinjau manusia, bukan diterapkan otomatis.
 
 ## Ukuran target (PROPOSED)
 
@@ -51,7 +73,7 @@ Overlap tidak melintasi batas Pasal atau batas tahapan agar sitasi tidak tercamp
 | `document_version_id` | Versi dokumen induk |
 | `classification_code` | Diwarisi dari versi dokumen |
 | `owner_team_id` | Diwarisi dari referensi dokumen |
-| `page_start`, `page_end` | Rentang halaman sumber |
+| `page_start`, `page_end` | Rentang halaman sumber. Memakai nomor halaman PDF berkas; nomor cetak peraturan disimpan terpisah bila perlu agar sitasi tidak ambigu |
 | `section_label` | Label tampilan, mis. Pasal, ayat, langkah, atau judul bagian |
 | `chunk_index` | Urutan dalam versi |
 | `content_hash` | Hash isi chunk untuk mendeteksi perubahan dan duplikasi |
@@ -71,6 +93,7 @@ Nama kolom fisik mengikuti [database-schema.md](../04-data/database-schema.md); 
 - OQ-04 Jenis dokumen yang boleh masuk RAG.
 - OQ-11 Model dan tokenizer yang disetujui.
 - OQ-16 Template knowledge product yang disetujui.
+- OQ-32 Validasi teks ekstraksi regulasi terhadap PDF atau sumber resmi.
 
 ## Risks
 

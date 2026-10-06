@@ -44,7 +44,7 @@ Dokumen ini menghimpun aturan bisnis SUNOVATE dalam bentuk bernomor agar dapat d
 |---|---|---|---|
 | BR-11 | Pembaruan wajib menyertakan `revision`; revision lama ditolak 409 `REVISION_CONFLICT`. | PROPOSED | ADR-011; blueprint v0.1 |
 | BR-12 | Status tenggat (`SAFE`, `DUE_SOON`, `DUE_TODAY`, `OVERDUE`, `COMPLETED`) dihitung hanya oleh backend. | PROPOSED | Blueprint v0.1 |
-| BR-13 | Ambang `DUE_SOON` diatur `DEADLINE_DUE_SOON_DAYS` (default 7); nilai final OQ-15. | PROPOSED | .env.example |
+| BR-13 | Ambang `DUE_SOON` diatur `DEADLINE_DUE_SOON_DAYS` (default 7); nilai final OQ-15. Ini pengaturan aplikasi, bukan tenggat hukum; tenggat yang tertulis dalam regulasi tidak dipakai sebagai nilai default. | PROPOSED | .env.example |
 | BR-14 | Record bisnis dihapus secara soft delete (`deleted_at`). | PROPOSED | ADR-010 |
 | BR-15 | `audit_logs` bersifat append-only; trigger PostgreSQL menolak UPDATE dan DELETE. | PROPOSED | ADR-010 |
 | BR-16 | Seluruh data seed dan demonstrasi berlabel `SIMULATED_DATA`; tidak ada data internal atau keuangan riil. | CONFIRMED | AGENTS.md |
@@ -95,6 +95,19 @@ Konflik dengan aturan yang sudah ada:
 - BR-05 dan BR-06 tidak berubah; siapa yang memutuskan publikasi tetap OQ-12.
 - BR-23 tetap: `APP_ENV=production` dengan dev auth aktif ditolak. BR-37 menambahkan konsekuensi untuk server pilot.
 
+## Regulasi dan Sitasi
+
+Aturan BR-40 sampai BR-45 berasal dari telaah Kompilasi Peraturan SUN terhadap dokumentasi (lihat bagian "Asal Temuan Kompilasi Peraturan" di [open-questions](../00-project/open-questions.md)). Seluruhnya **PROPOSED**; belum ada penegakan di kode.
+
+| ID | Aturan | Label | Sumber |
+|---|---|---|---|
+| BR-40 | Status hukum regulasi (berlaku, diubah, dicabut sebagian, dicabut) tidak pernah diturunkan otomatis dari teks regulasi atau dari ketiadaan relasi di repository. Nilainya diisi pemilik konten setelah validasi; sebelum itu ditampilkan sebagai belum diverifikasi. | PROPOSED | Telaah Kompilasi Peraturan SUN (kompilasi tidak menyatakan status berlaku saat ini); OQ-09, OQ-26; R-18 |
+| BR-41 | Setiap entri REGULATION dan setiap sitasi regulasi membawa rujukan Pasal (bila ada) dan nomor halaman PDF berkas, dengan format `<regulasi>, Pasal X, hal. N`. | PROPOSED | [citation-policy](../05-ai-rag/citation-policy.md); telaah Kompilasi Peraturan SUN |
+| BR-42 | Pencabutan sebagian dicatat sebagai relasi `REVOKES` dengan cakupan Pasal/ayat dan tidak menjadikan seluruh regulasi target `SUPERSEDED` atau dicabut. Ketentuan peralihan yang mempertahankan regulasi lama bukan pencabutan. Status akhir tetap OPEN QUESTION. | PROPOSED | Kompilasi Peraturan SUN, PMK 111/2024, Pasal 30 angka 2 sampai 4, hal. 47; PMK 168/2019, Pasal 28, hal. 154-155; OQ-29 |
+| BR-43 | Judul dan nomor regulasi diambil dari kepala naskah. Bila berbeda dari indeks sumber, kedua nilai disimpan dan ditandai NEEDS LEGAL CONFIRMATION; nilai yang rusak oleh ekstraksi tidak diperbaiki diam-diam. | PROPOSED | Kompilasi Peraturan SUN, PMK 165/2022, judul, hal. 49 (berbeda dari indeks, hal. 2); OQ-27 |
+| BR-44 | Rujukan tak bernomor dalam regulasi (mis. "peraturan menteri mengenai dealer utama SUN") tidak dipetakan otomatis ke regulasi bernomor. Pemetaan bersifat PROPOSED sampai divalidasi. | PROPOSED | Telaah relasi Kompilasi Peraturan SUN; OQ-30 |
+| BR-45 | `effectiveDate` regulasi diturunkan dari tanggal pengundangan dengan tinjauan manusia. Tanggal yang tidak terbaca pada sumber dibiarkan kosong dengan penanda, bukan diisi dari dugaan. | PROPOSED | Kompilasi Peraturan SUN, UU 24/2002, Pasal 22, hal. 10; PMK 111/2024, hal. 48 (tanggal pengundangan tidak terbaca); OQ-28 |
+
 ## Open Questions Terkait
 
 - OQ-05 Pemetaan klasifikasi ke skema resmi Kemenkeu (BR-21, BR-22).
@@ -106,6 +119,11 @@ Konflik dengan aturan yang sudah ada:
 - OQ-13 Retensi (BR-14, BR-15).
 - OQ-14 Berbagi lintas tim (BR-07).
 - OQ-15 Ambang tenggat (BR-13).
+- OQ-26 Status berlaku terkini regulasi (BR-40).
+- OQ-27 Sumber acuan judul dan nomor regulasi (BR-43).
+- OQ-28 Tanggal pengundangan PMK 111/2024 (BR-45).
+- OQ-29 Tampilan pencabutan sebagian dan ketentuan peralihan (BR-42).
+- OQ-30 Pemetaan rujukan tak bernomor (BR-44).
 
 ## Related Documents
 

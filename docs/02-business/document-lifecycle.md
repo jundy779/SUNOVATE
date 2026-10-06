@@ -83,6 +83,11 @@ Rincian kolom: [database-schema](../04-data/database-schema.md) dan [metadata-sc
 - **PROPOSED**: Versi baru didaftarkan melalui `POST /documents/{id}/versions` dan memerlukan permission `document:version`. Aksi audit: `VERSION_REGISTER`.
 - **PROPOSED**: Versi lama tidak dihapus; tetap tersedia untuk jejak dan sitasi historis.
 - **PROPOSED**: Bila dokumen menggantikan regulasi atau knowledge lain, knowledge lama menjadi `SUPERSEDED` dan relasi `SUPERSEDES` dicatat di `regulation_relations` bila relevan.
+- **CONFIRMED (sumber: Kompilasi Peraturan SUN, PMK 111/2024, Menimbang huruf c, hal. 34)**: Pola SUPERSEDES terbaca dari konsiderans: PMK 111/2024 menyatakan perlu melakukan pengaturan kembali atas PMK 212/PMK.08/2016. Di kompilasi pola ini selalu berpasangan dengan pasal pencabutan.
+- **CONFIRMED (sumber: Kompilasi Peraturan SUN, PMK 111/2024, Pasal 30 angka 2 sampai 4, hal. 47)**: Pencabutan dapat bersifat sebagian, yaitu hanya Pasal atau ayat tertentu pada PMK 168/PMK.08/2021, PMK 114/2023, PMK 168/2019, dan PMK 165/2022.
+- **PROPOSED**: Pencabutan sebagian tidak menjadikan knowledge target `SUPERSEDED`. Catat relasi `REVOKES` dengan cakupan Pasal/ayat (desain kolom cakupan: [logical-data-model](../04-data/logical-data-model.md), belum diimplementasikan). Status siklus hidup `SUPERSEDED` adalah status knowledge di SUNOVATE dan tidak sama dengan status hukum regulasi.
+- **PROPOSED**: Ketentuan peralihan yang mempertahankan regulasi lama untuk hal tertentu (contoh: Kompilasi Peraturan SUN, PMK 168/2019, Pasal 28, hal. 154-155) bukan pencabutan dan tidak dipakai untuk menurunkan status.
+- **OPEN QUESTION**: Status hukum akhir regulasi yang dicabut sebagian atau terdampak ketentuan peralihan: **NEEDS LEGAL CONFIRMATION** (OQ-29). Status hukum tidak diturunkan otomatis dari teks (BR-40, BR-42).
 - **PROPOSED**: Penghapusan memakai soft delete (`deleted_at`). Retensi file dan referensi adalah OQ-13.
 - **OPEN QUESTION**: Apakah pendaftaran versi untuk dokumen `PUBLISHED` memerlukan `approval_requests` bertipe `DOCUMENT_VERSION` pada setiap kasus.
 

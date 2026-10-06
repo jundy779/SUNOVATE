@@ -1,7 +1,7 @@
 # Register Risiko
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-06
 
 ## Purpose
 
@@ -38,6 +38,7 @@ Seluruh penilaian di bawah PROPOSED. Pemilik "Pengembang" berarti peserta magang
 | R-15 | Indikator "yield" dan "kepemilikan SBN" diminta tanpa sumber data otoritatif (OQ-10, OQ-21) | Angka tidak akurat atau dianggap resmi; SUNOVATE melampaui batas sebagai bukan sistem transaksi; data sensitif terbuka ke pengguna yang tidak berwenang | Sedang | Tinggi | Tidak menampilkan angka dan tidak membuat tabel bisnis SUN (ADR-013) sebelum sumber, definisi, dan hak lihat jelas; placeholder berlabel `SIMULATED_DATA` saja | Mentor; pemilik data OPEN QUESTION (OQ-21) | Terbuka |
 | R-16 | Pekerjaan bergantung pada jawaban knowledge owner yang belum diakui mentor (OQ-24) | Dokumen dan rencana harus direvisi bila mentor mengubah atau menolak jawaban | Sedang | Sedang | Label `CONFIRMED (knowledge owner, deck v1_ slide 24)` dan `PROPOSED` dipisahkan; perubahan kode yang bergantung padanya ditunda sampai pengakuan (termasuk perubahan izin `staff`); agenda sesi mentor dijadikan sesi konfirmasi | Mentor, Pengembang | Terbuka |
 | R-17 | Matriks izin saat ini (role `staff` dapat membuat dan mengubah knowledge dan dokumen) tidak selaras dengan jawaban hak ubah/unggah (OQ-05) | Perilaku sistem berbeda dari ketentuan knowledge owner; bila diperbaiki tanpa konfirmasi peran, pengguna yang berwenang bisa kehilangan akses | Sedang | Sedang | Usulan perubahan terdokumentasi di [permission-matrix](../06-security/permission-matrix.md) dan [future-development](../13-handover/future-development.md) (PD-1); konfirmasi peran (OQ-25) sebelum menerapkan; selama data hanya `SIMULATED_DATA` paparan terbatas | Pengembang, Mentor | Terbuka |
+| R-18 | Status berlaku terkini regulasi tidak dapat diturunkan dari Kompilasi Peraturan SUN, sedangkan tampilan "Berlaku" dan ketiadaan relasi pencabutan dapat dibaca sebagai bukti berlaku (OQ-26, OQ-29) | Pengguna atau Hermes mengutip regulasi yang sudah dicabut atau diubah sebagai berlaku; pencabutan sebagian atau ketentuan peralihan dibaca sebagai pencabutan penuh atau sebagai bukti berlaku; contoh: PMK 128/PMK.08/2012 tidak punya relasi di kompilasi tetapi statusnya tidak diketahui (OQ-17) | Sedang | Tinggi | Status hukum diisi pemilik konten setelah validasi, tidak diturunkan otomatis (BR-40); sitasi menyertakan "status berlaku belum diverifikasi" sampai divalidasi dan menampilkan pencabutan sebagian dengan cakupan ([citation-policy](../05-ai-rag/citation-policy.md), PROPOSED, belum diimplementasikan); validasi terhadap sumber resmi seperti Berita Negara atau JDIH oleh pemilik konten | Mentor; pemilik konten OPEN QUESTION (OQ-09, OQ-26) | Terbuka |
 
 ## Status Risiko
 

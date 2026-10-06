@@ -1,5 +1,22 @@
 # Changelog
-## Docs 2026-10-06 - Jawaban knowledge owner diteruskan ke requirement, alur sistem, database, pengujian, dan bug (hanya dokumentasi)
+## Docs 2026-10-06 - Dokumentasi domain diselaraskan dengan Kompilasi Peraturan SUN (hanya dokumentasi)
+### Diubah
+- Hasil pembacaan terbantu mesin atas `Kompilasi_Peraturan_SUN_formal.pdf` (ekstraksi teks tanpa OCR; kutipan diperiksa terhadap teks ekstraksi, bukan gambar halaman; tidak dibandingkan dengan Berita Negara atau JDIH) diterapkan ke dokumentasi. Sitasi memakai format `Kompilasi Peraturan SUN, <regulasi>, Pasal X, hal. N` (hal. = halaman PDF).
+- Koreksi: judul PMK 165/2022 pada naskah adalah "Transaksi Surat Utang Negara Secara Langsung" (CONFIRMED), berbeda dari indeks kompilasi (NEEDS LEGAL CONFIRMATION); definisi private placement, bookbuilding, pembelian kembali (tunai dan/atau penukaran), dan penukaran di `glossary.md` dan `sun-domain-overview.md`; judul enam regulasi yang sebelumnya "belum dicatat" diisi dengan sumber dan halaman.
+- Klaim deck yang tidak ada di kompilasi (ORI/SBR, "debt switch", BEI, SBN, PMK 124/2024, Pasal 1441) dipisahkan dari teks regulasi dan ditandai NOT VERIFIABLE FROM COMPILATION. Pemetaan "debt switch" ke "penukaran" berstatus PROPOSED.
+- OQ-17 diperbarui dengan fakta terverifikasi (PMK 128/PMK.08/2012, hal. 168-175, tentang penjualan SUN valuta asing di pasar perdana domestik dengan cara bookbuilding); kompilasi tidak menjelaskan penggantian "PMK 128 tahun 2019" dan status tetap OPEN.
+- Desain (PROPOSED, tidak diimplementasikan): metadata regulasi tambahan (`metadata-schema.md`), hierarki BAB/Bagian/Pasal/ayat/huruf, Lampiran, dan Penjelasan (`chunking-strategy.md`, `ingestion-pipeline.md`), cakupan pencabutan sebagian dan dasar relasi (`logical-data-model.md`, `conceptual-data-model.md`, `document-lifecycle.md`), format sitasi dan catatan status "Berlaku" (`citation-policy.md`). Pencabutan sebagian tidak menjadikan target `SUPERSEDED`; status hukum tidak diturunkan otomatis.
+- Catatan sumber kompilasi ditambahkan ke `market-data-proposal.md`, `integration-overview.md`, dan `dashboard-requirements.md`.
+### Ditambahkan
+- Open question OQ-26 sampai OQ-33 (status berlaku terkini, sumber acuan judul dan nomor, pengundangan PMK 111/2024, pencabutan sebagian dan ketentuan peralihan, rujukan tak bernomor, regulasi tambahan, validasi teks ekstraksi, nama unit lama); dua kandidat lain digabung ke OQ-16 dan OQ-03/OQ-02.
+- Aturan bisnis BR-40 sampai BR-45 (regulasi dan sitasi) dan risiko R-18 (status berlaku regulasi tidak dapat diturunkan dari kompilasi).
+### Tidak diubah
+- Kode, test, migrasi, file paket, seed, dokumen sumber di root, `docs/_archive`, dan decision log (tidak ada keputusan baru). SUN Tematik dan peran internal Direktorat SUN tidak diubah. Tidak ada integrasi yang diaktifkan atau diklaim tersedia. Digest dan teks ekstraksi kompilasi tidak dimasukkan ke repository.
+### Hasil validasi aktual (2026-10-06, Windows, PowerShell 7)
+| Pemeriksaan | Hasil |
+|---|---|
+| Pemeriksa dokumentasi (skrip sementara di luar repository, `docs/**/*.md` tanpa `_archive`) | 111 file, 0 tautan relatif rusak, 0 file tanpa baris `**Status:**`, 0 file dengan emoji atau ikon Unicode, 0 penanda konflik, 0 pagar kode tidak seimbang |
+| `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, `pnpm db:sql`, `pnpm db:check` | Tidak dijalankan: tidak ada perubahan kode, test, migrasi, atau paket |## Docs 2026-10-06 - Jawaban knowledge owner diteruskan ke requirement, alur sistem, database, pengujian, dan bug (hanya dokumentasi)
 ### Diubah
 - Tahap kedua dari jawaban knowledge owner (deck `v1_` slide 24; `CONFIRMED (knowledge owner, deck v1_ slide 24)`, pengakuan mentor tertunda OQ-24). Slide 11, 12, 15, dan 20 tidak berubah pada deck `v1_`, sehingga prioritas, alur dokumen, model data inti, dan definisi P0 sampai P3 tidak digeser; dampaknya hanya pada pelaku, batas data, indikator, dan server pilot.
 - Requirement: `functional-requirements.md` (FR-50 sampai FR-55; FR-09, FR-10, FR-22, FR-23, FR-39, FR-41, FR-42, FR-48 diselaraskan), `non-functional-requirements.md` (NFR-39 sampai NFR-44 untuk server khusus), `acceptance-criteria.md` (AC-16 sampai AC-25 dengan status terhadap kode), `user-stories.md` (US-35 sampai US-40; US-05 diselaraskan), `prd.md` dan `mvp-scope.md` (sisa pass 1 dan status persistence).

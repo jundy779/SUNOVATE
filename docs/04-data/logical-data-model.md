@@ -97,6 +97,27 @@ Semua fiktif, berdomain `@sunovate.local`, dan hanya memakai sebutan generik (`S
 - **OUT OF SCOPE (ADR-013)**: Entitas instrumen, lelang, transaksi, yield, dan setelmen tetap tidak dimodelkan. Permintaan knowledge owner (OQ-10) tidak mengubahnya.
 - **OPEN QUESTION (OQ-21)**: Sebelum ada entitas atau kolom apa pun harus diketahui: pemilik dan sistem sumber otoritatif; definisi kedua indikator; periode dan frekuensi pembaruan; tingkat agregasi; klasifikasi data dan siapa yang boleh melihat; apakah SUNOVATE boleh menyimpan salinan atau hanya menautkan ke sistem resmi; kebutuhan audit dan retensi. Tidak ada nama kolom, tipe, atau contoh angka yang diusulkan di sini.
 
+## Usulan Desain Relasi Regulasi (PROPOSED, revisi masa depan)
+
+Bagian ini **PROPOSED**. Tidak ada tabel, kolom, migrasi, seed, atau uji yang berubah; skema yang berlaku tetap 30 tabel pada revisi `0002_ordering_columns`. Pekerjaan masa depan: revisi Alembic baru (`0001` dan `0002` tidak diubah), pembaruan model, dan uji baru. Dasarnya adalah telaah Kompilasi Peraturan SUN (ekstraksi teks tanpa OCR, 83 relasi antarnaskah dan 12 riwayat perubahan pihak ketiga yang dinyatakan teks; tidak dibandingkan dengan sumber resmi). Format sumber: `Kompilasi Peraturan SUN, <regulasi>, Pasal X, hal. N`.
+
+### Keadaan saat ini (diperiksa pada model)
+
+- `regulation_relations` memiliki `source_entry_id`, `target_entry_id` (keduanya wajib dan menunjuk `knowledge_entries`), `relation_type`, `note`, dan `created_by`. Constraint unik pada (`source_entry_id`, `target_entry_id`, `relation_type`) dan CHECK `source_entry_id <> target_entry_id`.
+- Tidak ada kolom cakupan pencabutan, dasar relasi, atau penanda target yang belum terpetakan.
+
+### Kesenjangan yang terlihat pada kompilasi
+
+| Temuan (CONFIRMED) | Contoh dan sumber | Usulan (PROPOSED) |
+|---|---|---|
+| Pencabutan sebagian: hanya Pasal/ayat tertentu dicabut | PMK 111/2024 mencabut ketentuan tertentu pada PMK 168/2019, PMK 165/2022, dan PMK 114/2023 (Kompilasi Peraturan SUN, PMK 111/2024, Pasal 30 angka 2 sampai 4, hal. 47) | Kolom cakupan teks (mis. `scope_text`) berisi Pasal/ayat yang dicabut; `NULL` berarti seluruh regulasi. Unique constraint perlu ditinjau agar dua pencabutan sebagian berbeda cakupan dari sumber yang sama tetap dapat dicatat |
+| Dasar relasi berbeda: konsiderans, batang tubuh, pasal penutup, peralihan | `SUPERSEDES` terbaca dari Menimbang dan selalu berpasangan dengan `REVOKES` di kompilasi (contoh: PMK 111/2024, Menimbang huruf c, hal. 34, dan Pasal 30 angka 1, hal. 47). Ketentuan peralihan mempertahankan regulasi lama (PMK 168/2019, Pasal 28, hal. 154-155) | Kolom dasar relasi (mis. `basis`: `menimbang`, `mengingat`, `batang_tubuh`, `pasal_penutup`, `peralihan`). Relasi berdasar `peralihan` bukan pencabutan dan tidak dipakai menurunkan status |
+| Target tidak dapat dipetakan ke entri | Rujukan tanpa nomor ("peraturan menteri mengenai dealer utama SUN", "Peraturan Direktur Jenderal"), kelas peraturan tak bernama (UU 24/2002, Pasal 21, hal. 9), dan peraturan di luar kompilasi | `target_entry_id` dibuat opsional dengan `target_citation` (teks) dan `target_resolved` (boolean). Pemetaan ke regulasi bernomor tetap PROPOSED (OQ-30, BR-44) |
+| Riwayat perubahan pihak ketiga | Teks menyebut "sebagaimana diubah dengan" regulasi yang bukan bagian kompilasi (contoh: UU 6/2009 atas UU 23/1999, PMK 51/2019, Pasal 1 angka 10, hal. 62). Tidak ada regulasi dalam kompilasi yang menyatakan mengubah regulasi lain dalam kompilasi | `AMENDS` antarentri belum punya contoh nyata dari kompilasi; gunakan data `SIMULATED_DATA` untuk pengujian |
+| Nama berdekatan | PMK 168/PMK.08/2019 (lelang, hal. 140-167) berbeda dari PMK 168/PMK.08/2021 (Dealer Utama, disebut hal. 47) | Kunci unik regulasi memuat jenis, nomor, kode unit, dan tahun |
+
+- **PROPOSED**: Status hukum tidak diturunkan dari relasi. Relasi `REVOKES` dengan cakupan, relasi `peralihan`, dan ketiadaan relasi masing-masing tidak cukup untuk menyatakan regulasi berlaku atau dicabut; pemilik konten yang menetapkan (BR-40, BR-42, OQ-26, OQ-29).
+- **OPEN QUESTION**: Siapa yang memetakan rujukan tak bernomor dan bagaimana tampilannya (OQ-29, OQ-30).
 ## Related Documents
 - [conceptual-data-model.md](conceptual-data-model.md)
 - [metadata-schema.md](metadata-schema.md)
