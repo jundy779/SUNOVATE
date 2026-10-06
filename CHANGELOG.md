@@ -1,4 +1,27 @@
 # Changelog
+## Docs 2026-10-06 - Jawaban knowledge owner diteruskan ke requirement, alur sistem, database, pengujian, dan bug (hanya dokumentasi)
+### Diubah
+- Tahap kedua dari jawaban knowledge owner (deck `v1_` slide 24; `CONFIRMED (knowledge owner, deck v1_ slide 24)`, pengakuan mentor tertunda OQ-24). Slide 11, 12, 15, dan 20 tidak berubah pada deck `v1_`, sehingga prioritas, alur dokumen, model data inti, dan definisi P0 sampai P3 tidak digeser; dampaknya hanya pada pelaku, batas data, indikator, dan server pilot.
+- Requirement: `functional-requirements.md` (FR-50 sampai FR-55; FR-09, FR-10, FR-22, FR-23, FR-39, FR-41, FR-42, FR-48 diselaraskan), `non-functional-requirements.md` (NFR-39 sampai NFR-44 untuk server khusus), `acceptance-criteria.md` (AC-16 sampai AC-25 dengan status terhadap kode), `user-stories.md` (US-35 sampai US-40; US-05 diselaraskan), `prd.md` dan `mvp-scope.md` (sisa pass 1 dan status persistence).
+- Alur sistem: `document-lifecycle.md` (pelaku, gerbang intake, sequence ujung ke ujung), `knowledge-lifecycle.md`, `review-and-approval.md`, `work-monitoring-flow.md`, `business-rules.md` (BR-33 sampai BR-39 dengan penandaan konflik terhadap matriks `staff`).
+- Database: `logical-data-model.md` (opsi penunjukan ketua tim dan PIC, dampak PD-1 pada `role_permissions` dan seed, pengguna simulasi tambahan, yield dan SBN tidak dimodelkan), `database-schema.md` (mode persistence, pengecekan ulang 30 tabel dan kolom `0002`), `metadata-schema.md`, `simulated-data-policy.md`, `conceptual-data-model.md`, `data-retention.md`.
+- Pengujian: `test-strategy.md`, `security-testing.md` (SEC-40 sampai SEC-91 berstatus PLANNED kecuali disebut ada, dan daftar uji yang ada terkait PD-1), `rag-testing.md` (rencana golden set per tim dan prosedur dokumen asli), `backend-testing.md`, `frontend-testing.md`, `uat-plan.md` (UAT-01 ditandai bertentangan; UAT-12 sampai UAT-16), `threat-model.md` (T-20 sampai T-26), `security-checklist.md`.
+- Bug: `bug-severity.md` (contoh dari jawaban knowledge owner, tautan ke register).
+### Ditambahkan
+- `docs/10-testing/bug-register.md`: BUG-001 sampai BUG-009 (diperbaiki, dirujuk ke commit `357df94`, `3fba69f`, `6ed05bb`, `a084a53`), BUG-010 sampai BUG-013 (KL-21 sampai KL-24, terbuka), REQ-GAP-01 sampai REQ-GAP-03 (celah persyaratan, terbuka). Kandidat yang tidak dapat ditelusuri (uji API gagal dan plugin mypy pada scaffold awal; tumpang tindih label grafik, indeks sitasi, tinggi sidebar) dicatat terpisah dan tidak dimasukkan sebagai cacat.
+### Temuan yang dicatat (tidak diperbaiki di sini)
+- `staff` masih dapat membuat, mengubah, dan mengajukan knowledge (pengecekan manual: 201, 200, 200); PD-1 belum diterapkan. Tidak ada uji yang ada yang mengandalkan hal ini.
+- Seed hanya menambah baris; PD-1 pada database yang sudah di-seed memerlukan langkah data.
+- `APP_ENV=production` menolak dev auth sementara belum ada mekanisme login lain, sehingga server pilot pada mode production belum dapat dipakai login.
+### Tidak diubah
+- Kode, test, migrasi, file paket, seed, katalog role, `references/README.md`, dan dokumen sumber di root. Tidak ada integrasi yang diaktifkan atau diklaim tersedia.
+### Hasil validasi aktual (2026-10-06, Windows, PowerShell 7, Python 3.14.4)
+| Pemeriksaan | Hasil |
+|---|---|
+| Pemeriksa dokumentasi (skrip sementara, `docs/**/*.md` tanpa `_archive`) | 111 file, 0 tautan relatif rusak, 0 file tanpa baris `**Status:**`, 0 file dengan emoji atau ikon Unicode, 0 penanda konflik, 0 pagar kode tidak seimbang |
+| Pengecekan manual perilaku `staff` dan bentuk respons dashboard (skrip sementara dengan `TestClient`, dihapus) | `staff` POST/PATCH/submit knowledge 201/200/200; `staff` POST versi dokumen 403; tidak ada field yield atau SBN pada `/dashboard/summary`; `GET /teams` enam kode; route webhook kanal 404 |
+| `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, `pnpm db:sql`, `pnpm db:check` | Tidak dijalankan: tidak ada perubahan kode, test, migrasi, atau paket |
+| Diagram Mermaid | Tidak dirender otomatis; sintaks diperiksa manual |
 ## Docs 2026-10-02 - Jawaban knowledge owner dari deck proposal versi tetap (hanya dokumentasi)
 ### Diubah
 - Dokumentasi memasukkan deck `v1_SUNOVATE_Proposal_Arsitektur_dan_Tim_Kerja_v2.4.pptx`, versi tetap (fixed) dari deck proposal yang dikonfirmasi pengguna. Slide 24 kini berjudul "konfirmasi knowledge owner" dan delapan pertanyaannya dijawab. Jawaban diberi label `CONFIRMED (knowledge owner, deck v1_ slide 24)`; pengakuan mentor masih tertunda (OQ-24). Tafsiran, pemetaan role, dan konsekuensi tetap `PROPOSED`.
