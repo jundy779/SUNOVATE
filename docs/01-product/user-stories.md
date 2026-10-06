@@ -1,7 +1,7 @@
 # User Stories
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -83,7 +83,7 @@ Format: "Sebagai [persona], saya ingin [kebutuhan], agar [manfaat]." Persona mer
 
 ## Epic 9: Kanal Telegram/WhatsApp (P2)
 
-**OUT OF SCOPE** untuk MVP. Story dicatat hanya agar abstraksi provider tetap memadai. Pelaksanaan bergantung OQ-08.
+**OUT OF SCOPE** untuk MVP. Story dicatat hanya agar abstraksi provider tetap memadai. OQ-08 sudah dijawab knowledge owner ("bisa"); pelaksanaan tetap P2 dan menunggu kajian keamanan.
 
 | ID | Story | Petunjuk penerimaan | Prioritas |
 |---|---|---|---|
@@ -103,4 +103,4 @@ Format: "Sebagai [persona], saya ingin [kebutuhan], agar [manfaat]." Persona mer
 
 ## Last Updated
 
-2026-10-01
+2026-10-02

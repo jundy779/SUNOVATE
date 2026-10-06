@@ -2,7 +2,7 @@
 
 **Status:** NEEDS MENTOR VALIDATION
 
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -40,7 +40,7 @@ Persona dan role mengikuti role pengembangan usulan. Pengguna simulasi di kolom 
 | UAT-11 | system_admin | Melihat pengguna, tim, role, dan status provider | Data tampil sesuai permission; provider produksi berstatus nonaktif | `sim.admin` |
 
 - **OPEN QUESTION**: Skenario untuk SUN Tematik tidak disusun karena fungsinya belum dikonfirmasi (OQ-01).
-- **OPEN QUESTION**: Siapa knowledge owner dan reviewer pada setiap tim (OQ-09) dan alur persetujuan publikasi (OQ-12).
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Knowledge owner dan reviewer pada setiap tim adalah ketua tim dan PIC yang ditunjuk (OQ-09); penunjukan orangnya **OPEN QUESTION**. Alur persetujuan publikasi tetap **OPEN QUESTION** (OQ-12).
 - **OPEN QUESTION**: Indikator dashboard yang benar-benar dibutuhkan (OQ-10).
 
 ## Kriteria Penerimaan (PROPOSED)

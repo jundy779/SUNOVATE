@@ -1,7 +1,7 @@
 # Roadmap Produk
 
 **Status:** NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -44,8 +44,8 @@ gantt
 
 | Gate | Waktu | Syarat | Pertanyaan terkait |
 |---|---|---|---|
-| G1 Requirement | Akhir bulan 1 | Mentor meninjau scope, daftar tim, pilot, klasifikasi, dan prioritas P0. | OQ-01, OQ-02, OQ-03, OQ-05 |
-| G2 Foundation | Akhir bulan 2 | Matriks izin disetujui; uji otorisasi lulus di PostgreSQL; mekanisme login target diketahui. | OQ-07, OQ-09, OQ-12, OQ-14 |
+| G1 Requirement | Akhir bulan 1 | Mentor meninjau scope, daftar tim, pilot, klasifikasi, dan prioritas P0, serta mengakui jawaban knowledge owner pada deck `v1_` slide 24 (pilot "6 tim" sudah dijawab; nama resmi tim dan skema klasifikasi belum). | OQ-01, OQ-02, OQ-03, OQ-05, OQ-24 |
+| G2 Foundation | Akhir bulan 2 | Matriks izin disetujui; uji otorisasi lulus di PostgreSQL; mekanisme login target diketahui (hosting dijawab: komputer tersendiri sebagai server). | OQ-07, OQ-09, OQ-12, OQ-14, OQ-23, OQ-25 |
 | G3 AI dan Data | Akhir bulan 3 | Dokumen yang boleh masuk RAG disetujui; model AI dan embedding disetujui atau diputuskan tetap ekstraktif; evaluasi RAG awal ditinjau. | OQ-04, OQ-11 |
 | G4 Web | Akhir bulan 4 | Indikator dashboard dan format laporan disetujui. | OQ-10, OQ-15 |
 | G5 Feature-complete | Akhir bulan 5 | Template document automation disetujui; hanya integrasi yang tervalidasi yang aktif; lingkungan UAT tersedia. | OQ-06, OQ-08, OQ-16, OQ-20 |
@@ -58,7 +58,7 @@ Per 2026-10-01 proyek berada di bulan 1. Scaffold yang sudah ada mendahului seba
 ## Yang Tidak Dijanjikan
 
 - **OUT OF SCOPE** Integrasi P2 (SharePoint production sync, SSO organisasi, Power BI, Telegram, WhatsApp, data pasar resmi, Kemenkeu Satu) tidak dijadwalkan. Bulan 5 hanya mencakup integrasi yang sudah disetujui (sumber: Proposal v2.4, slide 11 dan 21).
-- **OUT OF SCOPE** Deployment produksi tidak dijanjikan dalam periode ini kecuali hosting disetujui (OQ-07).
+- **OUT OF SCOPE** Deployment produksi tidak dijanjikan dalam periode ini kecuali hosting dan persyaratan servernya disetujui (OQ-07, OQ-23; hosting dijawab knowledge owner sebagai komputer tersendiri sebagai server, belum diakui mentor).
 
 ## Risks
 
@@ -80,4 +80,4 @@ Per 2026-10-01 proyek berada di bulan 1. Scaffold yang sudah ada mendahului seba
 
 ## Last Updated
 
-2026-10-01
+2026-10-02

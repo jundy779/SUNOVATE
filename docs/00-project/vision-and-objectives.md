@@ -1,7 +1,7 @@
 # Visi dan Sasaran
 
 **Status:** NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -31,7 +31,7 @@ Semua sasaran di tabel ini **PROPOSED**. Target angka adalah usulan awal untuk l
 | T5 | Monitoring pekerjaan dan output tim kerja | Work output, tugas, milestone, pending matter, dan follow-up dapat dipantau dengan status tenggat yang dihitung backend. | Status tenggat SAFE, DUE_SOON, DUE_TODAY, OVERDUE, COMPLETED konsisten di API dan UI. | P0 |
 | T6 | Dashboard sesuai hak akses | Ringkasan dashboard hanya menghitung data yang boleh dibaca pengguna. | Tidak ada angka dashboard yang berasal dari record di luar team scope atau di atas clearance pada uji keamanan. | P0 |
 | T7 | Document automation berbasis template yang disetujui | Dokumen dihasilkan dari template yang disetujui pemiliknya, dengan persetujuan manusia sebelum dipakai. | Jumlah template disetujui; bergantung OQ-16. | P1 |
-| T8 | Fondasi integrasi Telegram dan WhatsApp | Abstraksi `NotificationProvider` dan `HermesClient` siap tanpa mengaktifkan kanal produksi. | Provider produksi tetap nonaktif; kanal hanya diaktifkan setelah OQ-08 dijawab. | P2 |
+| T8 | Fondasi integrasi Telegram dan WhatsApp | Abstraksi `NotificationProvider` dan `HermesClient` siap tanpa mengaktifkan kanal produksi. | Provider produksi tetap nonaktif; kanal hanya diaktifkan setelah kajian keamanan dan pengakuan mentor; OQ-08 sudah dijawab knowledge owner ("bisa", deck v1_ slide 24). | P2 |
 
 ## Ukuran Keberhasilan
 
@@ -53,8 +53,8 @@ Semua sasaran di tabel ini **PROPOSED**. Target angka adalah usulan awal untuk l
 
 ## Open Questions
 
-- OQ-03 Tim kerja dan proses pilot pertama, yang menentukan baseline adopsi.
-- OQ-10 Format laporan dan indikator dashboard yang dibutuhkan.
+- OQ-03 Tim kerja dan proses pilot pertama, yang menentukan baseline adopsi (dijawab knowledge owner: "6 tim"; proses belum).
+- OQ-10 Format laporan dan indikator dashboard yang dibutuhkan (PARTIAL: "yield" dan "kepemilikan SBN" diminta, tanpa sumber data; OQ-21).
 - OQ-11 Model AI dan embedding yang diizinkan, yang memengaruhi target retrieval semantik.
 
 ## Risks
@@ -77,4 +77,4 @@ Semua sasaran di tabel ini **PROPOSED**. Target angka adalah usulan awal untuk l
 
 ## Last Updated
 
-2026-10-01
+2026-10-02

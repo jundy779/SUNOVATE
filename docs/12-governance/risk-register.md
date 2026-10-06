@@ -1,7 +1,7 @@
 # Register Risiko
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -32,7 +32,12 @@ Seluruh penilaian di bawah PROPOSED. Pemilik "Pengembang" berarti peserta magang
 | R-09 | Klasifikasi tidak sesuai skema resmi | Kontrol akses tidak selaras kebijakan instansi | Sedang | Tinggi | Klasifikasi sebagai data konfigurasi; validasi OQ-05 sebelum data riil | Mentor | Terbuka |
 | R-10 | Simulated store disangka persistence produksi | Data hilang saat restart; ekspektasi keliru | Sedang | Sedang | `DATA_BACKEND=simulated` terdokumentasi; `meta.dataLabel`; repository SQLAlchemy sebagai langkah berikut (ADR-007) | Pengembang | Terbuka |
 | R-11 | Kualitas metadata rendah | Retrieval dan sitasi buruk | Tinggi | Sedang | Standar metadata minimum; review sebelum publikasi; `data_quality_issues`; evaluasi RAG | Pengembang; knowledge owner per tim OPEN QUESTION (OQ-09) | Terbuka |
-| R-12 | Perbedaan daftar tim kerja | Lingkup akses dan dashboard keliru | Sedang | Sedang | Seed hanya enam tim brief; tabel `teams` dapat diperluas; OQ-02 diajukan | Mentor | Terbuka |
+| R-12 | Perbedaan daftar tim kerja | Lingkup akses dan dashboard keliru | Sedang | Sedang | Seed hanya enam tim brief; tabel `teams` dapat diperluas; OQ-02 diajukan. Jawaban pilot "6 tim" (knowledge owner, OQ-03) konsisten tetapi tidak menyebut nama tim | Mentor | Terbuka |
+| R-13 | Server tunggal khusus ("computer tersendiri sebagai server", jawaban OQ-07): satu titik kegagalan tanpa redundansi | Layanan dan data hilang atau tidak tersedia bila perangkat keras rusak; backup di host yang sama ikut hilang; patching dan akses fisik atau jaringan tidak terkelola; penyerang yang menguasai host menguasai web, API, dan database sekaligus | Sedang | Tinggi | Backup di luar host dan uji restore ([backup-and-restore](../11-operations/backup-and-restore.md)); tetapkan administrator, jadwal patching, daftar yang boleh mengakses, dan TLS (OQ-23); tidak memuat data asli sebelum kontrol tersebut ada; pemulihan dapat dibangun ulang dari migrasi dan seed | Pengembang; administrator server OPEN QUESTION (OQ-23) | Terbuka |
+| R-14 | Cakupan "semua dokumen yang diusulkan tim kerja" (OQ-04) berjalan tanpa klasifikasi resmi dan persetujuan per dokumen | Dokumen RESTRICTED atau CONFIDENTIAL atau data pribadi masuk repository dan RAG; paparan data melalui pencarian atau Hermes | Sedang | Tinggi | Tetap `SIMULATED_DATA` sampai klasifikasi (OQ-05) dan persetujuan eksplisit ada; CONFIDENTIAL dikecualikan dari Hermes; karantina dan review manusia sebelum publikasi; ceiling klasifikasi Hermes | Pengembang, Mentor | Terbuka |
+| R-15 | Indikator "yield" dan "kepemilikan SBN" diminta tanpa sumber data otoritatif (OQ-10, OQ-21) | Angka tidak akurat atau dianggap resmi; SUNOVATE melampaui batas sebagai bukan sistem transaksi; data sensitif terbuka ke pengguna yang tidak berwenang | Sedang | Tinggi | Tidak menampilkan angka dan tidak membuat tabel bisnis SUN (ADR-013) sebelum sumber, definisi, dan hak lihat jelas; placeholder berlabel `SIMULATED_DATA` saja | Mentor; pemilik data OPEN QUESTION (OQ-21) | Terbuka |
+| R-16 | Pekerjaan bergantung pada jawaban knowledge owner yang belum diakui mentor (OQ-24) | Dokumen dan rencana harus direvisi bila mentor mengubah atau menolak jawaban | Sedang | Sedang | Label `CONFIRMED (knowledge owner, deck v1_ slide 24)` dan `PROPOSED` dipisahkan; perubahan kode yang bergantung padanya ditunda sampai pengakuan (termasuk perubahan izin `staff`); agenda sesi mentor dijadikan sesi konfirmasi | Mentor, Pengembang | Terbuka |
+| R-17 | Matriks izin saat ini (role `staff` dapat membuat dan mengubah knowledge dan dokumen) tidak selaras dengan jawaban hak ubah/unggah (OQ-05) | Perilaku sistem berbeda dari ketentuan knowledge owner; bila diperbaiki tanpa konfirmasi peran, pengguna yang berwenang bisa kehilangan akses | Sedang | Sedang | Usulan perubahan terdokumentasi di [permission-matrix](../06-security/permission-matrix.md) dan [future-development](../13-handover/future-development.md) (PD-1); konfirmasi peran (OQ-25) sebelum menerapkan; selama data hanya `SIMULATED_DATA` paparan terbatas | Pengembang, Mentor | Terbuka |
 
 ## Status Risiko
 

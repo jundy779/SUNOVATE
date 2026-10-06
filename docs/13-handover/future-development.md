@@ -2,7 +2,7 @@
 
 **Status:** PROPOSED
 
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -28,7 +28,7 @@ flowchart TB
 
 | No | Langkah | Bulan roadmap | Bergantung pada | Status |
 |---|---|---|---|---|
-| 1 | Validasi mentor: pilot, dokumen yang boleh masuk, klasifikasi, login dan hosting, knowledge owner dan reviewer, alur publikasi, model AI | Bulan 1–2 | OQ-03, OQ-04, OQ-05, OQ-07, OQ-09, OQ-11, OQ-12 | PROPOSED |
+| 1 | Validasi mentor: pengakuan atas jawaban knowledge owner (OQ-24) dan sisa pertanyaan (nama tim resmi, skema klasifikasi, mekanisme login, persyaratan server, pemetaan peran, alur publikasi, model AI). Pilot ("6 tim"), hosting (komputer tersendiri sebagai server), dan knowledge owner/reviewer (ketua tim dan PIC) sudah dijawab knowledge owner | Bulan 1–2 | OQ-02, OQ-05, OQ-07, OQ-11, OQ-12, OQ-23, OQ-24, OQ-25 | PROPOSED |
 | 2 | Implementasi repository SQLAlchemy untuk semua modul, dengan antarmuka service yang sama, lalu jalankan ulang test API terhadap PostgreSQL | Bulan 2 | Skema `0001_initial_schema` | PROPOSED |
 | 3 | Validasi jalur Docker Compose di mesin yang memiliki Docker | Bulan 2 | Izin perangkat | PROPOSED |
 | 4 | Pipeline ingestion: registrasi file dari provider yang disetujui, ekstraksi, chunking, status `extraction_status`, karantina | Bulan 3 | OQ-04, OQ-06 | PROPOSED |
@@ -41,9 +41,22 @@ flowchart TB
 | 11 | Integrasi yang disetujui saja, melalui checklist kesiapan integrasi | Bulan 5 | OQ-06, OQ-07, OQ-08 | PROPOSED |
 | 12 | Audit aksesibilitas, security test, UAT, bug fixing, dokumentasi, handover | Bulan 6 | OQ-20 | PROPOSED |
 
+## Item Tertunda dari Jawaban Knowledge Owner (2026-10-02)
+
+Semua item di bawah berstatus **PROPOSED** dan belum diimplementasikan. Sumber: deck `v1_` slide 24 (jawaban knowledge owner); pengakuan mentor tertunda (OQ-24).
+
+| No | Item | Bergantung pada | Status |
+|---|---|---|---|
+| PD-1 | Batasi hak ubah/unggah: cabut `knowledge:create`, `knowledge:update`, `knowledge:submit`, dan `document:create` dari role `staff`; perbarui matriks, seed, dan uji otorisasi (termasuk uji 403 untuk `staff`). Perubahan kode pada cabang terpisah dan sesuai [permission-matrix](../06-security/permission-matrix.md). | OQ-05, OQ-24, OQ-25 (konfirmasi role ketua tim, kasubdit PMP, Kasi MP, PIC) | PROPOSED, belum diimplementasikan |
+| PD-2 | Rancang deployment server khusus (satu komputer): host, jaringan, OS, backup, patching, TLS, administrator. | OQ-07, OQ-23 | PROPOSED |
+| PD-3 | Tentukan mekanisme login untuk pilot di server khusus; `POST /auth/dev/login` tetap nonaktif di luar development. | OQ-07, OQ-23 | PROPOSED |
+| PD-4 | Klarifikasi "Sandbox server" sebelum memilih document provider pilot. | OQ-06, OQ-22 | PROPOSED |
+| PD-5 | Definisikan indikator "yield" dan "kepemilikan SBN" setelah sumber data otoritatif dan siapa yang boleh melihatnya diketahui; tidak ada tabel bisnis SUN (ADR-013) sebelum itu. | OQ-10, OQ-21 | PROPOSED |
+| PD-6 | Aturan untuk Telegram dan WhatsApp bila dilanjutkan (P2): kajian keamanan, konten RESTRICTED ke atas tidak dikirim ke kanal eksternal secara default. | OQ-08 | PROPOSED |
+
 ## Kandidat yang Ditunda
 
-- **OUT OF SCOPE** sampai divalidasi: SharePoint production sync, SSO organisasi, Power BI, Telegram dan WhatsApp, market data resmi, integrasi Kemenkeu Satu (sumber: Proposal v2.4, slide 11, prioritas P2).
+- **OUT OF SCOPE** sampai divalidasi: SharePoint production sync, SSO organisasi, Power BI, Telegram dan WhatsApp, market data resmi, integrasi Kemenkeu Satu (sumber: Proposal v2.4, slide 11, prioritas P2). Knowledge owner menjawab "bisa" untuk Telegram dan WhatsApp (OQ-08) dan "Sandbox server" untuk peran SharePoint (OQ-06, perlu klarifikasi); keduanya belum menjadi integrasi yang tersedia.
 - **OPEN QUESTION**: Fitur SUN Business (instrumen, lelang, transaksi) tidak direncanakan sampai cakupannya divalidasi (ADR-013).
 - **OPEN QUESTION**: Fitur untuk SUN Tematik menunggu OQ-01.
 - **OPEN QUESTION**: Penggunaan ulang pola dari SUN Job Monitor menunggu OQ-19.

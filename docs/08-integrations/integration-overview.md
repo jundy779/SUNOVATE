@@ -1,7 +1,7 @@
 # Integration Overview
 
 **Status:** PROPOSED | NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -69,8 +69,8 @@ flowchart LR
 ## Open Questions
 
 - OQ-06 SharePoint sebagai sumber utama atau hanya referensi.
-- OQ-07 Mekanisme login dan hosting yang disetujui.
-- OQ-08 Izin penggunaan Telegram dan WhatsApp untuk internal.
+- OQ-07 Mekanisme login dan hosting yang disetujui (PARTIAL: hosting dijawab komputer tersendiri sebagai server; login belum).
+- OQ-08 Izin penggunaan Telegram dan WhatsApp untuk internal (dijawab knowledge owner: "bisa"; tetap P2).
 - OQ-10 Format laporan dan indikator dashboard.
 - OQ-11 Model AI dan lokasi pemrosesan data.
 

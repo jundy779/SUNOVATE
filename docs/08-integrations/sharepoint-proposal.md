@@ -1,7 +1,7 @@
 # SharePoint / Document Repository Proposal
 
 **Status:** PROPOSED | NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -10,7 +10,9 @@ Mengusulkan cara SUNOVATE menghubungkan Knowledge Hub dengan document repository
 ## Status
 
 - **PROPOSED:** Integrasi SharePoint production sync berada pada prioritas P2, setelah validasi (sumber: Proposal v2.4, slide 11).
-- **OPEN QUESTION:** Apakah SharePoint menjadi sumber utama atau hanya referensi (OQ-06).
+- **OPEN QUESTION:** Apakah SharePoint menjadi sumber utama atau hanya referensi (OQ-06). Status PARTIAL.
+- **CONFIRMED (knowledge owner, deck v1_ slide 24):** Jawaban atas pertanyaan tersebut adalah "Sandbox server" (DEC-20261002-04). **OPEN QUESTION (OQ-22):** Jawaban ini ambigu. Tampaknya sumber file untuk pilot adalah sebuah sandbox server, tetapi tidak jelas apakah SharePoint dipakai sama sekali, apakah "sandbox server" sama dengan komputer server khusus pada jawaban hosting (OQ-07), dan apakah ia berperan sebagai sumber utama atau referensi. Dokumen ini tidak menafsirkannya lebih jauh.
+- **PROPOSED:** Sampai OQ-22 terjawab, desain SharePoint di bawah tetap kandidat P2 dan pilot memakai provider lokal (`LocalDocumentProvider`) dengan data `SIMULATED_DATA`. Tidak ada integrasi SharePoint yang tersedia.
 - **CONFIRMED:** Tidak ada tenant, site, library, kredensial, atau persetujuan akses SharePoint yang tersedia untuk SUNOVATE saat ini.
 
 ## Current state
@@ -69,7 +71,7 @@ sequenceDiagram
 
 ## Prerequisites
 
-- Keputusan OQ-06 tentang peran SharePoint.
+- Keputusan OQ-06 tentang peran SharePoint dan klarifikasi "Sandbox server" (OQ-22).
 - Daftar dokumen yang boleh masuk repository dan RAG (OQ-04).
 - Pemetaan klasifikasi ke skema resmi Kemenkeu (OQ-05).
 - Penunjukan pemilik data dan lokasi repository yang disetujui.
@@ -80,7 +82,8 @@ sequenceDiagram
 
 - OQ-04 Dokumen yang boleh masuk repository dan RAG.
 - OQ-05 Klasifikasi dan hak akses per jenis dokumen.
-- OQ-06 SharePoint sebagai sumber utama atau referensi.
+- OQ-06 SharePoint sebagai sumber utama atau referensi (PARTIAL: "Sandbox server").
+- OQ-22 Makna "Sandbox server" dan apakah SharePoint dipakai pada pilot.
 - OQ-07 Mekanisme login dan hosting.
 - OQ-13 Kebijakan retensi dan penghapusan.
 - OQ-18 Penyimpanan file sumber di repository Git.

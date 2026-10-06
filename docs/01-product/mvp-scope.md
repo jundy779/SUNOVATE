@@ -1,7 +1,7 @@
 # Scope MVP
 
 **Status:** NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -67,7 +67,7 @@ Kolom "Scaffold" berarti ada implementasi awal yang berjalan dengan `DATA_BACKEN
 
 ## Open Questions
 
-- OQ-03 Pilot pertama menentukan skenario MVP yang diprioritaskan.
+- OQ-03 Pilot pertama menentukan skenario MVP yang diprioritaskan (dijawab knowledge owner: "6 tim"; proses pilot belum).
 - OQ-04, OQ-05 Dokumen dan klasifikasi yang boleh masuk.
 - OQ-11 Model embedding untuk pencarian semantik.
 
@@ -85,4 +85,4 @@ Kolom "Scaffold" berarti ada implementasi awal yang berjalan dengan `DATA_BACKEN
 
 ## Last Updated
 
-2026-10-01
+2026-10-02

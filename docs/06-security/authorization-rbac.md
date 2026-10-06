@@ -1,7 +1,7 @@
 # Authorization dan RBAC
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -76,6 +76,14 @@ Catatan: penyaringan daftar menerapkan langkah yang sama per rekaman; rekaman ya
 - **CONFIRMED** Hanya knowledge `PUBLISHED` yang masuk pencarian default dan retrieval Hermes (sumber: fact sheet bagian 6).
 - **CONFIRMED** Retrieval Hermes menyaring chunk yang boleh dibaca principal sebelum scoring, dan konteks dibatasi `HERMES_MAX_CLASSIFICATION=RESTRICTED` pada development (sumber: fact sheet bagian 4 dan 9).
 
+## Usulan Perubahan dari Jawaban Knowledge Owner (PROPOSED, belum diimplementasikan)
+
+**CONFIRMED (knowledge owner, deck v1_ slide 24)** Yang dapat mengubah data atau mengunggah adalah ketua tim, kasubdit PMP, Kasi MP, dan PIC yang ditunjuk (OQ-05). Model otorisasi di atas (permission AND team scope AND klasifikasi) tidak berubah. Yang diusulkan hanyalah isi matriks role ke permission:
+
+- **PROPOSED** `team_lead` = ketua tim; `knowledge_owner` = PIC yang ditunjuk; `knowledge_coordinator` = peran tingkat PMP (kasubdit PMP, Kasi MP), dengan padanan jabatan yang perlu dikonfirmasi (OQ-25).
+- **PROPOSED** Mencabut `knowledge:create`, `knowledge:update`, `knowledge:submit`, dan `document:create` dari role `staff`.
+- **Belum diimplementasikan.** Saat ini `staff` masih memiliki keempat permission tersebut. Rincian, konsekuensi, dan syarat penerapan ada di [permission-matrix](permission-matrix.md). Pengakuan mentor atas jawaban masih tertunda (OQ-24).
+
 ## Lokasi penegakan di kode
 
 | Komponen | Lokasi | Peran |
@@ -88,7 +96,7 @@ Catatan: penyaringan daftar menerapkan langkah yang sama per rekaman; rekaman ya
 
 ## Open Questions
 
-- **OPEN QUESTION** OQ-09 Siapa knowledge owner dan reviewer di tiap tim.
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)** OQ-09 Knowledge owner dan reviewer di tiap tim adalah ketua tim dan PIC yang ditunjuk; pemetaan role dan penunjukan orang OPEN QUESTION (OQ-25).
 - **OPEN QUESTION** OQ-12 Alur persetujuan publikasi dan siapa berwenang.
 - **OPEN QUESTION** OQ-14 Kebijakan berbagi lintas tim untuk konten INTERNAL.
 - **OPEN QUESTION** Apakah team_lead boleh mempublikasikan, dan apakah admin boleh membaca konten (sumber: fact sheet bagian 5).

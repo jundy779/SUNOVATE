@@ -1,7 +1,7 @@
 # RAG Evaluation
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -66,7 +66,7 @@ pnpm api:test
 
 - Dilakukan setelah LLM yang disetujui aktif, karena provider ekstraktif menyusun jawaban langsung dari chunk.
 - Reviewer menilai sampel jawaban: apakah setiap kalimat didukung chunk yang disitasi, apakah ada angka atau klaim di luar konteks, dan apakah status regulasi disampaikan dengan benar.
-- Penunjukan reviewer adalah **OPEN QUESTION** OQ-09; lingkungan dan pengguna uji adalah OQ-20.
+- Reviewer per tim adalah ketua tim dan PIC yang ditunjuk (**CONFIRMED (knowledge owner, deck v1_ slide 24)**, OQ-09); penunjukan orangnya **OPEN QUESTION**; lingkungan dan pengguna uji adalah OQ-20.
 
 ## Pelaporan hasil
 

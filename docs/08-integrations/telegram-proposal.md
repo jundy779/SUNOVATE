@@ -1,7 +1,7 @@
 # Telegram Proposal
 
 **Status:** PROPOSED | NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -11,7 +11,8 @@ Mengusulkan fondasi integrasi Telegram untuk notifikasi dan akses Hermes, dengan
 
 - **CONFIRMED:** Fondasi integrasi Telegram dan WhatsApp adalah tujuan fase lanjutan (sumber: brief sesi 2026-10-01, tujuan 8).
 - **PROPOSED:** Telegram berada pada prioritas P2, setelah validasi (sumber: Proposal v2.4, slide 11).
-- **OPEN QUESTION:** Apakah Telegram diizinkan untuk penggunaan internal (OQ-08).
+- **CONFIRMED (knowledge owner, deck v1_ slide 24):** Pertanyaan apakah Telegram diizinkan untuk penggunaan internal (OQ-08) dijawab "bisa" (DEC-20261002-06). Pengakuan mentor masih tertunda (OQ-24).
+- **PROPOSED:** Jawaban ini tidak mengubah prioritas P2 dan tidak membuat integrasi tersedia. Kontrol tetap sama: kajian keamanan dan kebijakan organisasi sebelum diaktifkan, penautan akun, dan konten RESTRICTED dan CONFIDENTIAL tidak dikirim ke kanal eksternal secara default. Tidak ada bot, akun, token, webhook, atau persetujuan penyedia.
 - **CONFIRMED:** Tidak ada bot, token, webhook, atau persetujuan Telegram yang tersedia untuk SUNOVATE saat ini.
 
 ## Current state
@@ -66,7 +67,7 @@ sequenceDiagram
 
 ## Prerequisites
 
-- Keputusan OQ-08.
+- OQ-08 sudah dijawab knowledge owner ("bisa"); yang masih dibutuhkan adalah pengakuan mentor (OQ-24) dan persetujuan keamanan.
 - Kebijakan organisasi tentang penggunaan aplikasi pesan pihak ketiga untuk informasi kedinasan.
 - Kajian keamanan atas webhook, penautan akun, dan penyimpanan token bot di secret store.
 - Jalur jaringan masuk yang disetujui untuk webhook.
@@ -76,7 +77,7 @@ sequenceDiagram
 
 - OQ-05 Klasifikasi yang boleh keluar ke kanal eksternal.
 - OQ-07 Hosting dan jalur jaringan.
-- OQ-08 Izin Telegram dan WhatsApp.
+- OQ-08 Izin Telegram dan WhatsApp (ANSWERED, knowledge owner: "bisa").
 - OQ-11 Lokasi pemrosesan data.
 - OQ-13 Retensi pesan dan log kanal.
 

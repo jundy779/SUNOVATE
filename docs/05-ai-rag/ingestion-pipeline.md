@@ -1,7 +1,7 @@
 # Ingestion Pipeline
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -47,7 +47,7 @@ flowchart TD
 3. **Dedupe checksum.** Checksum SHA-256 dihitung; pasangan referensi dan checksum yang sama ditolak.
 4. **Ekstraksi.** Teks diekstrak dari format yang didukung. **PROPOSED** OCR untuk dokumen hasil pindai ditambahkan pada fase lanjutan setelah alat dan lokasi pemrosesan disetujui (OQ-11).
 5. **Normalisasi.** Membersihkan header/footer berulang, nomor halaman, dan spasi; mempertahankan penanda struktur seperti Pasal, ayat, langkah, dan bagian.
-6. **Review metadata manusia.** Knowledge owner atau reviewer memeriksa judul, jenis knowledge, klasifikasi, tim pemilik, versi, dan relasi regulasi. Penunjukan orangnya adalah **OPEN QUESTION** OQ-09.
+6. **Review metadata manusia.** Knowledge owner atau reviewer memeriksa judul, jenis knowledge, klasifikasi, tim pemilik, versi, dan relasi regulasi. Knowledge owner dan reviewer per tim adalah ketua tim dan PIC yang ditunjuk (**CONFIRMED (knowledge owner, deck v1_ slide 24)**, OQ-09); penunjukan orangnya adalah **OPEN QUESTION**.
 7. **Chunking.** Mengikuti [chunking-strategy.md](./chunking-strategy.md).
 8. **FTS.** `document_chunks.search_vector` diisi dan diindeks GIN.
 9. **Embedding.** Hanya jika `EMBEDDING_PROVIDER` diaktifkan setelah model disetujui; hasil disimpan di `embedding_references` dengan `model_name` dan `dimensions` (ADR-009).

@@ -1,7 +1,7 @@
 # Ruang Lingkup dan Batasan
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -69,8 +69,8 @@ Sistem transaksi SUN resmi, Kemenkeu Satu, dan SUN Job Monitor sengaja digambar 
 
 - OQ-01 Fungsi SUN Tematik.
 - OQ-02 Daftar dan nama resmi tim kerja dalam scope.
-- OQ-06 SharePoint sebagai sumber utama atau referensi.
-- OQ-08 Izin penggunaan Telegram dan WhatsApp.
+- OQ-06 SharePoint sebagai sumber utama atau referensi (PARTIAL: knowledge owner menjawab "Sandbox server", OQ-22).
+- OQ-08 Izin penggunaan Telegram dan WhatsApp (dijawab knowledge owner: "bisa"; tetap P2 dan belum tersedia).
 - OQ-19 Hubungan dengan SUN Job Monitor.
 
 ## Risks
@@ -95,4 +95,4 @@ Sistem transaksi SUN resmi, Kemenkeu Satu, dan SUN Job Monitor sengaja digambar 
 
 ## Last Updated
 
-2026-10-01
+2026-10-02

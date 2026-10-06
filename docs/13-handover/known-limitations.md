@@ -2,7 +2,7 @@
 
 **Status:** DRAFT
 
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -34,7 +34,7 @@ Daftar jujur keterbatasan scaffold SUNOVATE per 2026-10-01, agar tidak ada fitur
 | KL-16 | Kebijakan | Klasifikasi data, matriks permission, role, dan aturan berbagi lintas tim masih usulan | Hak akses dapat berubah setelah validasi | OQ-05, OQ-14 |
 | KL-17 | Domain | Fungsi SUN Tematik belum dikonfirmasi; daftar tim kerja dapat berbeda dari bagan organisasi | Cakupan tim dapat berubah | OQ-01, OQ-02 |
 | KL-18 | Domain | Data bisnis SUN (instrumen, lelang, transaksi, yield, settlement) tidak dimodelkan | Tidak ada fitur SUN Business | ADR-013 |
-| KL-19 | Operasional | Belum ada hosting, backup produksi, metrik, tracing, atau alerting | Tidak ada operasi produksi | OQ-07, OQ-13 |
+| KL-19 | Operasional | Belum ada hosting nyata, backup produksi, metrik, tracing, atau alerting (hosting pilot dijawab knowledge owner sebagai komputer tersendiri sebagai server, belum tersedia) | Tidak ada operasi produksi | OQ-07, OQ-13, OQ-23, R-13 |
 | KL-20 | Pengujian | Pengujian keamanan dan RAG berjalan terhadap store simulasi dan provider deterministik | Hasil belum mewakili kondisi produksi | [rag-testing.md](../10-testing/rag-testing.md) |
 
 Hasil validasi terbaru (lint, typecheck, test, build): lihat laporan validasi terbaru di CHANGELOG.md.

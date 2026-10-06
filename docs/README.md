@@ -1,7 +1,7 @@
 # Dokumentasi SUNOVATE
 
 **Status:** DRAFT
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -76,8 +76,9 @@ Folder `docs/_archive/legacy-docs-v0/` berisi draf dokumentasi dari sesi sebelum
 - Perbarui baris `Last Updated` setiap kali isi berubah.
 - Ubah status menjadi CONFIRMED hanya setelah ada keputusan yang tercatat di [decision-log.md](12-governance/decision-log.md).
 - Jawaban mentor atas pertanyaan terbuka dicatat di [open-questions.md](00-project/open-questions.md) lalu dirujuk dari dokumen terdampak.
+- Jawaban knowledge owner pada deck proposal versi tetap `v1_` (slide 24) diberi label `CONFIRMED (knowledge owner, deck v1_ slide 24)`; pengakuan mentor masih tertunda (OQ-24). Rinciannya ada di [open-questions.md](00-project/open-questions.md) dan [decision-log.md](12-governance/decision-log.md) (DEC-20261002-01 sampai DEC-20261002-09).
 - Gunakan hanya data berlabel `SIMULATED_DATA` untuk contoh.
 
 ## Last Updated
 
-2026-10-01
+2026-10-02

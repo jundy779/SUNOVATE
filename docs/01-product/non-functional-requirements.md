@@ -1,7 +1,7 @@
 # Kebutuhan Non-Fungsional
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -87,7 +87,7 @@ Catatan: dengan `DATA_BACKEND=simulated`, data runtime hilang saat API restart (
 |---|---|---|
 | NFR-34 | Pengembangan lokal dengan Docker Compose (`pgvector/pgvector:pg17`); alternatif validasi tanpa Docker tersedia melalui skrip `pgserver`. | PROPOSED |
 | NFR-35 | Konfigurasi sepenuhnya melalui environment variable (lihat `.env.example`). | PROPOSED |
-| NFR-36 | Target hosting produksi. | OPEN QUESTION (OQ-07) |
+| NFR-36 | Target hosting produksi. | PARTIAL: komputer tersendiri sebagai server (CONFIRMED, knowledge owner, deck v1_ slide 24); persyaratan server OPEN QUESTION (OQ-07, OQ-23) |
 
 ## Antarmuka
 
@@ -105,4 +105,4 @@ Catatan: dengan `DATA_BACKEND=simulated`, data runtime hilang saat API restart (
 
 ## Last Updated
 
-2026-10-01
+2026-10-02

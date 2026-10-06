@@ -1,7 +1,7 @@
 # Power BI Proposal
 
 **Status:** PROPOSED | NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -11,7 +11,7 @@ Mengusulkan cara menyediakan data pelaporan SUNOVATE untuk Power BI, bila dibutu
 
 - **PROPOSED:** Integrasi Power BI berada pada prioritas P2, setelah validasi (sumber: Proposal v2.4, slide 11).
 - **PROPOSED:** Reporting dan ekspor di dalam SUNOVATE berada pada P1 (sumber: Proposal v2.4, slide 11). Kebutuhan Power BI dinilai setelah kebutuhan laporan internal jelas.
-- **OPEN QUESTION:** Format laporan dan indikator dashboard yang benar-benar dibutuhkan (OQ-10).
+- **OPEN QUESTION:** Format laporan dan indikator dashboard yang benar-benar dibutuhkan (OQ-10 PARTIAL: knowledge owner menyebut "yield" dan "kepemilikan SBN"; sumber data dan format laporan belum, OQ-21).
 - **CONFIRMED:** Tidak ada workspace, dataset, gateway, lisensi, atau persetujuan Power BI yang tersedia untuk SUNOVATE saat ini.
 
 ## Current state
@@ -36,7 +36,7 @@ Mengusulkan cara menyediakan data pelaporan SUNOVATE untuk Power BI, bila dibutu
 | Endpoint reporting read-only yang dibaca Power BI | Memerlukan autentikasi layanan dan pembatasan scope |
 | Semantic dataset yang dikelola pengelola BI | Memerlukan pemilik data dan aturan row-level security |
 
-Pilihan akhir menunggu OQ-10 dan keputusan hosting (OQ-07).
+Pilihan akhir menunggu OQ-10, OQ-21, dan keputusan hosting (OQ-07; hosting dijawab sebagian: komputer tersendiri sebagai server, persyaratan di OQ-23).
 
 ### Alur data
 

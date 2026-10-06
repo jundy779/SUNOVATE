@@ -1,7 +1,7 @@
 # Decision Log
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -10,7 +10,7 @@ Dokumen ini mencatat ringkasan keputusan proyek SUNOVATE beserta status dan damp
 ## Aturan Pencatatan
 
 - ID tidak dipakai ulang. Keputusan yang diganti tetap tercatat dengan status "Digantikan oleh ...".
-- CONFIRMED hanya bila didukung brief pengguna atau jawaban mentor bertanggal.
+- CONFIRMED hanya bila didukung brief pengguna atau jawaban mentor bertanggal. Jawaban knowledge owner dicatat dengan label `CONFIRMED (knowledge owner, <sumber>)` dan dinyatakan belum diakui mentor sampai pengakuan tercatat (OQ-24).
 - Setiap keputusan baru diikuti pembaruan dokumen terkait dan, bila material, `CHANGELOG.md` (lihat [change-management](change-management.md)).
 
 ## Keputusan
@@ -34,7 +34,7 @@ Dokumen ini mencatat ringkasan keputusan proyek SUNOVATE beserta status dan damp
 
 ## Jawaban Mentor atas Open Question
 
-Belum ada jawaban mentor yang tercatat per 2026-10-01. Setiap jawaban dicatat dengan templat berikut, lalu OQ terkait di [open-questions](../00-project/open-questions.md) diperbarui statusnya.
+Belum ada jawaban mentor yang tercatat per 2026-10-02. Yang tercatat adalah jawaban knowledge owner pada deck proposal versi tetap `v1_` slide 24 (bagian "Jawaban knowledge owner, deck v1_ slide 24" di bawah); pengakuan mentor atas jawaban tersebut masih tertunda (OQ-24). Setiap jawaban dicatat dengan templat berikut, lalu OQ terkait di [open-questions](../00-project/open-questions.md) diperbarui statusnya.
 
 ```markdown
 ### DEC-YYYYMMDD-NN
@@ -56,6 +56,117 @@ Ketentuan:
 - Tidak mencatat nama pribadi, nomor surat tugas, atau data sensitif. Sebut peran secara umum (misalnya "mentor").
 - Jawaban yang mengubah arsitektur juga dibuatkan ADR baru.
 
+## Jawaban knowledge owner, deck v1_ slide 24
+
+Entri berikut mencatat jawaban knowledge owner atas delapan pertanyaan slide 24 deck `v1_SUNOVATE_Proposal_Arsitektur_dan_Tim_Kerja_v2.4.pptx`, yang dikonfirmasi pengguna sebagai versi tetap deck proposal. Judul slide berubah dari "konfirmasi mentor" menjadi "konfirmasi knowledge owner". Deck tidak mencantumkan tanggal jawaban; tanggal pencatatan adalah 2026-10-02. Kutipan jawaban ditulis dengan ejaan dinormalisasi. Entri ini tidak masuk tabel ADR agar tidak bentrok dengan penambahan ADR pada cabang lain. Bagian yang diturunkan pengembang (tafsiran, pemetaan role, konsekuensi) berlabel PROPOSED.
+
+### DEC-20261002-01
+
+- **Open question:** OQ-03 Tim kerja dan proses mana yang menjadi pilot pertama? (OQ-02 terkait)
+- **Tanggal jawaban:** tidak tercantum di deck; dicatat 2026-10-02
+- **Sumber:** deck v1_ slide 24 (jawaban knowledge owner)
+- **Jawaban:** "6 tim"
+- **Keputusan:** CONFIRMED (knowledge owner): pilot mencakup 6 tim. PROPOSED: yang dimaksud adalah enam tim pada brief sesi (PPSUN, AKPSUN, PSUN, PPPSUN, DHTV, SUN Tematik). Bagian "proses" tidak dijawab. Nama resmi tim dan tim tambahan pada Pengayaan 6 Mei 2026 (OQ-02) tetap terbuka.
+- **Status:** CONFIRMED (knowledge owner, deck v1_ slide 24) untuk "6 tim"; NEEDS MENTOR VALIDATION untuk sisanya. OQ-03 ANSWERED (knowledge owner); OQ-02 PARTIAL.
+- **Dampak:** [team-work-scope](../02-business/team-work-scope.md), [stakeholder-map](../00-project/stakeholder-map.md), [assumptions](../00-project/assumptions.md) (A-02)
+- **ADR/BR terkait:** R-12, R-16
+- **Tindak lanjut:** Konfirmasi nama resmi dan tim tambahan (OQ-02); proses pilot; pengakuan mentor (OQ-24).
+
+### DEC-20261002-02
+
+- **Open question:** OQ-04 Dokumen apa yang boleh masuk repository dan RAG?
+- **Tanggal jawaban:** tidak tercantum di deck; dicatat 2026-10-02
+- **Sumber:** deck v1_ slide 24 (jawaban knowledge owner)
+- **Jawaban:** "Semua dokumen yang diusulkan tim kerja"
+- **Keputusan:** CONFIRMED (knowledge owner): cakupan ditentukan oleh usulan tim kerja. PROPOSED: setiap dokumen asli tetap memerlukan klasifikasi (OQ-05) dan persetujuan eksplisit sebelum masuk, sesuai AGENTS.md; CONFIDENTIAL tetap dikecualikan dari Hermes; semua data pengembangan tetap `SIMULATED_DATA`.
+- **Status:** CONFIRMED (knowledge owner, deck v1_ slide 24) untuk cakupan; NEEDS MENTOR VALIDATION untuk syarat masuk. OQ-04 PARTIAL.
+- **Dampak:** [ingestion-pipeline](../05-ai-rag/ingestion-pipeline.md), [document-lifecycle](../02-business/document-lifecycle.md), [risk-register](risk-register.md) (R-14)
+- **ADR/BR terkait:** ADR-014, R-03, R-14
+- **Tindak lanjut:** Tetapkan skema klasifikasi (OQ-05) dan prosedur persetujuan per dokumen; pengakuan mentor (OQ-24).
+
+### DEC-20261002-03
+
+- **Open question:** OQ-05 Bagaimana klasifikasi serta hak akses setiap jenis dokumen?
+- **Tanggal jawaban:** tidak tercantum di deck; dicatat 2026-10-02
+- **Sumber:** deck v1_ slide 24 (jawaban knowledge owner)
+- **Jawaban:** Yang dapat mengubah data atau mengunggah: ketua tim, kasubdit PMP, Kasi MP, dan PIC yang ditunjuk
+- **Keputusan:** CONFIRMED (knowledge owner): hak mengubah/mengunggah terbatas pada keempat sebutan tersebut. Jawaban ini tidak mendefinisikan skema klasifikasi maupun hak baca. PROPOSED: `team_lead` = ketua tim; `knowledge_owner` = PIC; `knowledge_coordinator` = peran tingkat PMP; cabut `knowledge:create`, `knowledge:update`, `knowledge:submit`, dan `document:create` dari `staff`.
+- **Status:** CONFIRMED (knowledge owner, deck v1_ slide 24) untuk siapa yang boleh mengubah/mengunggah; NEEDS MENTOR VALIDATION untuk pemetaan role. OQ-05 PARTIAL. Perubahan izin belum diimplementasikan.
+- **Dampak:** [permission-matrix](../06-security/permission-matrix.md), [authorization-rbac](../06-security/authorization-rbac.md), [document-ownership](document-ownership.md), [future-development](../13-handover/future-development.md) (PD-1)
+- **ADR/BR terkait:** ADR-006, R-09, R-17
+- **Tindak lanjut:** Konfirmasi role dan kepanjangan PMP (OQ-25); skema klasifikasi dan pemetaan ke skema resmi (OQ-05); perubahan kode pada cabang terpisah.
+
+### DEC-20261002-04
+
+- **Open question:** OQ-06 Apakah SharePoint menjadi sumber utama atau hanya referensi?
+- **Tanggal jawaban:** tidak tercantum di deck; dicatat 2026-10-02
+- **Sumber:** deck v1_ slide 24 (jawaban knowledge owner)
+- **Jawaban:** "Sandbox server"
+- **Keputusan:** CONFIRMED (knowledge owner): jawaban tercatat apa adanya. Maknanya ambigu: tampaknya sumber file untuk pilot adalah sandbox server, tetapi tidak jelas apakah SharePoint dipakai sama sekali. Tidak ada keputusan desain yang diambil.
+- **Status:** PARTIAL. OQ-06 PARTIAL; klarifikasi di OQ-22.
+- **Dampak:** [sharepoint-proposal](../08-integrations/sharepoint-proposal.md), [integration-boundaries](../03-architecture/integration-boundaries.md)
+- **ADR/BR terkait:** ADR-003, R-05
+- **Tindak lanjut:** Klarifikasi "Sandbox server" (OQ-22).
+
+### DEC-20261002-05
+
+- **Open question:** OQ-07 Mekanisme login dan hosting apa yang disetujui?
+- **Tanggal jawaban:** tidak tercantum di deck; dicatat 2026-10-02
+- **Sumber:** deck v1_ slide 24 (jawaban knowledge owner)
+- **Jawaban:** "Pakai computer tersendiri sebagai server"
+- **Keputusan:** CONFIRMED (knowledge owner): hosting pilot memakai satu komputer khusus sebagai server. Mekanisme login tidak dijawab. PROPOSED: satu host untuk web, API, dan PostgreSQL dengan backup di luar host.
+- **Status:** CONFIRMED (knowledge owner, deck v1_ slide 24) untuk hosting; login OPEN QUESTION. OQ-07 PARTIAL.
+- **Dampak:** [deployment-architecture](../03-architecture/deployment-architecture.md), [deployment-runbook](../11-operations/deployment-runbook.md), [backup-and-restore](../11-operations/backup-and-restore.md), [identity-provider-proposal](../08-integrations/identity-provider-proposal.md)
+- **ADR/BR terkait:** ADR-005, R-13
+- **Tindak lanjut:** Persyaratan server dan mekanisme login (OQ-23, OQ-07).
+
+### DEC-20261002-06
+
+- **Open question:** OQ-08 Apakah Telegram dan WhatsApp diizinkan untuk penggunaan internal?
+- **Tanggal jawaban:** tidak tercantum di deck; dicatat 2026-10-02
+- **Sumber:** deck v1_ slide 24 (jawaban knowledge owner)
+- **Jawaban:** "bisa"
+- **Keputusan:** CONFIRMED (knowledge owner): penggunaan internal dapat. PROPOSED: tetap P2; kajian keamanan dan kebijakan organisasi diperlukan; RESTRICTED dan CONFIDENTIAL tidak dikirim ke kanal eksternal secara default; tidak ada integrasi yang diaktifkan atau diklaim tersedia.
+- **Status:** CONFIRMED (knowledge owner, deck v1_ slide 24). OQ-08 ANSWERED (knowledge owner).
+- **Dampak:** [telegram-proposal](../08-integrations/telegram-proposal.md), [whatsapp-proposal](../08-integrations/whatsapp-proposal.md), [webhook-policy](../07-api/webhook-policy.md)
+- **ADR/BR terkait:** R-02, R-05
+- **Tindak lanjut:** Pengakuan mentor (OQ-24); pekerjaan kanal tidak dimulai sebelum P1 notifikasi dalam aplikasi.
+
+### DEC-20261002-07
+
+- **Open question:** OQ-09 Siapa knowledge owner dan reviewer pada masing-masing tim?
+- **Tanggal jawaban:** tidak tercantum di deck; dicatat 2026-10-02
+- **Sumber:** deck v1_ slide 24 (jawaban knowledge owner)
+- **Jawaban:** Masing-masing ketua tim dan PIC yang ditunjuk
+- **Keputusan:** CONFIRMED (knowledge owner): knowledge owner dan reviewer per tim adalah ketua tim dan PIC yang ditunjuk. Nama orang tidak dicatat. PROPOSED: ketua tim = `team_lead`, PIC = `knowledge_owner`.
+- **Status:** CONFIRMED (knowledge owner, deck v1_ slide 24) untuk peran; penunjukan orang dan pemetaan role OPEN QUESTION. OQ-09 ANSWERED (knowledge owner).
+- **Dampak:** [document-ownership](document-ownership.md), [knowledge-governance](knowledge-governance.md), [user-personas](../01-product/user-personas.md), [stakeholder-map](../00-project/stakeholder-map.md)
+- **ADR/BR terkait:** R-11, R-16
+- **Tindak lanjut:** Pemetaan role (OQ-25); pengakuan mentor (OQ-24). Pemutus publikasi tetap OQ-12.
+
+### DEC-20261002-08
+
+- **Open question:** OQ-10 Format laporan dan indikator dashboard apa yang benar-benar dibutuhkan?
+- **Tanggal jawaban:** tidak tercantum di deck; dicatat 2026-10-02
+- **Sumber:** deck v1_ slide 24 (jawaban knowledge owner)
+- **Jawaban:** "Yield, kepemilikan SBN"
+- **Keputusan:** CONFIRMED (knowledge owner): dua indikator diminta. Tidak ada angka, definisi, sumber data, atau format laporan. PROPOSED: tidak ada angka ditampilkan dan tidak ada tabel bisnis SUN (ADR-013) sampai OQ-21 dijawab.
+- **Status:** CONFIRMED (knowledge owner, deck v1_ slide 24) untuk indikator yang diminta; sisanya OPEN QUESTION. OQ-10 PARTIAL.
+- **Dampak:** [dashboard-requirements](../09-ui-ux/dashboard-requirements.md)
+- **ADR/BR terkait:** ADR-013, R-15
+- **Tindak lanjut:** Sumber data dan definisi (OQ-21); format laporan.
+
+### DEC-20261002-09
+
+- **Open question:** OQ-24 Pengakuan mentor atas jawaban knowledge owner
+- **Tanggal jawaban:** belum ada
+- **Sumber:** perubahan judul slide 24 dari "konfirmasi mentor" menjadi "konfirmasi knowledge owner" (deck v1_)
+- **Jawaban:** belum ada
+- **Keputusan:** Jawaban DEC-20261002-01 sampai DEC-20261002-08 dipakai sebagai dasar kerja berlabel `CONFIRMED (knowledge owner, deck v1_ slide 24)`, bukan keputusan final proyek, sampai mentor mengakuinya.
+- **Status:** NEEDS MENTOR VALIDATION. OQ-24 OPEN.
+- **Dampak:** [open-questions](../00-project/open-questions.md), [assumptions](../00-project/assumptions.md) (A-18), [risk-register](risk-register.md) (R-16)
+- **ADR/BR terkait:** R-16
+- **Tindak lanjut:** Minta pengakuan pada sesi mentor berikutnya ([mentor-session-01-agenda](../00-project/mentor-session-01-agenda.md)).
 ## Related Documents
 
 - [architecture-decisions](../03-architecture/architecture-decisions.md)

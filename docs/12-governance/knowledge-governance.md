@@ -1,7 +1,7 @@
 # Tata Kelola Knowledge
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -11,7 +11,10 @@ Dokumen ini mengusulkan model tata kelola knowledge SUNOVATE: peran tata kelola,
 
 - **CONFIRMED**: Tujuan SUNOVATE mencakup menjaga institutional memory Dit. SUN (sumber: brief sesi 2026-10-01).
 - **CONFIRMED**: Setiap tim berperan sebagai knowledge owner, process owner, dan document reviewer (sumber: brief sesi 2026-10-01).
-- **CONFIRMED (status usulan)**: Proposal v2.4 slide 18 mengusulkan peran tata kelola; seluruh isinya PROPOSED sampai divalidasi mentor.
+- **CONFIRMED (status usulan)**: Proposal v2.4 slide 18 mengusulkan peran tata kelola; seluruh isinya PROPOSED sampai divalidasi mentor. Deck versi tetap `v1_` menambahkan label "Ketua Tim" pada Pengelola MP / Product Owner dan "PMP" pada Knowledge Coordinator; kepanjangan PMP tidak dijelaskan (kemungkinan Program dan Manajemen Pengetahuan, perlu konfirmasi, OQ-25).
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Knowledge owner dan reviewer pada masing-masing tim adalah ketua tim dan PIC yang ditunjuk (OQ-09, DEC-20261002-07).
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Yang dapat mengubah data atau mengunggah adalah ketua tim, kasubdit PMP, Kasi MP, dan PIC yang ditunjuk (OQ-05, DEC-20261002-03).
+- **OPEN QUESTION (OQ-24)**: Pengakuan mentor atas dua jawaban di atas belum ada.
 
 ## Model Tata Kelola
 
@@ -29,16 +32,17 @@ flowchart TD
 | Peran (Proposal slide 18) | Tanggung jawab usulan | Role sistem terdekat | Status |
 |---|---|---|---|
 | Sponsor (Direktur SUN atau pejabat yang ditetapkan) | Arah dan prioritas | Tidak ada role sistem | PROPOSED |
-| Pengelola MP / Product Owner | Prioritas backlog dan penerimaan fitur | Tidak ada role sistem | PROPOSED |
-| Knowledge Coordinator | Konsistensi taksonomi, metadata, publikasi, arsip | `knowledge_coordinator` | PROPOSED |
-| SME / Knowledge Owner | Kebenaran isi knowledge timnya | `knowledge_owner`, `team_lead` | PROPOSED |
+| Pengelola MP / Product Owner / Ketua Tim | Prioritas backlog dan penerimaan fitur | Tidak ada role sistem | PROPOSED; label "Ketua Tim" dari deck `v1_` |
+| Knowledge Coordinator / PMP | Konsistensi taksonomi, metadata, publikasi, arsip | `knowledge_coordinator` | PROPOSED; label "PMP" dari deck `v1_`, OQ-25 |
+| SME / Knowledge Owner | Kebenaran isi knowledge timnya | `knowledge_owner`, `team_lead` | Peran: PROPOSED. Yang mengisinya per tim (ketua tim dan PIC): CONFIRMED (knowledge owner, deck v1_ slide 24) |
 | Administrator sistem | Pengguna, role, konfigurasi | `system_admin` | PROPOSED |
 | Data steward | Kualitas data dan metadata | `knowledge_coordinator` (`data_quality:manage`) | PROPOSED |
 | Security/compliance reviewer | Tinjauan akses dan audit | `auditor` | PROPOSED |
 | Pengelola integrasi | Kesiapan integrasi eksternal | Tidak ada role sistem; integrasi nonaktif | PROPOSED |
 | Pengguna / pemberi feedback | Memakai knowledge dan memberi umpan balik | `staff`, `reviewer`, `read_only` (`hermes:feedback`) | PROPOSED |
 
-- **OPEN QUESTION (OQ-09)**: Siapa yang ditunjuk sebagai knowledge owner dan reviewer di setiap tim.
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Knowledge owner dan reviewer di setiap tim adalah ketua tim dan PIC yang ditunjuk (OQ-09). Penunjukan orang per tim dan pemetaan ke role sistem masih OPEN QUESTION (OQ-25).
+- **PROPOSED**: Hak mengubah/mengunggah dibatasi untuk ketua tim, kasubdit PMP, Kasi MP, dan PIC yang ditunjuk. Penerapan pada matriks izin: lihat usulan perubahan di [permission-matrix](../06-security/permission-matrix.md); belum diimplementasikan dan menunggu konfirmasi (OQ-25).
 - **OPEN QUESTION (OQ-12)**: Siapa yang berwenang memutuskan publikasi.
 - **OPEN QUESTION**: Apakah administrator sistem boleh membaca isi knowledge.
 
@@ -88,6 +92,8 @@ Dimensi dari Proposal v2.4 slide 23 (PROPOSED). Target angka belum ditetapkan da
 - R-01 Asumsi proses bisnis tanpa validasi.
 - R-09 Klasifikasi tidak sesuai skema resmi.
 - R-11 Kualitas metadata rendah.
+- R-14 Cakupan "semua dokumen yang diusulkan tim kerja" tanpa klasifikasi dan persetujuan.
+- R-16 Ketergantungan pada jawaban knowledge owner yang belum diakui mentor.
 
 ## Related Documents
 

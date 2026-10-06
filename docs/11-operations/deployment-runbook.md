@@ -2,7 +2,7 @@
 
 **Status:** PROPOSED
 
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -11,7 +11,8 @@ Mencatat langkah deployment yang sudah dapat dijalankan (lokal) dan kerangka usu
 ## Status
 
 - **CONFIRMED**: Hanya deployment lokal yang diimplementasikan (sumber: implementasi scaffold sesi 2026-10-01).
-- **OPEN QUESTION**: Mekanisme login dan hosting yang disetujui (OQ-07).
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Hosting untuk pilot adalah komputer tersendiri sebagai server (OQ-07, DEC-20261002-05); pengakuan mentor tertunda (OQ-24). Belum ada server, akses, atau persetujuan nyata.
+- **OPEN QUESTION**: Mekanisme login (OQ-07) dan persyaratan server khusus: lokasi dan jaringan, OS, backup, administrator, akses, TLS (OQ-23).
 - **OPEN QUESTION**: Lingkungan UAT (OQ-20).
 - **CONFIRMED**: SUNOVATE belum siap produksi; lihat [known-limitations.md](../13-handover/known-limitations.md).
 
@@ -34,7 +35,7 @@ Mencatat langkah deployment yang sudah dapat dijalankan (lokal) dan kerangka usu
 
 ## Bagian B: Kerangka Deployment Lingkungan Lain (PROPOSED)
 
-Kerangka berikut hanya struktur. Isinya baru dapat dilengkapi setelah OQ-07 dan OQ-20 terjawab.
+Kerangka berikut hanya struktur. Isinya baru dapat dilengkapi setelah OQ-07 (login), OQ-23 (persyaratan server), dan OQ-20 terjawab. Pada server tunggal, langkah "Backup database" wajib menyimpan hasil di luar host yang sama (R-13).
 
 ```mermaid
 flowchart LR
@@ -48,7 +49,8 @@ flowchart LR
 
 ### Checklist Pra-Deployment
 
-- [ ] Hosting, jaringan, dan mekanisme login sudah disetujui (OQ-07).
+- [ ] Hosting, jaringan, dan mekanisme login sudah disetujui (OQ-07, OQ-23). Hosting: komputer tersendiri sebagai server (dijawab knowledge owner); detail dan mekanisme login belum.
+- [ ] Administrator server, daftar yang boleh mengakses server, patching, dan TLS sudah ditetapkan (OQ-23).
 - [ ] `APP_ENV` diset sesuai lingkungan dan `DEV_AUTH_ENABLED=false` di luar development.
 - [ ] Semua rahasia disimpan di luar repository dan berbeda dari nilai `.env.example`.
 - [ ] `IDENTITY_PROVIDER`, `DOCUMENT_PROVIDER`, `NOTIFICATION_PROVIDER`, `AI_PROVIDER`, dan `EMBEDDING_PROVIDER` hanya memakai provider yang sudah divalidasi; provider lain tetap nonaktif.

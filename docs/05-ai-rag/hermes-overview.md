@@ -1,7 +1,7 @@
 # Hermes Overview
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -81,7 +81,7 @@ Sumber: fact sheet bagian 6.
 ## Kanal
 
 - **CONFIRMED** Web SUNOVATE (`/hermes`) adalah kanal yang tersedia pada scaffold (sumber: fact sheet bagian 9).
-- **PROPOSED** Telegram dan WhatsApp merupakan prioritas P2, hanya setelah validasi dan bukan janji (sumber: Proposal v2.4, slide 11). Izin penggunaannya adalah **OPEN QUESTION** OQ-08. Lihat [telegram-proposal.md](../08-integrations/telegram-proposal.md) dan [whatsapp-proposal.md](../08-integrations/whatsapp-proposal.md).
+- **PROPOSED** Telegram dan WhatsApp merupakan prioritas P2, hanya setelah validasi dan bukan janji (sumber: Proposal v2.4, slide 11). Knowledge owner menjawab "bisa" untuk penggunaan internal (**CONFIRMED (knowledge owner, deck v1_ slide 24)**, OQ-08); kanal tetap belum tersedia dan memerlukan kajian keamanan. Lihat [telegram-proposal.md](../08-integrations/telegram-proposal.md) dan [whatsapp-proposal.md](../08-integrations/whatsapp-proposal.md).
 
 ## Proposed Design (belum diimplementasikan)
 

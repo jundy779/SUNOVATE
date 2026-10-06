@@ -1,7 +1,7 @@
 # Product Requirements Document (PRD) SUNOVATE
 
 **Status:** NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -37,8 +37,8 @@ PRD ini merangkum masalah, tujuan, pengguna, scope, fitur per prioritas, non-goa
 | Kelompok | Kebutuhan utama |
 |---|---|
 | Pimpinan | Ringkasan kinerja dan pending matters sesuai hak akses. |
-| Enam tim kerja dan SME | Menyimpan, menemukan, meninjau knowledge; memantau pekerjaan tim. |
-| Pengelola Knowledge | Kurasi, review, publikasi, kualitas metadata. |
+| Ketua tim kerja | Menyimpan, menemukan, meninjau knowledge; memantau pekerjaan tim (slide 9 deck `v1_`; sebelumnya "Enam tim kerja dan SME"). |
+| Pengelola Knowledge / PIC | Kurasi, review, publikasi, kualitas metadata. |
 | Auditor / Admin | Jejak audit, pengelolaan pengguna dan konfigurasi. |
 
 ## Scope
@@ -95,14 +95,14 @@ SharePoint production sync, SSO organisasi, Power BI, Telegram dan WhatsApp, dat
 | Validasi daftar tim dan pilot | Seed data, UAT | OQ-02, OQ-03 |
 | Keputusan dokumen yang boleh masuk RAG | Ingestion dan Hermes | OQ-04 |
 | Skema klasifikasi resmi | Kontrol akses | OQ-05 |
-| Mekanisme login dan hosting | Pengganti dev auth, deployment | OQ-07 |
+| Mekanisme login dan hosting | Pengganti dev auth, deployment | OQ-07 (hosting dijawab: komputer tersendiri sebagai server; login belum), OQ-23 |
 | Model AI dan embedding yang diizinkan | Pencarian semantik, Hermes generatif | OQ-11 |
 | Repository SQLAlchemy | Persistence nyata menggantikan simulated store | ADR-007 |
 | Lingkungan UAT | Bulan 6 | OQ-20 |
 
 ## Open Questions
 
-OQ-01 sampai OQ-20 di [open-questions.md](../00-project/open-questions.md). Yang paling memengaruhi PRD: OQ-03, OQ-04, OQ-05, OQ-10, OQ-11, OQ-12.
+OQ-01 sampai OQ-25 di [open-questions.md](../00-project/open-questions.md). Yang paling memengaruhi PRD: OQ-04, OQ-05, OQ-10, OQ-11, OQ-12, OQ-21, OQ-25. OQ-03, OQ-08, dan OQ-09 sudah dijawab knowledge owner (deck `v1_` slide 24) dan menunggu pengakuan mentor (OQ-24).
 
 ## Risks
 
@@ -117,4 +117,4 @@ R-01, R-02, R-04, R-06, R-07, R-10 di [risk-register.md](../12-governance/risk-r
 
 ## Last Updated
 
-2026-10-01
+2026-10-02

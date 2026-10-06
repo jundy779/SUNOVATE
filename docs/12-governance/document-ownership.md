@@ -1,7 +1,7 @@
 # Kepemilikan Dokumen dan Knowledge
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -11,7 +11,21 @@ Dokumen ini mengusulkan model kepemilikan untuk `knowledge_entries` dan `documen
 
 - **CONFIRMED**: Setiap tim berperan sebagai knowledge owner dan process owner (sumber: brief sesi 2026-10-01).
 - **CONFIRMED**: File tetap menjadi referensi eksternal; SUNOVATE tidak menjadi penyimpan file utama (sumber: brief sesi 2026-10-01; ADR-003).
-- **OPEN QUESTION (OQ-09)**: Penunjukan knowledge owner dan reviewer per tim.
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Knowledge owner dan reviewer pada masing-masing tim adalah ketua tim dan PIC yang ditunjuk (OQ-09, DEC-20261002-07). Penunjukan orang tidak dicatat di dokumentasi.
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Yang dapat mengubah data atau mengunggah adalah ketua tim, kasubdit PMP, Kasi MP, dan PIC yang ditunjuk (OQ-05, DEC-20261002-03). Istilah "kasubdit PMP" dan "Kasi MP" dipakai apa adanya dari jawaban; dokumentasi ini tidak menguraikan singkatannya atau menetapkan kewenangan jabatan tersebut.
+- **OPEN QUESTION (OQ-24)**: Pengakuan mentor atas jawaban di atas belum ada.
+- **OPEN QUESTION (OQ-25)**: Pemetaan jabatan dan peran yang disebut knowledge owner ke role sistem.
+
+## Pemetaan ke Role Sistem (PROPOSED)
+
+Pemetaan berikut adalah usulan pengembang dan belum diimplementasikan.
+
+| Yang disebut knowledge owner | Role sistem terdekat (PROPOSED) | Catatan |
+|---|---|---|
+| Ketua tim (knowledge owner dan reviewer tim) | `team_lead` | `team_lead` sudah memiliki izin ubah dan review pada matriks saat ini |
+| PIC yang ditunjuk (knowledge owner dan reviewer tim) | `knowledge_owner` | `owner_user_id` pada record |
+| Kasubdit PMP, Kasi MP | `knowledge_coordinator` (lintas tim) | Padanan jabatan ke role perlu konfirmasi; kepanjangan PMP tidak dijelaskan di deck |
+| Staf biasa | `staff` | Pada jawaban OQ-05 tidak termasuk yang dapat mengubah/mengunggah; lihat [permission-matrix](../06-security/permission-matrix.md) |
 
 ## Model Kepemilikan
 
@@ -44,7 +58,8 @@ R = Responsible, A = Accountable, C = Consulted, I = Informed. Seluruh tabel PRO
 | Mengelola akun dan role | | | | | R/A | I |
 | Meninjau jejak audit | | | | | | R/A |
 
-- **OPEN QUESTION (OQ-12)**: Pemegang "A" untuk publikasi masih usulan; matriks permission saat ini hanya memberi `knowledge:publish` kepada `knowledge_coordinator`.
+- **PROPOSED**: Kolom `knowledge_owner` dan `team_lead` pada tabel RACI di atas diisi oleh PIC dan ketua tim sesuai jawaban OQ-09; ini tidak mengubah tanda PROPOSED pada tabel.
+- **OPEN QUESTION (OQ-12)**: Pemegang "A" untuk publikasi masih usulan; jawaban OQ-05 dan OQ-09 menyebut peran yang mengubah/mengunggah dan meninjau, bukan yang memutuskan publikasi; matriks permission saat ini hanya memberi `knowledge:publish` kepada `knowledge_coordinator`.
 - **PROPOSED**: `system_admin` tidak memiliki `knowledge:create`/`update` dan tidak berperan atas isi.
 
 ## Pengalihan Kepemilikan

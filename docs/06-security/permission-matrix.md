@@ -1,7 +1,7 @@
 # Permission Matrix
 
 **Status:** NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -142,11 +142,57 @@ Catatan:
 - Konsekuensi matriks saat ini: keputusan approval `KNOWLEDGE_PUBLICATION` hanya dapat dilakukan knowledge_coordinator, karena hanya role ini yang memiliki `approval:decide` dan `knowledge:publish` sekaligus.
 - Permission `user:manage`, `team:manage`, `role:manage`, `knowledge:review`, `knowledge:archive`, `document:create`, `document:update`, `work:create`, `pending:manage`, dan `data_quality:manage` sudah didefinisikan tetapi belum dipakai oleh endpoint scaffold.
 
+## Usulan Perubahan: Pembatasan Hak Ubah/Unggah (PROPOSED, belum diimplementasikan)
+
+Status: **PROPOSED**. Bagian ini tidak mengubah katalog role, matriks di atas, kode, seed, atau uji. Semua tabel di atas tetap menggambarkan keadaan scaffold saat ini.
+
+### Dasar
+
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)** Yang dapat mengubah data atau mengunggah adalah ketua tim, kasubdit PMP, Kasi MP, dan PIC yang ditunjuk (OQ-05, DEC-20261002-03). Pengakuan mentor masih tertunda (OQ-24).
+- **CONFIRMED (fakta matriks saat ini)** Role `staff` memiliki `knowledge:create`, `knowledge:update`, `knowledge:submit`, dan `document:create` (lihat matriks di atas). Ini lebih luas daripada jawaban knowledge owner, yang tidak menyebut staf biasa.
+- **OPEN QUESTION (OQ-25)** Jabatan "kasubdit PMP" dan "Kasi MP" belum dipetakan ke role sistem, kepanjangan "PMP" tidak dijelaskan di deck, dan belum diketahui apakah kedua jabatan itu bekerja lintas tim atau hanya pada tim tertentu. Tidak ada `scope:all_teams` yang diasumsikan untuk keduanya.
+
+### Pemetaan yang diusulkan
+
+| Disebut knowledge owner | Role sistem (PROPOSED) | Catatan |
+|---|---|---|
+| Ketua tim | `team_lead` | Sudah memiliki `knowledge:create/update/submit`, `document:create/update/version` |
+| PIC yang ditunjuk | `knowledge_owner` | Sudah memiliki izin yang sama; penunjukan orang dicatat lewat `owner_user_id` |
+| Kasubdit PMP, Kasi MP | `knowledge_coordinator` | Sudah memiliki izin yang sama dan `scope:all_teams`; padanan jabatan ke role perlu konfirmasi |
+
+### Efek yang diusulkan pada role `staff`
+
+| Permission | Matriks saat ini | Usulan |
+|---|---|---|
+| `knowledge:create` | Y | dicabut |
+| `knowledge:update` | Y | dicabut |
+| `knowledge:submit` | Y | dicabut |
+| `document:create` | Y | dicabut |
+| `knowledge:read`, `document:read`, `search:query`, `hermes:query`, `hermes:feedback`, `work:read`, `work:create`, `work:update`, `pending:read`, `team:read` | Y | tidak berubah |
+| `approval:request` | Y | perlu diputuskan: dipakai `POST /knowledge/{id}/submit` bersama `knowledge:submit`; bila `knowledge:submit` dicabut, `approval:request` untuk `staff` menjadi tidak terpakai (OPEN QUESTION) |
+
+Permission `document:update` dan `document:version` tidak dimiliki `staff` pada matriks saat ini sehingga tidak berubah. Role `reviewer`, `auditor`, `read_only`, dan `system_admin` tidak memiliki `knowledge:create/update/submit` maupun `document:create` dan juga tidak berubah.
+
+### Konsekuensi bila diterapkan (PROPOSED)
+
+- Endpoint `POST /knowledge`, `PATCH /knowledge/{id}`, dan `POST /knowledge/{id}/submit` memberi 403 untuk `staff`.
+- Persona P-02 di [user-personas](../01-product/user-personas.md) hanya membaca, mencari, bertanya ke Hermes, dan memperbarui tugas.
+- Pencarian `staff` di `apps/api/tests` menunjukkan uji saat ini memakai `sim.staff.pppsun` untuk membaca, mencari, Hermes, dan memperbarui tugas, bukan untuk membuat atau mengubah knowledge; uji 403 untuk `staff` akan perlu ditambahkan bila perubahan diterapkan.
+- Pembatasan tetap berlaku bersama team scope dan klasifikasi (permission AND team scope AND klasifikasi).
+
+### Syarat sebelum diterapkan
+
+1. Mentor atau knowledge owner mengonfirmasi role yang tepat untuk ketiga sebutan di atas dan apakah staf boleh menyusun draf (OQ-25).
+2. Mentor mengakui jawaban knowledge owner (OQ-24).
+3. Perubahan matriks, seed, dan uji otorisasi dilakukan pada cabang kode terpisah; catatan ada di [future-development](../13-handover/future-development.md).
+
+**Belum diimplementasikan.** Kode, seed, dan uji di repositori ini tidak berubah oleh pembaruan dokumentasi ini.
 ## Open Questions
 
 - **OPEN QUESTION** Apakah team_lead boleh mempublikasikan knowledge.
 - **OPEN QUESTION** Apakah system_admin seharusnya dapat membaca konten knowledge dan dokumen.
-- **OPEN QUESTION** OQ-09 Penetapan knowledge owner dan reviewer per tim.
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)** OQ-09 Knowledge owner dan reviewer per tim adalah ketua tim dan PIC yang ditunjuk; penunjukan orang dan pemetaan ke role tetap OPEN QUESTION (OQ-25).
+- **OPEN QUESTION** OQ-25 Pemetaan "ketua tim", "kasubdit PMP", "Kasi MP", dan "PIC" ke role sistem serta nasib hak `staff` (lihat usulan di atas).
 - **OPEN QUESTION** OQ-12 Siapa berwenang memutuskan publikasi.
 
 ## Acceptance Criteria

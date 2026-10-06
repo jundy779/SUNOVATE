@@ -1,7 +1,7 @@
 # Authentication
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -10,7 +10,7 @@ Menjelaskan cara pengguna dibuktikan identitasnya pada SUNOVATE: mekanisme devel
 ## Status
 
 - Development authentication: diimplementasikan pada scaffold, hanya untuk pengguna `SIMULATED_DATA` (ADR-005, PROPOSED sebagai keputusan desain).
-- Production authentication: belum ada; menunggu OQ-07.
+- Production authentication: belum ada; menunggu OQ-07 (hosting dijawab knowledge owner sebagai komputer tersendiri sebagai server; mekanisme login belum dijawab, OQ-23).
 
 ## Confirmed Information
 

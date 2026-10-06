@@ -1,7 +1,7 @@
 # Dashboard Requirements
 
 **Status:** PROPOSED | NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -11,7 +11,9 @@ Menetapkan persyaratan dashboard SUNOVATE: isi per role, bagian "Perlu perhatian
 
 - **CONFIRMED:** Dashboard sesuai hak akses termasuk tujuan SUNOVATE (sumber: brief sesi 2026-10-01, tujuan 6).
 - **PROPOSED:** Kinerja dan pending matters dasar termasuk P0 MVP (sumber: Proposal v2.4, slide 11).
-- **OPEN QUESTION:** Indikator dan format laporan yang benar-benar dibutuhkan (OQ-10). Seluruh indikator di dokumen ini adalah kandidat untuk divalidasi.
+- **OPEN QUESTION:** Indikator dan format laporan yang benar-benar dibutuhkan (OQ-10, PARTIAL). Seluruh indikator di dokumen ini adalah kandidat untuk divalidasi.
+- **CONFIRMED (knowledge owner, deck v1_ slide 24):** Indikator yang diminta adalah "yield" dan "kepemilikan SBN" (DEC-20261002-08). Ini hanya indikator yang diminta, tanpa angka, definisi, sumber data, atau format laporan. Pengakuan mentor masih tertunda (OQ-24).
+- **OPEN QUESTION:** Sumber data otoritatif dan definisi kedua indikator serta siapa yang boleh melihatnya (OQ-21). Indikator diblokir sampai ada jawaban.
 - **CONFIRMED:** Dashboard memakai `GET /api/v1/dashboard/summary` dan data SIMULATED_DATA (sumber: fact sheet bagian 9).
 
 ## Aturan umum
@@ -22,7 +24,7 @@ Menetapkan persyaratan dashboard SUNOVATE: isi per role, bagian "Perlu perhatian
 4. **CONFIRMED:** Label SIMULATED_DATA selalu terlihat selama data berasal dari dataset simulasi; respons API membawa `meta.dataLabel` (sumber: fact sheet bagian 9).
 5. **PROPOSED:** Tidak ada grafik dekoratif. Grafik hanya dipakai bila menyampaikan informasi yang tidak lebih jelas dalam tabel, dan selalu disertai angka atau tabel alternatif.
 6. **PROPOSED:** Tabel didahulukan untuk data operasional. Ringkasan angka berupa satu baris metrik, bukan grid kartu besar.
-7. **CONFIRMED:** Dashboard tidak menampilkan data pasar, yield, hasil lelang, atau angka pembiayaan (sumber: fact sheet bagian 0; [Market Data Proposal](../08-integrations/market-data-proposal.md)).
+7. **CONFIRMED:** Dashboard tidak menampilkan data pasar, yield, hasil lelang, atau angka pembiayaan (sumber: fact sheet bagian 0; [Market Data Proposal](../08-integrations/market-data-proposal.md)). Aturan ini tetap berlaku: permintaan indikator "yield" dan "kepemilikan SBN" dari knowledge owner tidak membuka tampilan angka. Tabel bisnis SUN tetap OUT OF SCOPE untuk saat ini (ADR-013). Mengubah aturan ini memerlukan sumber data otoritatif, keputusan cakupan sesuai [change-management](../12-governance/change-management.md), dan klasifikasi akses (OQ-21).
 8. **PROPOSED:** Setiap angka dapat ditelusuri ke daftar record yang membentuknya (misalnya tautan ke `/work-monitoring` dengan filter).
 
 ## Ringkasan metrik (kandidat)
@@ -33,6 +35,17 @@ Menetapkan persyaratan dashboard SUNOVATE: isi per role, bagian "Perlu perhatian
 | Jatuh tempo dekat | Tugas atau output berstatus `DUE_SOON` | Ambang `DEADLINE_DUE_SOON_DAYS` (default 7), OQ-15 |
 | Terlambat | Berstatus `OVERDUE` | OQ-15 |
 | Pending matters | Pending matter yang belum selesai | OQ-10 |
+
+## Indikator yang diminta knowledge owner (belum ada data)
+
+| Indikator | Status | Yang belum diketahui |
+|---|---|---|
+| Yield | Diminta (CONFIRMED, knowledge owner); diblokir | Sumber data otoritatif, definisi, periode, siapa yang boleh melihat (OQ-21) |
+| Kepemilikan SBN | Diminta (CONFIRMED, knowledge owner); diblokir | Sumber data otoritatif, definisi, tingkat agregasi, siapa yang boleh melihat (OQ-21) |
+
+- **PROPOSED:** Sampai OQ-21 dijawab, dashboard tidak menampilkan kedua indikator dan tidak membuat angka contoh berlabel seolah-olah resmi. Bila diperlukan untuk demo tata letak, hanya placeholder kosong berlabel `SIMULATED_DATA` tanpa angka yang menyerupai data nyata.
+- **PROPOSED:** Bila sumbernya ternyata sistem resmi di luar SUNOVATE, pola yang mungkin adalah tautan atau referensi, bukan menyalin data (lihat [Power BI Proposal](../08-integrations/power-bi-proposal.md)); belum diputuskan.
+- **OPEN QUESTION:** Format laporan yang dibutuhkan belum dijawab (OQ-10).
 
 ## Perlu perhatian
 
@@ -70,13 +83,15 @@ flowchart LR
 ## Open Questions
 
 - OQ-03 Tim dan proses pilot.
-- OQ-10 Indikator dan format laporan.
+- OQ-10 Indikator dan format laporan (PARTIAL: "yield" dan "kepemilikan SBN" diminta; format laporan belum).
+- OQ-21 Sumber data otoritatif dan definisi "yield" dan "kepemilikan SBN".
 - OQ-14 Berbagi lintas tim.
 - OQ-15 Ambang jatuh tempo dan definisi status.
 
 ## Risks
 
 - R-01 Indikator disusun dari asumsi tanpa validasi.
+- R-15 Indikator yield dan kepemilikan SBN diminta tanpa sumber data otoritatif.
 - R-02 Agregat membocorkan keberadaan record di luar scope.
 - R-04 Angka simulasi dianggap angka resmi.
 - R-10 Simulated store disangka persistence produksi.

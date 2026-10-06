@@ -1,7 +1,7 @@
 # Data Classification
 
 **Status:** NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -39,7 +39,7 @@ Aturan dasar:
 | Hermes | Boleh menjadi konteks | Boleh menjadi konteks jika principal berhak | Boleh menjadi konteks jika principal berhak; batas atas development | Tidak diproses Hermes |
 | Ekspor | Boleh | Hanya pengguna berhak; menyertakan label klasifikasi | Hanya pengguna berhak; menyertakan label klasifikasi dan tercatat di audit | Tidak tersedia pada pengembangan |
 | Logging | Hanya id, kode klasifikasi, dan action; tanpa isi | Sama | Sama; prompt lengkap dengan konteks RESTRICTED tidak dicatat | Sama |
-| Kanal eksternal (Telegram, WhatsApp, notifikasi) | Belum tersedia; kandidat pertama jika disetujui | Tidak dikirim sampai OQ-08 dijawab | Tidak dikirim | Tidak dikirim |
+| Kanal eksternal (Telegram, WhatsApp, notifikasi) | Belum tersedia; kandidat pertama jika disetujui | Tidak dikirim sampai kajian keamanan selesai (OQ-08 dijawab "bisa" oleh knowledge owner) | Tidak dikirim | Tidak dikirim |
 
 Catatan:
 
@@ -58,7 +58,7 @@ Catatan:
 
 - **OPEN QUESTION** OQ-05 Klasifikasi dan hak akses setiap jenis dokumen; pemetaan ke skema klasifikasi resmi Kemenkeu.
 - **OPEN QUESTION** OQ-04 Dokumen apa yang boleh masuk repository dan RAG.
-- **OPEN QUESTION** OQ-08 Apakah Telegram dan WhatsApp diizinkan untuk penggunaan internal.
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)** OQ-08 Telegram dan WhatsApp dijawab "bisa" untuk penggunaan internal. **PROPOSED** Konten RESTRICTED dan CONFIDENTIAL tetap tidak dikirim ke kanal eksternal secara default; kanal belum tersedia.
 - **OPEN QUESTION** OQ-11 Apakah data boleh diproses model di luar jaringan instansi, dan sampai tingkat klasifikasi berapa.
 - **OPEN QUESTION** OQ-14 Kebijakan berbagi lintas tim untuk konten INTERNAL.
 

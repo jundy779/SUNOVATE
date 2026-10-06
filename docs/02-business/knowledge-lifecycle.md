@@ -1,7 +1,7 @@
 # Siklus Hidup Knowledge
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -76,7 +76,7 @@ Semua penetapan pelaku di bawah adalah PROPOSED dan berbasis role pengembangan, 
 | Pelajari | Pengguna Hermes (feedback), knowledge_coordinator (kualitas data, arsip) |
 
 - **OPEN QUESTION (OQ-12)**: Siapa yang berwenang memutuskan publikasi knowledge, dan apakah team_lead boleh mempublikasikan.
-- **OPEN QUESTION (OQ-09)**: Penunjukan knowledge owner dan reviewer per tim.
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Knowledge owner dan reviewer per tim adalah ketua tim dan PIC yang ditunjuk (OQ-09). **OPEN QUESTION**: penunjukan orangnya dan pemetaan ke role sistem (OQ-25).
 - **OPEN QUESTION (OQ-13)**: Retensi knowledge yang `SUPERSEDED` atau `ARCHIVED`.
 
 ## Jenis Knowledge

@@ -1,13 +1,13 @@
 # Webhook Policy
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 Kebijakan untuk webhook masuk di masa depan (Telegram, WhatsApp, document provider). **Tidak ada webhook yang diimplementasikan.**
 
 ## Confirmed Information
-- **CONFIRMED** Telegram dan WhatsApp adalah fondasi fase lanjutan; penggunaannya belum diizinkan (sumber: brief sesi 2026-10-01; OQ-08).
+- **CONFIRMED** Telegram dan WhatsApp adalah fondasi fase lanjutan; belum ada integrasi, akun, atau persetujuan yang tersedia (sumber: brief sesi 2026-10-01). **CONFIRMED (knowledge owner, deck v1_ slide 24)** OQ-08: penggunaan internal dijawab "bisa"; webhook tetap nonaktif sampai kajian keamanan dan persyaratan di bawah terpenuhi.
 
 ## Aturan wajib sebelum webhook diaktifkan
 1. **Verifikasi tanda tangan** sesuai mekanisme penyedia (HMAC atau token rahasia), dibandingkan dengan waktu konstan. Secret di secret store, bukan di repository.

@@ -2,7 +2,7 @@
 
 **Status:** PROPOSED
 
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -11,7 +11,8 @@ Mengusulkan pendekatan backup dan restore database SUNOVATE untuk pengembangan l
 ## Status
 
 - **PROPOSED**: Seluruh prosedur di dokumen ini adalah usulan dan belum diotomasi dalam skrip proyek.
-- **OPEN QUESTION**: Kebijakan backup produksi (frekuensi, retensi, lokasi, enkripsi, penanggung jawab) bergantung pada hosting yang disetujui (OQ-07) dan kebijakan retensi (OQ-13).
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Hosting pilot adalah komputer tersendiri sebagai server (OQ-07, DEC-20261002-05). Pada satu host, disk yang rusak dapat menghilangkan database dan backup sekaligus bila backup disimpan di host yang sama (R-13).
+- **OPEN QUESTION**: Kebijakan backup produksi (frekuensi, retensi, lokasi di luar host, enkripsi, penanggung jawab) bergantung pada persyaratan server (OQ-23) dan kebijakan retensi (OQ-13).
 
 ## Confirmed Information
 
@@ -63,7 +64,7 @@ Backup dianggap valid hanya bila pernah berhasil di-restore. Langkah uji:
 ## Kebutuhan Produksi (OPEN QUESTION)
 
 - Recovery point objective dan recovery time objective.
-- Lokasi penyimpanan backup dan enkripsi.
+- Lokasi penyimpanan backup di luar komputer server dan enkripsi (server tunggal, R-13; OQ-23).
 - Retensi backup dan hubungannya dengan retensi audit log dan percakapan AI (OQ-13).
 - Pihak yang berwenang melakukan restore.
 - Koordinasi backup database dengan backup provider dokumen (OQ-06).

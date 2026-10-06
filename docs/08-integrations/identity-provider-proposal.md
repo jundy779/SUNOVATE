@@ -1,7 +1,7 @@
 # Identity Provider Proposal
 
 **Status:** PROPOSED | NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -10,7 +10,8 @@ Mengusulkan cara SUNOVATE beralih dari identitas pengembangan ke identitas organ
 ## Status
 
 - **PROPOSED:** SSO organisasi berada pada prioritas P2, setelah validasi (sumber: Proposal v2.4, slide 11).
-- **OPEN QUESTION:** Mekanisme login dan hosting yang disetujui (OQ-07).
+- **CONFIRMED (knowledge owner, deck v1_ slide 24):** Hosting dijawab: "pakai computer tersendiri sebagai server" (OQ-07, DEC-20261002-05). Mekanisme login tidak dijawab.
+- **OPEN QUESTION:** Mekanisme login yang disetujui (OQ-07 PARTIAL) dan persyaratan server khusus (OQ-23). Tidak diketahui apakah server tersebut dapat menjangkau identity provider organisasi atau apakah akun lokal yang dipakai.
 - **CONFIRMED:** Tidak ada identity provider organisasi, client registration, endpoint, atau kredensial yang tersedia untuk SUNOVATE saat ini. Dokumen ini tidak menyatakan bahwa Kemenkeu memakai produk identitas tertentu.
 
 ## Current state
@@ -37,7 +38,7 @@ Opsi berikut hanya kemungkinan untuk dievaluasi bersama pengelola TI organisasi,
 |---|---|
 | SSO organisasi yang kompatibel dengan OpenID Connect (OIDC) | OPEN QUESTION: ketersediaan dan kebijakan registrasi aplikasi |
 | SSO organisasi yang kompatibel dengan SAML | OPEN QUESTION: ketersediaan dan kebijakan registrasi aplikasi |
-| Akun lokal SUNOVATE dengan kebijakan kata sandi dan MFA | Hanya dipertimbangkan bila SSO tidak tersedia; memerlukan kajian keamanan |
+| Akun lokal SUNOVATE dengan kebijakan kata sandi dan MFA | Hanya dipertimbangkan bila SSO tidak tersedia; memerlukan kajian keamanan. Relevan bila server khusus tidak terhubung ke identity provider organisasi (OQ-23); belum diputuskan |
 
 ### Alur autentikasi (usulan umum)
 
@@ -70,7 +71,7 @@ sequenceDiagram
 
 ## Prerequisites
 
-- Keputusan OQ-07 tentang mekanisme login dan hosting.
+- Keputusan OQ-07 tentang mekanisme login (hosting sudah dijawab sebagian) dan persyaratan server (OQ-23).
 - Persetujuan pengelola identitas organisasi untuk registrasi aplikasi.
 - Kajian keamanan atas alur autentikasi dan penyimpanan sesi.
 - Kredensial aplikasi disimpan di secret store.
@@ -79,7 +80,8 @@ sequenceDiagram
 ## Open Questions
 
 - OQ-05 Klasifikasi dan hak akses.
-- OQ-07 Mekanisme login dan hosting.
+- OQ-07 Mekanisme login (PARTIAL; hosting dijawab).
+- OQ-23 Persyaratan server khusus dan mekanisme login di server tersebut.
 - OQ-09 Knowledge owner dan reviewer per tim.
 - OQ-12 Siapa berwenang memutuskan publikasi.
 - OQ-20 Lingkungan UAT dan pengguna uji.

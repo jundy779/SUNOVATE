@@ -1,7 +1,7 @@
 # System Context
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 Menggambarkan posisi SUNOVATE terhadap pengguna dan sistem lain, serta batas yang tidak boleh dilanggar.
@@ -43,7 +43,7 @@ Garis putus-putus berarti usulan; tidak ada koneksi yang diimplementasikan.
 | Mentor | Memvalidasi requirement | CONFIRMED |
 
 ## Open Questions
-OQ-06 (SharePoint), OQ-07 (login dan hosting), OQ-08 (kanal), OQ-11 (model AI).
+OQ-06 (SharePoint; PARTIAL "Sandbox server"), OQ-07 (login; hosting dijawab komputer tersendiri sebagai server), OQ-08 (kanal; dijawab "bisa"), OQ-11 (model AI), OQ-23 (persyaratan server).
 
 ## Related Documents
 - [container-architecture.md](container-architecture.md)

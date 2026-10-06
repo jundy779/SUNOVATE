@@ -1,7 +1,7 @@
 # Cakupan Tim Kerja
 
 **Status:** NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-02
 
 ## Purpose
 
@@ -12,6 +12,8 @@ Dokumen ini mencatat tim kerja Dit. SUN yang masuk cakupan awal SUNOVATE, peran 
 - **CONFIRMED**: Cakupan awal terdiri atas enam tim kerja: PPSUN, AKPSUN, PSUN, PPPSUN, DHTV, dan SUN Tematik (sumber: brief sesi 2026-10-01).
 - **CONFIRMED**: Fungsi SUN Tematik adalah OPEN QUESTION dan tidak boleh diasumsikan (sumber: brief sesi 2026-10-01; AGENTS.md).
 - **CONFIRMED**: Setiap tim berperan sebagai knowledge owner, process owner, repository user, document reviewer, dashboard data source, dan Hermes authorization context (sumber: brief sesi 2026-10-01).
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Pilot pertama adalah "6 tim" (OQ-03). Deck tidak menyebut nama tim dan tidak menjawab bagian "proses". Kesamaan "6 tim" dengan enam tim di bawah adalah **PROPOSED**. Pengakuan mentor masih tertunda (OQ-24).
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Knowledge owner dan reviewer pada setiap tim adalah ketua tim dan PIC yang ditunjuk (OQ-09).
 
 ## Daftar Tim
 
@@ -24,7 +26,7 @@ Deskripsi singkat berasal dari Proposal v2.4 slide 10. Deck menyatakan enam tim 
 | PSUN | Peraturan SUN | Kepatuhan, pemrosesan regulasi, kajian hukum, dukungan penyusunan peraturan | NEEDS MENTOR VALIDATION (sumber: Proposal v2.4, slide 10) |
 | PPPSUN | Pengembangan dan Pendalaman Pasar SUN | Kelembagaan pasar, basis investor, strategi pemasaran, layanan publik, edukasi | NEEDS MENTOR VALIDATION (sumber: Proposal v2.4, slide 10) |
 | DHTV | Dokumen Hukum Transaksi Valas | Dokumen hukum transaksi valas dan engagement letter | NEEDS MENTOR VALIDATION (sumber: Proposal v2.4, slide 10) |
-| SUN Tematik | SUN Tematik | Knowledge product dan proses rinci menunggu konfirmasi mentor | OPEN QUESTION (OQ-01) |
+| SUN Tematik | SUN Tematik | Knowledge product dan proses rinci menunggu konfirmasi (mentor atau knowledge owner) | OPEN QUESTION (OQ-01) |
 
 Nama tim di atas mengikuti brief sesi. Nama resmi dapat berbeda (lihat catatan OQ-02).
 
@@ -47,7 +49,8 @@ Nama tim di atas mengikuti brief sesi. Nama resmi dapat berbeda (lihat catatan O
 - **PROPOSED**: `scope:all_teams` diberikan kepada `system_admin`, `knowledge_coordinator`, dan `auditor`. Permission ini tetap tunduk pada batas klasifikasi (`clearance_code`).
 - **PROPOSED**: Record di luar lingkup pengguna dikembalikan sebagai 404 agar keberadaannya tidak bocor.
 - **OPEN QUESTION (OQ-14)**: Kebijakan berbagi lintas tim untuk konten `INTERNAL`.
-- **OPEN QUESTION (OQ-09)**: Siapa knowledge owner dan reviewer pada masing-masing tim.
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Knowledge owner dan reviewer pada masing-masing tim adalah ketua tim dan PIC yang ditunjuk (OQ-09). Nama orang tidak dicatat; pemetaan ke role sistem adalah PROPOSED (OQ-25).
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Yang dapat mengubah data atau mengunggah adalah ketua tim, kasubdit PMP, Kasi MP, dan PIC yang ditunjuk (OQ-05). Pembatasan ini belum diterapkan pada matriks izin; lihat usulan di [permission-matrix](../06-security/permission-matrix.md).
 
 ```mermaid
 flowchart LR
@@ -79,8 +82,8 @@ Pengguna berikut fiktif dan berlabel `SIMULATED_DATA` (sumber: seed pengembangan
 
 - **CONFIRMED**: Deck Pengayaan 6 Mei 2026 menampilkan bagan tim kerja Dit. SUN 2026 yang lebih banyak daripada enam tim dalam cakupan, antara lain Evaluasi Kualitas Kewajiban Panel Agen Penjual & Konsultan Hukum SUN Valas; Monev Transaksi dan Kewajiban Pihak Ketiga; Respon Cepat dan Penugasan Tertentu; Sistem Informasi Pengelolaan Transaksi SUN; DHE; serta Riset Pasar Keuangan & SUN (sumber: Pengayaan 6 Mei 2026).
 - **CONFIRMED**: Beberapa nama sedikit berbeda dengan brief, misalnya "Analis Pasar Keuangan dan Pasar SUN" (sumber: Pengayaan 6 Mei 2026).
-- **OPEN QUESTION (OQ-02)**: Apakah cakupan SUNOVATE tetap enam tim, dan nama resmi mana yang dipakai.
-- **PROPOSED**: Sampai OQ-02 terjawab, seed hanya memuat enam tim pada brief. Tabel `teams` dirancang agar tim tambahan dapat ditambahkan tanpa perubahan skema.
+- **OPEN QUESTION (OQ-02, PARTIAL)**: Jawaban pilot "6 tim" konsisten dengan enam tim, tetapi nama resmi dan nasib tim tambahan pada Pengayaan 6 Mei 2026 belum dijawab.
+- **PROPOSED**: Sampai OQ-02 terjawab penuh, seed hanya memuat enam tim pada brief. Tabel `teams` dirancang agar tim tambahan dapat ditambahkan tanpa perubahan skema.
 
 ## Risks
 
