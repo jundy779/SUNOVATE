@@ -1,7 +1,7 @@
 # Database Schema
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-06
 
 ## Purpose
 Katalog fisik 30 tabel pada revisi Alembic `0001_initial_schema` ditambah `0002_ordering_columns` (head) (sumber: `apps/api/sunovate_api/db/models.py`, `apps/api/alembic/versions/`).
@@ -11,6 +11,20 @@ Katalog fisik 30 tabel pada revisi Alembic `0001_initial_schema` ditambah `0002_
 |---|---|
 | `0001_initial_schema` | 30 tabel, ekstensi, trigger, indeks (tidak diubah setelah diterapkan) |
 | `0002_ordering_columns` | **PROPOSED (ADR-015)** `audit_logs.seq` (`BIGINT GENERATED ALWAYS AS IDENTITY`, `uq_audit_logs_seq`) untuk urutan insert audit; `knowledge_tags.position` (`INTEGER NOT NULL DEFAULT 0`, `ck_knowledge_tags_position`: `position >= 0`) untuk urutan tag. Downgrade menghapus kedua kolom. Trigger append-only tidak diubah |
+
+## Mode Persistence Runtime
+
+Diperiksa ulang 2026-10-06: `apps/api/sunovate_api/db/models.py` mendefinisikan 30 tabel, `0001_initial_schema` membuat 30 tabel, dan `0002_ordering_columns` hanya menambah `audit_logs.seq` dan `knowledge_tags.position`. Tidak ada tabel atau kolom yang ditambahkan oleh pembaruan dokumentasi ini.
+
+| Mode | Pengaturan | Persistensi | Pemakaian |
+|---|---|---|---|
+| `simulated` | `DATA_BACKEND=simulated` (default) | Store in-memory dari dataset `SIMULATED_DATA` (`store/dataset.py`); data yang dibuat lewat API hilang saat API restart (KL-01) | Pengembangan lokal dan `pnpm test` |
+| `postgres` | `DATA_BACKEND=postgres` dengan `DATABASE_URL`, setelah `pnpm db:migrate` dan `pnpm db:seed` | Data dan audit tersimpan di PostgreSQL dan tercakup backup database (ADR-015, PROPOSED) | `pnpm db:test`, smoke manual, dan kandidat pilot |
+
+- **CONFIRMED (implementasi)**: `APP_ENV=production` menolak `DATA_BACKEND=simulated` dan dev auth aktif (`core/config.py`).
+- **PROPOSED (rekomendasi)**: Pilot pada komputer khusus sebagai server (jawaban knowledge owner, OQ-07, DEC-20261002-05) memakai `DATA_BACKEND=postgres`, karena store simulasi tidak persisten. Rekomendasi ini belum diuji pada server nyata (KL-02) dan server belum ada (OQ-23).
+- **PROPOSED**: Seed hanya menambah baris (`ON CONFLICT DO NOTHING`); perubahan katalog permission tidak menghapus baris lama pada database yang sudah berjalan (lihat [logical-data-model.md](logical-data-model.md)).
+- **Belum ada di skema**: representasi penunjukan ketua tim dan PIC per tim (usulan di [logical-data-model.md](logical-data-model.md)) serta entitas yield dan kepemilikan SBN (OUT OF SCOPE, ADR-013; OQ-21).
 
 ## Ekstensi dan objek khusus
 - `CREATE EXTENSION vector` (pgvector).

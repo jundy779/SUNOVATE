@@ -1,7 +1,7 @@
 # Simulated Data Policy
 
 **Status:** CONFIRMED (prinsip), PROPOSED (detail)
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-06
 
 ## Purpose
 Aturan pembuatan dan penggunaan data contoh.
@@ -20,6 +20,13 @@ Aturan pembuatan dan penggunaan data contoh.
 7. Seed menolak berjalan bila `APP_ENV=production`.
 8. Respons API selalu membawa `meta.dataLabel = SIMULATED_DATA` dan UI menampilkan label yang sama.
 9. File sumber biner di root tidak di-commit (ADR-014) dan tidak dipakai sebagai seed.
+
+## Jawaban Knowledge Owner dan Data Simulasi
+
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Dokumen yang boleh masuk repository dan RAG adalah "semua dokumen yang diusulkan tim kerja" (OQ-04). Ini jawaban cakupan dan **tidak** mencabut aturan di atas: data asli tetap tidak boleh ditambahkan tanpa persetujuan eksplisit (AGENTS.md), dan klasifikasi resmi belum ada (OQ-05). Semua data pengembangan dan pilot tetap `SIMULATED_DATA` sampai gerbang intake dan persetujuan ada (FR-53, BR-35).
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Indikator "yield" dan "kepemilikan SBN" diminta (OQ-10). Aturan nomor 3 tetap berlaku: tidak ada angka yield atau kepemilikan, termasuk angka contoh yang menyerupai data nyata. Placeholder tata letak hanya boleh kosong dan berlabel `SIMULATED_DATA` (OQ-21).
+- **PROPOSED**: Pengguna simulasi tambahan untuk uji otorisasi (ketua tim dan PIC pada tim yang sama, PIC tiap tim, pengguna tim SUN_TEMATIK tanpa data) hanya memakai sebutan generik, mis. "Knowledge Owner Simulasi PSUN"; tidak ada nama orang, jabatan resmi, atau jumlah anggota tim. Daftarnya ada di [logical-data-model.md](logical-data-model.md) dan belum ditambahkan ke dataset.
+- **PROPOSED**: Pengujian dengan dokumen asli hanya setelah persetujuan eksplisit tertulis dan klasifikasi ada; prosedurnya di [rag-testing.md](../10-testing/rag-testing.md). Dokumen asli tidak menjadi fixture, seed, atau isi repository Git (ADR-014, OQ-18).
 
 ## Isi dataset
 8 pengguna, 6 tim, 8 role, 32 permission, 4 klasifikasi, 8 knowledge entry dengan dokumen, versi, dan 12 chunk, 5 output, 7 tugas, 3 milestone, 3 pending matter, 2 tindak lanjut, 1 approval, 2 isu kualitas data.

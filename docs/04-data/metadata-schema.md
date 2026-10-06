@@ -1,7 +1,7 @@
 # Metadata Schema
 
 **Status:** NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-06
 
 ## Purpose
 Mendefinisikan metadata wajib dan opsional untuk knowledge entry dan dokumen.
@@ -32,8 +32,16 @@ Mendefinisikan metadata wajib dan opsional untuk knowledge entry dan dokumen.
 ## Metadata regulasi (PROPOSED)
 Nomor, jenis peraturan, tanggal penetapan, tanggal berlaku, status berlaku, relasi (`regulation_relations`). Status hukum ditentukan pemilik konten, bukan sistem (OQ-09, OQ-17).
 
+## Asal Data dan Metadata Intake (jawaban knowledge owner)
+
+- **CONFIRMED (implementasi)**: Setiap record membawa `data_origin` dengan nilai `SIMULATED_DATA`, `USER_ENTERED`, atau `INTEGRATION` (CHECK pada model). Seed memakai `SIMULATED_DATA`; record yang dibuat lewat API memakai `USER_ENTERED`.
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Dokumen yang boleh masuk adalah "semua dokumen yang diusulkan tim kerja" (OQ-04). Metadata wajib di atas, terutama `classificationCode` dan `ownerTeamId`, tetap harus terisi; klasifikasi tidak boleh melebihi clearance pembuat.
+- **PROPOSED**: Dokumen asli hanya boleh dimuat setelah klasifikasi resmi ditetapkan (OQ-05) dan persetujuan eksplisit tercatat (FR-53, BR-35). Nilai `USER_ENTERED` saja tidak membuktikan bahwa isi record bukan data asli; gerbang intake belum ada.
+- **OPEN QUESTION**: Tempat mencatat persetujuan intake per dokumen (memakai `approval_requests` yang ada, tipe baru lewat migrasi, atau catatan di luar sistem). Tidak ada field baru yang diusulkan atau ditambahkan di sini.
+- **PROPOSED**: Pemilik metadata adalah ketua tim dan PIC yang ditunjuk per tim (OQ-09). Pencatatan penunjukan dibahas di [logical-data-model.md](logical-data-model.md).
+
 ## Open Questions
-OQ-04 jenis dokumen yang boleh masuk; OQ-05 klasifikasi per jenis; OQ-09 pemilik metadata.
+OQ-04 jenis dokumen yang boleh masuk (PARTIAL: cakupan dijawab, syarat masuk belum); OQ-05 klasifikasi per jenis (PARTIAL: hanya siapa yang boleh mengubah/mengunggah dijawab); OQ-09 pemilik metadata (ANSWERED, knowledge owner: ketua tim dan PIC yang ditunjuk; penunjukan orang dan role di OQ-25).
 
 ## Related Documents
 - [document-classification.md](document-classification.md)
