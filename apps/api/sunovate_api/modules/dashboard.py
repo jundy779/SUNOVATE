@@ -6,6 +6,7 @@ Indicators are PROPOSED; the required set is an OPEN QUESTION (OQ-10).
 from __future__ import annotations
 
 from collections import Counter
+from datetime import timedelta
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends
@@ -35,40 +36,54 @@ def dashboard_summary(
 ) -> dict[str, Any]:
     store, authz = ctx.store, ctx.authz
     outputs = authz.list_readable(principal, WorkOutput)
-    tasks = [task_view(ctx, t) for t in authz.list_readable(principal, Task)]
+    task_records = authz.list_readable(principal, Task)
+    tasks = [task_view(ctx, task) for task in task_records]
     pending = (
         authz.list_readable(principal, PendingMatter) if principal.has("pending:read") else []
     )
-    follow_ups = (
-        [
-            with_deadline(ctx, f, f.due_date, f.status)
-            for f in authz.list_readable(principal, FollowUp)
-        ]
-        if principal.has("pending:read")
-        else []
+    follow_up_records = (
+        authz.list_readable(principal, FollowUp) if principal.has("pending:read") else []
     )
+    follow_ups = [
+        with_deadline(ctx, follow_up, follow_up.due_date, follow_up.status)
+        for follow_up in follow_up_records
+    ]
     knowledge = (
         authz.list_readable(principal, KnowledgeEntry, where={"lifecycle_status": "PUBLISHED"})
         if principal.has("knowledge:read")
         else []
     )
 
-    attention = [
-        {
-            "type": kind,
-            "id": v["id"],
-            "title": v["title"],
-            "ownerTeamCode": v["ownerTeamCode"],
-            "dueDate": v["dueDate"],
-            "deadlineState": v["deadlineState"],
-        }
-        for kind, views in (("TASK", tasks), ("FOLLOW_UP", follow_ups))
-        for v in views
-        if v["deadlineState"] in ATTENTION_STATES
-    ]
+    attention = []
+    for kind, records, views in (
+        ("TASK", task_records, tasks),
+        ("FOLLOW_UP", follow_up_records, follow_ups),
+    ):
+        for record, view in zip(records, views, strict=True):
+            if view["deadlineState"] not in ATTENTION_STATES:
+                continue
+            assignee_id = (
+                record.assignee_user_id if isinstance(record, Task) else record.owner_user_id
+            )
+            assignee = store.user(assignee_id) if assignee_id else None
+            attention.append(
+                {
+                    "type": kind,
+                    "id": view["id"],
+                    "title": view["title"],
+                    "category": "Tugas" if kind == "TASK" else "Tindak lanjut",
+                    "workStatus": view["status"],
+                    "assigneeName": assignee.display_name if assignee else None,
+                    "ownerTeamCode": view["ownerTeamCode"],
+                    "dueDate": view["dueDate"],
+                    "deadlineState": view["deadlineState"],
+                }
+            )
     attention.sort(key=lambda a: (ATTENTION_STATES.index(a["deadlineState"]), a["dueDate"]))
     counts = Counter(t["status"] for t in tasks)
     states = Counter(t["deadlineState"] for t in tasks)
+    reference_date = ctx.clock()
+    week_start = reference_date - timedelta(days=reference_date.weekday())
     pending_approvals = (
         authz.list_readable(principal, ApprovalRequest, where={"status": "PENDING"})
         if principal.has("approval:decide")
@@ -83,6 +98,14 @@ def dashboard_summary(
                 "clearanceCode": principal.clearance_code,
             },
             "metrics": {
+                "totalActiveTasks": sum(t.status not in CLOSED_STATUSES for t in task_records),
+                "attentionCount": len(attention),
+                "inProgressTasks": counts["IN_PROGRESS"],
+                "completedThisWeek": sum(
+                    task.status == "COMPLETED"
+                    and week_start <= task.updated_at.date() <= reference_date
+                    for task in task_records
+                ),
                 "activeOutputs": sum(o.status not in CLOSED_STATUSES for o in outputs),
                 "tasksDueSoon": states["DUE_SOON"] + states["DUE_TODAY"],
                 "tasksOverdue": states["OVERDUE"],
@@ -102,7 +125,7 @@ def dashboard_summary(
                 }
                 for k in sorted(knowledge, key=lambda k: k.updated_at, reverse=True)[:5]
             ],
-            "referenceDate": ctx.clock().isoformat(),
+            "referenceDate": reference_date.isoformat(),
         },
         "meta": {"dataLabel": "SIMULATED_DATA", "indicatorStatus": "PROPOSED"},
     }

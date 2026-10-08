@@ -98,8 +98,15 @@ def test_dashboard_summary_uses_authorized_scope() -> None:
     lead = client.get(f"{API}/dashboard/summary", headers=login(client, "sim.lead.psun"))
     data = lead.json()["data"]
     assert data["scope"]["teamCodes"] == ["PSUN"]
+    assert data["metrics"]["totalActiveTasks"] == 1
+    assert data["metrics"]["attentionCount"] == 2
+    assert data["metrics"]["inProgressTasks"] == 1
+    assert data["metrics"]["completedThisWeek"] == 0
     assert data["metrics"]["tasksOverdue"] == 1
     assert {a["ownerTeamCode"] for a in data["attention"]} == {"PSUN"}
+    assert data["attention"][0]["category"] == "Tugas"
+    assert data["attention"][0]["assigneeName"] == "Team Lead Simulasi PSUN"
+    assert data["attention"][0]["workStatus"] == "IN_PROGRESS"
     coordinator = client.get(f"{API}/dashboard/summary",
                              headers=login(client, "sim.coordinator")).json()["data"]
     assert coordinator["metrics"]["pendingApprovals"] == 1

@@ -88,6 +88,10 @@ export interface SearchHit {
 export interface DashboardSummary {
   scope: { allTeams: boolean; teamCodes: string[]; clearanceCode: ClassificationCode };
   metrics: {
+    totalActiveTasks: number;
+    attentionCount: number;
+    inProgressTasks: number;
+    completedThisWeek: number;
     activeOutputs: number;
     tasksDueSoon: number;
     tasksOverdue: number;
@@ -100,6 +104,9 @@ export interface DashboardSummary {
     type: "TASK" | "FOLLOW_UP";
     id: string;
     title: string;
+    category: "Tugas" | "Tindak lanjut";
+    workStatus: string;
+    assigneeName: string | null;
     ownerTeamCode: string | null;
     dueDate: string;
     deadlineState: DeadlineState;
