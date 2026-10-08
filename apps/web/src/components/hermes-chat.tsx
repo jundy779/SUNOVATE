@@ -28,7 +28,7 @@ async function askHermes(input: HermesQueryInput): Promise<HermesAnswer> {
   });
   if (!response.ok) {
     const body = (await response.json().catch(() => null)) as ApiErrorBody | null;
-    throw new Error(body?.message ?? "Hermes tidak dapat menjawab saat ini");
+    throw new Error(body?.message ?? "SAVI AI tidak dapat menjawab saat ini");
   }
   return ((await response.json()) as Envelope<HermesAnswer>).data;
 }
@@ -153,7 +153,7 @@ export function HermesChat() {
       </div>
 
       <form className="chat-form" onSubmit={onSubmit} noValidate>
-        <label htmlFor="question">Pertanyaan untuk Hermes</label>
+        <label htmlFor="question">Pertanyaan untuk SAVI AI</label>
         <textarea
           id="question"
           rows={3}
@@ -172,7 +172,7 @@ export function HermesChat() {
           </p>
         ) : null}
         <button className="button" type="submit" disabled={ask.isPending}>
-          {ask.isPending ? "Hermes sedang memeriksa sumber..." : "Kirim pertanyaan"}
+          {ask.isPending ? "SAVI AI sedang memeriksa sumber..." : "Kirim pertanyaan"}
         </button>
       </form>
     </div>

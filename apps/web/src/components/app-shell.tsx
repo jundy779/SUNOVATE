@@ -1,8 +1,10 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Principal } from "@sunovate/contracts";
 import { logoutAction } from "@/app/login/actions";
-import { visibleNavItems } from "@/lib/navigation";
+import { WorkspaceNav } from "@/components/workspace-nav";
+import { UiIcon } from "@/components/ui-icons";
 
 export function AppShell({ principal, children }: { principal: Principal; children: ReactNode }) {
   const scope = principal.allTeams
@@ -13,16 +15,11 @@ export function AppShell({ principal, children }: { principal: Principal; childr
       <aside className="sidebar">
         <div className="sidebar-inner">
           <Link className="brand" href="/dashboard">
+            <Image src="/brand/logo-dsun.png" alt="Direktorat Surat Utang Negara" width={142} height={63} priority />
             <span>SUNOVATE</span>
-            <small>DJPPR - Direktorat SUN</small>
+            <small>Knowledge &amp; transformation workspace</small>
           </Link>
-          <nav aria-label="Navigasi utama">
-            {visibleNavItems(principal.permissions).map((item) => (
-              <Link href={item.href} key={item.href}>
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+          <WorkspaceNav permissions={principal.permissions} />
           <div className="sidebar-note">
             <strong>Lingkungan pengembangan</strong>
             <span>Seluruh data: SIMULATED_DATA</span>
@@ -32,17 +29,31 @@ export function AppShell({ principal, children }: { principal: Principal; childr
       </aside>
       <div className="workspace">
         <header className="topbar">
-          <div>
-            <strong>{principal.displayName}</strong>
-            <span>
-              {principal.roles.join(", ")} - {scope} - clearance {principal.clearanceCode}
-            </span>
-          </div>
-          <form action={logoutAction}>
-            <button className="button secondary" type="submit">
-              Keluar
-            </button>
+          <form className="global-search" role="search" action="/search">
+            <label className="sr-only" htmlFor="global-search">Cari pengetahuan</label>
+            <input id="global-search" name="q" type="search" minLength={2} maxLength={200}
+              placeholder="Cari dokumen, informasi, atau topik" />
           </form>
+          <button className="notification-button" type="button" aria-label="Notifikasi pengembangan">
+            <UiIcon name="bell" />
+            <span aria-hidden="true" />
+          </button>
+          <details className="account-menu">
+            <summary className="topbar-account">
+              <div className="user-avatar" aria-hidden="true">{principal.displayName.slice(0, 1)}</div>
+              <div>
+                <strong>{principal.displayName}</strong>
+                <span>{scope} · {principal.clearanceCode}</span>
+              </div>
+              <UiIcon className="account-chevron" name="chevron" />
+            </summary>
+            <div className="account-popover">
+              <span>Akun simulasi</span>
+              <form action={logoutAction}>
+                <button className="text-button" type="submit">Keluar</button>
+              </form>
+            </div>
+          </details>
         </header>
         <main id="main-content">{children}</main>
       </div>

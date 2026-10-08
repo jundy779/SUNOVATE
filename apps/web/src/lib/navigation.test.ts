@@ -6,7 +6,7 @@ import { zodResolver } from "./zod-resolver";
 describe("visibleNavItems", () => {
   it("hides items without permission (cosmetic; API still enforces)", () => {
     const labels = visibleNavItems(["work:read", "knowledge:read"]).map((i) => i.label);
-    expect(labels).toEqual(["Dashboard", "Knowledge Hub", "Monitoring Kerja"]);
+    expect(labels).toEqual(["Ringkasan", "Basis Pengetahuan", "Monitoring Kerja"]);
   });
 
   it("shows administration for auditors", () => {
@@ -20,7 +20,7 @@ describe("contracts", () => {
     expect(devLoginSchema.safeParse({ email: "pegawai@kemenkeu.go.id" }).success).toBe(false);
   });
 
-  it("bounds Hermes question length", () => {
+  it("bounds SAVI AI question length", () => {
     expect(hermesQuerySchema.safeParse({ question: "ab" }).success).toBe(false);
     expect(hermesQuerySchema.safeParse({ question: "x".repeat(2001) }).success).toBe(false);
   });

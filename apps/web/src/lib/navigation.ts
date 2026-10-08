@@ -6,11 +6,11 @@ export interface NavItem {
 }
 
 export const NAV_ITEMS: NavItem[] = [
-  { label: "Dashboard", href: "/dashboard", anyOf: ["work:read"] },
-  { label: "Knowledge Hub", href: "/knowledge", anyOf: ["knowledge:read"] },
+  { label: "Ringkasan", href: "/dashboard", anyOf: ["work:read"] },
+  { label: "Basis Pengetahuan", href: "/knowledge", anyOf: ["knowledge:read"] },
   { label: "Pencarian", href: "/search", anyOf: ["search:query"] },
   { label: "Monitoring Kerja", href: "/work-monitoring", anyOf: ["work:read"] },
-  { label: "Hermes", href: "/hermes", anyOf: ["hermes:query"] },
+  { label: "SAVI AI", href: "/savi-ai", anyOf: ["hermes:query"] },
   { label: "Administrasi", href: "/admin", anyOf: ["user:read", "role:read", "audit:read"] },
 ];
 

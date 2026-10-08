@@ -44,7 +44,7 @@ describe("HermesChat", () => {
     const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify(answer), { status: 200 }));
     vi.stubGlobal("fetch", fetchMock);
     renderChat();
-    fireEvent.change(screen.getByLabelText("Pertanyaan untuk Hermes"), {
+    fireEvent.change(screen.getByLabelText("Pertanyaan untuk SAVI AI"), {
       target: { value: "Apa metadata wajib dokumen knowledge?" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Kirim pertanyaan" }));
@@ -76,7 +76,7 @@ describe("HermesChat", () => {
       ),
     );
     renderChat();
-    fireEvent.change(screen.getByLabelText("Pertanyaan untuk Hermes"), {
+    fireEvent.change(screen.getByLabelText("Pertanyaan untuk SAVI AI"), {
       target: { value: "Apa SOP knowledge?" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Kirim pertanyaan" }));

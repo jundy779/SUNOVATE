@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useId } from "react";
 import { DEADLINE_LABELS, type DeadlineState } from "@sunovate/shared-types";
 
 export function PageHeader({
@@ -15,7 +16,7 @@ export function PageHeader({
   return (
     <header className="page-header">
       <div>
-        <p className="eyebrow">{eyebrow}</p>
+        {eyebrow ? <p className="eyebrow">{eyebrow}</p> : null}
         <h1>{title}</h1>
         <p className="lede">{description}</p>
       </div>
@@ -78,12 +79,13 @@ export function Panel({
   action?: ReactNode;
   children: ReactNode;
 }) {
+  const headingId = useId();
   return (
-    <section className="panel" aria-label={title}>
+    <section className="panel" aria-labelledby={headingId}>
       <div className="section-heading">
         <div>
           {eyebrow ? <p className="eyebrow">{eyebrow}</p> : null}
-          <h2>{title}</h2>
+          <h2 id={headingId}>{title}</h2>
         </div>
         {action}
       </div>
