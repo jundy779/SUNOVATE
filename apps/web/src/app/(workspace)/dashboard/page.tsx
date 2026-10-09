@@ -35,6 +35,21 @@ export default async function DashboardPage() {
         action={<time className="dashboard-date" dateTime={data.referenceDate}>{formatDate(data.referenceDate)}</time>}
       />
 
+      <section className="dashboard-governance" aria-label="Konteks tata kelola dashboard">
+        <div>
+          <UiIcon name="users" />
+          <span><small>Cakupan akses</small><strong>{scope}</strong></span>
+        </div>
+        <div>
+          <UiIcon name="document" />
+          <span><small>Status indikator</small><strong>Usulan, menunggu validasi mentor</strong></span>
+        </div>
+        <div>
+          <UiIcon name="shield" />
+          <span><small>Aksi SAVI AI</small><strong>Wajib persetujuan manusia</strong></span>
+        </div>
+      </section>
+
       <section className="dashboard-metrics" aria-label="Ringkasan status simulasi">
         {metrics.map((metric) => (
           <article className="dashboard-metric" key={metric.label}>
