@@ -5,7 +5,7 @@ import { UiIcon, type IconName } from "@/components/ui-icons";
 const primaryAccess: { label: string; detail: string; icon: IconName; href: string }[] = [
   { label: "Monitoring Kerja", detail: "Output, tugas, dan tindak lanjut", icon: "chart", href: "/work-monitoring" },
   { label: "Knowledge Hub", detail: "Pengetahuan terstruktur dan terlacak", icon: "book", href: "/knowledge" },
-  { label: "SAVI AI", detail: "Jawaban berbasis sumber", icon: "chat", href: "/savi-ai" },
+  { label: "SAVI AI", detail: "Jawaban berbasis sumber", icon: "chat", href: "/hermes" },
   { label: "Pencarian", detail: "Temukan informasi lintas sumber", icon: "search", href: "/search" },
 ];
 

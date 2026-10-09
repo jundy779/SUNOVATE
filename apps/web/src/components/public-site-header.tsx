@@ -15,7 +15,7 @@ export function PublicSiteHeader({ compact = false }: { compact?: boolean }) {
           <span className="brand-divider" aria-hidden="true" />
           <span className="product-wordmark"><strong>SUNOVATE</strong><small>Direktorat Surat Utang Negara</small></span>
         </Link>
-        {!compact ? <nav className="public-nav" aria-label="Navigasi utama"><a href="#tentang">Tentang</a><a href="#akses">Akses Utama</a><a href="#pengetahuan">Knowledge Hub</a><Link href="/savi-ai">SAVI AI</Link></nav> : null}
+        {!compact ? <nav className="public-nav" aria-label="Navigasi utama"><a href="#tentang">Tentang</a><a href="#akses">Akses Utama</a><a href="#pengetahuan">Knowledge Hub</a><Link href="/hermes">SAVI AI</Link></nav> : null}
         <Link className="button public-login-link" href={compact ? "/" : "/login"}>{compact ? "Beranda" : "Masuk"}</Link>
       </header>
     </>
