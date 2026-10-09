@@ -1,52 +1,53 @@
-import Image from "next/image";
 import Link from "next/link";
+import { PublicSiteHeader } from "@/components/public-site-header";
+import { UiIcon, type IconName } from "@/components/ui-icons";
+
+const primaryAccess: { label: string; detail: string; icon: IconName; href: string }[] = [
+  { label: "Monitoring Kerja", detail: "Output, tugas, dan tindak lanjut", icon: "chart", href: "/work-monitoring" },
+  { label: "Knowledge Hub", detail: "Pengetahuan terstruktur dan terlacak", icon: "book", href: "/knowledge" },
+  { label: "SAVI AI", detail: "Jawaban berbasis sumber", icon: "chat", href: "/savi-ai" },
+  { label: "Pencarian", detail: "Temukan informasi lintas sumber", icon: "search", href: "/search" },
+];
+
+const knowledgeAreas = [
+  ["Regulasi dan kebijakan", "Rujukan yang terkelola dengan metadata, status, serta riwayat versi."],
+  ["SOP dan playbook", "Langkah kerja yang dapat dipelajari kembali dan disempurnakan bersama."],
+  ["Lesson learned", "Pengalaman pelaksanaan yang disimpan sebagai memori organisasi."],
+  ["Bahan rapat dan arsip", "Dokumen pendukung yang dapat ditelusuri sesuai hak akses pengguna."],
+] as const;
 
 export default function Home() {
   return (
     <main className="landing" id="main-content">
-      <header className="public-header">
-        <Link className="public-brand" href="/" aria-label="SUNOVATE beranda">
-          <Image src="/brand/logo-dsun.png" alt="Direktorat Surat Utang Negara" width={138} height={61} priority />
-          <span className="brand-divider" aria-hidden="true" />
-          <span className="product-wordmark"><strong>SUNOVATE</strong><small>Knowledge &amp; transformation workspace</small></span>
-        </Link>
-        <Link className="button secondary" href="/login">Masuk ke sistem</Link>
-      </header>
-
+      <PublicSiteHeader />
       <section className="landing-hero" aria-labelledby="hero-title">
         <div className="hero-copy">
-          <p className="eyebrow">DJPPR · Kementerian Keuangan RI</p>
-          <h1 id="hero-title">Pengetahuan organisasi yang terjaga, terhubung, dan dapat ditelusuri.</h1>
-          <p className="hero-lede">SUN Organizational Values and Transformation through Experience mendukung pengelolaan pengetahuan, pemantauan kerja, dan pencarian informasi berbasis sumber di lingkungan Direktorat Surat Utang Negara.</p>
-          <div className="hero-actions">
-            <Link className="button" href="/login">Akses SUNOVATE</Link>
-            <a className="text-link" href="#kapabilitas">Lihat kapabilitas</a>
-          </div>
+          <h1 id="hero-title">Pengetahuan yang terjaga, kinerja yang berkelanjutan.</h1>
+          <p className="hero-lede">SUN Organizational Values and Transformation through Experience menghubungkan pengetahuan, pengalaman, dan koordinasi kerja Direktorat Surat Utang Negara dalam satu ruang yang tertata.</p>
+          <div className="hero-actions"><Link className="button button-gold" href="/login">Masuk ke SUNOVATE</Link><a className="button button-outline-light" href="#pengetahuan">Jelajahi Knowledge Hub</a></div>
         </div>
-        <aside className="hero-statement" aria-label="Tagline SUNOVATE">
-          <div className="statement-topline"><span className="statement-index">01</span><span>Nilai utama</span></div>
-          <blockquote>Menjaga pengetahuan, belajar dari pengalaman, berinovasi untuk meningkatkan kinerja.</blockquote>
-          <p>Prototipe pengembangan · seluruh data demonstrasi berlabel SIMULATED_DATA</p>
-        </aside>
+        <div className="hero-image" role="img" aria-label="Ilustrasi arsitektur institusi pelayanan publik" />
       </section>
-
-      <section className="capability-section" id="kapabilitas" aria-labelledby="capability-title">
-        <div className="section-intro">
-          <p className="eyebrow">Kapabilitas utama</p>
-          <h2 id="capability-title">Satu ruang kerja untuk pengetahuan dan koordinasi</h2>
-          <p>Fitur disusun dengan kontrol akses, klasifikasi, dan jejak audit sebagai fondasi.</p>
-        </div>
-        <div className="capability-list">
-          <article><span>01</span><div><h3>Basis Pengetahuan</h3><p>Metadata, versi, dan sumber pengetahuan yang terstruktur dan dapat ditelusuri.</p></div></article>
-          <article><span>02</span><div><h3>SAVI AI</h3><p>Asisten berbasis sumber yang menjawab dalam ruang lingkup SUN dan menyertakan sitasi.</p></div></article>
-          <article><span>03</span><div><h3>Monitoring Kerja</h3><p>Ringkasan output, tugas, dan tindak lanjut sesuai kewenangan pengguna.</p></div></article>
+      <section className="access-rail" id="akses" aria-labelledby="access-title">
+        <h2 id="access-title">Akses utama</h2>
+        <div className="access-links">
+          {primaryAccess.map((item) => <Link href={item.href} key={item.label}><UiIcon name={item.icon} /><span><strong>{item.label}</strong><small>{item.detail}</small></span><span aria-hidden="true">→</span></Link>)}
         </div>
       </section>
-
-      <footer className="public-footer">
-        <span>SUNOVATE · Prototipe pengembangan</span>
-        <span>Bukan sistem transaksi atau pengambilan keputusan keuangan</span>
-      </footer>
+      <section className="institutional-content" id="tentang">
+        <article className="about-sunovate" aria-labelledby="about-title">
+          <p className="section-label">Tentang SUNOVATE</p><h2 id="about-title">Memori organisasi yang dapat dipakai kembali.</h2>
+          <p>SUNOVATE membantu Direktorat Surat Utang Negara menjaga kesinambungan pengetahuan, mendokumentasikan pengalaman kerja, dan menemukan informasi berbasis sumber sesuai kewenangan pengguna.</p>
+          <blockquote>“Menjaga pengetahuan, belajar dari pengalaman, berinovasi untuk meningkatkan kinerja.”</blockquote>
+          <div className="governance-note"><UiIcon name="shield" /><span><strong>Dirancang dengan tata kelola</strong>Kontrol akses, klasifikasi informasi, sitasi sumber, dan jejak audit menjadi bagian dari fondasi sistem.</span></div>
+        </article>
+        <article className="knowledge-directory" id="pengetahuan" aria-labelledby="knowledge-title">
+          <div className="content-heading"><div><p className="section-label">Knowledge Hub</p><h2 id="knowledge-title">Ruang pengetahuan</h2></div><Link className="text-link" href="/knowledge">Lihat seluruh pengetahuan</Link></div>
+          <div className="knowledge-list">{knowledgeAreas.map(([title, detail], index) => <div key={title}><span>{String(index + 1).padStart(2, "0")}</span><div><h3>{title}</h3><p>{detail}</p></div></div>)}</div>
+        </article>
+      </section>
+      <section className="prototype-notice" aria-label="Status lingkungan"><div><strong>Lingkungan pengembangan</strong><span>Seluruh data demonstrasi menggunakan label SIMULATED_DATA.</span></div><span>Integrasi produksi belum diaktifkan</span></section>
+      <footer className="public-footer"><div><strong>SUNOVATE</strong><span>Direktorat Surat Utang Negara</span></div><span>SUN Organizational Values and Transformation through Experience</span><span>Prototipe pengembangan · bukan sistem transaksi atau pengambilan keputusan keuangan</span></footer>
     </main>
   );
 }

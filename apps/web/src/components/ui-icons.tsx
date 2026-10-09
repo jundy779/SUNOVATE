@@ -1,21 +1,6 @@
 import type { ReactNode, SVGProps } from "react";
 
-export type IconName =
-  | "home"
-  | "book"
-  | "search"
-  | "chart"
-  | "chat"
-  | "settings"
-  | "document"
-  | "clock"
-  | "users"
-  | "check"
-  | "bell"
-  | "chevron"
-  | "tag"
-  | "shield"
-  | "send";
+export type IconName = "home" | "book" | "search" | "chart" | "chat" | "settings" | "document" | "clock" | "users" | "check" | "bell" | "chevron" | "tag" | "shield" | "send";
 
 const paths: Record<IconName, ReactNode> = {
   home: <><path d="M3 10.75 12 3l9 7.75" /><path d="M5.5 9.5V21h13V9.5M9.25 21v-6.75h5.5V21" /></>,
@@ -36,9 +21,5 @@ const paths: Record<IconName, ReactNode> = {
 };
 
 export function UiIcon({ name, ...props }: { name: IconName } & SVGProps<SVGSVGElement>) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
-      {paths[name]}
-    </svg>
-  );
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>{paths[name]}</svg>;
 }

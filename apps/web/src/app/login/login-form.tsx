@@ -32,7 +32,7 @@ export function LoginForm() {
 
   return (
     <form className="auth-form" onSubmit={onSubmit} noValidate>
-      <label htmlFor="email">Email pengguna simulasi</label>
+      <label htmlFor="email">Akun pengguna simulasi</label>
       <input
         id="email"
         type="email"
@@ -49,7 +49,7 @@ export function LoginForm() {
           </option>
         ))}
       </datalist>
-      <small id="email-hint">Pilih salah satu akun SIMULATED_DATA. Tidak ada kata sandi.</small>
+      <small id="email-hint">Pilih akun pengembangan yang tersedia. Prototipe ini belum terhubung ke SSO organisasi.</small>
       {errors.email ? (
         <p className="field-error" id="email-error" role="alert">
           {errors.email.message}
@@ -61,8 +61,9 @@ export function LoginForm() {
         </p>
       ) : null}
       <button className="button" type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Memproses..." : "Masuk dengan akses pengembangan"}
+        {isSubmitting ? "Memproses..." : "Masuk"}
       </button>
     </form>
   );
 }
+
