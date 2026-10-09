@@ -4,7 +4,7 @@ Rules for AI coding agents working on SUNOVATE (SUN Integrated Management and Kn
 Direktorat SUN, DJPPR). Read this file first.
 
 ## Before changing anything
-- Read the relevant documentation in `docs/` (start at `docs/README.md`) and `docs/13-handover/developer-handover.md`.
+- Read `docs/README.md`, `docs/13-handover/ai-agent-handoff.md`, `docs/13-handover/task-tracker.md`, and the relevant domain documentation before changing anything.
 - Do not edit the root source documents (`*.pdf`, `*.pptx`, `SUNOVATE_WEB_IMPLEMENTATION_BLUEPRINT_v0.1.md`, `14_*.txt`, `20_*.txt`) or `docs/_archive/`.
 
 ## Facts and data
@@ -28,8 +28,10 @@ Direktorat SUN, DJPPR). Read this file first.
 - Add or update tests for important changes, especially authorization, Hermes, and data rules.
 - Do not delete files or features without checking impact (search references, tests, docs).
 - Update documentation when architecture, API, schema, or permissions change; record major decisions in `docs/12-governance/decision-log.md` and `docs/03-architecture/architecture-decisions.md`.
+- Update `docs/13-handover/task-tracker.md` and `CHANGELOG.md` for every material task/status change. A plan, mockup, or proposal is not `DONE` without implementation evidence and validation.
 - Keep TypeScript strict, Python typed (mypy strict), server components by default, and changes minimal.
 - Do not add Turborepo, Kubernetes, microservices, Redis, a message broker, or new dependencies without a concrete, documented need.
+- Go, Rust, PWA, Android, and iOS are deferred roadmap items, not MVP requirements. The proposed Cloudflare Tunnel/Access demo path must not be activated without mentor and TIK/security approval.
 - Use only the locked SUNOVATE design tokens; no gradients, purple, Unicode icons, or generic oversized card grids.
 
 ## Before declaring done

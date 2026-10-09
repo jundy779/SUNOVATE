@@ -1,7 +1,7 @@
 # Asumsi
 
 **Status:** NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-09
 
 ## Purpose
 
@@ -35,6 +35,8 @@ Dokumen ini mencatat asumsi kerja yang dipakai untuk membangun scaffold SUNOVATE
 | A-17 | Hosting untuk pilot adalah satu komputer tersendiri yang berperan sebagai server (jawaban knowledge owner atas OQ-07, deck `v1_` slide 24). Asumsi pengembang (PROPOSED): satu host untuk web, API, dan PostgreSQL di jaringan internal, tanpa redundansi, dengan backup dan administrator yang belum ditetapkan. | Bila server berbeda (mis. tidak ada akses jaringan, OS berbeda, atau harus ada redundansi), rencana deployment, backup, dan patching harus dirancang ulang; satu host juga berarti satu titik kegagalan (R-13). | Mentor | OQ-07, OQ-23, DEC-20261002-05, R-13 | PARTIAL |
 | A-18 | Jawaban knowledge owner pada deck `v1_` slide 24 dipakai sebagai dasar kerja sambil menunggu pengakuan mentor. | Bila mentor tidak mengakui atau mengubah jawaban, dokumen dan rencana yang bergantung padanya harus direvisi (R-16). | Mentor | OQ-24, DEC-20261002-09, R-16 | OPEN |
 | A-19 | Hak mengubah/mengunggah data pada pilot dibatasi untuk ketua tim, kasubdit PMP, Kasi MP, dan PIC yang ditunjuk; staf biasa tidak termasuk (jawaban knowledge owner atas OQ-05). Matriks izin saat ini belum mengikutinya (role `staff` masih dapat membuat dan mengubah knowledge dan dokumen). | Bila tidak diubah, perilaku sistem tidak sesuai jawaban; bila diubah tanpa konfirmasi peran, akses yang sah bisa tertutup. Perubahan diusulkan di [permission-matrix.md](../06-security/permission-matrix.md) dan belum diimplementasikan. | Mentor | OQ-05, OQ-25, DEC-20261002-03 | PARTIAL |
+| A-20 | Target teknis demo adalah sekitar 25 pengguna dengan satu komputer kantor khusus; Docker Compose dan Nginx menjadi baseline paket. Cloudflare Tunnel/Access hanya opsi akses (arahan project lead, 2026-10-09). | Kapasitas belum terbukti dan jalur pihak ketiga dapat menambah risiko akses/data. | Mentor dan TIK/keamanan | OQ-20, OQ-23, OQ-34, ADR-016, R-19, R-20 | OPEN / NEEDS APPROVAL |
+| A-21 | Python/FastAPI tetap backend inti. Go, Rust, PWA, Android, dan iOS bukan syarat MVP serta hanya masuk setelah kebutuhan terukur. | Penambahan prematur menaikkan biaya operasi, pengujian, dan handover. | Project lead, Mentor | ADR-016, TASK-015 sampai TASK-017 | PROPOSED |
 
 ## Asumsi yang Sengaja Tidak Dibuat
 
@@ -63,4 +65,4 @@ Dokumen ini mencatat asumsi kerja yang dipakai untuk membangun scaffold SUNOVATE
 
 ## Last Updated
 
-2026-10-02
+2026-10-09

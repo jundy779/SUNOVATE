@@ -64,4 +64,11 @@ pnpm db:test      # seluruh pytest pada backend postgres (pgserver sementara, be
 ```
 
 Hasil validasi terakhir dicatat di `CHANGELOG.md`. Mulai membaca dokumentasi dari `docs/README.md`.
-Aturan untuk AI coding agent ada di `AGENTS.md`.
+AI agent wajib membaca `docs/13-handover/ai-agent-handoff.md` dan memperbarui
+`docs/13-handover/task-tracker.md` untuk setiap perubahan material. Aturan coding agent ada di `AGENTS.md`.
+
+## Deployment demo dan roadmap
+
+- **PROPOSED / NEEDS APPROVAL:** demo sekitar 25 pengguna pada satu komputer kantor khusus dengan Docker Compose dan Nginx; Cloudflare Tunnel + Access hanya boleh diaktifkan setelah persetujuan mentor dan TIK/keamanan.
+- Komputer kantor bukan target produksi. Opsi produksi private cloud/Azure/internal data center/hybrid menunggu keputusan instansi.
+- Python/FastAPI tetap inti. Go, Rust, PWA, Android, dan iOS adalah roadmap pasca-MVP berbasis kebutuhan terukur, bukan fitur aktif.

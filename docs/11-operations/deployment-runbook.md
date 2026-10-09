@@ -2,7 +2,7 @@
 
 **Status:** PROPOSED
 
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-09
 
 ## Purpose
 
@@ -14,6 +14,7 @@ Mencatat langkah deployment yang sudah dapat dijalankan (lokal) dan kerangka usu
 - **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Hosting untuk pilot adalah komputer tersendiri sebagai server (OQ-07, DEC-20261002-05); pengakuan mentor tertunda (OQ-24). Belum ada server, akses, atau persetujuan nyata.
 - **OPEN QUESTION**: Mekanisme login (OQ-07) dan persyaratan server khusus: lokasi dan jaringan, OS, backup, administrator, akses, TLS (OQ-23).
 - **OPEN QUESTION**: Lingkungan UAT (OQ-20).
+- **PROPOSED (project lead, 2026-10-09)**: Target demo sekitar 25 pengguna; Docker Compose + Nginx pada komputer khusus; Cloudflare Tunnel + Access sebagai opsi yang belum diaktifkan (OQ-34, ADR-016).
 - **CONFIRMED**: SUNOVATE belum siap produksi; lihat [known-limitations.md](../13-handover/known-limitations.md).
 
 ## Bagian A: Deployment Lokal (Diimplementasikan)
@@ -36,6 +37,18 @@ Mencatat langkah deployment yang sudah dapat dijalankan (lokal) dan kerangka usu
 ## Bagian B: Kerangka Deployment Lingkungan Lain (PROPOSED)
 
 Kerangka berikut hanya struktur. Isinya baru dapat dilengkapi setelah OQ-07 (login), OQ-23 (persyaratan server), dan OQ-20 terjawab. Pada server tunggal, langkah "Backup database" wajib menyimpan hasil di luar host yang sama (R-13).
+
+### Gate Khusus Demo 25 Pengguna
+
+- [ ] Mentor menyetujui skenario demo dan TIK/keamanan menyetujui host, egress, domain/subdomain, Cloudflare, serta daftar pengguna (OQ-34).
+- [ ] Server memakai akun layanan non-admin, firewall deny-by-default, patch terbaru, full-disk encryption bila tersedia, dan secret di luar Git.
+- [ ] Cloudflare Access memakai MFA/identity yang disetujui, allowlist eksplisit, masa aktif terbatas, log akses, dan prosedur revoke/kill switch.
+- [ ] Hanya `SIMULATED_DATA`; tidak ada dokumen internal, data pribadi, kredensial produksi, atau angka keuangan nyata.
+- [ ] Backup disimpan di luar host dan satu restore drill berhasil.
+- [ ] Load test target 25 pengguna lulus berdasarkan SLA yang disepakati; hasil CPU, RAM, disk, latency, error rate, dan koneksi DB dicatat.
+- [ ] UAT dan rollback owner ditetapkan. Tunnel dimatikan setelah masa demo berakhir.
+
+Dokumen ini tidak memberikan perintah mengaktifkan tunnel sebelum seluruh gate di atas disetujui.
 
 ```mermaid
 flowchart LR

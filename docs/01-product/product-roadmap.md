@@ -1,7 +1,7 @@
 # Roadmap Produk
 
 **Status:** NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-09
 
 ## Purpose
 
@@ -53,12 +53,13 @@ gantt
 
 ## Status Saat Ini
 
-Per 2026-10-01 proyek berada di bulan 1. Scaffold yang sudah ada mendahului sebagian pekerjaan bulan 2 sampai 4 (otorisasi, endpoint, pipeline Hermes pengembangan), tetapi masih memakai simulated store. Rincian di [mvp-scope.md](mvp-scope.md).
+Per 2026-10-09 proyek berada di bulan 1. Scaffold sudah mendahului sebagian pekerjaan bulan 2 sampai 4, termasuk mode PostgreSQL (ADR-015), dashboard, otorisasi, endpoint, dan pipeline SAVI AI pengembangan. Target demo sekitar 25 pengguna pada komputer kantor serta Cloudflare Tunnel/Access masih PROPOSED dan menunggu approval (ADR-016, OQ-34). Rincian status task ada di [task-tracker.md](../13-handover/task-tracker.md).
 
 ## Yang Tidak Dijanjikan
 
 - **OUT OF SCOPE** Integrasi P2 (SharePoint production sync, SSO organisasi, Power BI, Telegram, WhatsApp, data pasar resmi, Kemenkeu Satu) tidak dijadwalkan. Bulan 5 hanya mencakup integrasi yang sudah disetujui (sumber: Proposal v2.4, slide 11 dan 21).
 - **OUT OF SCOPE** Deployment produksi tidak dijanjikan dalam periode ini kecuali hosting dan persyaratan servernya disetujui (OQ-07, OQ-23; hosting dijawab knowledge owner sebagai komputer tersendiri sebagai server, belum diakui mentor).
+- **DEFERRED** Go, Rust, dan klien mobile bukan keluaran wajib enam bulan. Evaluasi dilakukan setelah MVP stabil dan ada bukti kebutuhan performa/keamanan/penggunaan.
 
 ## Risks
 
@@ -80,4 +81,4 @@ Per 2026-10-01 proyek berada di bulan 1. Scaffold yang sudah ada mendahului seba
 
 ## Last Updated
 
-2026-10-02
+2026-10-09

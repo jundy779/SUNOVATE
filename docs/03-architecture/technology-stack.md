@@ -1,7 +1,7 @@
 # Technology Stack
 
 **Status:** CONFIRMED (pilihan stack), PROPOSED (versi dapat diperbarui)
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-09
 
 ## Purpose
 Mencatat teknologi dan versi yang benar-benar terpasang dan dipakai pada scaffold.
@@ -46,12 +46,23 @@ Mencatat teknologi dan versi yang benar-benar terpasang dan dipakai pada scaffol
 | pgvector extension | 0.6.2 pada server validasi `pgserver` |
 | Full-text search | `tsvector` konfigurasi `simple`, indeks GIN |
 
+## Profil Stack per Fase
+
+| Fase | Stack | Status dan alasan |
+|---|---|---|
+| MVP dan demo 25 pengguna | Next.js/React/TypeScript, FastAPI/Python, PostgreSQL/pgvector, Alembic, Docker Compose, Nginx | **CURRENT / PROPOSED DEPLOYMENT**. Python tetap inti untuk API, RAG, data engineering, dan document automation. |
+| Akses demo | Cloudflare Tunnel + Cloudflare Access | **PROPOSED; NEEDS APPROVAL** mentor dan TIK/keamanan. Bukan pengganti autentikasi aplikasi dan belum diaktifkan. |
+| Skala lanjut | Go untuk gateway, webhook, notifikasi, worker atau workload konkuren | **DEFERRED**. Ditambahkan hanya bila observability/load test membuktikan bottleneck; tidak dibutuhkan hanya untuk 25 pengguna. |
+| Keamanan file lanjut | Rust untuk parsing/validasi file, checksum, redaction, atau komponen berisiko tinggi | **DEFERRED**. Bukan alasan membuat microservice sebelum kebutuhan terbukti. |
+| Klien masa depan | PWA dan aplikasi Android/iOS (opsi Flutter atau native wrapper) | **DEFERRED**. Menggunakan API yang sama setelah auth, kontrak API, dan kebijakan perangkat stabil. |
+
 `pgserver` dan `pypdf` hanya dipakai sementara saat validasi/inspeksi melalui `uv run --with`; keduanya bukan dependency proyek.
 
 ## Keputusan
 - **CONFIRMED** FastAPI/SQLAlchemy menggantikan NestJS/Prisma (ADR-002).
 - **PROPOSED** Resolver Zod ditulis lokal agar tidak menambah dependency `@hookform/resolvers` untuk dua form.
 - **OPEN QUESTION** Model LLM dan embedding (OQ-11).
+- **PROPOSED** Penambahan bahasa/framework ditentukan kebutuhan operasional, bukan jumlah teknologi. Modular monolith tetap baseline sampai data beban menunjukkan boundary layanan yang layak dipisah.
 
 ## Related Documents
 - [architecture-decisions.md](architecture-decisions.md)

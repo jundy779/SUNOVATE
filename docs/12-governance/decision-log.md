@@ -1,7 +1,7 @@
 # Decision Log
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-09
 
 ## Purpose
 
@@ -32,6 +32,21 @@ Dokumen ini mencatat ringkasan keputusan proyek SUNOVATE beserta status dan damp
 | ADR-013 | 2026-10-01 | Tabel SUN Business yang belum tervalidasi (instrumen, lelang, transaksi, yield, setelmen) dihapus dari skema | Menghindari model domain tanpa validasi dan data sensitif | PROPOSED | SUN Business tetap OPEN QUESTION untuk fase lanjut | [sun-domain-overview](../02-business/sun-domain-overview.md) |
 | ADR-014 | 2026-10-01 | File sumber biner (PDF/PPTX) di root dikecualikan dari Git melalui `.gitignore` | Klasifikasi penyimpanan di repository belum dikonfirmasi (OQ-18) | PROPOSED | File sumber tetap lokal | [simulated-data-policy](../04-data/simulated-data-policy.md) |
 | ADR-015 | 2026-10-02 | Backend kedua `DATA_BACKEND=postgres` di belakang interface `Repository` sinkron per request (SQLAlchemy sinkron + `psycopg[binary]==3.3.6`); `simulated` tetap default; revisi `0002_ordering_columns` | Data runtime hilang saat restart (R-10, KL-01); handler tetap `def` sehingga driver sinkron menghindari migrasi async seluruh jalur request | PROPOSED | Data bertahan setelah restart pada mode postgres; satu dependency baru; `pnpm db:test` menjalankan seluruh suite pada PostgreSQL sementara; melanjutkan ADR-007 | [architecture-decisions](../03-architecture/architecture-decisions.md), [data-architecture](../04-data/data-architecture.md) |
+| ADR-016 | 2026-10-09 | Baseline demo sekitar 25 pengguna pada satu komputer kantor; Docker Compose + Nginx; Cloudflare Tunnel/Access sebagai opsi akses; Go/Rust/mobile ditunda | Menyediakan demo realistis tanpa menyamakan komputer kantor dengan produksi atau menambah stack sebelum kebutuhan terbukti | PROPOSED (project lead); NEEDS APPROVAL mentor dan TIK/keamanan | Hanya `SIMULATED_DATA`; wajib load/security/backup test; produksi menunggu keputusan instansi | [deployment-architecture](../03-architecture/deployment-architecture.md), [task-tracker](../13-handover/task-tracker.md) |
+
+### DEC-20261009-01
+
+- **Sumber:** Arahan project lead, sesi 2026-10-09.
+- **Keputusan kerja:** Siapkan rancangan demo sekitar 25 pengguna pada komputer kantor khusus. Cloudflare Tunnel dan Access dipertimbangkan sebagai jalur akses terbatas.
+- **Status:** PROPOSED; belum merupakan persetujuan deployment.
+- **Gate:** Persetujuan mentor dan TIK/keamanan, OQ-20/OQ-23/OQ-34, `SIMULATED_DATA`, backup/restore drill, load test, dan security checklist.
+
+### DEC-20261009-02
+
+- **Sumber:** Arahan project lead, sesi 2026-10-09.
+- **Keputusan kerja:** Python/FastAPI tetap backend inti. Go, Rust, dan klien mobile masuk roadmap pasca-MVP dan hanya dipilih dari kebutuhan terukur.
+- **Status:** PROPOSED.
+- **Dampak:** Tidak ada service atau dependency baru pada MVP saat ini.
 
 ## Jawaban Mentor atas Open Question
 

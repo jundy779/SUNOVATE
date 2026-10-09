@@ -2,7 +2,7 @@
 
 **Status:** PROPOSED
 
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-09
 
 ## Purpose
 
@@ -40,6 +40,7 @@ flowchart TB
 | 10 | Document automation berbasis template yang disetujui | Bulan 5 | OQ-16 | PROPOSED |
 | 11 | Integrasi yang disetujui saja, melalui checklist kesiapan integrasi | Bulan 5 | OQ-06, OQ-07, OQ-08 | PROPOSED |
 | 12 | Audit aksesibilitas, security test, UAT, bug fixing, dokumentasi, handover | Bulan 6 | OQ-20 | PROPOSED |
+| 13 | Paket demo sekitar 25 pengguna pada komputer kantor: Compose, Nginx, backup/restore, load test; tunnel hanya setelah approval | Demo/UAT | OQ-20, OQ-23, OQ-34 | NEEDS APPROVAL |
 
 ## Item Tertunda dari Jawaban Knowledge Owner (2026-10-02)
 
@@ -72,6 +73,10 @@ Semua item di bawah berstatus **PROPOSED** dan belum diimplementasikan. Sumber: 
 - **OPEN QUESTION**: Fitur SUN Business (instrumen, lelang, transaksi) tidak direncanakan sampai cakupannya divalidasi (ADR-013).
 - **OPEN QUESTION**: Fitur untuk SUN Tematik menunggu OQ-01.
 - **OPEN QUESTION**: Penggunaan ulang pola dari SUN Job Monitor menunggu OQ-19.
+- **DEFERRED**: Go untuk gateway/webhook/notifikasi/worker konkuren. Ekstraksi service memerlukan metrik bottleneck, ADR, owner operasi, dan test kontrak.
+- **DEFERRED**: Rust untuk parsing/validasi file, checksum, redaction, atau komponen keamanan berisiko tinggi setelah threat review.
+- **DEFERRED**: PWA, Android, dan iOS setelah kontrak API, autentikasi, dan kebijakan perangkat stabil. Opsi Flutter tidak diputuskan.
+- **PROPOSED FUTURE**: Hosting produksi private cloud/Azure/internal data center/hybrid diputuskan instansi; komputer kantor hanya demo sementara.
 
 ## Aturan Saat Melanjutkan
 
@@ -90,3 +95,4 @@ Semua item di bawah berstatus **PROPOSED** dan belum diimplementasikan. Sumber: 
 - [known-limitations.md](known-limitations.md)
 - [open-questions.md](../00-project/open-questions.md)
 - [mvp-scope.md](../01-product/mvp-scope.md)
+- [task-tracker.md](task-tracker.md)

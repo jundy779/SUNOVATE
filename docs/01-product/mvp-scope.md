@@ -1,7 +1,7 @@
 # Scope MVP
 
 **Status:** NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-06
+**Last Updated:** 2026-10-09
 
 ## Purpose
 
@@ -35,6 +35,8 @@ Dokumen ini menetapkan apa yang termasuk dan tidak termasuk dalam MVP SUNOVATE, 
 | SharePoint production sync, SSO organisasi, Power BI, Telegram, WhatsApp, data pasar resmi, integrasi Kemenkeu Satu | P2 | OUT OF SCOPE MVP |
 | Data instrumen, lelang, transaksi, yield, setelmen | Tidak dijadwalkan | OUT OF SCOPE (ADR-013) |
 | Perilaku khusus SUN Tematik | Tidak dijadwalkan | OPEN QUESTION (OQ-01) |
+| Go service, Rust service, PWA, Android, iOS | Pasca-MVP | DEFERRED; tidak diperlukan untuk demo 25 pengguna tanpa bukti metrik |
+| Cloudflare Tunnel/Access | Infrastruktur demo | NEEDS APPROVAL; bukan kemampuan produk dan belum aktif |
 
 ## Status Saat Ini di Scaffold (diperiksa ulang 2026-10-06)
 
@@ -64,6 +66,7 @@ Kolom "Scaffold" berarti ada implementasi awal yang berjalan dengan `DATA_BACKEN
 7. Provider produksi tetap nonaktif kecuali yang sudah divalidasi.
 8. Dokumentasi terkait diperbarui, termasuk [known-limitations.md](../13-handover/known-limitations.md).
 9. Pertanyaan prioritas Tinggi di [open-questions.md](../00-project/open-questions.md) sudah dijawab atau memiliki asumsi yang disetujui mentor.
+10. Untuk demo 25 pengguna: load test, backup/restore drill, security checklist, UAT terbatas, dan approval mentor serta TIK/keamanan selesai.
 
 ## Open Questions
 

@@ -2,7 +2,7 @@
 
 **Status:** NEEDS MENTOR VALIDATION
 
-**Last Updated:** 2026-10-06
+**Last Updated:** 2026-10-09
 
 ## Purpose
 
@@ -17,6 +17,10 @@ Menyusun kerangka UAT SUNOVATE: skenario per persona, peserta, lingkungan, sign-
 - **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Hosting pilot adalah komputer tersendiri sebagai server (OQ-07); lingkungan UAT dan persyaratan server tetap OPEN QUESTION (OQ-20, OQ-23).
 
 ## Prinsip
+
+- **PROPOSED (project lead, 2026-10-09):** cohort demo/UAT sekitar 25 pengguna. Angka ini target perencanaan, bukan daftar pengguna yang sudah ditunjuk atau klaim kapasitas.
+- **NEEDS APPROVAL:** penggunaan komputer kantor dan Cloudflare Tunnel/Access mengikuti OQ-20, OQ-23, dan OQ-34. Hanya `SIMULATED_DATA` yang boleh dipakai.
+- Sebelum UAT, load test harus mengukur latency, error rate, CPU, RAM, disk, dan koneksi database pada host aktual; backup/restore serta kill switch tunnel harus diuji.
 
 - **CONFIRMED**: UAT memakai data `SIMULATED_DATA` saja; data internal atau data keuangan asli tidak dipakai (sumber: brief sesi 2026-10-01, AGENTS.md).
 - **PROPOSED**: Peserta memakai akun uji yang dipetakan ke role pengembangan; role adalah usulan dan bukan jabatan resmi (sumber: brief sesi 2026-10-01).

@@ -1,4 +1,27 @@
 # Changelog
+## Docs 2026-10-09 - Baseline demo, roadmap stack, dan handoff lintas AI agent
+
+### Ditambahkan
+- `docs/13-handover/task-tracker.md` sebagai sumber status task aktif, approval gate, bukti, dan urutan eksekusi.
+- `docs/13-handover/ai-agent-handoff.md` sebagai snapshot wajib baca untuk AI agent.
+- ADR-016 serta DEC-20261009-01/02: baseline demo sekitar 25 pengguna pada komputer kantor khusus; Docker Compose + Nginx; Cloudflare Tunnel/Access sebagai opsi yang belum aktif; Python tetap inti; Go/Rust/mobile ditunda.
+- OQ-34 serta risiko R-19 sampai R-21 untuk persetujuan tunnel, pembuktian kapasitas, dan pencegahan kompleksitas stack prematur.
+
+### Diubah
+- Deployment architecture, runbook, UAT, asumsi, roadmap, MVP scope, technology stack, developer handover, dan future development diselaraskan dengan arahan project lead 2026-10-09.
+- `AGENTS.md` kini mewajibkan pembaruan task tracker dan changelog pada setiap perubahan material. Status `DONE` harus memiliki bukti implementasi dan validasi.
+- Nama produk asisten pada frontend ditegaskan sebagai SAVI AI; nama internal `HermesGateway` dipertahankan sementara agar tidak terjadi rename berisiko tanpa migration plan.
+
+### Batas dan approval
+- Komputer kantor adalah target demo/UAT sementara, bukan target produksi. Cloudflare tidak boleh diaktifkan sebelum persetujuan mentor dan TIK/keamanan.
+- Hanya `SIMULATED_DATA`. Tidak ada data internal, data pribadi, angka keuangan nyata, atau integrasi produksi yang ditambahkan.
+- Dokumen sumber root dan `docs/_archive/` tidak diubah.
+
+### Validasi
+- Pemeriksa 116 file Markdown otoritatif: 0 tautan relatif rusak; `git diff --check` bersih.
+- `pnpm validate`: lint lulus; TypeScript dan mypy strict lulus; frontend 12 test lulus; backend 171 test lulus dan 39 dilewati; Next.js production build lulus.
+- `pnpm db:sql`: migrasi Alembic `0001_initial_schema` dan `0002_ordering_columns` berhasil dirender sampai `COMMIT`.
+
 ## Docs 2026-10-06 - Dokumentasi domain diselaraskan dengan Kompilasi Peraturan SUN (hanya dokumentasi)
 ### Diubah
 - Hasil pembacaan terbantu mesin atas `Kompilasi_Peraturan_SUN_formal.pdf` (ekstraksi teks tanpa OCR; kutipan diperiksa terhadap teks ekstraksi, bukan gambar halaman; tidak dibandingkan dengan Berita Negara atau JDIH) diterapkan ke dokumentasi. Sitasi memakai format `Kompilasi Peraturan SUN, <regulasi>, Pasal X, hal. N` (hal. = halaman PDF).

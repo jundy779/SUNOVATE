@@ -1,7 +1,7 @@
 # Deployment Architecture
 
 **Status:** NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-09
 
 ## Purpose
 Menjelaskan deployment lokal yang sudah ada dan usulan deployment yang menunggu keputusan hosting.
@@ -26,15 +26,16 @@ flowchart LR
     A -.-> P
 ```
 
-## Varian server khusus (PROPOSED, sesuai jawaban hosting)
+## Demo Terbatas Sekitar 25 Pengguna (PROPOSED)
 
-Jawaban knowledge owner diterjemahkan menjadi satu komputer khusus di jaringan instansi. Semua detail di bawah adalah usulan pengembang dan belum ada persetujuan atau lingkungan nyata.
+Jawaban knowledge owner diterjemahkan menjadi satu komputer kantor khusus. Target sekitar 25 pengguna dan pemakaian Cloudflare Tunnel/Access berasal dari arahan project lead sesi 2026-10-09. Semua detail di bawah adalah usulan teknis; aktivasi jaringan eksternal tetap menunggu persetujuan mentor serta TIK/keamanan.
 
 ```mermaid
-flowchart LR
-    U["Pengguna jaringan internal"] --> H
+flowchart TB
+    U["Pengguna demo terdaftar"] --> C["Cloudflare Access + Tunnel<br/>PROPOSED"]
+    C --> H
     subgraph H["Satu komputer khusus (server)"]
-      RP["TLS / reverse proxy"] --> W["Web (Next.js standalone)"]
+      RP["Nginx / reverse proxy"] --> W["Web (Next.js standalone)"]
       W --> A["API (FastAPI)"]
       A --> P[("PostgreSQL + pgvector")]
     end
@@ -46,6 +47,9 @@ flowchart LR
 - **OPEN QUESTION (OQ-23)** Lokasi dan akses jaringan, sistem operasi, apakah Docker boleh dipasang, backup, siapa yang mengadministrasi, siapa yang boleh mengakses, dan TLS.
 - **OPEN QUESTION (OQ-07)** Mekanisme login di server ini. Sampai dijawab, `POST /auth/dev/login` tetap hanya untuk development dan aplikasi menolak start bila `APP_ENV=production` dengan dev auth aktif.
 - **PROPOSED** Tidak ada data asli, data pribadi, atau data keuangan di server sampai klasifikasi (OQ-05) dan persetujuan eksplisit ada.
+- **PROPOSED** Cloudflare Access menjadi lapisan pembatas akses demo, bukan identity provider bisnis SUNOVATE. Tunnel tidak membuka port inbound langsung, tetapi tetap merupakan jalur pihak ketiga yang harus masuk threat review, logging, daftar akun, dan prosedur pencabutan akses.
+- **PROPOSED** Target sekitar 25 pengguna wajib dibuktikan dengan load test berdasarkan spesifikasi host aktual; angka ini bukan klaim kapasitas.
+- **NEEDS APPROVAL** Domain/subdomain, akun Cloudflare milik instansi, egress firewall, administrator, daftar pengguna, durasi demo, dan penghentian tunnel.
 
 ## Usulan target (PROPOSED)
 
@@ -62,9 +66,11 @@ flowchart LR
 - **PROPOSED** Web dan API dideploy terpisah tetapi tetap satu boundary aplikasi; `next.config.ts` sudah memakai `output: "standalone"`.
 - **PROPOSED** Prasyarat sebelum deploy apa pun: repository SQLAlchemy, identity provider produksi, secret store, backup, logging terpusat, security review.
 - **OUT OF SCOPE** Kubernetes, multi-region, atau autoscaling pada fase magang.
+- **PROPOSED FUTURE** Produksi memilih private cloud/Azure/internal data center/hybrid melalui keputusan instansi. Komputer kantor dan Cloudflare Tunnel tidak diperlakukan sebagai baseline produksi.
+- **DEFERRED** Go/Rust hanya dipisahkan menjadi service setelah metrik membuktikan kebutuhan. Mobile/PWA menggunakan boundary API yang sama dan tidak mengubah sumber kebenaran data.
 
 ## Open Questions
-OQ-07 login (hosting dijawab sebagian: komputer tersendiri sebagai server); OQ-23 persyaratan server; OQ-11 lokasi pemrosesan AI; OQ-20 lingkungan UAT; OQ-24 pengakuan mentor.
+OQ-07 login (hosting dijawab sebagian: komputer tersendiri sebagai server); OQ-23 persyaratan server; OQ-11 lokasi pemrosesan AI; OQ-20 lingkungan UAT; OQ-24 pengakuan mentor; OQ-34 persetujuan tunnel dan target demo 25 pengguna.
 
 ## Related Documents
 - [deployment-runbook.md](../11-operations/deployment-runbook.md)

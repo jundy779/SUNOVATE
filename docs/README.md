@@ -1,7 +1,7 @@
 # Dokumentasi SUNOVATE
 
 **Status:** DRAFT
-**Last Updated:** 2026-10-06
+**Last Updated:** 2026-10-09
 
 ## Purpose
 
@@ -31,12 +31,13 @@ Setiap pernyataan penting diberi salah satu label berikut.
 
 ## Urutan Baca yang Disarankan
 
-1. [project-overview.md](00-project/project-overview.md) dan [scope-and-boundaries.md](00-project/scope-and-boundaries.md) untuk memahami apa itu SUNOVATE dan batasannya.
-2. [open-questions.md](00-project/open-questions.md) dan [assumptions.md](00-project/assumptions.md) untuk melihat hal yang belum pasti.
-3. [prd.md](01-product/prd.md) dan [mvp-scope.md](01-product/mvp-scope.md) untuk kebutuhan produk.
-4. [system-context.md](03-architecture/system-context.md) dan [architecture-decisions.md](03-architecture/architecture-decisions.md) untuk arsitektur.
-5. [authorization-rbac.md](06-security/authorization-rbac.md) dan [hermes-overview.md](05-ai-rag/hermes-overview.md) untuk kontrol akses dan AI.
-6. [local-development.md](11-operations/local-development.md) dan [developer-handover.md](13-handover/developer-handover.md) untuk menjalankan dan melanjutkan pengembangan.
+1. [ai-agent-handoff.md](13-handover/ai-agent-handoff.md) dan [task-tracker.md](13-handover/task-tracker.md) untuk snapshot serta status pekerjaan terbaru.
+2. [project-overview.md](00-project/project-overview.md) dan [scope-and-boundaries.md](00-project/scope-and-boundaries.md) untuk memahami apa itu SUNOVATE dan batasannya.
+3. [open-questions.md](00-project/open-questions.md) dan [assumptions.md](00-project/assumptions.md) untuk melihat hal yang belum pasti.
+4. [prd.md](01-product/prd.md) dan [mvp-scope.md](01-product/mvp-scope.md) untuk kebutuhan produk.
+5. [system-context.md](03-architecture/system-context.md) dan [architecture-decisions.md](03-architecture/architecture-decisions.md) untuk arsitektur.
+6. [authorization-rbac.md](06-security/authorization-rbac.md) dan [hermes-overview.md](05-ai-rag/hermes-overview.md) untuk kontrol akses dan AI.
+7. [local-development.md](11-operations/local-development.md) dan [developer-handover.md](13-handover/developer-handover.md) untuk menjalankan dan melanjutkan pengembangan.
 
 ## Indeks Folder
 
@@ -55,7 +56,7 @@ Setiap pernyataan penting diberi salah satu label berikut.
 | `10-testing` | Strategi dan jenis pengujian, UAT, tingkat keparahan bug, register bug. | [test-strategy](10-testing/test-strategy.md), [test-pyramid](10-testing/test-pyramid.md), [frontend-testing](10-testing/frontend-testing.md), [backend-testing](10-testing/backend-testing.md), [integration-testing](10-testing/integration-testing.md), [security-testing](10-testing/security-testing.md), [rag-testing](10-testing/rag-testing.md), [uat-plan](10-testing/uat-plan.md), [bug-severity](10-testing/bug-severity.md), [bug-register](10-testing/bug-register.md) |
 | `11-operations` | Pengembangan lokal, konfigurasi, migrasi, backup, observability, deployment, troubleshooting. | [local-development](11-operations/local-development.md), [environment-configuration](11-operations/environment-configuration.md), [migration-guide](11-operations/migration-guide.md), [backup-and-restore](11-operations/backup-and-restore.md), [observability](11-operations/observability.md), [deployment-runbook](11-operations/deployment-runbook.md), [troubleshooting](11-operations/troubleshooting.md) |
 | `12-governance` | Tata kelola knowledge, kepemilikan dokumen, review, perubahan, risiko, log keputusan. | [knowledge-governance](12-governance/knowledge-governance.md), [document-ownership](12-governance/document-ownership.md), [review-and-approval](12-governance/review-and-approval.md), [change-management](12-governance/change-management.md), [risk-register](12-governance/risk-register.md), [decision-log](12-governance/decision-log.md) |
-| `13-handover` | Serah terima pengembang dan administrator, panduan pengguna, keterbatasan, pengembangan lanjutan. | [developer-handover](13-handover/developer-handover.md), [administrator-guide](13-handover/administrator-guide.md), [user-guide-outline](13-handover/user-guide-outline.md), [known-limitations](13-handover/known-limitations.md), [future-development](13-handover/future-development.md) |
+| `13-handover` | Serah terima pengembang dan AI agent, tracker, panduan pengguna, keterbatasan, pengembangan lanjutan. | [ai-agent-handoff](13-handover/ai-agent-handoff.md), [task-tracker](13-handover/task-tracker.md), [developer-handover](13-handover/developer-handover.md), [administrator-guide](13-handover/administrator-guide.md), [user-guide-outline](13-handover/user-guide-outline.md), [known-limitations](13-handover/known-limitations.md), [future-development](13-handover/future-development.md) |
 
 ## Batasan Dasar
 
@@ -78,7 +79,8 @@ Folder `docs/_archive/legacy-docs-v0/` berisi draf dokumentasi dari sesi sebelum
 - Jawaban mentor atas pertanyaan terbuka dicatat di [open-questions.md](00-project/open-questions.md) lalu dirujuk dari dokumen terdampak.
 - Jawaban knowledge owner pada deck proposal versi tetap `v1_` (slide 24) diberi label `CONFIRMED (knowledge owner, deck v1_ slide 24)`; pengakuan mentor masih tertunda (OQ-24). Rinciannya ada di [open-questions.md](00-project/open-questions.md) dan [decision-log.md](12-governance/decision-log.md) (DEC-20261002-01 sampai DEC-20261002-09).
 - Gunakan hanya data berlabel `SIMULATED_DATA` untuk contoh.
+- Setiap perubahan material wajib memperbarui [task-tracker.md](13-handover/task-tracker.md) dan root `CHANGELOG.md`; status `DONE` membutuhkan bukti implementasi dan validasi.
 
 ## Last Updated
 
-2026-10-06
+2026-10-09

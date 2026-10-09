@@ -1,7 +1,7 @@
 # Architecture Decisions (ADR)
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-09
 
 ## Purpose
 Rincian konteks, keputusan, alternatif, dan konsekuensi. Ringkasan dan status ada di [decision-log.md](../12-governance/decision-log.md).
@@ -89,6 +89,14 @@ Rincian konteks, keputusan, alternatif, dan konsekuensi. Ringkasan dan status ad
   - Risiko diterima: bila DB mati, permintaan yang seharusnya 403 menjadi 503 `DATABASE_UNAVAILABLE` karena `audit_denial` butuh DB; `audit_denial` memakai koneksi kedua dari pool yang sama (satu request paling banyak dua koneksi); koneksi berstatus idle in transaction selama generasi Hermes (generasi saat ini lokal dan cepat).
   - Reset TRUNCATE hanya pada DB pgserver sementara; trigger `audit_logs_append_only` tidak menghalangi TRUNCATE dan tidak diubah (celah dicatat di known-limitations, penutupannya OUT OF SCOPE).
   - `pnpm db:test` lebih lambat dari `pnpm test` (sekitar 4 sampai 5 menit di mesin Windows pengembang) karena reset per test.
+
+### ADR-016 Baseline demo satu host; ekspansi stack berbasis bukti
+
+- **Status:** PROPOSED; membutuhkan persetujuan mentor dan TIK/keamanan untuk deployment nyata.
+- **Keputusan:** Demo terbatas menargetkan sekitar 25 pengguna dengan satu komputer kantor khusus yang menjalankan Next.js, FastAPI/Python, dan PostgreSQL melalui Docker Compose serta Nginx. Cloudflare Tunnel + Access adalah opsi akses yang belum diaktifkan. Semua data tetap `SIMULATED_DATA`.
+- **Batas:** Ini bukan target produksi dan bukan klaim kapasitas. Load test, backup/restore, security checklist, daftar akses, logging, serta kill switch tunnel wajib sebelum UAT.
+- **Roadmap:** Go dapat dipertimbangkan untuk gateway/webhook/worker konkuren dan Rust untuk pemrosesan file berisiko tinggi hanya setelah metrik dan threat review menunjukkan kebutuhan. PWA/Android/iOS ditunda sampai API dan autentikasi stabil.
+- **Alasan:** Menjaga MVP dapat diselesaikan dan diaudit tanpa mengunci jalur skala jangka panjang atau menambah kompleksitas prematur.
 
 ## Related Documents
 - [decision-log.md](../12-governance/decision-log.md)

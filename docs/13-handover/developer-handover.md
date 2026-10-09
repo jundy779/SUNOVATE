@@ -2,7 +2,7 @@
 
 **Status:** DRAFT
 
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-09
 
 ## Purpose
 
@@ -58,11 +58,12 @@ flowchart LR
 
 ## Mulai dari Mana
 
-1. Jalankan aplikasi mengikuti [local-development.md](../11-operations/local-development.md).
-2. Baca `AGENTS.md`, [architecture-decisions.md](../03-architecture/architecture-decisions.md), dan [permission-matrix.md](../06-security/permission-matrix.md).
-3. Buka `http://localhost:8000/docs` dan coba endpoint dengan pengguna simulasi.
-4. Telusuri satu alur penuh: `POST /api/v1/knowledge` lalu `POST /api/v1/knowledge/{id}/submit`.
-5. Telusuri pipeline Hermes di modul `hermes` (lihat [hermes-overview.md](../05-ai-rag/hermes-overview.md)).
+1. Baca [ai-agent-handoff.md](ai-agent-handoff.md) dan [task-tracker.md](task-tracker.md); pilih task yang tidak diblokir approval.
+2. Jalankan aplikasi mengikuti [local-development.md](../11-operations/local-development.md).
+3. Baca `AGENTS.md`, [architecture-decisions.md](../03-architecture/architecture-decisions.md), dan [permission-matrix.md](../06-security/permission-matrix.md).
+4. Buka `http://localhost:8000/docs` dan coba endpoint dengan pengguna simulasi.
+5. Telusuri satu alur penuh: `POST /api/v1/knowledge` lalu `POST /api/v1/knowledge/{id}/submit`.
+6. Telusuri pipeline internal `HermesGateway`; nama produk pada frontend adalah SAVI AI.
 
 ## Aturan Kerja dari AGENTS.md
 
@@ -75,6 +76,7 @@ flowchart LR
 - Hanya token desain SUNOVATE yang terkunci; tanpa gradient, ungu, ikon Unicode, atau grid kartu besar generik.
 - Fungsi SUN Tematik adalah OPEN QUESTION; jangan mengarang perilaku.
 - Sebelum handoff, jalankan lint, typecheck, test, dan build yang relevan, lalu laporkan hasil aktual.
+- Perbarui task tracker dan changelog pada setiap perubahan status. Cloudflare demo, Go, Rust, dan mobile tidak boleh diperlakukan sebagai fitur aktif.
 - Jangan mengubah `docs/` atau dokumen sumber di root tanpa permintaan eksplisit.
 
 ## Konvensi
@@ -102,5 +104,7 @@ flowchart LR
 - [administrator-guide.md](administrator-guide.md)
 - [known-limitations.md](known-limitations.md)
 - [future-development.md](future-development.md)
+- [ai-agent-handoff.md](ai-agent-handoff.md)
+- [task-tracker.md](task-tracker.md)
 - [component-architecture.md](../03-architecture/component-architecture.md)
 - [backend-testing.md](../10-testing/backend-testing.md)
