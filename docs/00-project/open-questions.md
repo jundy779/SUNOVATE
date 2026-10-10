@@ -1,7 +1,7 @@
 # Pertanyaan Terbuka untuk Mentor
 
 **Status:** NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-09
+**Last Updated:** 2026-10-10
 
 ## Purpose
 
@@ -63,6 +63,7 @@ Status `ANSWERED` tanpa keterangan hanya dipakai setelah pengakuan mentor tercat
 | OQ-32 | Bagaimana pemilik konten memvalidasi teks ekstraksi regulasi terhadap PDF atau sumber resmi (ekstraksi tanpa OCR mencatat galat seperti "PMK.OS" untuk "PMK.08"), dan bolehkah teks yang belum divalidasi dikutip Hermes? | Chunking dan sitasi bergantung pada teks yang bersih; kutipan rusak berisiko salah kutip. Bersinggungan dengan OQ-11 (alat OCR dan lokasi pemrosesan). | [ingestion-pipeline.md](../05-ai-rag/ingestion-pipeline.md), [citation-policy.md](../05-ai-rag/citation-policy.md), [chunking-strategy.md](../05-ai-rag/chunking-strategy.md) | Tinggi | OPEN |
 | OQ-33 | Bolehkah nama unit lama dalam regulasi (mis. "Direktorat Jenderal Pengelolaan Utang" di PMK 128/PMK.08/2012, hal. 173) diperlakukan sebagai institusi yang sama dengan nama saat ini ("Direktorat Jenderal Pengelolaan Pembiayaan dan Risiko", PMK 111/2024 Pasal 1 angka 6, hal. 35) untuk keperluan pencarian? | Mencegah Hermes menganggap satu institusi sebagai dua tanpa validasi. | [glossary.md](glossary.md), [prompt-policy.md](../05-ai-rag/prompt-policy.md) | Rendah | OPEN |
 | OQ-34 | Apakah mentor dan TIK/keamanan menyetujui demo sekitar 25 pengguna melalui komputer kantor khusus dan Cloudflare Tunnel + Access; siapa pemilik akun/domain, administrator, daftar pengguna, masa aktif, logging, egress policy, dan prosedur mematikan tunnel? | Tanpa keputusan, tunnel tidak boleh diaktifkan dan kapasitas 25 pengguna tidak boleh diklaim. | [deployment-architecture.md](../03-architecture/deployment-architecture.md), [deployment-runbook.md](../11-operations/deployment-runbook.md), [task-tracker.md](../13-handover/task-tracker.md) | Tinggi | OPEN |
+| OQ-35 | Untuk Draft Workspace file pekerjaan: siapa yang boleh memberi/mencabut permission per akun, mengajukan, mereview, menerbitkan, dan menarik file; apakah grant dibatasi tim, klasifikasi, dan masa berlaku; berapa retensinya; serta apakah setiap koreksi wajib menjadi versi baru? | Tanpa keputusan, akun utama berisiko menjadi super-admin konten dan rekaman resmi dapat diubah tanpa separation of duties. Baseline usulan: DRAFT dapat diubah/dihapus lunak oleh pemilik berizin; PUBLISHED immutable; koreksi melalui versi baru; penarikan mempertahankan file dan audit. | [document-lifecycle.md](../02-business/document-lifecycle.md), [permission-matrix.md](../06-security/permission-matrix.md), [functional-requirements.md](../01-product/functional-requirements.md) | Tinggi | OPEN |
 
 ## Asal Jawaban dan Status Pengakuan
 
@@ -112,9 +113,18 @@ Catatan pemisahan dari usulan awal: dua butir kandidat tidak dibuat sebagai OQ b
 1. Catat jawaban, tanggal, dan sumber jawaban (mis. sesi mentor, dokumen arahan, atau deck versi tetap) di [decision-log.md](../12-governance/decision-log.md) dengan merujuk ID pertanyaan.
 2. Ubah kolom Status di tabel ini sesuai tabel "Arti Status" dan tambahkan rujukan entri decision log. Jangan menghapus baris.
 3. Perbarui dokumen terdampak: ubah label pernyataan terkait dari OPEN QUESTION atau PROPOSED menjadi CONFIRMED dengan sumber. Jawaban knowledge owner diberi label `CONFIRMED (knowledge owner, deck v1_ slide 24)`.
-4. Bila jawaban mengubah scope, ikuti [change-management.md](../12.ûßÛh‘éì¶»§q«^uXH]H]\ÒSUSUQÑUX‚‹H
-Š˜]\ÎŠŠˆ[šHZØ[ˆ\™Ù]›ÙZÜÚH[ˆZØ[ˆÛZ[HØ\\Ú]\ËˆØY\İ˜XÚİ\Ü™\İÜ™KÙXİ\š]HÚXÚÛ\İY\ˆZÜÙ\ËÙÙÚ[™ËÙ\HÚ[İÚ]Ú[›™[ØZšXˆÙX™[[HPU‚‹H
-Š”›ØYX\ŠŠˆÛÈ\]\\[X˜[™ÚØ[ˆ[ZÈØ]]Ø^KİÙXšÛÚËİÛÜšÙ\ˆÛÛšİ\™[ˆ[ˆ\İ[ZÈ[\›ÜÙ\Ø[ˆš[H™\š\ÚZÛÈ[™ÙÚH[XHÙ][ZY]šZÈ[ˆ™X]™]šY]ÈY[[šZÚØ[ˆÙX]Z[‹ˆĞKĞ[™›ÚYÚSÔÈ][™HØ[\ZHTH[ˆ]][ZØ\ÚHİXš[‚‹H
-Š[\Ø[ŠŠˆY[š˜YØHU”\]\Ù[\ØZZØ[ˆ[ˆX]Y][œHY[™İ[˜ÚH˜[\ˆÚØ[H˜[™ÚØH[š˜[™È]]HY[˜[X˜ZÛÛ\ZÜÚ]\È™[X]\‹‚‚ˆÈÈ™[]YØİ[Y[Â‹HÙXÚ\Ú[Û‹[ÙË›YJ‹‹ÌL‹YÛİ™\›˜[˜ÙKÙXÚ\Ú[Û‹[ÙË›Y
-B‹HØÚ[™ÙK[X[˜YÙ[Y[›YJ‹‹ÌL‹YÛİ™\›˜[˜ÙKØÚ[™ÙK[X[˜YÙ[Y[›Y
-B
+4. Bila jawaban mengubah scope, ikuti [change-management.md](../12-governance/change-management.md).
+5. Bila jawaban memunculkan pertanyaan baru, tambahkan baris dengan ID berikutnya (OQ-36 dan seterusnya).
+
+Jawaban yang hanya disampaikan lisan tetap dicatat dengan keterangan "arahan lisan" dan tanggal sesi, tanpa nama orang.
+
+## Related Documents
+
+- [assumptions.md](assumptions.md)
+- [risk-register.md](../12-governance/risk-register.md)
+- [decision-log.md](../12-governance/decision-log.md)
+- [mentor-session-01-agenda.md](mentor-session-01-agenda.md)
+
+## Last Updated
+
+2026-10-09

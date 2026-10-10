@@ -195,6 +195,21 @@ Permission `document:update` dan `document:version` tidak dimiliki `staff` pada 
 3. Perubahan matriks, seed, dan uji otorisasi dilakukan pada cabang kode terpisah; catatan ada di [future-development](../13-handover/future-development.md).
 
 **Belum diimplementasikan.** Kode, seed, dan uji di repositori ini tidak berubah oleh pembaruan dokumentasi ini.
+
+## Usulan Permission Draft Workspace (PROPOSED, belum diimplementasikan)
+
+| Permission | Batas tindakan |
+|---|---|
+| `work_file:draft_create` | Membuat lampiran kerja berstatus DRAFT |
+| `work_file:draft_update_own` | Mengubah atau mengganti DRAFT milik sendiri sesuai team scope |
+| `work_file:draft_delete_own` | Melakukan soft delete DRAFT milik sendiri |
+| `work_file:submit` | Membekukan DRAFT dan mengajukannya untuk review |
+| `work_file:review` | Mengembalikan SUBMITTED untuk perbaikan atau merekomendasikan publikasi |
+| `work_file:publish` | Menerbitkan dan mengunci versi setelah approval |
+| `work_file:withdraw` | Menarik atau mengarsipkan versi tanpa menghapus rekaman |
+| `access_grant:manage` | Memberi atau mencabut delegasi permission yang terbatas scope dan waktu |
+
+`system_admin` tidak otomatis memperoleh hak mengubah isi file terbit. Jika delegasi per akun diperlukan, gunakan grant terpisah dengan `user_id`, permission, team scope, classification ceiling, `valid_from`, `valid_until`, `granted_by`, alasan, dan audit event. Pemetaan role dan pihak yang boleh memberi, menerbitkan, atau menarik izin menunggu OQ-35.
 ## Open Questions
 
 - **OPEN QUESTION** Apakah team_lead boleh mempublikasikan knowledge.
@@ -202,6 +217,7 @@ Permission `document:update` dan `document:version` tidak dimiliki `staff` pada 
 - **CONFIRMED (knowledge owner, deck v1_ slide 24)** OQ-09 Knowledge owner dan reviewer per tim adalah ketua tim dan PIC yang ditunjuk; penunjukan orang dan pemetaan ke role tetap OPEN QUESTION (OQ-25).
 - **OPEN QUESTION** OQ-25 Pemetaan "ketua tim", "kasubdit PMP", "Kasi MP", dan "PIC" ke role sistem serta nasib hak `staff` (lihat usulan di atas).
 - **OPEN QUESTION** OQ-12 Siapa berwenang memutuskan publikasi.
+- **OPEN QUESTION** OQ-35 Siapa yang boleh mengelola delegasi permission file pekerjaan, menerbitkan versi, dan menarik rekaman yang sudah terbit.
 
 ## Acceptance Criteria
 

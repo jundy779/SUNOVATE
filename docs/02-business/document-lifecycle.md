@@ -1,7 +1,7 @@
 # Siklus Hidup Dokumen
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-06
+**Last Updated:** 2026-10-10
 
 ## Purpose
 
@@ -90,6 +90,34 @@ Rincian kolom: [database-schema](../04-data/database-schema.md) dan [metadata-sc
 - **OPEN QUESTION**: Status hukum akhir regulasi yang dicabut sebagian atau terdampak ketentuan peralihan: **NEEDS LEGAL CONFIRMATION** (OQ-29). Status hukum tidak diturunkan otomatis dari teks (BR-40, BR-42).
 - **PROPOSED**: Penghapusan memakai soft delete (`deleted_at`). Retensi file dan referensi adalah OQ-13.
 - **OPEN QUESTION**: Apakah pendaftaran versi untuk dokumen `PUBLISHED` memerlukan `approval_requests` bertipe `DOCUMENT_VERSION` pada setiap kasus.
+
+## Usulan Draft Workspace untuk File Hasil Pekerjaan
+
+**Status: PROPOSED / DEFERRED.** Fitur ini dicatat untuk tahap berikutnya dan belum mengubah kode maupun matriks permission saat ini. Kata *unggah* dibedakan dari *terbit*: transfer file ke penyimpanan tetap berstatus `DRAFT`; rekaman baru dikunci setelah aksi Ajukan/Terbitkan yang sah.
+
+```mermaid
+stateDiagram-v2
+    [*] --> DRAFT
+    DRAFT --> DRAFT: ubah / ganti / hapus lunak
+    DRAFT --> SUBMITTED: ajukan
+    SUBMITTED --> DRAFT: minta perbaikan
+    SUBMITTED --> PUBLISHED: setujui dan terbitkan
+    PUBLISHED --> SUPERSEDED: versi pengganti terbit
+    PUBLISHED --> WITHDRAWN: penarikan berizin
+```
+
+Aturan sasaran:
+
+- Pemilik hanya dapat mengubah atau menghapus lunak file selama `DRAFT` dan selama permission, team scope, serta clearance klasifikasinya masih berlaku.
+- `SUBMITTED` membekukan isi selama review. Reviewer dapat mengembalikan ke `DRAFT`, tetapi tidak mengubah file milik pengaju.
+- `PUBLISHED` bersifat immutable: file, checksum, metadata inti, dan nomor versi tidak dapat ditimpa atau dihapus permanen, termasuk oleh system administrator.
+- Koreksi dibuat sebagai versi baru yang merujuk versi sebelumnya. Versi lama tetap disimpan untuk audit dan sitasi historis.
+- Penarikan atau pengarsipan bukan penghapusan. Status, alasan, pelaku, persetujuan, dan waktu tetap tercatat; siapa yang berwenang masih OQ-35.
+- Akun utama mengelola pemberian akses, bukan mengubah isi rekaman terbit. Delegasi per akun wajib memiliki scope tim, permission eksplisit, pemberi, alasan, tanggal mulai/berakhir, dan audit trail.
+- Sebelum submit, file harus melewati validasi tipe/ukuran, checksum, pemindaian malware, klasifikasi, kepemilikan tim, dan pemeriksaan duplikasi.
+- File tetap berada pada penyimpanan eksternal yang disetujui (mis. SharePoint/Azure/object storage); database menyimpan metadata, checksum, status, versi, serta referensi lokasi, bukan BLOB.
+
+Model data kandidat adalah `work_attachments` yang menghubungkan file ke `work_outputs` atau `tasks`, bukan langsung memakai `document_references` tanpa keputusan. Pemisahan ini mencegah lampiran kerja yang masih draf otomatis dianggap sumber Knowledge Hub atau RAG.
 
 ## Pelaku dan Gerbang Intake
 

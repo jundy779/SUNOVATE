@@ -1,7 +1,7 @@
 # Register Risiko
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-09
+**Last Updated:** 2026-10-10
 
 ## Purpose
 
@@ -42,6 +42,7 @@ Seluruh penilaian di bawah PROPOSED. Pemilik "Pengembang" berarti peserta magang
 | R-19 | Cloudflare Tunnel/Access diaktifkan tanpa persetujuan, konfigurasi least privilege, atau kill switch | Aplikasi demo terekspos tidak semestinya; akun atau metadata akses berada pada layanan pihak ketiga | Sedang | Tinggi | Jangan aktifkan sebelum OQ-34 disetujui; akun/domain instansi, MFA, allowlist pengguna, log review, expiry, egress policy, dan prosedur penghentian wajib | Mentor, TIK/keamanan; administrator OPEN QUESTION | Terbuka |
 | R-20 | Target 25 pengguna dianggap kapasitas terjamin tanpa load test pada host aktual | Demo lambat/gagal, database kehabisan koneksi, atau data rusak saat beban | Sedang | Sedang | Tetapkan skenario dan SLA; uji ramp-up, steady state, spike, koneksi DB, CPU/RAM/disk; uji backup/restore; jangan gunakan data asli | Pengembang; administrator OPEN QUESTION | Terbuka |
 | R-21 | Go/Rust/mobile ditambahkan sebelum boundary dan kebutuhan stabil | Kompleksitas deployment, keamanan, test, dan handover meningkat; MVP terlambat | Sedang | Sedang | Modular monolith tetap baseline; butuh metrik, ADR baru, owner operasional, dan acceptance criteria sebelum ekstraksi service/klien | Project lead, Mentor | Diterima untuk roadmap; dicegah pada MVP |
+| R-22 | Akun utama memiliki override konten atau file terbit dapat ditimpa/dihapus | Hilangnya bukti kerja, manipulasi rekaman, versi RAG tidak dapat ditelusuri, dan audit tidak dapat dipercaya | Sedang | Tinggi | Pisahkan administrasi akses dari kepemilikan konten; PUBLISHED immutable; koreksi lewat versi baru; withdrawal mempertahankan bukti; grant terbatas scope/waktu; separation of duties dan audit wajib | Mentor, knowledge owner, TIK/keamanan | Terbuka (OQ-35) |
 
 ## Status Risiko
 

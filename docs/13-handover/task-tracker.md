@@ -39,6 +39,7 @@ Menjadi sumber status pekerjaan lintas sesi dan lintas AI agent. Setiap perubaha
 | TASK-016 | Komponen Rust untuk validasi file, checksum, parsing aman, atau redaction | Pasca-MVP | DEFERRED | Hanya setelah kebutuhan keamanan/performa terbukti dan threat review selesai. |
 | TASK-017 | PWA dan aplikasi Android/iOS (Flutter atau native wrapper) | Pasca-MVP | DEFERRED | API dan auth harus stabil; kebijakan distribusi perangkat belum ditentukan. |
 | TASK-018 | Keputusan hosting produksi: private cloud/Azure/internal data center/hybrid | Produksi | NEEDS APPROVAL | Keputusan instansi/TIK; komputer kantor bukan target produksi. |
+| TASK-019 | Draft Workspace dan file pekerjaan terbit yang immutable | Pasca-MVP | NEEDS APPROVAL | Usulan project lead 2026-10-10. Draf dapat diubah/dihapus lunak; versi terbit dikunci; koreksi lewat versi baru. Permission, penarikan, dan retensi menunggu OQ-35; belum diimplementasikan. |
 
 ## Urutan Eksekusi Terdekat
 

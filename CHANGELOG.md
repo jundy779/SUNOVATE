@@ -1,4 +1,14 @@
 # Changelog
+
+## Unreleased 2026-10-10 - Proposal Draft Workspace dan immutable work files
+
+### Dokumentasi
+
+- Menambahkan FR-56 dan TASK-019 untuk lampiran file pekerjaan dengan dua fase utama: DRAFT yang dapat diedit/dihapus lunak dan PUBLISHED yang immutable.
+- Menetapkan koreksi sebagai versi baru, penarikan sebagai perubahan status tanpa hard delete, serta pemisahan administrasi akses dari kewenangan mengubah konten.
+- Menambahkan kandidat permission terperinci, OQ-35 untuk validasi mentor/TIK, dan R-22 untuk risiko override akun utama atau penghapusan rekaman terbit.
+- Fitur tetap `NEEDS APPROVAL` dan belum diimplementasikan; tidak ada perubahan API, database, UI, atau matriks permission aktif.
+
 ## Unreleased 2026-10-10 - CRUD Monitoring Kerja end-to-end
 
 ### Ditambahkan

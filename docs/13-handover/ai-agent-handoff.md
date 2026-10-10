@@ -15,6 +15,7 @@ Urutan wajib: root `AGENTS.md`, [task-tracker.md](task-tracker.md), [developer-h
 - Komputer kantor adalah target demo/UAT sementara, bukan arsitektur produksi. Produksi menunggu keputusan private cloud/Azure/internal data center/hybrid.
 - Go, Rust, PWA, Android, dan iOS adalah roadmap pasca-MVP. Jangan menambah service atau dependency hanya agar stack tampak lebih banyak.
 - Monitoring kerja memiliki CRUD terotorisasi untuk output, tugas, milestone, pending matter, dan follow-up. Approval khusus monitoring belum boleh dikarang; TASK-005 tetap IN PROGRESS sampai OQ-12/OQ-25 diputuskan.
+- Draft Workspace untuk file hasil pekerjaan adalah proposal tertunda (FR-56/TASK-019), bukan fitur aktif. DRAFT boleh diubah/dihapus lunak oleh pemilik berizin; versi PUBLISHED harus immutable; koreksi menjadi versi baru; penarikan mempertahankan audit. Jangan implementasikan atau menganggap akun utama sebagai super-admin konten sebelum OQ-35 diputuskan.
 - Ketua tim proyek mengarahkan implementasi; mentor mengawasi dan memvalidasi kebutuhan. Keputusan jaringan, domain, identitas, data, keamanan, dan produksi tetap memerlukan pihak instansi yang berwenang.
 
 ## Batas yang Tidak Boleh Dilanggar
