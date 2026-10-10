@@ -1,7 +1,7 @@
 # Endpoint Catalog
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-10
 
 ## Purpose
 Daftar seluruh endpoint `/api/v1` yang diimplementasikan (scaffold, data dari backend `DATA_BACKEND`: `simulated` default atau `postgres`; kontrak identik pada keduanya, ADR-015). Sumber: `apps/api/sunovate_api/modules/`. OpenAPI hidup: `http://localhost:8000/docs`.
@@ -34,11 +34,17 @@ Daftar seluruh endpoint `/api/v1` yang diimplementasikan (scaffold, data dari ba
 | GET | `/dashboard/summary` | `work:read` | metrik, perlu perhatian, tugas per status, knowledge terbaru |
 | GET | `/work-outputs` | `work:read` | filter `teamCode`; `deadlineState` |
 | GET | `/work-outputs/{id}` | `work:read` | + tugas + milestone |
+| POST | `/work-outputs` | `work:create` | team scope + clearance; 201 |
+| PATCH / DELETE | `/work-outputs/{id}` | `work:update` | revision wajib; delete soft delete |
 | GET | `/tasks` | `work:read` | filter `status`, `deadlineState`, `teamCode` |
-| PATCH | `/tasks/{id}` | `work:update` | `status`, `progress`; wajib `revision`; `null` berarti field tidak diubah |
+| POST | `/tasks` | `work:create` | output terkait opsional; harus satu tim |
+| PATCH / DELETE | `/tasks/{id}` | `work:update` | wajib `revision`; delete soft delete |
 | GET | `/milestones` | `work:read` | |
+| POST / PATCH / DELETE | `/milestones[/{id}]` | `work:create` / `work:update` | output terkait wajib dan satu tim |
 | GET | `/pending-matters` | `pending:read` | |
 | GET | `/follow-ups` | `pending:read` | |
+| POST / PATCH / DELETE | `/pending-matters[/{id}]` | `pending:manage` | team scope + clearance |
+| POST / PATCH / DELETE | `/follow-ups[/{id}]` | `pending:manage` | induk opsional dan satu tim |
 | GET | `/audit-logs` | `audit:read` | filter `action`; terbaru dulu |
 | GET | `/approvals` | `approval:request` atau `approval:decide` | milik sendiri + yang boleh diputuskan dalam scope |
 | POST | `/approvals/{id}/decision` | `approval:decide` (+ `knowledge:publish` untuk APPROVE publikasi) | body `{decision, revision, reason}` |
@@ -96,7 +102,7 @@ Request: `{ "question": "Apa saja metadata wajib saat mendaftarkan dokumen knowl
 Nilai `decision` lain: `INSUFFICIENT_EVIDENCE`, `REFUSED_OUT_OF_SCOPE`, `REFUSED_GENERAL_CODING`, `REFUSED_POLICY`, `REQUIRES_HUMAN_APPROVAL` (dengan `approvalRequestId`), `BLOCKED_BY_OUTPUT_GUARD`.
 
 ## Belum diimplementasikan (PROPOSED)
-CRUD pengguna/tim/role, pembuatan output dan tugas, pengelolaan pending matters, arsip knowledge, upload/ekstraksi dokumen, notifikasi, eksekusi aksi setelah approval, regulation relations, document automation.
+CRUD pengguna/tim/role, approval khusus monitoring kerja, arsip knowledge, upload/ekstraksi dokumen, notifikasi, eksekusi aksi setelah approval, regulation relations, document automation.
 
 ## Related Documents
 - [permission-matrix.md](../06-security/permission-matrix.md)

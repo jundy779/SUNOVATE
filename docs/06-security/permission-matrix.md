@@ -1,7 +1,7 @@
 # Permission Matrix
 
 **Status:** NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-10
 
 ## Purpose
 
@@ -123,11 +123,19 @@ Semua path relatif terhadap prefix `/api/v1`.
 | GET | `/dashboard/summary` | `work:read` |
 | GET | `/work-outputs` | `work:read` |
 | GET | `/work-outputs/{id}` | `work:read` |
+| POST | `/work-outputs` | `work:create` |
+| PATCH, DELETE | `/work-outputs/{id}` | `work:update` |
 | GET | `/tasks` | `work:read` |
+| POST | `/tasks` | `work:create` |
 | PATCH | `/tasks/{id}` | `work:update` |
+| DELETE | `/tasks/{id}` | `work:update` |
 | GET | `/milestones` | `work:read` |
+| POST | `/milestones` | `work:create` |
+| PATCH, DELETE | `/milestones/{id}` | `work:update` |
 | GET | `/pending-matters` | `pending:read` |
 | GET | `/follow-ups` | `pending:read` |
+| POST | `/pending-matters`, `/follow-ups` | `pending:manage` |
+| PATCH, DELETE | `/pending-matters/{id}`, `/follow-ups/{id}` | `pending:manage` |
 | GET | `/audit-logs` | `audit:read` |
 | GET | `/approvals` | `approval:decide`, atau `approval:request` (hanya request milik sendiri) |
 | POST | `/approvals/{id}/decision` | `approval:decide` (+ `knowledge:publish` untuk tipe `KNOWLEDGE_PUBLICATION`) |
@@ -140,7 +148,7 @@ Catatan:
 
 - Endpoint yang membaca atau mengubah rekaman tunggal juga menerapkan team scope dan klasifikasi; rekaman yang tidak boleh dibaca menghasilkan 404.
 - Konsekuensi matriks saat ini: keputusan approval `KNOWLEDGE_PUBLICATION` hanya dapat dilakukan knowledge_coordinator, karena hanya role ini yang memiliki `approval:decide` dan `knowledge:publish` sekaligus.
-- Permission `user:manage`, `team:manage`, `role:manage`, `knowledge:review`, `knowledge:archive`, `document:create`, `document:update`, `work:create`, `pending:manage`, dan `data_quality:manage` sudah didefinisikan tetapi belum dipakai oleh endpoint scaffold.
+- Permission `user:manage`, `team:manage`, `role:manage`, `knowledge:review`, `knowledge:archive`, `document:create`, `document:update`, dan `data_quality:manage` sudah didefinisikan tetapi belum dipakai oleh endpoint scaffold. `work:create` dan `pending:manage` dipakai endpoint monitoring sejak 2026-10-10.
 
 ## Usulan Perubahan: Pembatasan Hak Ubah/Unggah (PROPOSED, belum diimplementasikan)
 

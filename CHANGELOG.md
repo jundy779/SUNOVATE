@@ -1,4 +1,23 @@
 # Changelog
+## Unreleased 2026-10-10 - CRUD Monitoring Kerja end-to-end
+
+### Ditambahkan
+- API create/update/soft-delete untuk output kerja, tugas, milestone, pending matter, dan tindak lanjut.
+- Validasi permission, team scope, clearance klasifikasi, relasi induk satu tim, optimistic revision, dan audit untuk seluruh operasi tulis.
+- UI Monitoring Kerja berbasis tab dengan jumlah record, form tambah, perubahan status, aksi arsip, feedback, dan kontrol yang mengikuti permission pengguna.
+- Proxy mutasi server-side `/api/work` sehingga token development tetap berada di cookie HTTP-only.
+- Dua test backend untuk CRUD, scope, permission `pending:manage`, revision, dan soft delete; satu skenario E2E untuk alur tambah output melalui UI.
+
+### Batas
+- Approval khusus monitoring belum diimplementasikan karena OQ-12 dan OQ-25 belum diputuskan. TASK-005 tetap `IN PROGRESS`.
+- Seluruh record demonstrasi tetap `SIMULATED_DATA`/`USER_ENTERED` dalam lingkungan simulasi; tidak ada integrasi produksi.
+
+### Validasi aktual
+- `pnpm validate` lulus: Ruff, ESLint, mypy strict, TypeScript, 12 test frontend, 173 test backend (39 dilewati), dan Next.js production build.
+- `pnpm db:sql` berhasil merender migrasi `0001` dan `0002` sampai `COMMIT`.
+- `pnpm e2e` belum berjalan karena binary Chromium tidak tersedia; unduhan Playwright menghasilkan arsip kosong/truncated. Pemeriksaan screenshot desktop/mobile tidak dapat dilakukan pada runtime ini.
+- `pnpm db:test` belum berjalan karena `pgserver` mencoba membuat user sistem `pgserver` dan ditolak environment (`useradd` exit 1). Suite simulasi dan render migrasi tetap lulus; paritas PostgreSQL perubahan write ini masih perlu dijalankan pada host yang mengizinkan pgserver atau Docker.
+
 ## Docs 2026-10-09 - Baseline demo, roadmap stack, dan handoff lintas AI agent
 
 ### Ditambahkan

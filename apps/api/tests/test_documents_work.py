@@ -120,3 +120,97 @@ def test_pending_matters_and_follow_ups() -> None:
     follow_ups = client.get(f"{API}/follow-ups", headers=staff).json()["data"]
     assert [p["ownerTeamCode"] for p in pending] == ["PPPSUN"]
     assert follow_ups[0]["deadlineState"] == "OVERDUE"
+
+
+def test_work_output_and_task_crud_are_scoped_and_audited() -> None:
+    client = make_client()
+    staff = login(client, "sim.staff.pppsun")
+    team_id = str(sid("team:PPPSUN"))
+
+    created_output = client.post(
+        f"{API}/work-outputs",
+        headers=staff,
+        json={
+            "title": "Output simulasi pengujian",
+            "description": "Deskripsi output hanya untuk pengujian otomatis.",
+            "ownerTeamId": team_id,
+            "classificationCode": "INTERNAL",
+            "targetDate": "2026-10-20",
+        },
+    )
+    assert created_output.status_code == 201
+    output = created_output.json()["data"]
+    assert output["dataOrigin"] == "USER_ENTERED"
+
+    created_task = client.post(
+        f"{API}/tasks",
+        headers=staff,
+        json={
+            "title": "Tugas simulasi pengujian",
+            "ownerTeamId": team_id,
+            "workOutputId": output["id"],
+            "classificationCode": "INTERNAL",
+            "dueDate": "2026-10-18",
+        },
+    )
+    assert created_task.status_code == 201
+    task = created_task.json()["data"]
+
+    updated = client.patch(
+        f"{API}/tasks/{task['id']}",
+        headers=staff,
+        json={"revision": task["revision"], "status": "COMPLETED"},
+    )
+    assert updated.status_code == 200
+    assert updated.json()["data"]["progress"] == 100
+
+    deleted = client.delete(
+        f"{API}/tasks/{task['id']}?revision={updated.json()['data']['revision']}",
+        headers=staff,
+    )
+    assert deleted.status_code == 204
+    ids = {
+        item["id"]
+        for item in client.get(f"{API}/tasks?pageSize=100", headers=staff).json()["data"]
+    }
+    assert task["id"] not in ids
+
+
+def test_pending_and_follow_up_crud_require_manage_permission() -> None:
+    client = make_client()
+    lead = login(client, "sim.lead.psun")
+    staff = login(client, "sim.staff.pppsun")
+    team_id = str(sid("team:PSUN"))
+    body = {
+        "title": "Pending matter simulasi baru",
+        "description": "Catatan simulasi untuk pengujian pengelolaan pending matter.",
+        "ownerTeamId": team_id,
+        "classificationCode": "INTERNAL",
+        "dueDate": "2026-10-20",
+    }
+
+    assert client.post(f"{API}/pending-matters", headers=staff, json=body).status_code == 403
+    created = client.post(f"{API}/pending-matters", headers=lead, json=body)
+    assert created.status_code == 201
+    pending = created.json()["data"]
+
+    follow_up = client.post(
+        f"{API}/follow-ups",
+        headers=lead,
+        json={
+            "title": "Tindak lanjut simulasi",
+            "ownerTeamId": team_id,
+            "pendingMatterId": pending["id"],
+            "classificationCode": "INTERNAL",
+            "dueDate": "2026-10-19",
+        },
+    )
+    assert follow_up.status_code == 201
+    item = follow_up.json()["data"]
+    updated = client.patch(
+        f"{API}/follow-ups/{item['id']}",
+        headers=lead,
+        json={"revision": item["revision"], "status": "DONE"},
+    )
+    assert updated.status_code == 200
+    assert updated.json()["data"]["deadlineState"] == "COMPLETED"

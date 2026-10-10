@@ -71,7 +71,17 @@ export interface WorkItem {
   dueDate?: string | null;
   targetDate?: string | null;
   progress?: number;
+  description?: string;
+  priority?: "LOW" | "NORMAL" | "HIGH" | "URGENT";
+  workOutputId?: string | null;
+  pendingMatterId?: string | null;
   revision: number;
+}
+
+export interface TeamSummary {
+  id: string;
+  code: string;
+  name: string;
 }
 
 export interface SearchHit {

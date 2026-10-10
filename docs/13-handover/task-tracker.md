@@ -1,7 +1,7 @@
 # Task Tracker SUNOVATE
 
 **Status:** ACTIVE
-**Last Updated:** 2026-10-09
+**Last Updated:** 2026-10-10
 
 ## Purpose
 
@@ -25,7 +25,7 @@ Menjadi sumber status pekerjaan lintas sesi dan lintas AI agent. Setiap perubaha
 | TASK-002 | Dashboard berkonteks Dit. SUN tanpa angka bisnis yang tidak tervalidasi | MVP | DONE | Commit remote `53f9bd4`; yield dan kepemilikan SBN tetap diblokir OQ-21. |
 | TASK-003 | Fondasi FastAPI, Repository, PostgreSQL, pgvector, Alembic, RBAC, dan audit | MVP | DONE | ADR-002, ADR-003, ADR-015; mode simulated tetap default. |
 | TASK-004 | Monitoring kerja: pembacaan output, tugas, milestone, pending matter, follow-up | MVP | DONE | Endpoint dan halaman baca tersedia. |
-| TASK-005 | CRUD lengkap monitoring kerja dan alur persetujuan | MVP | PLANNED | Wajib mengikuti matriks izin dan OQ-12/OQ-25. |
+| TASK-005 | CRUD lengkap monitoring kerja dan alur persetujuan | MVP | IN PROGRESS | CRUD API/UI, scope, revision, soft delete, audit, dan test selesai 2026-10-10. Approval tetap NEEDS APPROVAL karena OQ-12/OQ-25. |
 | TASK-006 | Knowledge Hub: ingestion, ekstraksi, chunking, FTS dan semantic retrieval | MVP | IN PROGRESS | Repository dasar ada; ingestion dan semantic retrieval menunggu OQ-04/OQ-06/OQ-11. |
 | TASK-007 | SAVI AI: RAG bersitasi dengan provider AI yang disetujui | MVP | IN PROGRESS | Provider ekstraktif development ada; nama frontend adalah SAVI AI. Model eksternal belum disetujui. |
 | TASK-008 | Guard domain SUN, prompt-injection defense, output guard, dan human approval | MVP | IN PROGRESS | Scaffold guard dan test ada; evaluasi dengan golden set tervalidasi masih diperlukan. |

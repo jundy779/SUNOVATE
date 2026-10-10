@@ -41,3 +41,19 @@ test("staff cannot open administration", async ({ page }) => {
   await page.goto("/admin");
   await expect(page.getByRole("heading", { name: "Anda tidak memiliki izin" })).toBeVisible();
 });
+
+test("staff creates and updates scoped work data", async ({ page }) => {
+  await page.goto("/login");
+  await page.getByLabel("Email pengguna simulasi").fill("sim.staff.pppsun@sunovate.local");
+  await page.getByRole("button", { name: "Masuk dengan akses pengembangan" }).click();
+  await page.getByRole("link", { name: "Monitoring Kerja" }).click();
+
+  await page.getByRole("button", { name: "Tambah output" }).click();
+  await page.getByLabel("Judul").fill("Output simulasi dari UI");
+  await page.getByLabel("Deskripsi").fill("Data simulasi untuk memverifikasi alur monitoring kerja.");
+  await page.getByLabel("Tim").selectOption({ index: 1 });
+  await page.getByRole("button", { name: "Simpan" }).click();
+
+  await expect(page.getByText("Output simulasi dari UI")).toBeVisible();
+  await expect(page.getByText("Output kerja berhasil ditambahkan.")).toBeVisible();
+});

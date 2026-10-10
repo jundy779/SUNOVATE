@@ -30,6 +30,9 @@ export async function apiRequest<T>(path: string, init: RequestInit = {}): Promi
       requestId: "-",
     });
   }
+  if (response.status === 204) {
+    return { data: null as T, meta: { dataLabel: "SIMULATED_DATA" } };
+  }
   if (response.ok) return (await response.json()) as Envelope<T>;
   const body = (await response.json().catch(() => null)) as ApiErrorBody | null;
   throw new ApiRequestError(response.status, body);
