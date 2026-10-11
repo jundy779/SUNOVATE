@@ -1,7 +1,7 @@
 # Dokumentasi SUNOVATE
 
 **Status:** DRAFT
-**Last Updated:** 2026-10-09
+**Last Updated:** 2026-10-11
 
 ## Purpose
 
@@ -45,7 +45,7 @@ Setiap pernyataan penting diberi salah satu label berikut.
 |---|---|---|
 | `00-project` | Konteks proyek, batasan, pemangku kepentingan, asumsi, pertanyaan terbuka. | [project-overview](00-project/project-overview.md), [vision-and-objectives](00-project/vision-and-objectives.md), [scope-and-boundaries](00-project/scope-and-boundaries.md), [stakeholder-map](00-project/stakeholder-map.md), [glossary](00-project/glossary.md), [assumptions](00-project/assumptions.md), [open-questions](00-project/open-questions.md), [mentor-session-01-agenda](00-project/mentor-session-01-agenda.md) |
 | `01-product` | Kebutuhan produk, persona, user story, kriteria penerimaan, roadmap. | [prd](01-product/prd.md), [user-personas](01-product/user-personas.md), [user-stories](01-product/user-stories.md), [functional-requirements](01-product/functional-requirements.md), [non-functional-requirements](01-product/non-functional-requirements.md), [mvp-scope](01-product/mvp-scope.md), [acceptance-criteria](01-product/acceptance-criteria.md), [product-roadmap](01-product/product-roadmap.md) |
-| `02-business` | Latar domain SUN, ruang lingkup tim kerja, siklus knowledge dan dokumen, aturan bisnis. | [sun-domain-overview](02-business/sun-domain-overview.md), [team-work-scope](02-business/team-work-scope.md), [knowledge-lifecycle](02-business/knowledge-lifecycle.md), [document-lifecycle](02-business/document-lifecycle.md), [work-monitoring-flow](02-business/work-monitoring-flow.md), [business-rules](02-business/business-rules.md) |
+| `02-business` | Latar domain SUN, ruang lingkup tim kerja, siklus knowledge dan dokumen, aturan bisnis. | [sun-domain-overview](02-business/sun-domain-overview.md), [team-work-scope](02-business/team-work-scope.md), [knowledge-lifecycle](02-business/knowledge-lifecycle.md), [document-lifecycle](02-business/document-lifecycle.md), [work-monitoring-flow](02-business/work-monitoring-flow.md), [draft-workspace](02-business/work-file-draft-workspace.md), [business-rules](02-business/business-rules.md) |
 | `03-architecture` | Konteks sistem, container, komponen, deployment, stack, batas integrasi, ADR. | [system-context](03-architecture/system-context.md), [container-architecture](03-architecture/container-architecture.md), [component-architecture](03-architecture/component-architecture.md), [deployment-architecture](03-architecture/deployment-architecture.md), [technology-stack](03-architecture/technology-stack.md), [integration-boundaries](03-architecture/integration-boundaries.md), [provider-abstraction](03-architecture/provider-abstraction.md), [architecture-decisions](03-architecture/architecture-decisions.md) |
 | `04-data` | Arsitektur data, model konseptual dan logis, skema, metadata, klasifikasi, retensi, kualitas, kebijakan data simulasi. | [data-architecture](04-data/data-architecture.md), [conceptual-data-model](04-data/conceptual-data-model.md), [logical-data-model](04-data/logical-data-model.md), [database-schema](04-data/database-schema.md), [metadata-schema](04-data/metadata-schema.md), [document-classification](04-data/document-classification.md), [data-retention](04-data/data-retention.md), [data-quality](04-data/data-quality.md), [simulated-data-policy](04-data/simulated-data-policy.md) |
 | `05-ai-rag` | Hermes, RAG, ingestion, retrieval, chunking, sitasi, prompt, guard, evaluasi, persetujuan manusia. | [hermes-overview](05-ai-rag/hermes-overview.md), [rag-architecture](05-ai-rag/rag-architecture.md), [ingestion-pipeline](05-ai-rag/ingestion-pipeline.md), [retrieval-strategy](05-ai-rag/retrieval-strategy.md), [chunking-strategy](05-ai-rag/chunking-strategy.md), [citation-policy](05-ai-rag/citation-policy.md), [prompt-policy](05-ai-rag/prompt-policy.md), [scope-guard](05-ai-rag/scope-guard.md), [prompt-injection-defense](05-ai-rag/prompt-injection-defense.md), [rag-evaluation](05-ai-rag/rag-evaluation.md), [human-approval](05-ai-rag/human-approval.md) |
@@ -83,4 +83,4 @@ Folder `docs/_archive/legacy-docs-v0/` berisi draf dokumentasi dari sesi sebelum
 
 ## Last Updated
 
-2026-10-09
+2026-10-11

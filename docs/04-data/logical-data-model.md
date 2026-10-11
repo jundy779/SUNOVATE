@@ -1,7 +1,7 @@
 # Logical Data Model
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-06
+**Last Updated:** 2026-10-11
 
 ## Purpose
 Atribut kunci, kardinalitas, dan aturan integritas per entitas. Kolom lengkap ada di [database-schema.md](database-schema.md).
@@ -38,6 +38,21 @@ Status work output, milestone, dan pending matter adalah usulan dan menunggu kon
 - Satu pengguna dapat masuk ke beberapa tim; role dapat dicatat per tim (`user_roles.team_id`) atau global (`NULL`). Catatan (diperiksa pada kode 2026-10-06): kolom `team_id` belum memengaruhi resolusi permission; semua role pengguna digabung (lihat bagian "Usulan Desain dari Jawaban Knowledge Owner").
 - Satu knowledge entry memiliki nol atau lebih document reference; satu reference memiliki banyak versi; `current_version_id` menunjuk versi aktif.
 - Chunk mewarisi kepemilikan dan klasifikasi dari knowledge entry induk melalui `knowledge_entry_id`.
+
+## Kandidat Model Draft Workspace (PROPOSED, belum diimplementasikan)
+
+Rancangan FR-56 memakai tiga entitas kandidat: `work_attachments` untuk lampiran logis dan lifecycle; `work_attachment_versions` untuk versi file immutable beserta checksum serta provider locator; dan `user_permission_grants` untuk delegasi per akun yang dibatasi tim, klasifikasi, dan waktu. Lampiran dapat terkait `work_outputs` atau `tasks`, tetapi aturan tepat satu induk menunggu keputusan.
+
+Integritas minimum yang direncanakan:
+
+- lifecycle hanya `DRAFT`, `SUBMITTED`, `PUBLISHED`, `SUPERSEDED`, atau `WITHDRAWN`;
+- `deleted_at` hanya boleh diisi saat DRAFT;
+- pasangan (`work_attachment_id`, `version_number`) dan (`work_attachment_id`, `checksum_sha256`) unik;
+- versi PUBLISHED tidak dapat UPDATE atau DELETE, ditegakkan API dan trigger database;
+- koreksi memakai `replaces_version_id`, bukan menimpa versi;
+- grant wajib memiliki team scope, pemberi, alasan, serta masa berlaku dan tidak memberikan override konten kepada system administrator.
+
+Nama kolom lengkap, provider file, retensi, pihak pemberi grant, dan approval chain menunggu OQ-35. Tidak ada migration `0003` yang dibuat. Rincian: [work-file-draft-workspace.md](../02-business/work-file-draft-workspace.md).
 
 ## Usulan Desain dari Jawaban Knowledge Owner (PROPOSED, belum diimplementasikan)
 

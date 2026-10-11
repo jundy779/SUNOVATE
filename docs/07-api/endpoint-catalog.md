@@ -102,7 +102,10 @@ Request: `{ "question": "Apa saja metadata wajib saat mendaftarkan dokumen knowl
 Nilai `decision` lain: `INSUFFICIENT_EVIDENCE`, `REFUSED_OUT_OF_SCOPE`, `REFUSED_GENERAL_CODING`, `REFUSED_POLICY`, `REQUIRES_HUMAN_APPROVAL` (dengan `approvalRequestId`), `BLOCKED_BY_OUTPUT_GUARD`.
 
 ## Belum diimplementasikan (PROPOSED)
+
 CRUD pengguna/tim/role, approval khusus monitoring kerja, arsip knowledge, upload/ekstraksi dokumen, notifikasi, eksekusi aksi setelah approval, regulation relations, document automation.
+
+Draft Workspace FR-56 juga belum diimplementasikan. Kontrak kandidat mencakup `/work-attachments`, versi draft, submit, return, publish, revisions, withdraw, dan `/access-grants`. Endpoint tersebut tidak boleh ditambahkan ke OpenAPI aktif sebelum OQ-35 disetujui. Spesifikasi lengkap: [work-file-draft-workspace.md](../02-business/work-file-draft-workspace.md).
 
 ## Related Documents
 - [permission-matrix.md](../06-security/permission-matrix.md)

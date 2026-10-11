@@ -2,7 +2,7 @@
 
 **Status:** PROPOSED
 
-**Last Updated:** 2026-10-09
+**Last Updated:** 2026-10-11
 
 ## Purpose
 
@@ -54,6 +54,7 @@ Semua item di bawah berstatus **PROPOSED** dan belum diimplementasikan. Sumber: 
 | PD-4 | Klarifikasi "Sandbox server" sebelum memilih document provider pilot. | OQ-06, OQ-22 | PROPOSED |
 | PD-5 | Definisikan indikator "yield" dan "kepemilikan SBN" setelah sumber data otoritatif dan siapa yang boleh melihatnya diketahui; tidak ada tabel bisnis SUN (ADR-013) sebelum itu. | OQ-10, OQ-21 | PROPOSED |
 | PD-6 | Aturan untuk Telegram dan WhatsApp bila dilanjutkan (P2): kajian keamanan, konten RESTRICTED ke atas tidak dikirim ke kanal eksternal secara default. | OQ-08 | PROPOSED |
+| PD-7 | Implementasi Draft Workspace file pekerjaan: model lampiran/versi/grant, provider upload, malware scan, lifecycle DRAFT sampai WITHDRAWN, publikasi immutable, API, UI, audit, dan test AC-26 sampai AC-31. Spesifikasi tersedia di `work-file-draft-workspace.md`. | OQ-35, OQ-06, OQ-12, OQ-25 | NEEDS APPROVAL; desain teknis selesai 2026-10-11, kode belum dimulai |
 
 ## Backlog Persistence PostgreSQL
 

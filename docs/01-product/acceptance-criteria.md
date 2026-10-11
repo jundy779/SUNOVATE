@@ -1,7 +1,7 @@
 # Kriteria Penerimaan
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-06
+**Last Updated:** 2026-10-11
 
 ## Purpose
 
@@ -257,6 +257,50 @@ Status terhadap kode saat ini: prosedur ada sebagai usulan di [backup-and-restor
 
 Status terhadap kode saat ini: dua bagian pertama lulus terhadap kode (`test_production_refuses_dev_auth_and_simulated_backend`, `test_production_refuses_simulated_backend`, `test_dev_auth_disabled_blocks_login_and_access`). Bagian jaringan, CORS, dan secret adalah pemeriksaan manual pada server yang belum ada. Catatan: `APP_ENV=production` mewajibkan dev auth nonaktif, sedangkan belum ada mekanisme login lain (OQ-07, PD-3), sehingga server pada mode production belum dapat dipakai login. Terkait: NFR-42, NFR-43, US-40.
 
+## AC-26 Draft milik sendiri dapat diperbarui
+
+- **Given** staf memiliki grant aktif untuk membuat dan memperbarui draft pada timnya
+- **And** lampiran miliknya berstatus DRAFT dengan `revision` yang cocok
+- **When** ia mengganti file dengan file valid
+- **Then** versi draft baru tercatat, checksum dihitung server-side, dan audit `WORK_FILE_DRAFT_UPDATE` dibuat.
+
+## AC-27 Draft lintas pemilik atau tim ditolak
+
+- **Given** pengguna tidak memiliki kepemilikan atau team scope atas draft
+- **When** ia membaca, mengganti, atau menghapus draft tersebut
+- **Then** API mengembalikan 404 dan audit akses ditolak tercatat tanpa membocorkan keberadaan record.
+
+## AC-28 Submit membekukan file
+
+- **Given** DRAFT lolos validasi file, scan, klasifikasi, dan checksum
+- **When** pemilik mengajukan
+- **Then** status menjadi SUBMITTED dan approval dibuat
+- **And** PATCH, DELETE, atau unggah versi pada record tersebut ditolak sampai dikembalikan ke DRAFT.
+
+## AC-29 Versi terbit immutable
+
+- **Given** lampiran berstatus PUBLISHED
+- **When** pemilik, reviewer, atau system administrator mencoba menimpa file, mengubah metadata inti, atau hard delete
+- **Then** API menolak operasi dan versi, checksum, provider locator, serta audit historis tidak berubah.
+
+## AC-30 Koreksi menghasilkan versi baru
+
+- **Given** lampiran PUBLISHED memerlukan koreksi
+- **When** pengguna berizin memulai revisi
+- **Then** sistem membuat DRAFT baru yang merujuk versi terbit sebelumnya
+- **And** versi lama tetap PUBLISHED sampai versi pengganti disetujui
+- **And** setelah pengganti terbit, versi lama menjadi SUPERSEDED tanpa dihapus.
+
+## AC-31 Grant akses dibatasi dan diaudit
+
+- **Given** pengelola akses yang disetujui mentor
+- **When** ia memberi permission file kepada staf
+- **Then** grant mencatat tim, classification ceiling, masa berlaku, pemberi, dan alasan
+- **And** grant kedaluwarsa atau dicabut tidak lagi memberi akses
+- **And** pengelola akses tidak otomatis mendapat hak mengubah file PUBLISHED.
+
+Status AC-26 sampai AC-31: **PROPOSED, belum dapat diuji**. Model, endpoint, permission, storage provider, dan approval chain belum diimplementasikan; OQ-35 masih OPEN.
+
 ## Open Questions
 
 - Kode error untuk pelanggaran separation of duties belum dikunci di dokumentasi API; perlu diselaraskan dengan [error-format.md](../07-api/error-format.md).
@@ -264,6 +308,7 @@ Status terhadap kode saat ini: dua bagian pertama lulus terhadap kode (`test_pro
 - OQ-25 menentukan role yang menjadi pelaku pada AC-16 sampai AC-19 dan apakah staf biasa boleh menyusun draf; AC-17 berlaku hanya setelah PD-1 disetujui.
 - OQ-21 menentukan kapan AC-22 dapat diganti dengan skenario angka.
 - OQ-23 menentukan lingkungan untuk AC-24 dan AC-25.
+- OQ-35 menentukan pelaku dan kebijakan final AC-26 sampai AC-31.
 
 ## Related Documents
 
@@ -274,4 +319,4 @@ Status terhadap kode saat ini: dua bagian pertama lulus terhadap kode (`test_pro
 
 ## Last Updated
 
-2026-10-06
+2026-10-11

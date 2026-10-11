@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased 2026-10-11 - Specification-ready Draft Workspace
+
+### Dokumentasi
+
+- Menambahkan spesifikasi lengkap `work-file-draft-workspace.md`: batas unggah versus terbit, lifecycle, kontrol tindakan, validasi file, model data kandidat, kontrak API, UI, dan gate keputusan.
+- Menambahkan AC-26 sampai AC-31 untuk kepemilikan draft, pembekuan saat submit, immutability, revisi baru, dan grant akses terbatas.
+- Menyelaraskan model logis, endpoint catalog, future development, task tracker, indeks dokumentasi, dan handoff AI.
+- TASK-019 tetap `NEEDS APPROVAL`; tidak ada migration, endpoint, permission aktif, atau UI baru.
+
 ## Unreleased 2026-10-10 - Proposal Draft Workspace dan immutable work files
 
 ### Dokumentasi
