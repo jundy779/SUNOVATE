@@ -7,6 +7,7 @@ write intent -> SUN domain. See docs/05-ai-rag/scope-guard.md.
 from __future__ import annotations
 
 import re
+import unicodedata
 from dataclasses import dataclass
 
 POLICY_PATTERNS = tuple(
@@ -21,8 +22,19 @@ POLICY_PATTERNS = tuple(
         r"\b(lewati|bypass|abaikan)\s+(otorisasi|izin|pemeriksaan|keamanan|authorization)\b",
         r"\bberpura[- ]pura\b",
         r"\bpretend\s+(you|to)\b",
+        r"\b(act|behave|respond)\s+as\s+(an?\s+)?(unrestricted|uncensored|unfiltered|root)\b",
+        r"\b(do\s+anything\s+now|dan\s+mode)\b",
+        r"\b(disregard|override)\s+(the\s+|all\s+|any\s+)*(instructions|rules|policies|guardrails)\b",
+        r"\b(reveal|show|print|repeat|expose)\s+(the\s+|your\s+|hidden\s+|internal\s+)*"
+        r"(instructions|system\s*prompt|developer\s*message|guardrails)\b",
+        r"\b(ungkapkan|tunjukkan|salin|bocorkan)\s+(instruksi\s+internal|instruksi\s+tersembunyi|"
+        r"pesan\s+developer|guardrail)\b",
+        r"\b(tampilkan|bocorkan|ungkapkan|berikan)\s+(api[_ -]?key|token|secret|password|"
+        r"kata\s+sandi|kredensial)\b",
         r"\b(tampilkan|bocorkan|buka)\s+(seluruh\s+|semua\s+)?(dokumen|data)\s+"
         r"(rahasia|terbatas|confidential)",
+        r"\b(akses|buka|rangkum)\s+(dokumen|data|file)\s+(tim\s+lain|yang\s+bukan\s+hak|"
+        r"tanpa\s+izin)\b",
         r"\binstruksi\s+(untuk|kepada)\s+(ai|asisten|hermes|model)\b",
     )
 )
@@ -35,30 +47,40 @@ FINANCIAL_PATTERNS = tuple(
         r"\bharga\s+wajar\b",
         r"\bprediksi\s+(yield|imbal\s+hasil|harga|kupon)",
         r"\b(should\s+i\s+(buy|sell)|investment\s+advice)\b",
+        r"\b(pilihkan|tentukan)\s+(seri\s+)?(sun|sbn|obligasi)\s+.*\b(untung|menguntungkan|beli)",
+        r"\b(sun|sbn|obligasi)\s+mana\s+.*\b(paling\s+)?(untung|menguntungkan)\b",
+        r"\bstrategi\s+(trading|jual\s+beli)\s+(sun|sbn|obligasi)\b",
     )
 )
 
-CODING_PATTERNS = tuple(
+CODING_ACTION_PATTERNS = tuple(
     re.compile(p, re.IGNORECASE)
     for p in (
-        r"\b(python|javascript|typescript|golang|php|html|css|regex|kotlin|rust)\b",
         r"\bbuat(kan)?\s+(kode|program|fungsi|script|skrip|aplikasi|query\s+sql)\b",
         r"\b(write|generate|fix|debug)\s+(the\s+|a\s+|some\s+|my\s+)?(code|script|function)\b",
         r"\b(coding|ngoding|debugging)\b",
     )
 )
 
+PROGRAMMING_LANGUAGE = re.compile(
+    r"\b(python|javascript|typescript|golang|php|html|css|regex|kotlin|rust)\b",
+    re.IGNORECASE,
+)
+
 WRITE_PATTERNS = tuple(
     re.compile(p, re.IGNORECASE)
     for p in (
-        r"\b(hapus|hapuskan|ubah|ubahlah|perbarui|perbaharui|tambahkan|setujui|publikasikan|"
-        r"terbitkan|arsipkan|kirim|kirimkan|tugaskan)\b",
+        r"(?:^|\b(?:tolong|mohon|coba|segera)\s+)"
+        r"(hapus|ubah|perbarui|perbaharui|tambah|setujui|publikasi|terbitkan|arsipkan|kirim|tugaskan)\b",
+        r"\b(hapuskan|ubahlah|tambahkan|setujui|publikasikan|terbitkan|arsipkan|kirimkan|tugaskan)\b",
         r"\bbuat(kan)?\s+(tugas|entri|knowledge|pending|tindak\s+lanjut|approval)\b",
-        r"\b(delete|approve|publish|create|send|assign)\b",
+        r"(?:^|\bplease\s+)(delete|approve|publish|create|send|assign)\b",
+        r"\b(saya|aku)\s+(ingin|mau)\s+(menghapus|mengubah|memperbarui|menambah|"
+        r"menerbitkan|mengarsipkan|mengirim|menugaskan)\b",
     )
 )
 
-DOMAIN_TERMS = (
+STRONG_DOMAIN_TERMS = (
     "sun",
     "surat utang",
     "obligasi",
@@ -78,41 +100,41 @@ DOMAIN_TERMS = (
     "kajian",
     "close out",
     "lesson learned",
-    "knowledge",
-    "dokumen",
-    "rapat",
-    "tim",
     "ppsun",
     "akpsun",
     "psun",
     "pppsun",
     "dhtv",
-    "tematik",
-    "pending",
-    "tindak lanjut",
-    "output",
-    "tugas",
-    "milestone",
-    "metadata",
+    "sun tematik",
     "klasifikasi",
     "dealer",
     "ritel",
     "setelmen",
     "portofolio",
-    "pasar",
     "valas",
-    "edukasi",
-    "arsip",
-    "bahan",
-    "referensi",
-    "entri",
-    "catatan",
-    "keputusan",
-    "review",
     "hermes",
     "sunovate",
 )
-_DOMAIN = re.compile(r"\b(" + "|".join(re.escape(t) for t in DOMAIN_TERMS) + r")\b", re.IGNORECASE)
+_STRONG_DOMAIN = re.compile(
+    r"\b(" + "|".join(re.escape(t) for t in STRONG_DOMAIN_TERMS) + r")\b", re.IGNORECASE
+)
+
+CONTEXTUAL_DOMAIN_PAIRS = tuple(
+    tuple(re.compile(rf"\b{re.escape(term)}\b", re.IGNORECASE) for term in pair)
+    for pair in (
+        ("metadata", "dokumen"),
+        ("metadata", "knowledge"),
+        ("entri", "knowledge"),
+        ("kajian", "pasar"),
+        ("catatan", "keputusan"),
+        ("output", "tim"),
+        ("tugas", "tim"),
+        ("pending", "tindak lanjut"),
+        ("milestone", "output"),
+        ("bahan", "rapat"),
+        ("arsip", "dokumen"),
+    )
+)
 
 
 @dataclass(frozen=True)
@@ -129,6 +151,24 @@ def _matches(patterns: tuple[re.Pattern[str], ...], text: str) -> bool:
     return any(p.search(text) for p in patterns)
 
 
+def _normalize(text: str) -> str:
+    normalized = unicodedata.normalize("NFKC", text)
+    without_format_chars = "".join(ch for ch in normalized if unicodedata.category(ch) != "Cf")
+    return " ".join(without_format_chars.split())
+
+
+def _has_domain_context(text: str) -> bool:
+    return bool(_STRONG_DOMAIN.search(text)) or any(
+        all(pattern.search(text) for pattern in pair) for pair in CONTEXTUAL_DOMAIN_PAIRS
+    )
+
+
+def _is_general_coding(text: str) -> bool:
+    if _matches(CODING_ACTION_PATTERNS, text):
+        return True
+    return bool(PROGRAMMING_LANGUAGE.search(text)) and not _has_domain_context(text)
+
+
 def is_instruction_like(text: str) -> bool:
     """Used for both user questions and retrieved passages (indirect injection)."""
     return _matches(POLICY_PATTERNS, text)
@@ -136,7 +176,7 @@ def is_instruction_like(text: str) -> bool:
 
 class ScopeGuard:
     def evaluate(self, question: str) -> ScopeDecision:
-        text = " ".join(question.split())
+        text = _normalize(question)
         if is_instruction_like(text):
             return ScopeDecision(
                 "REFUSED_POLICY",
@@ -150,7 +190,7 @@ class ScopeGuard:
                 "Hermes tidak memberikan rekomendasi atau keputusan keuangan. Silakan merujuk "
                 "pada proses dan pejabat yang berwenang.",
             )
-        if _matches(CODING_PATTERNS, text):
+        if _is_general_coding(text):
             return ScopeDecision(
                 "REFUSED_GENERAL_CODING",
                 "general_coding",
@@ -163,7 +203,7 @@ class ScopeGuard:
                 "Hermes tidak menjalankan perubahan data. Permintaan dicatat sebagai usulan yang "
                 "memerlukan persetujuan manusia yang berwenang.",
             )
-        if not _DOMAIN.search(text):
+        if not _has_domain_context(text):
             return ScopeDecision(
                 "REFUSED_OUT_OF_SCOPE",
                 "out_of_domain",

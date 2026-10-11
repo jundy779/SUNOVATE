@@ -46,13 +46,13 @@ Nilai yang dipakai kode scaffold saat ini (`hermes/retrieval.py`, `hermes/gatewa
 | Kandidat | 20 | chunk terotorisasi teratas berdasarkan coverage term |
 | Coverage | term query yang cocok di judul + label bagian + isi, dibagi jumlah term query | |
 | Skor rerank | 0,6 x coverage + 0,4 x coverage isi saja | mencegah kecocokan judul saja dianggap bukti |
-| `MIN_COVERAGE` | 0,4 | minimum coverage chunk teratas |
+| `MIN_COVERAGE` | 0,6 | minimum coverage chunk teratas; dinaikkan 2026-10-11 setelah RAG-21 menemukan sumber umum yang tidak mendukung klaim spesifik |
 | Term cocok minimum | 2 (atau 1 bila query hanya satu term) | |
 | `MIN_SCORE` | 0,45 | minimum skor rerank chunk teratas dan chunk lain yang dipilih |
 | `RELATIVE_CUTOFF` | 0,6 | chunk lain harus >= 60 persen skor teratas |
 | `MAX_PASSAGES` | 3 | passage maksimum yang diberikan ke HermesClient |
 
-Kasus golden set RAG-16 (query yang hanya cocok dengan judul dan label "Langkah" dari SOP lain) memicu penambahan `MIN_SCORE`.
+Kasus golden set RAG-16 (query yang hanya cocok dengan judul dan label "Langkah" dari SOP lain) memicu penambahan `MIN_SCORE`. RAG-21 memicu kenaikan `MIN_COVERAGE` karena kecocokan istilah umum SUN, regulasi, dan ketentuan belum membuktikan klaim "otomatis menghapus seluruh ketentuan lama".
 
 ## Desain hybrid (PROPOSED)
 

@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased 2026-10-11 - Penguatan SAVI AI ScopeGuard
+
+### Diperbaiki
+
+- ScopeGuard menolak variasi permintaan kredensial, jailbreak bahasa Inggris, mode unrestricted, akses data tanpa izin, dan saran investasi yang lebih beragam.
+- Input dinormalisasi dengan NFKC dan karakter format Unicode dihapus agar variasi zero-width sederhana tidak melewati pola.
+- Write intent dipersempit ke bentuk perintah sehingga pertanyaan informasional yang memuat kata "menghapus" tidak membuat approval palsu.
+- Penyebutan bahasa pemrograman dalam konteks SUNOVATE tidak otomatis dianggap permintaan coding; dokumen umum seperti CV tidak dianggap domain SUN.
+- Golden set bertambah dari 16 menjadi 24 kasus dan unit test membuktikan pertanyaan tertolak tidak mencapai retrieval.
+- Ambang coverage retrieval dinaikkan dari 0,4 menjadi 0,6 setelah RAG-21 menemukan jawaban yang menyitir materi umum tetapi tidak mendukung klaim "otomatis menghapus seluruh ketentuan lama" (BUG-018).
+
 ## Unreleased 2026-10-11 - Status sumber indikator dashboard
 
 ### Ditambahkan

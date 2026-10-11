@@ -26,7 +26,7 @@ from .retrieval import LexicalReranker, RetrievalService, RetrievedChunk, exclud
 from .scope_guard import ScopeGuard
 from .text import terms
 
-MIN_COVERAGE = 0.4
+MIN_COVERAGE = 0.6
 MIN_SCORE = 0.45
 MAX_PASSAGES = 3
 RELATIVE_CUTOFF = 0.6

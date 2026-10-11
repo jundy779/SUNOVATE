@@ -1,7 +1,7 @@
 # RAG Evaluation
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-11
 
 ## Purpose
 
@@ -17,7 +17,7 @@ Menetapkan cara mengukur kualitas dan keamanan Hermes secara berulang: golden se
 
 - Lokasi: `tests/fixtures/rag_golden_set.json`.
 - Seluruh isi berlabel SIMULATED_DATA; tidak memuat dokumen, angka, atau nama pejabat asli.
-- **CONFIRMED (implementasi)** Struktur setiap kasus pada file saat ini (16 kasus, RAG-01 sampai RAG-16):
+- **CONFIRMED (implementasi)** Struktur setiap kasus pada file saat ini (24 kasus, RAG-01 sampai RAG-24):
 
 | Field | Keterangan |
 |---|---|
@@ -58,7 +58,8 @@ Seluruh ambang berstatus **PROPOSED** dan dikalibrasi ulang ketika semantic retr
 pnpm api:test
 ```
 
-- **CONFIRMED (implementasi)** `pnpm api:test` menjalankan suite pytest backend, termasuk `tests/rag-evaluation/test_rag_golden_set.py`. Gate yang ditegakkan test saat ini: leakage = 0, citation validity = 100 persen, dan akurasi decision = 100 persen pada 16 kasus (wajar untuk provider deterministik; perlu dilonggarkan dengan alasan tertulis bila LLM dipakai).
+- **CONFIRMED (implementasi)** `pnpm api:test` menjalankan suite pytest backend, termasuk `tests/rag-evaluation/test_rag_golden_set.py`. Gate yang ditegakkan test saat ini: leakage = 0, citation validity = 100 persen, dan akurasi decision = 100 persen pada 24 kasus (wajar untuk provider deterministik; perlu dilonggarkan dengan alasan tertulis bila LLM dipakai).
+- Kasus RAG-17 sampai RAG-24 menambah regresi untuk permintaan kredensial, jailbreak bahasa Inggris, keputusan investasi, dokumen umum di luar SUN, false positive kata "menghapus", penyebutan Python dalam konteks SUNOVATE, karakter zero-width, dan write intent majemuk.
 - Evaluasi memakai provider `development_extractive` dan simulated store, sehingga hasilnya deterministik dan tidak memerlukan jaringan.
 - **PROPOSED** Evaluasi wajib dijalankan pada setiap perubahan pada modul Hermes, aturan `ScopeGuard`, filter injeksi, prompt, chunking, atau dataset SIMULATED.
 

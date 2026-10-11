@@ -1,7 +1,7 @@
 # Scope Guard
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-11
 
 ## Purpose
 
@@ -28,6 +28,10 @@ Permintaan keputusan atau rekomendasi keuangan diperlakukan sebagai di luar caku
 ## Implementasi saat ini (IMPLEMENTED)
 
 - Berbasis aturan (heuristik pola kata dan frasa), deterministik, tanpa model eksternal.
+- Normalisasi NFKC dan penghapusan karakter format Unicode dilakukan sebelum evaluasi untuk menutup variasi zero-width sederhana.
+- Penyebutan bahasa pemrograman tidak otomatis ditolak bila pertanyaan memiliki konteks SUN/SUNOVATE; aksi membuat atau memperbaiki kode tetap `REFUSED_GENERAL_CODING`.
+- Write intent memakai pola perintah, bukan setiap kemunculan kata kerja. Pertanyaan informasional tentang regulasi yang "menghapus" ketentuan tidak otomatis dibuatkan approval.
+- Domain generik memerlukan pasangan konteks yang relevan; frasa seperti "review dokumen CV" tidak dianggap domain SUN hanya karena mengandung kata review dan dokumen.
 - Daftar pola berada di modul Hermes pada `apps/api`; dokumen ini tidak menyalin daftar tersebut agar tidak terjadi perbedaan antara dokumen dan kode.
 - Setiap keputusan dicatat di audit log bersama decision Hermes.
 
@@ -50,7 +54,7 @@ Urutan ini mendahulukan kategori yang paling berisiko. Urutan aktual di kode (`a
 
 ## Keterbatasan yang diketahui
 
-- **False positive.** Pertanyaan sah dapat tertolak karena memuat kata pemicu. Contoh: pertanyaan tentang SOP yang memuat kata "hapus" dapat terbaca sebagai write intent; pertanyaan tentang kode dokumen atau kode instrumen dapat terbaca sebagai general coding.
+- **False positive.** Pola deterministik masih dapat salah memahami kalimat kompleks. Regresi 2026-10-11 mengurangi false positive kata "menghapus" pada pertanyaan informasional dan penyebutan Python dalam konteks SUNOVATE.
 - **False negative.** Parafrase, ejaan tidak baku, campuran bahasa, atau instruksi yang dipecah dapat lolos dari pola.
 - **Tanpa konteks percakapan.** Penilaian per pertanyaan; upaya bertahap lintas pesan belum dideteksi.
 - **Domain SUN.** Pola domain bergantung pada kosakata; pertanyaan domain yang memakai istilah tidak umum dapat tertolak sebagai di luar cakupan.
