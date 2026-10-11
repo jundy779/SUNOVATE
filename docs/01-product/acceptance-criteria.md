@@ -226,7 +226,7 @@ Status terhadap kode saat ini: bagian `CONFIDENTIAL` lulus (AC-05; kasus golden 
 - **And** halaman menampilkan "sumber data belum tersedia" untuk kedua indikator
 - **And** tidak ada tabel bisnis SUN di skema (ADR-013).
 
-Status terhadap kode saat ini: bagian respons API dan skema lulus secara struktural (pengecekan manual 2026-10-06: field respons hanya `attention`, `metrics`, `recentKnowledge`, `referenceDate`, `scope`, `tasksByStatus`; skema 30 tabel tanpa tabel yield), belum ada uji otomatis. Teks "sumber data belum tersedia" belum ada di UI, sehingga bagian itu belum sesuai. Terkait: FR-54, US-39, R-15.
+Status terhadap kode saat ini: respons API dan skema tidak memuat angka atau tabel bisnis SUN. UI menampilkan kedua indikator dengan teks "Sumber data belum tersedia" sejak 2026-10-11; assertion ditambahkan ke smoke E2E. Terkait: FR-54, US-39, R-15.
 
 ## AC-23 Telegram dan WhatsApp tidak aktif
 

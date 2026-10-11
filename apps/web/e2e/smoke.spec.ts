@@ -10,6 +10,9 @@ test("staff logs in, sees scoped dashboard, and asks SAVI AI", async ({ page }) 
 
   await expect(page.getByRole("heading", { name: "Ringkasan kerja", exact: true })).toBeVisible();
   await expect(page.getByText("SIMULATED_DATA").first()).toBeVisible();
+  await expect(page.getByText("Yield SUN", { exact: true })).toBeVisible();
+  await expect(page.getByText("Kepemilikan SBN", { exact: true })).toBeVisible();
+  await expect(page.getByText("Sumber data belum tersedia")).toHaveCount(2);
   await expect(page.getByRole("link", { name: "Administrasi" })).toHaveCount(0);
 
   await page.getByRole("link", { name: "SAVI AI" }).click();

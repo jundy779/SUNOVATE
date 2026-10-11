@@ -59,6 +59,20 @@ export default async function DashboardPage() {
         ))}
       </section>
 
+      <section className="dashboard-source-status" aria-labelledby="source-status-title">
+        <div className="dashboard-source-heading">
+          <UiIcon name="chart" />
+          <div>
+            <h2 id="source-status-title">Indikator data SUN</h2>
+            <p>Nilai tidak ditampilkan sebelum sumber, definisi, dan hak akses disetujui.</p>
+          </div>
+        </div>
+        <dl>
+          <div><dt>Yield SUN</dt><dd>Sumber data belum tersedia</dd></div>
+          <div><dt>Kepemilikan SBN</dt><dd>Sumber data belum tersedia</dd></div>
+        </dl>
+      </section>
+
       <div className="dashboard-primary-grid">
         <Panel title="Perlu perhatian" action={<Link href="/work-monitoring">Lihat semua</Link>}>
           {data.attention.length ? (

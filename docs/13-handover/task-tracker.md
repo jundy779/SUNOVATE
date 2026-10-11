@@ -22,7 +22,7 @@ Menjadi sumber status pekerjaan lintas sesi dan lintas AI agent. Setiap perubaha
 | ID | Task | Fase | Status | Gate / bukti |
 |---|---|---|---|---|
 | TASK-001 | Landing page, login simulasi, shell aplikasi, dan dashboard institusional | MVP | DONE | Implementasi web; data tetap `SIMULATED_DATA`. |
-| TASK-002 | Dashboard berkonteks Dit. SUN tanpa angka bisnis yang tidak tervalidasi | MVP | DONE | Commit remote `53f9bd4`; yield dan kepemilikan SBN tetap diblokir OQ-21. |
+| TASK-002 | Dashboard berkonteks Dit. SUN tanpa angka bisnis yang tidak tervalidasi | MVP | DONE | Commit remote `53f9bd4`; sejak 2026-10-11 UI menampilkan Yield SUN dan Kepemilikan SBN sebagai "Sumber data belum tersedia". Angka tetap diblokir OQ-21. |
 | TASK-003 | Fondasi FastAPI, Repository, PostgreSQL, pgvector, Alembic, RBAC, dan audit | MVP | DONE | ADR-002, ADR-003, ADR-015; mode simulated tetap default. |
 | TASK-004 | Monitoring kerja: pembacaan output, tugas, milestone, pending matter, follow-up | MVP | DONE | Endpoint dan halaman baca tersedia. |
 | TASK-005 | CRUD lengkap monitoring kerja dan alur persetujuan | MVP | IN PROGRESS | CRUD API/UI, scope, revision, soft delete, audit, dan test selesai 2026-10-10. Approval tetap NEEDS APPROVAL karena OQ-12/OQ-25. |

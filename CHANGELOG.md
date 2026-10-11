@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased 2026-10-11 - Status sumber indikator dashboard
+
+### Ditambahkan
+
+- Dashboard menampilkan Yield SUN dan Kepemilikan SBN sebagai indikator terkunci dengan keterangan "Sumber data belum tersedia".
+- Tidak ada angka simulasi atau tabel bisnis baru; sumber, definisi, dan hak akses tetap menunggu OQ-21.
+- Smoke E2E memeriksa kedua label dan dua status sumber data.
+
 ## Unreleased 2026-10-11 - Specification-ready Draft Workspace
 
 ### Dokumentasi

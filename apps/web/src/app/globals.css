@@ -271,6 +271,16 @@ tbody tr:hover { background: var(--paper); }
 .metric-icon svg { width: 28px; height: 28px; }
 .metric-icon-gold { background: rgb(201 162 39 / 13%); color: var(--gold); }
 .metric-icon-success { background: rgb(46 139 87 / 12%); color: var(--success); }
+.dashboard-source-status { display: grid; grid-template-columns: minmax(280px, .9fr) minmax(420px, 1.1fr); align-items: stretch; margin-top: 1rem; border: 1px solid var(--line); border-left: 4px solid var(--gold); background: var(--white); }
+.dashboard-source-heading { display: grid; grid-template-columns: 32px minmax(0, 1fr); align-items: center; gap: .8rem; padding: .85rem 1rem; }
+.dashboard-source-heading > svg { width: 24px; height: 24px; color: var(--navy); }
+.dashboard-source-heading h2 { margin: 0 0 .2rem; color: var(--navy); font-size: .9rem; }
+.dashboard-source-heading p { margin: 0; color: var(--muted); font-size: .68rem; line-height: 1.45; }
+.dashboard-source-status dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; border-left: 1px solid var(--line); }
+.dashboard-source-status dl > div { display: grid; align-content: center; gap: .2rem; min-width: 0; padding: .8rem 1rem; border-right: 1px solid var(--line); }
+.dashboard-source-status dl > div:last-child { border-right: 0; }
+.dashboard-source-status dt { color: var(--navy); font-size: .7rem; font-weight: 700; }
+.dashboard-source-status dd { margin: 0; color: var(--muted); font-size: .68rem; }
 .dashboard-primary-grid, .dashboard-secondary-grid { display: grid; gap: 1rem; margin-top: 1rem; align-items: stretch; }
 .dashboard-primary-grid { grid-template-columns: minmax(0, 1.75fr) minmax(330px, 1fr); }
 .dashboard-secondary-grid { grid-template-columns: minmax(0, 1.28fr) minmax(390px, .92fr); }
@@ -413,6 +423,8 @@ code { font-size: .8rem; background: var(--paper); padding: 0 .25rem; }
   .dashboard-governance { grid-template-columns: 1fr; }
   .dashboard-governance > div { border-right: 0; border-bottom: 1px solid var(--line); }
   .dashboard-governance > div:last-child { border-bottom: 0; }
+  .dashboard-source-status { grid-template-columns: 1fr; }
+  .dashboard-source-status dl { border-top: 1px solid var(--line); border-left: 0; }
 }
 
 @media (max-width: 560px) {
@@ -433,6 +445,9 @@ code { font-size: .8rem; background: var(--paper); padding: 0 .25rem; }
   .dashboard-metrics { grid-template-columns: 1fr; }
   .dashboard-metric { border-right: 0; border-bottom: 1px solid var(--line); }
   .dashboard-metric:last-child { border-bottom: 0; }
+  .dashboard-source-status dl { grid-template-columns: 1fr; }
+  .dashboard-source-status dl > div { border-right: 0; border-bottom: 1px solid var(--line); }
+  .dashboard-source-status dl > div:last-child { border-bottom: 0; }
   .quality-row { grid-template-columns: 28px minmax(0, 1fr) auto; gap: .65rem; padding: .65rem 0; }
   .quality-progress { grid-column: 2 / -1; width: 100%; }
   .quality-value { grid-column: 2; }
