@@ -10,7 +10,16 @@ import json
 from pathlib import Path
 from typing import Any
 
-INTAKE = Path(__file__).resolve().parents[1] / "fixtures" / "sme_question_intake.json"
+from sunovate_api.hermes.intake import load_sme_question_intake
+
+INTAKE = (
+    Path(__file__).resolve().parents[2]
+    / "apps"
+    / "api"
+    / "sunovate_api"
+    / "resources"
+    / "sme_question_intake.json"
+)
 GOLDEN = Path(__file__).resolve().parents[1] / "fixtures" / "rag_golden_set.json"
 
 ALLOWED_STATUSES = {
@@ -32,6 +41,7 @@ def test_sme_intake_is_explicitly_excluded_from_runtime() -> None:
     assert intake["dataLabel"] == "MENTOR_PROVIDED_DRAFT"
     assert intake["activationStatus"] == "EXCLUDED_FROM_RUNTIME"
     assert len(intake["cases"]) == 8
+    assert len(load_sme_question_intake().cases) == 8
 
 
 def test_sme_intake_has_review_evidence_and_no_active_cases() -> None:

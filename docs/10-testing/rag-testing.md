@@ -103,7 +103,7 @@ Prosedur ini **PROPOSED** dan tidak berlaku sekarang. Sampai semua syarat terpen
 ## Intake Pertanyaan Mentor/SME
 
 - **CONFIRMED (arahan mentor diteruskan project lead, 2026-10-13):** delapan pertanyaan operasional diterima sebagai bahan validasi SAVI.
-- Pertanyaan disimpan terpisah di `tests/fixtures/sme_question_intake.json`, berlabel `MENTOR_PROVIDED_DRAFT`, dan diblokir dari runtime.
+- Pertanyaan disimpan terpisah di `apps/api/sunovate_api/resources/sme_question_intake.json`, berlabel `MENTOR_PROVIDED_DRAFT`, dan diblokir dari retrieval/jawaban SAVI.
 - Pertanyaan belum menjadi golden case karena sebagian rujukan pasal perlu revisi dan langkah operasional belum disertai SOP atau checklist yang disahkan.
 - Test struktural mencegah kasus intake muncul diam-diam dalam golden set aktif.
 - Alur status, temuan per kasus, dan gerbang promosi dijelaskan di [sme-question-validation.md](sme-question-validation.md). OQ-36 tetap terbuka.

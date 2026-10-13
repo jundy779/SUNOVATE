@@ -386,6 +386,20 @@ code { font-size: .8rem; background: var(--paper); padding: 0 .25rem; }
 .row-actions button { padding: 0; border: 0; background: transparent; color: var(--navy); font: inherit; font-size: .68rem; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 .row-actions .danger-link { color: var(--risk); }
 .work-policy-note { margin: 0; color: var(--muted); font-size: .7rem; line-height: 1.55; }
+.validation-list { display: grid; }
+.validation-item { padding: 1.25rem; border-bottom: 1px solid var(--line); }
+.validation-item:last-child { border-bottom: 0; }
+.validation-item > header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.validation-id { color: var(--navy); font-size: .72rem; font-weight: 800; letter-spacing: .06em; }
+.validation-item h3 { margin: .75rem 0 1rem; color: var(--navy); font-size: 1rem; line-height: 1.45; }
+.validation-item h4 { margin: 0 0 .45rem; color: var(--navy); font-size: .76rem; letter-spacing: .035em; text-transform: uppercase; }
+.validation-item p, .validation-item li { color: var(--muted); font-size: .82rem; line-height: 1.65; }
+.validation-item p, .validation-item ul { margin: 0; }
+.validation-item ul { padding-left: 1.15rem; }
+.validation-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 1.5rem; }
+.validation-grid section { min-width: 0; }
+.validation-grid h4:not(:first-child) { margin-top: 1rem; }
+.validation-notes { margin-top: 1rem; border-left: 3px solid var(--gold); background: var(--paper); padding: .8rem 1rem; }
 
 @media (max-width: 1200px) {
   .dashboard-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -420,6 +434,7 @@ code { font-size: .8rem; background: var(--paper); padding: 0 .25rem; }
   .metric:nth-child(2) { border-right: 0; }
   .metric:nth-child(-n + 2) { border-bottom: 1px solid var(--line); }
   .two-column { grid-template-columns: 1fr; }
+  .validation-grid { grid-template-columns: 1fr; }
   .dashboard-governance { grid-template-columns: 1fr; }
   .dashboard-governance > div { border-right: 0; border-bottom: 1px solid var(--line); }
   .dashboard-governance > div:last-child { border-bottom: 0; }

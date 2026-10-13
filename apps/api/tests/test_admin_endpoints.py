@@ -37,6 +37,22 @@ def test_providers_report_no_production_integration() -> None:
     assert not any(p["productionReady"] for p in body["data"])
 
 
+def test_sme_question_intake_requires_review_and_all_team_scope() -> None:
+    client = make_client()
+    path = f"{API}/hermes/sme-question-intake"
+
+    assert client.get(path, headers=login(client, "sim.staff.pppsun")).status_code == 403
+    assert client.get(path, headers=login(client, "sim.reviewer.akpsun")).status_code == 403
+    assert client.get(path, headers=login(client, "sim.admin")).status_code == 403
+
+    body = client.get(path, headers=login(client, "sim.coordinator")).json()
+    assert body["meta"]["dataLabel"] == "MENTOR_PROVIDED_DRAFT"
+    assert body["meta"]["runtimeEligibility"] == "BLOCKED"
+    assert body["data"]["activationStatus"] == "EXCLUDED_FROM_RUNTIME"
+    assert len(body["data"]["cases"]) == 8
+    assert all(case["runtimeEligibility"] == "BLOCKED" for case in body["data"]["cases"])
+
+
 def test_data_quality_and_classifications() -> None:
     client = make_client()
     issues = client.get(f"{API}/data-quality-issues",

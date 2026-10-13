@@ -10,10 +10,11 @@ Mengatur penerimaan pertanyaan nyata dari mentor atau SME sebelum dipakai sebaga
 ## Register Saat Ini
 
 - **CONFIRMED (arahan mentor diteruskan project lead, 2026-10-13):** delapan pertanyaan operasional SUN diterima untuk bahan pengembangan dan pengujian.
-- Register berada di `tests/fixtures/sme_question_intake.json` dengan label `MENTOR_PROVIDED_DRAFT`.
-- Seluruh kasus `BLOCKED` untuk runtime dan tidak dibaca `HermesGateway`.
+- Register berada di `apps/api/sunovate_api/resources/sme_question_intake.json` dengan label `MENTOR_PROVIDED_DRAFT`.
+- Seluruh kasus `BLOCKED` dari retrieval dan jawaban SAVI. Endpoint baca khusus reviewer tidak terhubung ke `HermesGateway`.
 - Golden set aktif tetap di `tests/fixtures/rag_golden_set.json` dan hanya memakai `SIMULATED_DATA`.
 - Test `tests/rag-evaluation/test_sme_question_intake.py` mencegah promosi tanpa sengaja ke golden set aktif.
+- **CONFIRMED (implementasi, 2026-10-13):** halaman `/savi-validation` dan endpoint baca `/api/v1/hermes/sme-question-intake` tersedia untuk pengguna yang memiliki `knowledge:review` serta `scope:all_teams`. Tidak ada aksi setujui, revisi, tolak, atau aktivasi.
 
 ## Status Validasi
 

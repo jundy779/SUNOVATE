@@ -12,6 +12,13 @@ describe("visibleNavItems", () => {
   it("shows administration for auditors", () => {
     expect(visibleNavItems(["audit:read"]).map((i) => i.href)).toEqual(["/admin"]);
   });
+
+  it("shows SAVI validation only to the publication role", () => {
+    expect(visibleNavItems(["knowledge:review"]).map((i) => i.href)).toEqual([]);
+    expect(visibleNavItems(["knowledge:publish"]).map((i) => i.href)).toEqual([
+      "/savi-validation",
+    ]);
+  });
 });
 
 describe("contracts", () => {

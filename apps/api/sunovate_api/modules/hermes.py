@@ -12,6 +12,7 @@ from ..authz.dependencies import Ctx, require
 from ..authz.principal import Principal
 from ..core.errors import not_found
 from ..core.responses import ApiModel, envelope
+from ..hermes.intake import load_sme_question_intake
 from ..store.records import AiFeedback
 
 router = APIRouter(prefix="/hermes", tags=["Hermes gateway"])
@@ -25,6 +26,22 @@ class HermesQuery(ApiModel):
 class FeedbackRequest(ApiModel):
     rating: Literal["HELPFUL", "NOT_HELPFUL"]
     comment: str | None = Field(default=None, max_length=1000)
+
+
+@router.get("/sme-question-intake")
+def get_sme_question_intake(
+    _principal: Annotated[
+        Principal,
+        Depends(require("knowledge:review", "scope:all_teams", resource="sme_question_intake")),
+    ],
+) -> dict[str, Any]:
+    """Return review-only questions; never feed retrieval or answer generation."""
+    intake = load_sme_question_intake()
+    return envelope(
+        intake.model_dump(by_alias=True),
+        dataLabel=intake.data_label,
+        runtimeEligibility="BLOCKED",
+    )
 
 
 @router.post("/query")

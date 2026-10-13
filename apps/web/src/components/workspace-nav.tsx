@@ -11,6 +11,7 @@ const icons: Record<string, IconName> = {
   "/search": "search",
   "/work-monitoring": "chart",
   "/savi-ai": "chat",
+  "/savi-validation": "shield",
   "/admin": "settings",
 };
 
@@ -32,3 +33,4 @@ export function WorkspaceNav({ permissions }: { permissions: readonly string[] }
     </nav>
   );
 }
+

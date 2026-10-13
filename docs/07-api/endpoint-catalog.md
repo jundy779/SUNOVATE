@@ -1,7 +1,7 @@
 # Endpoint Catalog
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-10
+**Last Updated:** 2026-10-13
 
 ## Purpose
 Daftar seluruh endpoint `/api/v1` yang diimplementasikan (scaffold, data dari backend `DATA_BACKEND`: `simulated` default atau `postgres`; kontrak identik pada keduanya, ADR-015). Sumber: `apps/api/sunovate_api/modules/`. OpenAPI hidup: `http://localhost:8000/docs`.
@@ -50,6 +50,7 @@ Daftar seluruh endpoint `/api/v1` yang diimplementasikan (scaffold, data dari ba
 | POST | `/approvals/{id}/decision` | `approval:decide` (+ `knowledge:publish` untuk APPROVE publikasi) | body `{decision, revision, reason}` |
 | POST | `/hermes/query` | `hermes:query` + `search:query` | body `{question, conversationId?}` |
 | POST | `/hermes/messages/{id}/feedback` | `hermes:feedback` | hanya pesan milik sendiri |
+| GET | `/hermes/sme-question-intake` | `knowledge:review` + `scope:all_teams` | register mentor/SME read-only; `MENTOR_PROVIDED_DRAFT`; diblokir dari retrieval/jawaban SAVI |
 | GET | `/providers` | `provider:read` | status provider; semua non-produksi |
 | GET | `/data-quality-issues` | `data_quality:read` | |
 
