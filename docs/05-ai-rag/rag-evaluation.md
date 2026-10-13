@@ -1,7 +1,7 @@
 # RAG Evaluation
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-11
+**Last Updated:** 2026-10-13
 
 ## Purpose
 
@@ -62,6 +62,7 @@ pnpm api:test
 - Kasus RAG-17 sampai RAG-24 menambah regresi untuk permintaan kredensial, jailbreak bahasa Inggris, keputusan investasi, dokumen umum di luar SUN, false positive kata "menghapus", penyebutan Python dalam konteks SUNOVATE, karakter zero-width, dan write intent majemuk.
 - Evaluasi memakai provider `development_extractive` dan simulated store, sehingga hasilnya deterministik dan tidak memerlukan jaringan.
 - **PROPOSED** Evaluasi wajib dijalankan pada setiap perubahan pada modul Hermes, aturan `ScopeGuard`, filter injeksi, prompt, chunking, atau dataset SIMULATED.
+- Delapan pertanyaan mentor tanggal 2026-10-13 belum termasuk 24 kasus aktif. Pertanyaan berada pada register intake terpisah dan seluruhnya `BLOCKED` sampai validasi SME atau hukum, SOP, klasifikasi, serta sumber retrieval lengkap (lihat [sme-question-validation.md](../10-testing/sme-question-validation.md)).
 
 ## Review manual faithfulness (PROPOSED)
 

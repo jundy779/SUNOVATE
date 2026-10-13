@@ -1,7 +1,7 @@
 # Dokumentasi SUNOVATE
 
 **Status:** DRAFT
-**Last Updated:** 2026-10-11
+**Last Updated:** 2026-10-13
 
 ## Purpose
 
@@ -53,7 +53,7 @@ Setiap pernyataan penting diberi salah satu label berikut.
 | `07-api` | Konvensi API, format error, alur autentikasi, katalog endpoint, kebijakan webhook, OpenAPI. | [api-overview](07-api/api-overview.md), [api-conventions](07-api/api-conventions.md), [error-format](07-api/error-format.md), [authentication-flow](07-api/authentication-flow.md), [endpoint-catalog](07-api/endpoint-catalog.md), [webhook-policy](07-api/webhook-policy.md), [openapi-guidelines](07-api/openapi-guidelines.md) |
 | `08-integrations` | Usulan integrasi fase lanjutan dan daftar kesiapan. Semua masih usulan. | [integration-overview](08-integrations/integration-overview.md), [sharepoint-proposal](08-integrations/sharepoint-proposal.md), [identity-provider-proposal](08-integrations/identity-provider-proposal.md), [power-bi-proposal](08-integrations/power-bi-proposal.md), [telegram-proposal](08-integrations/telegram-proposal.md), [whatsapp-proposal](08-integrations/whatsapp-proposal.md), [market-data-proposal](08-integrations/market-data-proposal.md), [integration-readiness-checklist](08-integrations/integration-readiness-checklist.md) |
 | `09-ui-ux` | Arsitektur informasi, navigasi, dashboard, design system, aksesibilitas, responsif. | [information-architecture](09-ui-ux/information-architecture.md), [navigation](09-ui-ux/navigation.md), [dashboard-requirements](09-ui-ux/dashboard-requirements.md), [design-system](09-ui-ux/design-system.md), [accessibility](09-ui-ux/accessibility.md), [responsive-design](09-ui-ux/responsive-design.md), [prototype-notes](09-ui-ux/prototype-notes.md) |
-| `10-testing` | Strategi dan jenis pengujian, UAT, tingkat keparahan bug, register bug. | [test-strategy](10-testing/test-strategy.md), [test-pyramid](10-testing/test-pyramid.md), [frontend-testing](10-testing/frontend-testing.md), [backend-testing](10-testing/backend-testing.md), [integration-testing](10-testing/integration-testing.md), [security-testing](10-testing/security-testing.md), [rag-testing](10-testing/rag-testing.md), [uat-plan](10-testing/uat-plan.md), [bug-severity](10-testing/bug-severity.md), [bug-register](10-testing/bug-register.md) |
+| `10-testing` | Strategi dan jenis pengujian, UAT, tingkat keparahan bug, register bug. | [test-strategy](10-testing/test-strategy.md), [test-pyramid](10-testing/test-pyramid.md), [frontend-testing](10-testing/frontend-testing.md), [backend-testing](10-testing/backend-testing.md), [integration-testing](10-testing/integration-testing.md), [security-testing](10-testing/security-testing.md), [rag-testing](10-testing/rag-testing.md), [sme-question-validation](10-testing/sme-question-validation.md), [uat-plan](10-testing/uat-plan.md), [bug-severity](10-testing/bug-severity.md), [bug-register](10-testing/bug-register.md) |
 | `11-operations` | Pengembangan lokal, konfigurasi, migrasi, backup, observability, deployment, troubleshooting. | [local-development](11-operations/local-development.md), [environment-configuration](11-operations/environment-configuration.md), [migration-guide](11-operations/migration-guide.md), [backup-and-restore](11-operations/backup-and-restore.md), [observability](11-operations/observability.md), [deployment-runbook](11-operations/deployment-runbook.md), [troubleshooting](11-operations/troubleshooting.md) |
 | `12-governance` | Tata kelola knowledge, kepemilikan dokumen, review, perubahan, risiko, log keputusan. | [knowledge-governance](12-governance/knowledge-governance.md), [document-ownership](12-governance/document-ownership.md), [review-and-approval](12-governance/review-and-approval.md), [change-management](12-governance/change-management.md), [risk-register](12-governance/risk-register.md), [decision-log](12-governance/decision-log.md) |
 | `13-handover` | Serah terima pengembang dan AI agent, tracker, panduan pengguna, keterbatasan, pengembangan lanjutan. | [ai-agent-handoff](13-handover/ai-agent-handoff.md), [task-tracker](13-handover/task-tracker.md), [developer-handover](13-handover/developer-handover.md), [administrator-guide](13-handover/administrator-guide.md), [user-guide-outline](13-handover/user-guide-outline.md), [known-limitations](13-handover/known-limitations.md), [future-development](13-handover/future-development.md) |
@@ -83,4 +83,4 @@ Folder `docs/_archive/legacy-docs-v0/` berisi draf dokumentasi dari sesi sebelum
 
 ## Last Updated
 
-2026-10-11
+2026-10-13

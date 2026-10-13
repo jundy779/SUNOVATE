@@ -1,0 +1,123 @@
+{
+  "dataLabel": "MENTOR_PROVIDED_DRAFT",
+  "source": "Arahan mentor yang diteruskan project lead pada 2026-10-13",
+  "purpose": "Register intake pertanyaan nyata untuk validasi SME. File ini tidak dibaca oleh runtime SAVI dan bukan golden set aktif.",
+  "activationStatus": "EXCLUDED_FROM_RUNTIME",
+  "cases": [
+    {
+      "id": "SME-001",
+      "question": "Apa yang harus dilakukan jika data hasil lelang SUN berbeda antara sistem dan lembar validasi?",
+      "draftAnswer": "Perbedaan nominal penawaran atau hasil lelang tidak boleh langsung dianggap benar. Data sumber, nominal, dan identitas penawaran perlu diperiksa dan direkonsiliasi; hasilnya dikonfirmasi kepada pegawai berwenang, didokumentasikan, dan dikoreksi hanya melalui SOP serta kewenangan yang berlaku.",
+      "suppliedReferences": ["PMK Nomor 111 Tahun 2024 Pasal 12"],
+      "validationNotes": [
+        "Pasal 12 tidak sesuai dengan klaim penetapan hasil lelang karena mengatur penerbitan SUN di Pasar Perdana dan penerbitan SUN tematik.",
+        "Langkah rekonsiliasi dan koreksi memerlukan SOP internal serta matriks kewenangan yang disahkan."
+      ],
+      "validationStatus": "NEEDS_REVISION",
+      "runtimeEligibility": "BLOCKED"
+    },
+    {
+      "id": "SME-002",
+      "question": "Bagaimana jika ditemukan kesalahan data setelah proses lock atau penguncian data?",
+      "draftAnswer": "Kesalahan input setelah penguncian perlu dicatat, dilengkapi bukti sebelum koreksi, dilaporkan kepada atasan atau pengelola sistem, lalu diajukan melalui mekanisme koreksi resmi. Dokumentasi persetujuan dan hasil koreksi perlu dipertahankan sesuai ketentuan retensi dan audit yang berlaku.",
+      "suppliedReferences": ["PMK Nomor 111 Tahun 2024", "SOP internal belum dilampirkan"],
+      "validationNotes": [
+        "PMK Nomor 111 Tahun 2024 hanya menjadi dasar umum dan belum membuktikan mekanisme pembukaan lock pada sistem tertentu.",
+        "Nama sistem, pemilik proses, approval chain, SOP koreksi, retensi bukti, dan kewenangan pengubah wajib dikonfirmasi."
+      ],
+      "validationStatus": "PENDING_SME_VALIDATION",
+      "runtimeEligibility": "BLOCKED"
+    },
+    {
+      "id": "SME-003",
+      "question": "Apakah seluruh penawaran dengan yield tertentu harus diterima dalam lelang SUN?",
+      "draftAnswer": "Tidak semua penawaran harus diterima. Penentuan alokasi dan hasil transaksi merupakan kewenangan pejabat yang ditetapkan dalam peraturan dengan mempertimbangkan kondisi pasar keuangan, target pembiayaan, acuan harga atau yield, serta bahan pendukung yang berwenang. SAVI tidak boleh menggantikan keputusan pejabat atau memberikan rekomendasi investasi.",
+      "suppliedReferences": ["PMK Nomor 111 Tahun 2024 Pasal 12 ayat (1) sampai ayat (3)"],
+      "candidateReferences": [
+        "PMK Nomor 111 Tahun 2024 Pasal 14 ayat (3)",
+        "PMK Nomor 111 Tahun 2024 Pasal 17",
+        "PMK Nomor 111 Tahun 2024 Pasal 18"
+      ],
+      "validationNotes": [
+        "Pasal 12 yang diberikan tidak sesuai; kandidat Pasal 14, Pasal 17, dan Pasal 18 harus disahkan reviewer substansi atau hukum.",
+        "Setiap faktor pertimbangan pada jawaban awal perlu dipetakan ke sumber yang benar."
+      ],
+      "validationStatus": "NEEDS_REVISION",
+      "runtimeEligibility": "BLOCKED"
+    },
+    {
+      "id": "SME-004",
+      "question": "Apa yang harus dilakukan jika Terms and Conditions (T&C) tidak sesuai dengan data transaksi?",
+      "draftAnswer": "Perbedaan pada Terms and Conditions dan data transaksi perlu diidentifikasi, dicocokkan dengan dokumen serta data sumber yang disahkan, dikoordinasikan kepada unit berwenang, dan diselesaikan melalui persetujuan resmi sebelum dokumen final digunakan.",
+      "suppliedReferences": ["Undang-Undang Nomor 24 Tahun 2002 Pasal 11"],
+      "candidateReferences": ["PMK Nomor 111 Tahun 2024 Pasal 13 ayat (3)"],
+      "validationNotes": [
+        "Pasal 11 UU Nomor 24 Tahun 2002 mendukung unsur minimum pada SUN, tetapi tidak memuat prosedur koreksi internal.",
+        "Pasal 13 ayat (3) PMK Nomor 111 Tahun 2024 lebih spesifik untuk struktur, ketentuan, dan persyaratan SUN; SOP penanganan selisih tetap diperlukan."
+      ],
+      "validationStatus": "PENDING_SME_VALIDATION",
+      "runtimeEligibility": "BLOCKED"
+    },
+    {
+      "id": "SME-005",
+      "question": "Apa yang perlu diperiksa sebelum penyelesaian transaksi (settlement) SUN?",
+      "draftAnswer": "Sebelum setelmen, data hasil transaksi, jumlah kewajiban, jadwal, pihak terkait, dan bukti konfirmasi perlu diperiksa sesuai ketentuan Bank Indonesia serta checklist resmi yang berlaku. Hasil pemeriksaan dan kendala perlu didokumentasikan tanpa mengubah data transaksi di luar kewenangan.",
+      "suppliedReferences": [
+        "PMK Nomor 111 Tahun 2024 Pasal 1 angka 8",
+        "PMK Nomor 111 Tahun 2024 Pasal 24"
+      ],
+      "candidateReferences": ["PMK Nomor 111 Tahun 2024 Pasal 18 ayat (4) sampai ayat (6)"],
+      "validationNotes": [
+        "Rujukan Pasal 24 yang diberikan perlu diperiksa ulang.",
+        "Daftar pemeriksaan operasional harus berasal dari ketentuan BI dan SOP atau checklist internal yang berlaku, bukan disimpulkan oleh SAVI."
+      ],
+      "validationStatus": "NEEDS_REVISION",
+      "runtimeEligibility": "BLOCKED"
+    },
+    {
+      "id": "SME-006",
+      "question": "Bagaimana jika Dealer Utama tidak memenuhi kewajiban pembayaran pada saat setelmen?",
+      "draftAnswer": "Status pembayaran dan kewajiban yang belum dipenuhi perlu dikonfirmasi dan didokumentasikan, kemudian dilaporkan kepada unit atau pejabat berwenang. Tindak lanjut dan sanksi tidak boleh ditetapkan secara otomatis oleh SAVI tanpa verifikasi kondisi serta dasar hukum yang berlaku.",
+      "suppliedReferences": [
+        "PMK Nomor 111 Tahun 2024 Pasal 23 ayat (1) sampai ayat (3)",
+        "PMK Nomor 111 Tahun 2024 Pasal 24"
+      ],
+      "validationNotes": [
+        "Kesesuaian Pasal 23 dan Pasal 24 dengan kegagalan setelmen Dealer Utama belum tervalidasi.",
+        "Ketentuan BI, aturan Dealer Utama yang masih berlaku, kondisi pemicu, kewenangan, dan jenis tindak lanjut wajib diverifikasi sebelum jawaban diaktifkan."
+      ],
+      "validationStatus": "PENDING_LEGAL_VALIDATION",
+      "runtimeEligibility": "BLOCKED"
+    },
+    {
+      "id": "SME-007",
+      "question": "Apa yang dapat dilakukan jika target lelang SUN belum tercapai?",
+      "draftAnswer": "Hasil lelang utama perlu dievaluasi terlebih dahulu. Lelang tambahan hanya dapat dipertimbangkan apabila dasar hukum, kriteria, rencana, dan kewenangan penetapannya terpenuhi. SAVI tidak boleh menyatakan lelang tambahan otomatis dilakukan hanya karena target belum tercapai.",
+      "suppliedReferences": [
+        "PMK Nomor 111 Tahun 2024 Pasal 14 huruf a sampai huruf b",
+        "PMK Nomor 111 Tahun 2024 Pasal 17 ayat (1) sampai ayat (3)"
+      ],
+      "validationNotes": [
+        "Pasal 14 mengatur metode penjualan dan Pasal 17 mengatur acuan harga atau yield; keduanya belum membuktikan prosedur lengkap lelang tambahan sebagaimana jawaban awal.",
+        "Ketentuan lelang yang masih berlaku dan SOP internal perlu ditentukan reviewer substansi atau hukum."
+      ],
+      "validationStatus": "NEEDS_REVISION",
+      "runtimeEligibility": "BLOCKED"
+    },
+    {
+      "id": "SME-008",
+      "question": "Bagaimana jika data investor SUN ritel berbeda antara Mitra Distribusi dan catatan kepemilikan?",
+      "draftAnswer": "Perbedaan data investor dan catatan kepemilikan perlu ditelusuri berdasarkan bukti transaksi, direkonsiliasi melalui pihak yang berwenang, dan dikoreksi hanya melalui prosedur resmi. Identitas maupun catatan kepemilikan tidak boleh diubah secara langsung oleh SAVI.",
+      "suppliedReferences": [
+        "Undang-Undang Nomor 24 Tahun 2002 Pasal 12 ayat (1)",
+        "Peraturan Pemerintah Nomor 76 Tahun 2005"
+      ],
+      "validationNotes": [
+        "Pasal 12 ayat (1) mendukung peran Bank Indonesia dalam pencatatan kepemilikan, kliring, dan setelmen, tetapi tidak menetapkan alur rinci rekonsiliasi data investor ritel.",
+        "Hubungan operasional Mitra Distribusi, pihak penatausahaan, bukti yang sah, kanal eskalasi, dan SOP koreksi harus dikonfirmasi."
+      ],
+      "validationStatus": "PENDING_SME_VALIDATION",
+      "runtimeEligibility": "BLOCKED"
+    }
+  ]
+}

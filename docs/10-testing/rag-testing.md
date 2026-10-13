@@ -2,7 +2,7 @@
 
 **Status:** PROPOSED
 
-**Last Updated:** 2026-10-06
+**Last Updated:** 2026-10-13
 
 ## Purpose
 
@@ -99,6 +99,14 @@ Prosedur ini **PROPOSED** dan tidak berlaku sekarang. Sampai semua syarat terpen
 4. Hasil uji dicatat tanpa isi dokumen: hanya id kasus, keputusan Hermes, jumlah sitasi, dan ada atau tidaknya kebocoran. Jawaban yang dihasilkan tidak disalin ke register bug atau CHANGELOG.
 5. Setelah uji, data asli di lingkungan uji dihapus sesuai kebijakan retensi yang berlaku (OQ-13) dan penghapusan dicatat.
 6. Kebocoran, bagaimanapun kecilnya, diproses sebagai P0 dan insiden ([incident-response.md](../06-security/incident-response.md)).
+
+## Intake Pertanyaan Mentor/SME
+
+- **CONFIRMED (arahan mentor diteruskan project lead, 2026-10-13):** delapan pertanyaan operasional diterima sebagai bahan validasi SAVI.
+- Pertanyaan disimpan terpisah di `tests/fixtures/sme_question_intake.json`, berlabel `MENTOR_PROVIDED_DRAFT`, dan diblokir dari runtime.
+- Pertanyaan belum menjadi golden case karena sebagian rujukan pasal perlu revisi dan langkah operasional belum disertai SOP atau checklist yang disahkan.
+- Test struktural mencegah kasus intake muncul diam-diam dalam golden set aktif.
+- Alur status, temuan per kasus, dan gerbang promosi dijelaskan di [sme-question-validation.md](sme-question-validation.md). OQ-36 tetap terbuka.
 
 ## Batasan Evaluasi Saat Ini
 
