@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import type { Principal } from "@sunovate/contracts";
 import { PageHeader, Panel, StatusTag } from "@/components/page-elements";
 import { apiGet } from "@/lib/api";
+import { MentorDecisionForm } from "./mentor-decision-form";
 import { ValidationRegister, type IntakeCase } from "./validation-register";
 
 export const metadata: Metadata = { title: "Validasi SAVI" };
@@ -40,6 +41,8 @@ export default async function SaviValidationPage() {
         </div>
         <StatusTag tone="risk">BLOCKED</StatusTag>
       </section>
+
+      <MentorDecisionForm />
 
       <Panel
         eyebrow={`${intake.cases.length} pertanyaan`}
