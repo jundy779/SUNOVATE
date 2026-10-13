@@ -22,8 +22,8 @@ export interface IntakeCase {
 }
 
 export const STATUS_LABELS: Record<ValidationStatus, string> = {
-  PENDING_SME_VALIDATION: "Menunggu validasi SME",
-  PENDING_LEGAL_VALIDATION: "Menunggu validasi hukum",
+  PENDING_SME_VALIDATION: "Menunggu pemeriksaan substansi",
+  PENDING_LEGAL_VALIDATION: "Menunggu pemeriksaan dasar hukum",
   NEEDS_REVISION: "Perlu revisi",
   VERIFIED: "Terverifikasi",
   REJECTED: "Ditolak",
@@ -88,7 +88,7 @@ export function ValidationRegister({ cases }: { cases: IntakeCase[] }) {
 
   return (
     <>
-      <div className="validation-summary" aria-label="Ringkasan status validasi">
+      <div className="validation-summary" aria-label="Ringkasan status pemeriksaan">
         <div>
           <strong>{cases.length}</strong>
           <span>Total pertanyaan</span>
@@ -103,7 +103,7 @@ export function ValidationRegister({ cases }: { cases: IntakeCase[] }) {
 
       <div className="validation-toolbar">
         <label className="validation-search">
-          <span>Cari dalam register</span>
+          <span>Cari dalam daftar</span>
           <input
             type="search"
             value={query}
@@ -112,7 +112,7 @@ export function ValidationRegister({ cases }: { cases: IntakeCase[] }) {
           />
         </label>
         <label>
-          <span>Status validasi</span>
+          <span>Status pemeriksaan</span>
           <select
             value={status}
             onChange={(event) => setStatus(event.target.value as ValidationStatus | typeof ALL_STATUSES)}
@@ -130,7 +130,7 @@ export function ValidationRegister({ cases }: { cases: IntakeCase[] }) {
             Atur ulang
           </button>
           <button type="button" className="button button-secondary" onClick={() => window.print()}>
-            Cetak register
+            Cetak daftar
           </button>
         </div>
       </div>
@@ -144,7 +144,7 @@ export function ValidationRegister({ cases }: { cases: IntakeCase[] }) {
           {filteredCases.map((item) => (
             <article className="validation-item" key={item.id}>
               <header>
-                <span className="validation-id">{item.id}</span>
+                <span className="validation-id">Pertanyaan {item.id.replace(/\D/g, "")}</span>
                 <StatusTag tone={STATUS_TONES[item.validationStatus]}>
                   {STATUS_LABELS[item.validationStatus]}
                 </StatusTag>

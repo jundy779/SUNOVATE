@@ -35,6 +35,7 @@ Menjelaskan cara menguji aplikasi web `apps/web` (Next.js App Router), mencakup 
 | Form Hermes | Validasi pertanyaan kosong, tampilan keputusan (`ANSWERED`, `INSUFFICIENT_EVIDENCE`, `REFUSED_*`, `REQUIRES_HUMAN_APPROVAL`, `BLOCKED_BY_OUTPUT_GUARD`), tampilan sitasi |
 | Register validasi SAVI | Pencarian lintas konten, filter status, reset, kondisi tanpa hasil, dan pemanggilan fungsi cetak tanpa aksi persetujuan |
 | Lembar keputusan mentor OQ-36 | Isian hanya pada state browser, indikator kelengkapan, reset, cetak, dan tidak memiliki aksi simpan/setujui/aktifkan |
+| Bahasa antarmuka | Kode klasifikasi, status pengetahuan, jenis pengetahuan, peran, kewenangan, aksi, entitas, dan hasil diterjemahkan; kode yang belum dikenal memakai label umum yang aman |
 | Label data | Label `SIMULATED_DATA` tampil pada halaman yang menampilkan data |
 | Status dan tenggat | Label `deadline state` ditampilkan sesuai nilai dari backend, tanpa perhitungan ulang di frontend |
 | State kosong dan error | Komponen menampilkan pesan yang jelas saat data kosong atau API gagal |

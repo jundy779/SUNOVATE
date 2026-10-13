@@ -23,7 +23,7 @@ export default function LoginPage() {
             <LoginForm />
             <Link className="auth-back-link" href="/">← Kembali ke beranda</Link>
             <div className="auth-security"><UiIcon name="shield" /><span>Akses dicatat dan dilindungi sesuai kebijakan keamanan informasi.</span></div>
-            <p className="data-label">Lingkungan pengembangan · SIMULATED_DATA · jangan gunakan kredensial organisasi</p>
+            <p className="data-label">Lingkungan pengembangan · data contoh · jangan gunakan akun organisasi</p>
           </div>
         </section>
       </div>

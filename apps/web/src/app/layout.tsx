@@ -3,13 +3,13 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: { default: "SUNOVATE", template: "%s | SUNOVATE" },
-  description: "SUN Organizational Values and Transformation through Experience (prototipe pengembangan)",
+  description: "Ruang pengelolaan pengetahuan dan koordinasi kerja Direktorat Surat Utang Negara",
   robots: { index: false, follow: false },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="id" data-scroll-behavior="smooth">
+    <html lang="id">
       <body>
         <a className="skip-link" href="#main-content">
           Langsung ke konten utama

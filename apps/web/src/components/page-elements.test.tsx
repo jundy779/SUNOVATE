@@ -23,8 +23,8 @@ describe("DeadlineTag", () => {
 });
 
 describe("SimulatedLabel", () => {
-  it("always shows the SIMULATED_DATA label", () => {
+  it("shows a plain-language sample data label", () => {
     render(<SimulatedLabel />);
-    expect(screen.getByText("SIMULATED_DATA")).toBeInTheDocument();
+    expect(screen.getByText("Data contoh")).toBeInTheDocument();
   });
 });

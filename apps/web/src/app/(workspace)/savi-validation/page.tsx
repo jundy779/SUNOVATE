@@ -6,7 +6,7 @@ import { apiGet } from "@/lib/api";
 import { MentorDecisionForm } from "./mentor-decision-form";
 import { ValidationRegister, type IntakeCase } from "./validation-register";
 
-export const metadata: Metadata = { title: "Validasi SAVI" };
+export const metadata: Metadata = { title: "Pemeriksaan SAVI" };
 
 interface IntakeRegister {
   dataLabel: "MENTOR_PROVIDED_DRAFT";
@@ -28,25 +28,25 @@ export default async function SaviValidationPage() {
     <>
       <PageHeader
         eyebrow="Tata kelola SAVI AI"
-        title="Validasi pertanyaan mentor"
-        description="Register baca saja untuk memeriksa jawaban acuan, dasar sumber, dan kekurangan bukti sebelum sebuah pertanyaan boleh masuk pengujian aktif SAVI."
-        action={<span className="data-label">MENTOR_PROVIDED_DRAFT</span>}
+        title="Pemeriksaan pertanyaan mentor"
+        description="Daftar baca saja untuk memeriksa rancangan jawaban, dasar sumber, dan kekurangan bukti sebelum sebuah pertanyaan boleh digunakan oleh SAVI."
+        action={<span className="data-label">Bahan awal dari mentor</span>}
       />
 
       <section className="governance-strip" aria-label="Status aktivasi">
         <div>
-          <p className="eyebrow">Status runtime</p>
+          <p className="eyebrow">Status penggunaan</p>
           <h2>Belum terhubung ke jawaban SAVI</h2>
           <p>Seluruh kasus diblokir sampai validasi substansi, hukum, SOP, klasifikasi, dan hak akses selesai.</p>
         </div>
-        <StatusTag tone="risk">BLOCKED</StatusTag>
+        <StatusTag tone="risk">Belum dapat digunakan</StatusTag>
       </section>
 
       <MentorDecisionForm />
 
       <Panel
         eyebrow={`${intake.cases.length} pertanyaan`}
-        title="Register validasi"
+        title="Daftar pemeriksaan"
         action={<StatusTag tone="warning">Baca saja</StatusTag>}
       >
         <ValidationRegister cases={intake.cases} />

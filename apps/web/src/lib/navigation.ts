@@ -11,7 +11,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: "Pencarian", href: "/search", anyOf: ["search:query"] },
   { label: "Monitoring Kerja", href: "/work-monitoring", anyOf: ["work:read"] },
   { label: "SAVI AI", href: "/savi-ai", anyOf: ["hermes:query"] },
-  { label: "Validasi SAVI", href: "/savi-validation", anyOf: ["knowledge:publish"] },
+  { label: "Pemeriksaan SAVI", href: "/savi-validation", anyOf: ["knowledge:publish"] },
   { label: "Administrasi", href: "/admin", anyOf: ["user:read", "role:read", "audit:read"] },
 ];
 

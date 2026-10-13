@@ -69,7 +69,7 @@ export const HERMES_DECISION_LABELS: Record<HermesDecision, string> = {
   INSUFFICIENT_EVIDENCE: "Bukti tidak cukup",
   REFUSED_OUT_OF_SCOPE: "Di luar domain SUN",
   REFUSED_GENERAL_CODING: "Bukan layanan pemrograman",
-  REFUSED_POLICY: "Ditolak oleh kebijakan",
+  REFUSED_POLICY: "Tidak dapat dijawab sesuai ketentuan",
   REQUIRES_HUMAN_APPROVAL: "Perlu persetujuan manusia",
-  BLOCKED_BY_OUTPUT_GUARD: "Ditahan pemeriksaan keluaran",
+  BLOCKED_BY_OUTPUT_GUARD: "Jawaban belum dapat ditampilkan",
 };

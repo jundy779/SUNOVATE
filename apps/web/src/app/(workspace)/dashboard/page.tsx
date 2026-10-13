@@ -137,7 +137,7 @@ export default async function DashboardPage() {
         </Panel>
       </div>
 
-      <p className="dashboard-data-note">SIMULATED_DATA · Indikator dashboard berstatus PROPOSED dan menunggu validasi mentor.</p>
+      <p className="dashboard-data-note">Data contoh · Indikator masih berupa usulan dan menunggu pemeriksaan mentor.</p>
     </div>
   );
 }

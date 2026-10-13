@@ -13,6 +13,7 @@ import {
 } from "@sunovate/contracts";
 import { HERMES_DECISION_LABELS } from "@sunovate/shared-types";
 import { zodResolver } from "@/lib/zod-resolver";
+import { classificationLabel } from "@/lib/ui-labels";
 import { StatusTag, type Tone } from "./page-elements";
 
 interface Turn {
@@ -39,7 +40,7 @@ async function sendFeedback(messageId: string, rating: "HELPFUL" | "NOT_HELPFUL"
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ messageId, rating }),
   });
-  if (!response.ok) throw new Error("Feedback gagal dikirim");
+  if (!response.ok) throw new Error("Penilaian belum dapat dikirim");
 }
 
 function decisionTone(decision: HermesAnswer["decision"]): Tone {
@@ -81,8 +82,8 @@ export function HermesChat() {
       <div className="chat-log" aria-live="polite" aria-busy={ask.isPending}>
         {turns.length === 0 ? (
           <p className="muted">
-            Ajukan pertanyaan tentang knowledge SUN yang boleh Anda akses. Contoh: Apa saja metadata
-            wajib saat mendaftarkan dokumen knowledge?
+            Ajukan pertanyaan tentang pengetahuan SUN yang boleh Anda akses. Contoh: Informasi apa
+            saja yang wajib dicatat saat mendaftarkan dokumen?
           </p>
         ) : null}
         {turns.map(({ question, answer }) => (
@@ -105,7 +106,7 @@ export function HermesChat() {
                       <span>
                         {" "}
                         - {citation.sectionLabel} - {citation.versionLabel} -{" "}
-                        {citation.classificationCode}
+                        {classificationLabel(citation.classificationCode)}
                       </span>
                     </li>
                   ))}
@@ -113,8 +114,8 @@ export function HermesChat() {
               ) : null}
               {answer.approvalRequestId ? (
                 <p className="muted">
-                  Permintaan approval dibuat: <code>{answer.approvalRequestId}</code>. Tidak ada
-                  perubahan data yang dijalankan.
+                  Permintaan persetujuan telah dicatat. Tidak ada perubahan data yang dijalankan
+                  sebelum petugas berwenang memberikan keputusan.
                 </p>
               ) : null}
               {answer.excludedPassages > 0 ? (
@@ -123,9 +124,9 @@ export function HermesChat() {
                   instruksi.
                 </p>
               ) : null}
-              <div className="feedback" role="group" aria-label="Feedback jawaban">
+              <div className="feedback" role="group" aria-label="Penilaian jawaban">
                 {rated[answer.messageId] ? (
-                  <span className="muted">Terima kasih, feedback tercatat.</span>
+                  <span className="muted">Terima kasih, penilaian Anda telah dicatat.</span>
                 ) : (
                   <>
                     <button

@@ -11,8 +11,9 @@ import {
 } from "@/components/page-elements";
 import { apiGet } from "@/lib/api";
 import { formatDateTime } from "@/lib/format";
+import { knowledgeStatusLabel, knowledgeTypeLabel } from "@/lib/ui-labels";
 
-export const metadata: Metadata = { title: "Knowledge Hub" };
+export const metadata: Metadata = { title: "Basis Pengetahuan" };
 
 type SearchParams = Promise<{ q?: string; status?: string }>;
 
@@ -26,12 +27,12 @@ export default async function KnowledgePage({ searchParams }: { searchParams: Se
   return (
     <>
       <PageHeader
-        eyebrow="Knowledge Hub"
+        eyebrow="Basis Pengetahuan"
         title="Pengetahuan institusional"
-        description="Metadata dan ringkasan knowledge yang boleh Anda akses. File resmi tetap berada pada document provider yang disetujui."
+        description="Informasi dan ringkasan pengetahuan yang boleh Anda akses. Berkas resmi tetap berada pada tempat penyimpanan yang telah disetujui."
         action={<SimulatedLabel />}
       />
-      <form className="toolbar" role="search" aria-label="Filter knowledge">
+      <form className="toolbar" role="search" aria-label="Penyaringan pengetahuan">
         <label>
           <span className="sr-only">Kata kunci</span>
           <input type="search" name="q" defaultValue={q} placeholder="Cari judul atau ringkasan" />
@@ -42,7 +43,7 @@ export default async function KnowledgePage({ searchParams }: { searchParams: Se
             <option value="">Semua status</option>
             {KNOWLEDGE_STATUSES.map((s) => (
               <option key={s} value={s}>
-                {s}
+                {knowledgeStatusLabel(s)}
               </option>
             ))}
           </select>
@@ -73,11 +74,11 @@ export default async function KnowledgePage({ searchParams }: { searchParams: Se
                       {entry.title}
                     </Link>
                   </td>
-                  <td>{entry.knowledgeType}</td>
+                  <td>{knowledgeTypeLabel(entry.knowledgeType)}</td>
                   <td>{entry.ownerTeamCode ?? "-"}</td>
                   <td>
                     <StatusTag tone={entry.lifecycleStatus === "PUBLISHED" ? "success" : "neutral"}>
-                      {entry.lifecycleStatus}
+                      {knowledgeStatusLabel(entry.lifecycleStatus)}
                     </StatusTag>
                   </td>
                   <td>
@@ -91,7 +92,7 @@ export default async function KnowledgePage({ searchParams }: { searchParams: Se
         </div>
       ) : (
         <EmptyState
-          title="Tidak ada knowledge yang cocok"
+          title="Tidak ada pengetahuan yang cocok"
           description="Ubah kata kunci atau filter. Hasil hanya memuat entri dalam cakupan tim dan klasifikasi Anda."
         />
       )}

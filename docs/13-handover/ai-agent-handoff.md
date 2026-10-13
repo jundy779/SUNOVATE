@@ -27,6 +27,7 @@ Urutan wajib: root `AGENTS.md`, [task-tracker.md](task-tracker.md), [developer-h
 - Jangan mengarang fungsi SUN Tematik, proses kerja Dit. SUN, angka yield/kepemilikan SBN, struktur persetujuan, atau format dokumen resmi.
 - Jangan mengubah label `NEEDS APPROVAL`/`OPEN QUESTION` menjadi selesai tanpa sumber keputusan.
 - Jangan menyimpan file sebagai BLOB, memberi SAVI AI akses DB langsung, atau mengeksekusi aksi tulis AI tanpa human approval.
+- Teks yang terlihat pengguna wajib memakai bahasa Indonesia nonteknis sesuai `docs/09-ui-ux/content-language.md`. Jangan tampilkan nama internal Hermes, API/endpoint, permission/scope, runtime, enum mentah, atau label mesin seperti `SIMULATED_DATA`, `PROPOSED`, dan `BLOCKED` pada antarmuka. Istilah tersebut tetap boleh berada pada kode dan dokumentasi pengembang.
 - Jangan mengaktifkan Cloudflare Tunnel, SSO, SharePoint, Telegram, WhatsApp, Power BI, model AI eksternal, atau data pasar hanya berdasarkan roadmap.
 - Jangan mengedit dokumen sumber root atau `docs/_archive/`.
 

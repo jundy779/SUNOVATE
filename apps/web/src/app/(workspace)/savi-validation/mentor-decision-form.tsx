@@ -86,8 +86,8 @@ const FIELD_GROUPS: Array<{
       },
       {
         name: "refusalEscalation",
-        label: "Dalam kondisi apa SAVI harus menolak atau mengeskalasi?",
-        placeholder: "Misalnya bukti tidak cukup, data sensitif, atau membutuhkan keputusan pejabat",
+        label: "Dalam kondisi apa SAVI harus menolak atau meneruskan pertanyaan kepada pegawai berwenang?",
+        placeholder: "Misalnya bukti tidak cukup, informasi sensitif, atau membutuhkan keputusan pejabat",
       },
       {
         name: "reviewValidity",

@@ -11,6 +11,8 @@
 - Endpoint baca terotorisasi dan halaman `/savi-validation` untuk meninjau delapan pertanyaan, jawaban awal, sumber, status, dan catatan validasi.
 - Ringkasan status, pencarian menyeluruh, filter status, kondisi tanpa hasil, serta format cetak pada register validasi SAVI tanpa menambahkan aksi persetujuan.
 - Lembar keputusan mentor OQ-36 pada halaman Validasi SAVI dan dokumentasi proyek untuk mencatat peran validator, urutan review, sumber/SOP wajib, klasifikasi, eskalasi, serta masa tinjau. Isian web bersifat lokal, tidak disimpan, dan tidak mengaktifkan jawaban.
+- Bahasa antarmuka disederhanakan menjadi bahasa kerja pengguna: label teknis, enum mentah, nama internal, istilah akses, status pengembangan, riwayat aktivitas, Basis Pengetahuan, Monitoring Kerja, dan pesan gangguan kini memiliki padanan Indonesia yang jelas.
+- Pedoman bahasa antarmuka dan AC-32 ditambahkan agar AI agent berikutnya tidak mengembalikan istilah pengembang ke halaman pengguna.
 
 ### Batas
 
@@ -20,7 +22,7 @@
 ### Validasi aktual
 
 - Ruff, ESLint, mypy strict, dan TypeScript lulus.
-- 17 test frontend lulus; 186 test backend lulus dan 39 dilewati, termasuk lembar keputusan lokal, filter register, gate intake, dan otorisasi endpoint review.
+- 19 test frontend lulus; 186 test backend lulus dan 39 dilewati, termasuk pemetaan istilah antarmuka, lembar keputusan lokal, filter register, gate intake, dan otorisasi endpoint review.
 - Next.js production build lulus setelah cache build lokal yang rusak dipindahkan dan dibuat ulang.
 - `pnpm db:sql` berhasil merender migrasi `0001` dan `0002` sampai `COMMIT`.
 

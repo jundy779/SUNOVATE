@@ -4,15 +4,15 @@ import { UiIcon, type IconName } from "@/components/ui-icons";
 
 const primaryAccess: { label: string; detail: string; icon: IconName; href: string }[] = [
   { label: "Monitoring Kerja", detail: "Output, tugas, dan tindak lanjut", icon: "chart", href: "/work-monitoring" },
-  { label: "Knowledge Hub", detail: "Pengetahuan terstruktur dan terlacak", icon: "book", href: "/knowledge" },
+  { label: "Basis Pengetahuan", detail: "Pengetahuan terstruktur dan terlacak", icon: "book", href: "/knowledge" },
   { label: "SAVI AI", detail: "Jawaban berbasis sumber", icon: "chat", href: "/savi-ai" },
   { label: "Pencarian", detail: "Temukan informasi lintas sumber", icon: "search", href: "/search" },
 ];
 
 const knowledgeAreas = [
   ["Regulasi dan kebijakan", "Rujukan yang terkelola dengan metadata, status, serta riwayat versi."],
-  ["SOP dan playbook", "Langkah kerja yang dapat dipelajari kembali dan disempurnakan bersama."],
-  ["Lesson learned", "Pengalaman pelaksanaan yang disimpan sebagai memori organisasi."],
+  ["SOP dan panduan kerja", "Langkah kerja yang dapat dipelajari kembali dan disempurnakan bersama."],
+  ["Catatan pembelajaran", "Pengalaman pelaksanaan yang disimpan sebagai memori organisasi."],
   ["Bahan rapat dan arsip", "Dokumen pendukung yang dapat ditelusuri sesuai hak akses pengguna."],
 ] as const;
 
@@ -24,7 +24,7 @@ export default function Home() {
         <div className="hero-copy">
           <h1 id="hero-title">Pengetahuan yang terjaga, kinerja yang berkelanjutan.</h1>
           <p className="hero-lede">SUN Organizational Values and Transformation through Experience menghubungkan pengetahuan, pengalaman, dan koordinasi kerja Direktorat Surat Utang Negara dalam satu ruang yang tertata.</p>
-          <div className="hero-actions"><Link className="button button-gold" href="/login">Masuk ke SUNOVATE</Link><a className="button button-outline-light" href="#pengetahuan">Jelajahi Knowledge Hub</a></div>
+          <div className="hero-actions"><Link className="button button-gold" href="/login">Masuk ke SUNOVATE</Link><a className="button button-outline-light" href="#pengetahuan">Jelajahi Basis Pengetahuan</a></div>
         </div>
         <div className="hero-image" role="img" aria-label="Ilustrasi arsitektur institusi pelayanan publik" />
       </section>
@@ -42,11 +42,11 @@ export default function Home() {
           <div className="governance-note"><UiIcon name="shield" /><span><strong>Dirancang dengan tata kelola</strong>Kontrol akses, klasifikasi informasi, sitasi sumber, dan jejak audit menjadi bagian dari fondasi sistem.</span></div>
         </article>
         <article className="knowledge-directory" id="pengetahuan" aria-labelledby="knowledge-title">
-          <div className="content-heading"><div><p className="section-label">Knowledge Hub</p><h2 id="knowledge-title">Ruang pengetahuan</h2></div><Link className="text-link" href="/knowledge">Lihat seluruh pengetahuan</Link></div>
+          <div className="content-heading"><div><p className="section-label">Basis Pengetahuan</p><h2 id="knowledge-title">Ruang pengetahuan</h2></div><Link className="text-link" href="/knowledge">Lihat seluruh pengetahuan</Link></div>
           <div className="knowledge-list">{knowledgeAreas.map(([title, detail], index) => <div key={title}><span>{String(index + 1).padStart(2, "0")}</span><div><h3>{title}</h3><p>{detail}</p></div></div>)}</div>
         </article>
       </section>
-      <section className="prototype-notice" aria-label="Status lingkungan"><div><strong>Lingkungan pengembangan</strong><span>Seluruh data demonstrasi menggunakan label SIMULATED_DATA.</span></div><span>Integrasi produksi belum diaktifkan</span></section>
+      <section className="prototype-notice" aria-label="Status lingkungan"><div><strong>Lingkungan pengembangan</strong><span>Seluruh informasi yang tampil merupakan data contoh.</span></div><span>Belum terhubung ke layanan operasional</span></section>
       <footer className="public-footer"><div><strong>SUNOVATE</strong><span>Direktorat Surat Utang Negara</span></div><span>SUN Organizational Values and Transformation through Experience</span><span>Prototipe pengembangan · bukan sistem transaksi atau pengambilan keputusan keuangan</span></footer>
     </main>
   );

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { useId } from "react";
 import { DEADLINE_LABELS, type DeadlineState } from "@sunovate/shared-types";
+import { classificationLabel } from "@/lib/ui-labels";
 
 export function PageHeader({
   eyebrow,
@@ -46,11 +47,11 @@ export function DeadlineTag({ state }: { state: DeadlineState | null }) {
 }
 
 export function ClassificationTag({ code }: { code: string }) {
-  return <span className="classification">{code}</span>;
+  return <span className="classification">{classificationLabel(code)}</span>;
 }
 
 export function SimulatedLabel() {
-  return <span className="data-label">SIMULATED_DATA</span>;
+  return <span className="data-label">Data contoh</span>;
 }
 
 export function EmptyState({

@@ -4,6 +4,14 @@ import type { Principal } from "@sunovate/contracts";
 import { EmptyState, PageHeader, Panel, SimulatedLabel, StatusTag } from "@/components/page-elements";
 import { apiGet } from "@/lib/api";
 import { formatDateTime } from "@/lib/format";
+import {
+  auditActionLabel,
+  auditEntityLabel,
+  classificationLabel,
+  outcomeLabel,
+  permissionLabel,
+  roleLabel,
+} from "@/lib/ui-labels";
 
 export const metadata: Metadata = { title: "Administrasi" };
 
@@ -51,8 +59,8 @@ export default async function AdminPage() {
     <>
       <PageHeader
         eyebrow="Administrasi"
-        title="Pengguna, peran, audit, dan provider"
-        description="Tampilan baca saja pada lingkungan pengembangan. Peran dan izin berstatus usulan dan menunggu validasi mentor."
+        title="Pengguna, peran, dan riwayat aktivitas"
+        description="Tampilan baca saja pada lingkungan pengembangan. Peran dan kewenangan masih berupa usulan dan menunggu pemeriksaan mentor."
         action={<SimulatedLabel />}
       />
       {users ? (
@@ -65,7 +73,7 @@ export default async function AdminPage() {
                   <th scope="col">Email</th>
                   <th scope="col">Peran</th>
                   <th scope="col">Tim</th>
-                  <th scope="col">Clearance</th>
+                  <th scope="col">Batas akses informasi</th>
                 </tr>
               </thead>
               <tbody>
@@ -73,9 +81,9 @@ export default async function AdminPage() {
                   <tr key={user.id}>
                     <td>{user.displayName}</td>
                     <td>{user.email}</td>
-                    <td>{user.roles.join(", ")}</td>
-                    <td>{user.teamCodes.join(", ") || "Semua tim (scope)"}</td>
-                    <td>{user.clearanceCode}</td>
+                    <td>{user.roles.map(roleLabel).join(", ")}</td>
+                    <td>{user.teamCodes.join(", ") || "Semua tim"}</td>
+                    <td>{classificationLabel(user.clearanceCode)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -84,22 +92,22 @@ export default async function AdminPage() {
         </Panel>
       ) : null}
       {roles ? (
-        <Panel title="Peran dan izin (PROPOSED)">
+        <Panel title="Usulan peran dan kewenangan">
           <div className="table-wrap">
             <table>
               <thead>
                 <tr>
                   <th scope="col">Peran</th>
-                  <th scope="col">Jumlah izin</th>
-                  <th scope="col">Izin</th>
+                  <th scope="col">Jumlah kewenangan</th>
+                  <th scope="col">Kewenangan</th>
                 </tr>
               </thead>
               <tbody>
                 {roles.data.map((role) => (
                   <tr key={role.code}>
-                    <td>{role.code}</td>
+                    <td>{roleLabel(role.code)}</td>
                     <td>{role.permissions.length}</td>
-                    <td className="wrap">{role.permissions.join(", ")}</td>
+                    <td className="wrap">{role.permissions.map(permissionLabel).join(", ")}</td>
                   </tr>
                 ))}
               </tbody>
@@ -108,14 +116,14 @@ export default async function AdminPage() {
         </Panel>
       ) : null}
       {providers ? (
-        <Panel title="Status provider integrasi">
+        <Panel title="Status layanan pendukung">
           <ul className="list">
             {providers.data.map((p) => (
               <li key={p.kind}>
-                <strong>{p.kind}</strong>
+                <strong>Layanan {p.kind === "DOCUMENT" ? "penyimpanan dokumen" : p.kind === "AI" ? "SAVI AI" : "pendukung"}</strong>
                 <span>
-                  <StatusTag tone={p.mode === "DISABLED" ? "risk" : "warning"}>{p.mode}</StatusTag>{" "}
-                  {p.implementation} - {p.note}
+                  <StatusTag tone={p.mode === "DISABLED" ? "risk" : "warning"}>{p.mode === "DISABLED" ? "Belum diaktifkan" : "Pengembangan"}</StatusTag>{" "}
+                  Menunggu persetujuan dan penyiapan layanan resmi.
                 </span>
               </li>
             ))}
@@ -123,7 +131,7 @@ export default async function AdminPage() {
         </Panel>
       ) : null}
       {audit ? (
-        <Panel title="Audit log terbaru">
+        <Panel title="Riwayat aktivitas terbaru">
           {audit.data.length ? (
             <div className="table-wrap">
               <table>
@@ -139,9 +147,9 @@ export default async function AdminPage() {
                   {audit.data.map((row) => (
                     <tr key={row.id}>
                       <td>{formatDateTime(row.occurredAt)}</td>
-                      <td>{row.action}</td>
-                      <td>{row.entityType}</td>
-                      <td>{row.outcome}</td>
+                      <td>{auditActionLabel(row.action)}</td>
+                      <td>{auditEntityLabel(row.entityType)}</td>
+                      <td>{outcomeLabel(row.outcome)}</td>
                     </tr>
                   ))}
                 </tbody>

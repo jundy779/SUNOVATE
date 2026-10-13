@@ -5,6 +5,7 @@ import type { Principal } from "@sunovate/contracts";
 import { logoutAction } from "@/app/login/actions";
 import { WorkspaceNav } from "@/components/workspace-nav";
 import { UiIcon } from "@/components/ui-icons";
+import { classificationLabel } from "@/lib/ui-labels";
 
 export function AppShell({ principal, children }: { principal: Principal; children: ReactNode }) {
   const scope = principal.allTeams
@@ -17,13 +18,13 @@ export function AppShell({ principal, children }: { principal: Principal; childr
           <Link className="brand" href="/dashboard">
             <Image src="/brand/logo-dsun.png" alt="Direktorat Surat Utang Negara" width={142} height={63} priority />
             <span>SUNOVATE</span>
-            <small>Knowledge &amp; transformation workspace</small>
+            <small>Ruang pengetahuan dan transformasi</small>
           </Link>
           <WorkspaceNav permissions={principal.permissions} />
           <div className="sidebar-note">
             <strong>Lingkungan pengembangan</strong>
-            <span>Seluruh data: SIMULATED_DATA</span>
-            <span>Integrasi produksi: nonaktif</span>
+            <span>Seluruh informasi: data contoh</span>
+            <span>Belum terhubung ke layanan operasional</span>
           </div>
         </div>
       </aside>
@@ -43,7 +44,7 @@ export function AppShell({ principal, children }: { principal: Principal; childr
               <div className="user-avatar" aria-hidden="true">{principal.displayName.slice(0, 1)}</div>
               <div>
                 <strong>{principal.displayName}</strong>
-                <span>{scope} · {principal.clearanceCode}</span>
+                <span>{scope} · {classificationLabel(principal.clearanceCode)}</span>
               </div>
               <UiIcon className="account-chevron" name="chevron" />
             </summary>

@@ -25,7 +25,7 @@ export async function apiRequest<T>(path: string, init: RequestInit = {}): Promi
   } catch {
     throw new ApiRequestError(503, {
       code: "API_UNREACHABLE",
-      message: "API SUNOVATE tidak dapat dihubungi",
+      message: "Layanan SUNOVATE sedang tidak dapat dihubungi",
       details: null,
       requestId: "-",
     });

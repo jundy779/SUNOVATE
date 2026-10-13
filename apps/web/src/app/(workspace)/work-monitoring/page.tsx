@@ -21,7 +21,7 @@ export default async function WorkMonitoringPage() {
       <PageHeader
         eyebrow="Kinerja Tim Kerja"
         title="Monitoring pekerjaan"
-        description="Output, tugas, dan pending matters dalam cakupan tim dan klasifikasi Anda. Status tenggat dihitung oleh backend."
+        description="Output, tugas, dan hal yang perlu ditindaklanjuti dalam cakupan tim serta klasifikasi Anda. Status tenggat diperbarui oleh sistem."
         action={<SimulatedLabel />}
       />
       <WorkManagement

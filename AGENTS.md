@@ -33,6 +33,7 @@ Direktorat SUN, DJPPR). Read this file first.
 - Do not add Turborepo, Kubernetes, microservices, Redis, a message broker, or new dependencies without a concrete, documented need.
 - Go, Rust, PWA, Android, and iOS are deferred roadmap items, not MVP requirements. The proposed Cloudflare Tunnel/Access demo path must not be activated without mentor and TIK/security approval.
 - Use only the locked SUNOVATE design tokens; no gradients, purple, Unicode icons, or generic oversized card grids.
+- Never expose developer language in user-facing UI. Translate internal codes and terms such as API, endpoint, permission, scope, runtime, retrieval, raw enum values, `SIMULATED_DATA`, `PROPOSED`, `BLOCKED`, and `Hermes` into clear Indonesian labels. Keep technical names only in code, logs, tests, and developer documentation. Follow `docs/09-ui-ux/content-language.md`.
 
 ## Before declaring done
 Run and report actual results (never claim a command passed without running it):

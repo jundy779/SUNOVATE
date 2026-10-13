@@ -34,14 +34,14 @@ describe("ValidationRegister", () => {
 
     expect(screen.getByText("Menampilkan 2 dari 2 pertanyaan")).toBeInTheDocument();
 
-    fireEvent.change(screen.getByRole("searchbox", { name: "Cari dalam register" }), {
+    fireEvent.change(screen.getByRole("searchbox", { name: "Cari dalam daftar" }), {
       target: { value: "dikunci" },
     });
     expect(screen.getByText("Menampilkan 1 dari 2 pertanyaan")).toBeInTheDocument();
     expect(screen.queryByText(AUCTION_QUESTION)).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Atur ulang" }));
-    fireEvent.change(screen.getByRole("combobox", { name: "Status validasi" }), {
+    fireEvent.change(screen.getByRole("combobox", { name: "Status pemeriksaan" }), {
       target: { value: "PENDING_SME_VALIDATION" },
     });
     expect(screen.getByText(AUCTION_QUESTION)).toBeInTheDocument();
@@ -52,7 +52,7 @@ describe("ValidationRegister", () => {
     const print = vi.spyOn(window, "print").mockImplementation(() => undefined);
     render(<ValidationRegister cases={CASES} />);
 
-    fireEvent.change(screen.getByRole("searchbox", { name: "Cari dalam register" }), {
+    fireEvent.change(screen.getByRole("searchbox", { name: "Cari dalam daftar" }), {
       target: { value: "tidak ditemukan" },
     });
     expect(screen.getByText("Tidak ada pertanyaan yang cocok")).toBeInTheDocument();
@@ -60,7 +60,7 @@ describe("ValidationRegister", () => {
     fireEvent.click(screen.getByRole("button", { name: "Tampilkan semua" }));
     expect(screen.getByText("Menampilkan 2 dari 2 pertanyaan")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "Cetak register" }));
+    fireEvent.click(screen.getByRole("button", { name: "Cetak daftar" }));
     expect(print).toHaveBeenCalledOnce();
     print.mockRestore();
   });

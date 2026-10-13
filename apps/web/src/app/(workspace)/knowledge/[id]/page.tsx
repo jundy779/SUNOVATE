@@ -10,6 +10,7 @@ import {
 } from "@/components/page-elements";
 import { apiGet } from "@/lib/api";
 import { formatDateTime } from "@/lib/format";
+import { knowledgeStatusLabel, knowledgeTypeLabel } from "@/lib/ui-labels";
 
 export default async function KnowledgeDetailPage({
   params,
@@ -22,10 +23,10 @@ export default async function KnowledgeDetailPage({
   return (
     <>
       <nav aria-label="Breadcrumb" className="breadcrumb">
-        <Link href="/knowledge">Knowledge Hub</Link> / <span>Detail</span>
+        <Link href="/knowledge">Basis Pengetahuan</Link> / <span>Detail</span>
       </nav>
       <PageHeader
-        eyebrow={`Knowledge Hub - ${entry.knowledgeType}`}
+        eyebrow={`Basis Pengetahuan · ${knowledgeTypeLabel(entry.knowledgeType)}`}
         title={entry.title}
         description={entry.summary}
         action={<SimulatedLabel />}
@@ -35,7 +36,7 @@ export default async function KnowledgeDetailPage({
           <dt>Status</dt>
           <dd>
             <StatusTag tone={entry.lifecycleStatus === "PUBLISHED" ? "success" : "neutral"}>
-              {entry.lifecycleStatus}
+              {knowledgeStatusLabel(entry.lifecycleStatus)}
             </StatusTag>
           </dd>
         </div>
@@ -65,7 +66,7 @@ export default async function KnowledgeDetailPage({
         </div>
       </dl>
 
-      <Panel title="Isi per bagian" eyebrow="Teks hasil ekstraksi (simulasi)">
+      <Panel title="Isi per bagian" eyebrow="Teks hasil pembacaan dokumen (contoh)">
         {entry.sections?.length ? (
           <ol className="sections">
             {entry.sections.map((section) => (
@@ -76,18 +77,18 @@ export default async function KnowledgeDetailPage({
             ))}
           </ol>
         ) : (
-          <EmptyState title="Belum ada teks terindeks" />
+          <EmptyState title="Belum ada teks yang dapat ditampilkan" />
         )}
       </Panel>
 
-      <Panel title="Referensi dokumen" eyebrow="File tidak disimpan di SUNOVATE">
+      <Panel title="Referensi dokumen" eyebrow="Berkas tetap berada di penyimpanan resmi">
         {entry.documents?.length ? (
           <ul className="list">
             {entry.documents.map((doc) => (
               <li key={doc.id}>
                 <strong>{doc.title}</strong>
                 <span>
-                  {doc.provider} - <code>{doc.providerLocation}</code>
+                  Lokasi berkas telah tercatat pada layanan penyimpanan yang disetujui.
                 </span>
               </li>
             ))}

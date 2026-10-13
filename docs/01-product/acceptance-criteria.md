@@ -301,6 +301,16 @@ Status terhadap kode saat ini: dua bagian pertama lulus terhadap kode (`test_pro
 
 Status AC-26 sampai AC-31: **PROPOSED, belum dapat diuji**. Model, endpoint, permission, storage provider, dan approval chain belum diimplementasikan; OQ-35 masih OPEN.
 
+## AC-32 Bahasa antarmuka nonteknis
+
+- **Given** pengguna membuka halaman publik, ruang kerja, SAVI, hasil cetak, atau kanal pesan SUNOVATE
+- **When** sistem menampilkan label, status, informasi akses, atau pesan kesalahan
+- **Then** teks memakai bahasa kerja yang jelas dan tidak menampilkan istilah implementasi pengembang
+- **And** enum, permission code, nama internal Hermes, jalur layanan, lokasi penyimpanan, serta pesan kesalahan teknis diterjemahkan atau disembunyikan
+- **And** istilah resmi hukum dan organisasi tetap mengikuti sumber yang berwenang.
+
+Status terhadap kode saat ini: pemetaan terpusat tersedia untuk klasifikasi, status dan jenis pengetahuan, peran, kewenangan, aksi serta entitas riwayat, dan hasil aktivitas. Audit manual kanal Telegram/WhatsApp masih menunggu implementasi kanal. Terkait: [content-language.md](../09-ui-ux/content-language.md).
+
 ## Open Questions
 
 - Kode error untuk pelanggaran separation of duties belum dikunci di dokumentasi API; perlu diselaraskan dengan [error-format.md](../07-api/error-format.md).

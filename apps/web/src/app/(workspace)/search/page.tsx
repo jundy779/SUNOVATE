@@ -20,7 +20,7 @@ export default async function SearchPage({
     <>
       <PageHeader
         eyebrow="Pencarian"
-        title="Cari knowledge terbit"
+        title="Cari pengetahuan yang telah diterbitkan"
         description="Pencarian leksikal atas judul, ringkasan, dan teks bagian. Hanya entri terbit dalam cakupan Anda yang ditampilkan. Pencarian semantik masih berupa usulan."
         action={<SimulatedLabel />}
       />
@@ -37,7 +37,7 @@ export default async function SearchPage({
       {!result ? (
         <EmptyState
           title="Belum ada pencarian"
-          description="Masukkan minimal dua karakter untuk mencari knowledge yang boleh Anda akses."
+          description="Masukkan minimal dua karakter untuk mencari pengetahuan yang boleh Anda akses."
         />
       ) : result.data.length ? (
         <ol className="results" aria-label={`${result.data.length} hasil`}>
@@ -57,7 +57,7 @@ export default async function SearchPage({
       ) : (
         <EmptyState
           title="Tidak ada hasil"
-          description="Tidak ada knowledge terbit dalam cakupan Anda yang cocok dengan kata kunci ini."
+          description="Tidak ada pengetahuan yang telah diterbitkan dalam cakupan Anda yang cocok dengan kata kunci ini."
         />
       )}
     </>
