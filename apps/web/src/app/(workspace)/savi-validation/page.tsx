@@ -3,26 +3,9 @@ import { redirect } from "next/navigation";
 import type { Principal } from "@sunovate/contracts";
 import { PageHeader, Panel, StatusTag } from "@/components/page-elements";
 import { apiGet } from "@/lib/api";
+import { ValidationRegister, type IntakeCase } from "./validation-register";
 
 export const metadata: Metadata = { title: "Validasi SAVI" };
-
-type ValidationStatus =
-  | "PENDING_SME_VALIDATION"
-  | "PENDING_LEGAL_VALIDATION"
-  | "NEEDS_REVISION"
-  | "VERIFIED"
-  | "REJECTED";
-
-interface IntakeCase {
-  id: string;
-  question: string;
-  draftAnswer: string;
-  suppliedReferences: string[];
-  candidateReferences: string[];
-  validationNotes: string[];
-  validationStatus: ValidationStatus;
-  runtimeEligibility: "BLOCKED";
-}
 
 interface IntakeRegister {
   dataLabel: "MENTOR_PROVIDED_DRAFT";
@@ -31,14 +14,6 @@ interface IntakeRegister {
   activationStatus: "EXCLUDED_FROM_RUNTIME";
   cases: IntakeCase[];
 }
-
-const STATUS_LABELS: Record<ValidationStatus, string> = {
-  PENDING_SME_VALIDATION: "Menunggu validasi SME",
-  PENDING_LEGAL_VALIDATION: "Menunggu validasi hukum",
-  NEEDS_REVISION: "Perlu revisi",
-  VERIFIED: "Terverifikasi",
-  REJECTED: "Ditolak",
-};
 
 export default async function SaviValidationPage() {
   const { data: me } = await apiGet<Principal>("/auth/me");
@@ -71,45 +46,7 @@ export default async function SaviValidationPage() {
         title="Register validasi"
         action={<StatusTag tone="warning">Baca saja</StatusTag>}
       >
-        <div className="validation-list">
-          {intake.cases.map((item) => (
-            <article className="validation-item" key={item.id}>
-              <header>
-                <span className="validation-id">{item.id}</span>
-                <StatusTag tone={item.validationStatus === "NEEDS_REVISION" ? "risk" : "warning"}>
-                  {STATUS_LABELS[item.validationStatus]}
-                </StatusTag>
-              </header>
-              <h3>{item.question}</h3>
-              <div className="validation-grid">
-                <section>
-                  <h4>Jawaban acuan awal</h4>
-                  <p>{item.draftAnswer}</p>
-                </section>
-                <section>
-                  <h4>Sumber yang diberikan</h4>
-                  <ul>
-                    {item.suppliedReferences.map((source) => <li key={source}>{source}</li>)}
-                  </ul>
-                  {item.candidateReferences.length ? (
-                    <>
-                      <h4>Kandidat sumber koreksi</h4>
-                      <ul>
-                        {item.candidateReferences.map((source) => <li key={source}>{source}</li>)}
-                      </ul>
-                    </>
-                  ) : null}
-                </section>
-              </div>
-              <section className="validation-notes">
-                <h4>Catatan yang harus diselesaikan</h4>
-                <ul>
-                  {item.validationNotes.map((note) => <li key={note}>{note}</li>)}
-                </ul>
-              </section>
-            </article>
-          ))}
-        </div>
+        <ValidationRegister cases={intake.cases} />
       </Panel>
     </>
   );

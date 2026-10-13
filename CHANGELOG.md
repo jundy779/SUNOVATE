@@ -9,6 +9,7 @@
 - Panduan validasi SME, hukum, SOP, klasifikasi, akses, serta gerbang promosi ke golden set.
 - OQ-36 untuk menentukan validator, sumber resmi per klaim, SOP/checklist, klasifikasi, dan kondisi eskalasi atau penolakan SAVI.
 - Endpoint baca terotorisasi dan halaman `/savi-validation` untuk meninjau delapan pertanyaan, jawaban awal, sumber, status, dan catatan validasi.
+- Ringkasan status, pencarian menyeluruh, filter status, kondisi tanpa hasil, serta format cetak pada register validasi SAVI tanpa menambahkan aksi persetujuan.
 
 ### Batas
 
@@ -18,7 +19,7 @@
 ### Validasi aktual
 
 - Ruff, ESLint, mypy strict, dan TypeScript lulus.
-- 13 test frontend lulus; 186 test backend lulus dan 39 dilewati, termasuk gate intake dan otorisasi endpoint review.
+- 15 test frontend lulus; 186 test backend lulus dan 39 dilewati, termasuk filter register, gate intake, dan otorisasi endpoint review.
 - Next.js production build lulus setelah cache build lokal yang rusak dipindahkan dan dibuat ulang.
 - `pnpm db:sql` berhasil merender migrasi `0001` dan `0002` sampai `COMMIT`.
 
