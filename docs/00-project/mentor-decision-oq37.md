@@ -1,11 +1,11 @@
 # Lembar Keputusan Glosarium SAVI, OQ-37
 
-**Status:** PARTIAL, NEEDS MENTOR VALIDATION
+**Status:** PARTIAL, CONFIRMED MENTOR ANSWERS
 **Last Updated:** 2026-10-14
 
 ## Tujuan
 
-Mencatat jawaban singkat ketua proyek pada 14 Oktober 2026 mengenai tata kelola glosarium SAVI. Jawaban ini menjadi arahan kerja, tetapi belum diberi label keputusan mentor karena sumber jawabannya belum dinyatakan sebagai arahan mentor.
+Mencatat jawaban mentor pada 14 Oktober 2026 mengenai tata kelola glosarium SAVI. Bagian yang dijawab menjadi arahan resmi proyek; OQ-37 tetap parsial karena beberapa pemetaan dan detail teknis belum ditentukan.
 
 ## Jawaban yang diterima
 

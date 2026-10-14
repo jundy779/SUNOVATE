@@ -2,8 +2,8 @@
 
 ## 2026-10-14 — Jawaban parsial tata kelola glosarium SAVI
 
-- Mencatat jawaban ketua proyek untuk OQ-37: SUN berarti Surat Utang Negara; sumber glosarium adalah peraturan SUN dan playbook transaksi; glosarium dapat dilihat pegawai; review setiap tiga bulan; singkatan tanpa sumber resmi dilarang; pemeriksaan diarahkan ke admin.
-- Menjaga status PARTIAL karena `admin` belum dipetakan ke role/permission, pasangan istilah lain belum disahkan, dan jawaban belum dinyatakan sebagai keputusan mentor.
+- Mencatat jawaban mentor untuk OQ-37: SUN berarti Surat Utang Negara; sumber glosarium adalah peraturan SUN dan playbook transaksi; glosarium dapat dilihat pegawai; review setiap tiga bulan; singkatan tanpa sumber resmi dilarang; pemeriksaan diarahkan ke admin.
+- Menjaga status PARTIAL karena `admin` belum dipetakan ke role/permission dan pasangan istilah lain belum disahkan secara individual.
 - Tujuh kandidat domain tetap diblokir. Istilah lama tidak ditampilkan sebagai istilah aktif, tetapi audit perubahan tetap dipertahankan.
 
 ## 2026-10-14 — Evidence reranking dan answer gate SAVI

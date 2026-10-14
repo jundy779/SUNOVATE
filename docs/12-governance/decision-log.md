@@ -52,10 +52,10 @@ Dokumen ini mencatat ringkasan keputusan proyek SUNOVATE beserta status dan damp
 
 - **Open question:** OQ-37 tata kelola glosarium SAVI.
 - **Tanggal jawaban:** 2026-10-14.
-- **Sumber:** Jawaban ketua proyek pada sesi 2026-10-14; belum dinyatakan sebagai jawaban mentor.
+- **Sumber:** Jawaban mentor pada sesi 2026-10-14, dikonfirmasi oleh ketua proyek.
 - **Jawaban:** SUN berarti Surat Utang Negara; admin mengesahkan/memperbaiki dan menjadi tujuan pemeriksaan; sumber berupa peraturan SUN serta playbook transaksi SUN; semua pegawai boleh melihat glosarium; istilah lama tidak disimpan sebagai riwayat aktif; review setiap tiga bulan; singkatan tanpa dokumen resmi tidak boleh digunakan.
 - **Keputusan:** Terapkan kebijakan konservatif pada dokumentasi. SUN dapat diperlakukan sebagai kepanjangan resmi. Kandidat lain tetap diblokir. Riwayat tampilan boleh tidak aktif, tetapi audit perubahan tidak dihapus.
-- **Status:** PARTIAL, NEEDS MENTOR VALIDATION.
+- **Status:** PARTIAL; CONFIRMED untuk bagian yang dijawab mentor, OPEN untuk rincian yang belum dijawab.
 - **Dampak:** OQ-37 menjadi PARTIAL; tidak ada permission admin, ekspansi retrieval, tiket, notifikasi, atau perubahan kandidat runtime.
 - **Tindak lanjut:** Tetapkan role admin, sumber per entri, daftar pemetaan yang disahkan, klasifikasi, tanggal review pertama, dan mekanisme pencabutan.
 

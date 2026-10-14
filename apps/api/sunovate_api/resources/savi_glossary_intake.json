@@ -89,7 +89,7 @@
       "sourceReferences": ["docs/00-project/glossary.md, entri SBN"],
       "validationStatus": "PENDING_MENTOR_VALIDATION",
       "runtimeEligibility": "BLOCKED",
-      "validationNotes": ["Kompilasi tidak memverifikasi singkatan dan definisi payung SBN.", "Singkatan tanpa dukungan dokumen resmi dilarang oleh arahan kerja 2026-10-14."]
+      "validationNotes": ["Kompilasi tidak memverifikasi singkatan dan definisi payung SBN.", "Singkatan tanpa dukungan dokumen resmi dilarang oleh jawaban mentor 2026-10-14."]
     },
     {
       "id": "GLS-009",
@@ -100,7 +100,7 @@
       "sourceReferences": ["Pengayaan Kelas Magang 6 Mei 2026", "docs/00-project/glossary.md, entri ORI"],
       "validationStatus": "PENDING_MENTOR_VALIDATION",
       "runtimeEligibility": "BLOCKED",
-      "validationNotes": ["Nama produk dan pemetaannya tidak ditemukan dalam kompilasi yang tersedia.", "Singkatan tanpa dukungan dokumen resmi dilarang oleh arahan kerja 2026-10-14."]
+      "validationNotes": ["Nama produk dan pemetaannya tidak ditemukan dalam kompilasi yang tersedia.", "Singkatan tanpa dukungan dokumen resmi dilarang oleh jawaban mentor 2026-10-14."]
     },
     {
       "id": "GLS-010",
@@ -111,7 +111,7 @@
       "sourceReferences": ["Pengayaan Kelas Magang 6 Mei 2026", "docs/00-project/glossary.md, entri SBR"],
       "validationStatus": "PENDING_MENTOR_VALIDATION",
       "runtimeEligibility": "BLOCKED",
-      "validationNotes": ["Nama produk dan pemetaannya tidak ditemukan dalam kompilasi yang tersedia.", "Singkatan tanpa dukungan dokumen resmi dilarang oleh arahan kerja 2026-10-14."]
+      "validationNotes": ["Nama produk dan pemetaannya tidak ditemukan dalam kompilasi yang tersedia.", "Singkatan tanpa dukungan dokumen resmi dilarang oleh jawaban mentor 2026-10-14."]
     },
     {
       "id": "GLS-011",
@@ -122,7 +122,7 @@
       "sourceReferences": ["Intake pertanyaan mentor SME-004"],
       "validationStatus": "PENDING_SME_VALIDATION",
       "runtimeEligibility": "BLOCKED",
-      "validationNotes": ["Diperlukan contoh dokumen atau SOP yang disahkan sebelum istilah dipakai untuk retrieval.", "Singkatan tanpa dukungan dokumen resmi dilarang oleh arahan kerja 2026-10-14."]
+      "validationNotes": ["Diperlukan contoh dokumen atau SOP yang disahkan sebelum istilah dipakai untuk retrieval.", "Singkatan tanpa dukungan dokumen resmi dilarang oleh jawaban mentor 2026-10-14."]
     },
     {
       "id": "GLS-012",
