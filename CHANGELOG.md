@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-14 — Penyimpanan hasil pemeriksaan sebagai draf simulasi
+
+- Menambahkan aksi **Setujui pembagian dan simpan draf** pada layar pemeriksaan isi dokumen.
+- Backend menyimpan knowledge DRAFT, referensi teks simulasi, versi, dan bagian terstruktur dalam satu transaksi. Judul wajib diawali `SIMULASI -` dan akses memerlukan gabungan kewenangan pemeriksaan serta penulisan dokumen.
+- Draf yang tersimpan tetap tidak muncul pada pencarian umum dan tidak dapat digunakan SAVI sebelum melewati alur publikasi.
+- Audit menyimpan identitas record dan jumlah bagian tanpa menyalin isi dokumen. Ekstraksi berkas asli dan ingestion produksi tetap tidak aktif.
+- Validasi aktual: Ruff, ESLint, mypy strict, TypeScript, build produksi, 24 test frontend, dan 205 test backend lulus (39 pengujian PostgreSQL dilewati pada mode simulasi). `pnpm db:test` tidak dapat memulai PostgreSQL sementara karena lingkungan tidak mengizinkan pembuatan user sistem `pgserver`; migrasi tetap diperiksa melalui render SQL.
+
 ## 2026-10-14 — Layar pemeriksaan pembagian isi dokumen
 
 - Menambahkan endpoint Python review-only untuk membagi teks contoh menjadi bagian terstruktur tanpa membaca berkas, menulis database, atau menerbitkan pengetahuan.

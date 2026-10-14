@@ -22,7 +22,7 @@ Daftar jujur keterbatasan scaffold SUNOVATE per 2026-10-02, agar tidak ada fitur
 | KL-04 | Pencarian | Retrieval hanya leksikal; tidak ada retrieval semantik | Kualitas pencarian terbatas pada kecocokan kata | ADR-008 |
 | KL-05 | AI | Provider AI pengembangan deterministik dan ekstraktif; tidak ada model bahasa | Jawaban Hermes berupa kutipan tersusun, bukan sintesis | ADR-008, OQ-11 |
 | KL-06 | AI | Embedding provider nonaktif; kolom vektor tanpa tipe dimensi dan tanpa indeks ANN | Tidak ada embedding | ADR-009, OQ-11 |
-| KL-07 | Dokumen | Belum ada unggah dokumen, ekstraksi teks, atau pipeline ingestion; dokumen hanya referensi dan versi dari dataset simulasi | Konten baru tidak dapat diolah otomatis | OQ-04, OQ-06 |
+| KL-07 | Dokumen | Belum ada unggah dokumen, ekstraksi berkas, atau pipeline ingestion produksi. Teks simulasi dapat dipreview dan disimpan manual sebagai draf terstruktur, tetapi tidak masuk pencarian umum atau SAVI | Konten baru belum dapat diolah otomatis dari berkas resmi | OQ-04, OQ-06 |
 | KL-08 | Dokumen | Document automation berbasis template belum diimplementasikan | Tujuan (7) brief belum terpenuhi | OQ-16 |
 | KL-09 | Notifikasi | Tabel `notifications` ada, tetapi pengiriman notifikasi belum ada; `NOTIFICATION_PROVIDER=disabled` | Pengguna tidak menerima pemberitahuan | Prioritas P1 |
 | KL-10 | Integrasi | Tidak ada integrasi SharePoint, Power BI, Telegram, WhatsApp, Kemenkeu Satu, atau data pasar; provider produksi hanya placeholder nonaktif | Tidak ada pertukaran data dengan sistem lain | Prioritas P2, OQ-06, OQ-08 |

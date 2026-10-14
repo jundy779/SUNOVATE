@@ -115,6 +115,7 @@ _TABLES: Final[dict[type[Record], Table]] = {
 # Record types accepted by insert() (design 5.1); anything else -> TypeError.
 _INSERTABLE: Final = (
     KnowledgeEntry,
+    DocumentReference,
     WorkOutput,
     Task,
     Milestone,
@@ -122,6 +123,7 @@ _INSERTABLE: Final = (
     FollowUp,
     ApprovalRequest,
     DocumentVersion,
+    DocumentChunk,
     AiConversation,
     AiMessage,
     AiCitation,

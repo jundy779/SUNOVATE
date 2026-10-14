@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from hashlib import sha256
 from typing import Annotated, Any, Literal
 from uuid import UUID
 
@@ -14,7 +15,13 @@ from ..context import AppContext
 from ..core.errors import ApiError, invalid_state, permission_denied
 from ..core.responses import ApiModel, Pagination, envelope, paginated, serialize
 from ..hermes.chunking import chunk_text
-from ..store.records import ApprovalRequest, DocumentReference, KnowledgeEntry
+from ..store.records import (
+    ApprovalRequest,
+    DocumentChunk,
+    DocumentReference,
+    DocumentVersion,
+    KnowledgeEntry,
+)
 from ._common import governed_view, readable_or_404
 
 router = APIRouter(prefix="/knowledge", tags=["knowledge entries"])
@@ -88,6 +95,21 @@ class ChunkPreviewRequest(ApiModel):
     knowledge_type: KnowledgeType
     extracted_text: str = Field(min_length=20, max_length=100_000)
     max_words: int = Field(default=400, ge=50, le=800)
+
+
+class ChunkDraftCreate(ChunkPreviewRequest):
+    summary: str = Field(min_length=10, max_length=2000)
+    classification_code: ClassificationCode
+    sharing_scope: SharingScope = "TEAM"
+    owner_team_id: UUID
+
+    @field_validator("document_label")
+    @classmethod
+    def _simulated_title_only(cls, value: str) -> str:
+        title = value.strip()
+        if not title.upper().startswith("SIMULASI -"):
+            raise ValueError("Nama bahan pengembangan harus diawali 'SIMULASI -'")
+        return title
 
 
 def _view(ctx: AppContext, entry: KnowledgeEntry, *, detail: bool = False) -> dict[str, Any]:
@@ -176,6 +198,103 @@ def preview_chunks(
         },
         previewMode=True,
     )
+
+
+@router.post("/chunk-drafts", status_code=201)
+def create_chunk_draft(
+    body: ChunkDraftCreate,
+    ctx: Ctx,
+    principal: Annotated[
+        Principal,
+        Depends(
+            require(
+                "knowledge:review",
+                "knowledge:create",
+                "document:create",
+                "document:version",
+                resource="knowledge_chunk_draft",
+            )
+        ),
+    ],
+) -> dict[str, Any]:
+    """Persist a reviewed SIMULATED_DATA preview as a non-retrievable draft."""
+    _check_target(ctx, principal, body.owner_team_id, body.classification_code)
+    chunks = chunk_text(
+        body.extracted_text,
+        body.knowledge_type,
+        document_label=body.document_label,
+        max_words=body.max_words,
+    )
+    checksum = sha256(body.extracted_text.encode("utf-8")).hexdigest()
+    entry = KnowledgeEntry(
+        title=body.document_label,
+        knowledge_type=body.knowledge_type,
+        summary=body.summary,
+        classification_code=body.classification_code,
+        sharing_scope=body.sharing_scope,
+        owner_team_id=body.owner_team_id,
+        owner_user_id=principal.user_id,
+        created_by=principal.user_id,
+        updated_by=principal.user_id,
+        source_note="SIMULATED_DATA - draf hasil pemeriksaan pembagian isi",
+        tags=["simulasi", "hasil-pemeriksaan"],
+    )
+    document = DocumentReference(
+        knowledge_entry_id=entry.id,
+        title=body.document_label,
+        provider_location=f"local://simulated/chunk-drafts/{entry.id}.txt",
+        mime_type="text/plain",
+        owner_team_id=body.owner_team_id,
+        classification_code=body.classification_code,
+        owner_user_id=principal.user_id,
+        created_by=principal.user_id,
+        updated_by=principal.user_id,
+    )
+    version = DocumentVersion(
+        document_reference_id=document.id,
+        version_label="v0.1",
+        checksum_sha256=checksum,
+        size_bytes=len(body.extracted_text.encode("utf-8")),
+        provider_location=document.provider_location,
+        extraction_status="EXTRACTED",
+        created_by=principal.user_id,
+    )
+    stored_chunks = [
+        DocumentChunk(
+            document_version_id=version.id,
+            knowledge_entry_id=entry.id,
+            chunk_index=chunk.index,
+            section_label=chunk.section_label,
+            content=chunk.content,
+        )
+        for chunk in chunks
+    ]
+    with ctx.store.transaction():
+        ctx.store.insert(entry)
+        ctx.store.insert(document)
+        ctx.store.insert(version)
+        for chunk in stored_chunks:
+            ctx.store.insert(chunk)
+        ctx.store.update_revisioned(
+            DocumentReference,
+            document.id,
+            expected_revision=1,
+            changes={"current_version_id": version.id},
+            actor_id=principal.user_id,
+        )
+        ctx.store.audit(
+            actor_user_id=principal.user_id,
+            action="CREATE",
+            entity_type="knowledge_entry",
+            entity_id=entry.id,
+            detail={
+                "source": "reviewed_chunk_preview",
+                "chunkCount": len(stored_chunks),
+                "documentReferenceId": str(document.id),
+                "documentVersionId": str(version.id),
+            },
+        )
+    return envelope(_view(ctx, entry, detail=True), persisted=True)
 
 
 @router.get("/{entry_id}")

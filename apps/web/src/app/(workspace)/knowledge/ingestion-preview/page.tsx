@@ -7,19 +7,28 @@ import { ChunkPreviewWorkbench } from "./workbench";
 
 export const metadata: Metadata = { title: "Pemeriksaan Isi Dokumen" };
 
+interface TeamOption {
+  id: string;
+  code: string;
+  name: string;
+}
+
 export default async function IngestionPreviewPage() {
   const { data: me } = await apiGet<Principal>("/auth/me");
   if (!me.permissions.includes("knowledge:review")) redirect("/unauthorized");
+  const required = ["knowledge:create", "document:create", "document:version"];
+  const canSave = required.every((permission) => me.permissions.includes(permission));
+  const teams = canSave ? (await apiGet<TeamOption[]>("/teams")).data : [];
 
   return (
     <>
       <PageHeader
         eyebrow="Basis Pengetahuan"
         title="Periksa pembagian isi dokumen"
-        description="Tinjau cara isi dokumen dibagi menjadi bagian-bagian yang dapat dicari. Tahap ini hanya pemeriksaan dan belum menyimpan atau menerbitkan bahan."
-        action={<StatusTag tone="warning">Belum disimpan</StatusTag>}
+        description="Tinjau pembagian isi dokumen simulasi. Pengguna berwenang dapat menyimpan hasilnya sebagai draf, tetapi penerbitan tetap melalui pemeriksaan terpisah."
+        action={<StatusTag tone="warning">Ruang draf simulasi</StatusTag>}
       />
-      <ChunkPreviewWorkbench />
+      <ChunkPreviewWorkbench teams={teams} canSave={canSave} />
     </>
   );
 }

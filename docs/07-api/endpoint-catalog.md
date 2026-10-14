@@ -23,6 +23,7 @@ Daftar seluruh endpoint `/api/v1` yang diimplementasikan (scaffold, data dari ba
 | GET | `/classifications` | Auth | empat tingkat |
 | GET | `/knowledge` | `knowledge:read` | filter `q`, `status`, `type`, `teamCode`; paginasi |
 | POST | `/knowledge/chunk-preview` | `knowledge:review` | membagi teks contoh secara deterministik; hanya preview di memori, tidak menyimpan atau menerbitkan |
+| POST | `/knowledge/chunk-drafts` | `knowledge:review` + `knowledge:create` + `document:create` + `document:version` | menyimpan hasil review sebagai knowledge DRAFT, referensi teks simulasi, versi, dan chunk; judul wajib diawali `SIMULASI -`; tidak masuk SAVI |
 | GET | `/knowledge/{id}` | `knowledge:read` | detail + dokumen + bagian teks |
 | POST | `/knowledge` | `knowledge:create` | draf baru untuk tim dalam scope; `tags` duplikat dibuang (kemunculan pertama dipertahankan) |
 | PATCH | `/knowledge/{id}` | `knowledge:update` | hanya DRAFT; wajib `revision`; `null` berarti field tidak diubah; `tags` didedupe seperti POST |

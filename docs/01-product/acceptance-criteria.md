@@ -311,6 +311,17 @@ Status AC-26 sampai AC-31: **PROPOSED, belum dapat diuji**. Model, endpoint, per
 
 Status terhadap kode saat ini: pemetaan terpusat tersedia untuk klasifikasi, status dan jenis pengetahuan, peran, kewenangan, aksi serta entitas riwayat, dan hasil aktivitas. Audit manual kanal Telegram/WhatsApp masih menunggu implementasi kanal. Terkait: [content-language.md](../09-ui-ux/content-language.md).
 
+## AC-33 Hasil pemeriksaan teks simulasi disimpan sebagai draf
+
+- **Given** pengguna memiliki kewenangan memeriksa, membuat knowledge, mendaftarkan dokumen, dan mendaftarkan versi
+- **And** nama bahan diawali `SIMULASI -`
+- **When** pengguna memeriksa pembagian dan memilih simpan draf
+- **Then** knowledge, referensi teks simulasi, versi, dan bagian tersimpan dalam satu transaksi dengan status DRAFT
+- **And** audit hanya mencatat identitas record dan jumlah bagian tanpa menyalin isi
+- **And** draf tidak muncul pada pencarian umum dan tidak dapat digunakan SAVI sebelum alur publikasi selesai.
+
+Status terhadap kode saat ini: **LULUS** pada backend simulasi dan unit test antarmuka. Jalur repository PostgreSQL sudah mendukung record terkait, tetapi pengujian PostgreSQL untuk perubahan ini belum dapat dijalankan pada sesi 2026-10-14 karena lingkungan tidak mengizinkan pembuatan user sistem `pgserver`. Unggah dan ekstraksi berkas asli tetap di luar skenario ini.
+
 ## Open Questions
 
 - Kode error untuk pelanggaran separation of duties belum dikunci di dokumentasi API; perlu diselaraskan dengan [error-format.md](../07-api/error-format.md).
@@ -329,4 +340,4 @@ Status terhadap kode saat ini: pemetaan terpusat tersedia untuk klasifikasi, sta
 
 ## Last Updated
 
-2026-10-11
+2026-10-14
