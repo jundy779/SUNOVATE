@@ -1,7 +1,7 @@
 # Decision Log
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-09
+**Last Updated:** 2026-10-14
 
 ## Purpose
 
@@ -47,6 +47,17 @@ Dokumen ini mencatat ringkasan keputusan proyek SUNOVATE beserta status dan damp
 - **Keputusan kerja:** Python/FastAPI tetap backend inti. Go, Rust, dan klien mobile masuk roadmap pasca-MVP dan hanya dipilih dari kebutuhan terukur.
 - **Status:** PROPOSED.
 - **Dampak:** Tidak ada service atau dependency baru pada MVP saat ini.
+
+### DEC-20261014-01
+
+- **Open question:** OQ-37 tata kelola glosarium SAVI.
+- **Tanggal jawaban:** 2026-10-14.
+- **Sumber:** Jawaban ketua proyek pada sesi 2026-10-14; belum dinyatakan sebagai jawaban mentor.
+- **Jawaban:** SUN berarti Surat Utang Negara; admin mengesahkan/memperbaiki dan menjadi tujuan pemeriksaan; sumber berupa peraturan SUN serta playbook transaksi SUN; semua pegawai boleh melihat glosarium; istilah lama tidak disimpan sebagai riwayat aktif; review setiap tiga bulan; singkatan tanpa dokumen resmi tidak boleh digunakan.
+- **Keputusan:** Terapkan kebijakan konservatif pada dokumentasi. SUN dapat diperlakukan sebagai kepanjangan resmi. Kandidat lain tetap diblokir. Riwayat tampilan boleh tidak aktif, tetapi audit perubahan tidak dihapus.
+- **Status:** PARTIAL, NEEDS MENTOR VALIDATION.
+- **Dampak:** OQ-37 menjadi PARTIAL; tidak ada permission admin, ekspansi retrieval, tiket, notifikasi, atau perubahan kandidat runtime.
+- **Tindak lanjut:** Tetapkan role admin, sumber per entri, daftar pemetaan yang disahkan, klasifikasi, tanggal review pertama, dan mekanisme pencabutan.
 
 ## Jawaban Mentor atas Open Question
 

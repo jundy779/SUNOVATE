@@ -1,6 +1,6 @@
 {
   "dataLabel": "CONTROLLED_GLOSSARY_DRAFT",
-  "source": "docs/00-project/glossary.md dan arahan tindak lanjut SAVI 2026-10-14",
+  "source": "docs/00-project/glossary.md, mentor-decision-oq37.md, dan arahan tindak lanjut SAVI 2026-10-14",
   "purpose": "Memisahkan variasi ejaan terbatas yang boleh dipakai saat pencarian ulang dari pemetaan istilah domain yang masih memerlukan pengesahan.",
   "entries": [
     {
@@ -67,7 +67,7 @@
       "sourceReferences": ["Kompilasi Peraturan SUN, PMK 114/2023, Pasal 2 ayat (3) huruf b, hal. 121", "Pengayaan Kelas Magang 6 Mei 2026"],
       "validationStatus": "PENDING_MENTOR_VALIDATION",
       "runtimeEligibility": "BLOCKED",
-      "validationNotes": ["Istilah debt switch tidak ditemukan dalam kompilasi dan pemetaannya perlu disahkan mentor."]
+      "validationNotes": ["Istilah debt switch tidak ditemukan dalam kompilasi dan pemetaannya perlu disahkan mentor.", "Jawaban tata kelola 2026-10-14 belum mengesahkan pasangan istilah ini; tetap diblokir."]
     },
     {
       "id": "GLS-007",
@@ -78,7 +78,7 @@
       "sourceReferences": ["Kompilasi Peraturan SUN, PMK 114/2023, Pasal 2 ayat (3)-(4), hal. 121", "Pengayaan Kelas Magang 6 Mei 2026"],
       "validationStatus": "PENDING_MENTOR_VALIDATION",
       "runtimeEligibility": "BLOCKED",
-      "validationNotes": ["Istilah cash buyback tidak dipakai dalam teks regulasi pada kompilasi."]
+      "validationNotes": ["Istilah cash buyback tidak dipakai dalam teks regulasi pada kompilasi.", "Jawaban tata kelola 2026-10-14 belum mengesahkan pasangan istilah ini; tetap diblokir."]
     },
     {
       "id": "GLS-008",
@@ -89,7 +89,7 @@
       "sourceReferences": ["docs/00-project/glossary.md, entri SBN"],
       "validationStatus": "PENDING_MENTOR_VALIDATION",
       "runtimeEligibility": "BLOCKED",
-      "validationNotes": ["Kompilasi tidak memverifikasi singkatan dan definisi payung SBN."]
+      "validationNotes": ["Kompilasi tidak memverifikasi singkatan dan definisi payung SBN.", "Singkatan tanpa dukungan dokumen resmi dilarang oleh arahan kerja 2026-10-14."]
     },
     {
       "id": "GLS-009",
@@ -100,7 +100,7 @@
       "sourceReferences": ["Pengayaan Kelas Magang 6 Mei 2026", "docs/00-project/glossary.md, entri ORI"],
       "validationStatus": "PENDING_MENTOR_VALIDATION",
       "runtimeEligibility": "BLOCKED",
-      "validationNotes": ["Nama produk dan pemetaannya tidak ditemukan dalam kompilasi yang tersedia."]
+      "validationNotes": ["Nama produk dan pemetaannya tidak ditemukan dalam kompilasi yang tersedia.", "Singkatan tanpa dukungan dokumen resmi dilarang oleh arahan kerja 2026-10-14."]
     },
     {
       "id": "GLS-010",
@@ -111,7 +111,7 @@
       "sourceReferences": ["Pengayaan Kelas Magang 6 Mei 2026", "docs/00-project/glossary.md, entri SBR"],
       "validationStatus": "PENDING_MENTOR_VALIDATION",
       "runtimeEligibility": "BLOCKED",
-      "validationNotes": ["Nama produk dan pemetaannya tidak ditemukan dalam kompilasi yang tersedia."]
+      "validationNotes": ["Nama produk dan pemetaannya tidak ditemukan dalam kompilasi yang tersedia.", "Singkatan tanpa dukungan dokumen resmi dilarang oleh arahan kerja 2026-10-14."]
     },
     {
       "id": "GLS-011",
@@ -122,7 +122,7 @@
       "sourceReferences": ["Intake pertanyaan mentor SME-004"],
       "validationStatus": "PENDING_SME_VALIDATION",
       "runtimeEligibility": "BLOCKED",
-      "validationNotes": ["Diperlukan contoh dokumen atau SOP yang disahkan sebelum istilah dipakai untuk retrieval."]
+      "validationNotes": ["Diperlukan contoh dokumen atau SOP yang disahkan sebelum istilah dipakai untuk retrieval.", "Singkatan tanpa dukungan dokumen resmi dilarang oleh arahan kerja 2026-10-14."]
     },
     {
       "id": "GLS-012",
