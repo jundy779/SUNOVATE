@@ -79,7 +79,7 @@ Urutan pekerjaan:
 
 1. Menyetujui jenis dokumen, klasifikasi, pemilik, retensi, dan sumber resmi.
 2. Menyiapkan ekstraksi pada dokumen simulasi dan review manusia.
-3. Menggunakan preview chunking Python yang sudah tersedia untuk Pasal, tahap, dan bagian.
+3. Menggunakan preview chunking Python dan layar pemeriksaan manusia yang sudah tersedia untuk Pasal, tahap, dan bagian; hasil tetap tidak tersimpan sebelum gerbang intake disetujui.
 4. Menyimpan chunk terverifikasi dan mengaktifkan PostgreSQL full-text search.
 5. Menggunakan reranker leksikal dan evidence gate deterministik yang sudah tersedia sebagai baseline aman.
 6. Memilih model embedding, reranker model, dan LLM hanya setelah OQ-11 ditutup.

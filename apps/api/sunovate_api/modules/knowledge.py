@@ -13,6 +13,7 @@ from ..authz.principal import Principal
 from ..context import AppContext
 from ..core.errors import ApiError, invalid_state, permission_denied
 from ..core.responses import ApiModel, Pagination, envelope, paginated, serialize
+from ..hermes.chunking import chunk_text
 from ..store.records import ApprovalRequest, DocumentReference, KnowledgeEntry
 from ._common import governed_view, readable_or_404
 
@@ -82,6 +83,13 @@ class KnowledgeSubmit(ApiModel):
     note: str | None = Field(default=None, max_length=1000)
 
 
+class ChunkPreviewRequest(ApiModel):
+    document_label: str = Field(min_length=3, max_length=255)
+    knowledge_type: KnowledgeType
+    extracted_text: str = Field(min_length=20, max_length=100_000)
+    max_words: int = Field(default=400, ge=50, le=800)
+
+
 def _view(ctx: AppContext, entry: KnowledgeEntry, *, detail: bool = False) -> dict[str, Any]:
     view = governed_view(ctx, entry)
     if detail:
@@ -130,6 +138,44 @@ def list_knowledge(
     items.sort(key=lambda e: e.updated_at, reverse=True)
     page, meta = paginated(items, pagination)
     return envelope([_view(ctx, e) for e in page], **meta)
+
+
+@router.post("/chunk-preview")
+def preview_chunks(
+    body: ChunkPreviewRequest,
+    ctx: Ctx,
+    principal: Annotated[
+        Principal, Depends(require("knowledge:review", resource="knowledge_chunk_preview"))
+    ],
+) -> dict[str, Any]:
+    """Preview deterministic text sections without persisting source text or chunks."""
+    del ctx, principal
+    chunks = chunk_text(
+        body.extracted_text,
+        body.knowledge_type,
+        document_label=body.document_label,
+        max_words=body.max_words,
+    )
+    return envelope(
+        {
+            "documentLabel": body.document_label,
+            "knowledgeType": body.knowledge_type,
+            "chunkCount": len(chunks),
+            "totalWords": sum(chunk.word_count for chunk in chunks),
+            "persisted": False,
+            "chunks": [
+                {
+                    "index": chunk.index,
+                    "sectionLabel": chunk.section_label,
+                    "content": chunk.content,
+                    "wordCount": chunk.word_count,
+                    "contentHash": chunk.content_hash,
+                }
+                for chunk in chunks
+            ],
+        },
+        previewMode=True,
+    )
 
 
 @router.get("/{entry_id}")

@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-10-14 — Layar pemeriksaan pembagian isi dokumen
+
+- Menambahkan endpoint Python review-only untuk membagi teks contoh menjadi bagian terstruktur tanpa membaca berkas, menulis database, atau menerbitkan pengetahuan.
+- Menambahkan layar institusional `/knowledge/ingestion-preview` bagi pemeriksa, dengan ringkasan jumlah bagian/kata, isi per bagian, dan kode pemeriksaan.
+- Menambahkan gerbang `knowledge:review`, proxy server Next.js agar token tidak masuk browser, tautan kontekstual dari Basis Pengetahuan, serta pengujian bahwa preview tidak menambah entri pengetahuan.
+- Ekstraksi berkas, penyimpanan chunk, FTS produksi, embedding, dan publikasi tetap belum diaktifkan.
+- Validasi aktual: Ruff, ESLint, mypy strict, dan TypeScript lulus; 23 test frontend serta 203 test backend lulus (39 dilewati); build produksi Next.js lulus setelah cache Turbopack lokal dipindahkan; SQL migrasi `0001` dan `0002` berhasil dirender sampai `COMMIT`.
+- Peninjauan visual otomatis lokal belum dapat dijalankan karena Chromium Playwright tidak tersedia dan browser terisolasi tidak dapat menjangkau `127.0.0.1`; struktur responsif dan komponen mengikuti sistem desain SUNOVATE yang ada, tetapi screenshot baru belum menjadi bukti validasi sesi ini.
+
 ## 2026-10-14 — Jawaban parsial tata kelola glosarium SAVI
 
 - Mencatat jawaban mentor untuk OQ-37: SUN berarti Surat Utang Negara; sumber glosarium adalah peraturan SUN dan playbook transaksi; glosarium dapat dilihat pegawai; review setiap tiga bulan; singkatan tanpa sumber resmi dilarang; pemeriksaan diarahkan ke admin.

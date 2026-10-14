@@ -10,7 +10,7 @@ Menetapkan usulan cara memotong dokumen menjadi chunk agar retrieval akurat dan 
 ## Status
 
 - **IMPLEMENTED** Chunk pada scaffold berasal dari dataset SIMULATED_DATA yang dimuat ke simulated store.
-- **IMPLEMENTED (DEVELOPMENT PREVIEW)** Modul Python `hermes/chunking.py` memotong teks yang sudah diekstrak berdasarkan Pasal, tahap/langkah, heading terbatas, atau paragraf; menghasilkan label, jumlah kata, urutan, dan SHA-256 deterministik tanpa menulis database.
+- **IMPLEMENTED (DEVELOPMENT PREVIEW)** Modul Python `hermes/chunking.py`, endpoint terotorisasi `/knowledge/chunk-preview`, dan layar pemeriksaan `/knowledge/ingestion-preview` memotong teks yang sudah diekstrak berdasarkan Pasal, tahap/langkah, heading terbatas, atau paragraf. Hasil menampilkan label, jumlah kata, urutan, dan SHA-256 deterministik tanpa menulis database.
 - **PROPOSED** Ekstraksi berkas, review metadata, tokenizer model, ukuran produksi dalam token, overlap, penyimpanan chunk, dan pemicu ingestion. Ukuran dikalibrasi dengan [rag-evaluation.md](./rag-evaluation.md) setelah OQ-11 diputuskan.
 
 ## Prinsip

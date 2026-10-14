@@ -364,6 +364,39 @@ tbody tr:hover { background: var(--paper); }
 .table-heading { color: var(--muted); font-size: .75rem; font-weight: 700; text-transform: uppercase; }
 code { font-size: .8rem; background: var(--paper); padding: 0 .25rem; }
 
+/* Knowledge intake preview: deliberate, review-only institutional workbench. */
+.ingestion-layout { display: grid; grid-template-columns: minmax(340px, .78fr) minmax(0, 1.22fr); gap: 1.25rem; align-items: start; margin-top: 1.5rem; }
+.ingestion-form, .ingestion-results { border: 1px solid var(--line); background: var(--white); box-shadow: var(--shadow); }
+.ingestion-heading { min-height: 66px; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .9rem 1.1rem; border-bottom: 1px solid var(--line); box-shadow: inset 4px 0 0 var(--gold); }
+.ingestion-heading h2, .ingestion-heading p { margin: 0; }
+.ingestion-heading h2 { margin-top: .2rem; font-size: 1.05rem; }
+.ingestion-fields { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem; padding: 1.1rem; }
+.ingestion-fields label { display: grid; align-content: start; gap: .4rem; color: var(--navy); font-size: .7rem; font-weight: 700; }
+.ingestion-fields input, .ingestion-fields select, .ingestion-fields textarea { width: 100%; border-color: var(--line); border-radius: 3px; font-size: .77rem; }
+.ingestion-text { grid-column: 1 / -1; }
+.ingestion-fields textarea { min-height: 278px; line-height: 1.6; }
+.ingestion-fields small { color: var(--muted); font-weight: 400; line-height: 1.45; }
+.ingestion-actions { display: flex; justify-content: flex-end; gap: .55rem; padding: .9rem 1.1rem; border-top: 1px solid var(--line); background: var(--paper); }
+.ingestion-actions .button { min-height: 38px; padding: .5rem .8rem; font-size: .7rem; }
+.ingestion-error { margin: 0 1.1rem 1rem; border-left: 3px solid var(--risk); background: #fff3f3; padding: .65rem .75rem; color: var(--risk); font-size: .74rem; font-weight: 700; }
+.ingestion-empty { min-height: 360px; display: grid; align-content: center; justify-items: center; gap: .35rem; padding: 2rem; color: var(--muted); text-align: center; }
+.ingestion-empty strong { color: var(--navy); }
+.ingestion-empty p { margin: 0; font-size: .78rem; }
+.ingestion-summary { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--line); background: var(--paper); }
+.ingestion-summary div { display: grid; gap: .15rem; padding: .85rem 1rem; border-right: 1px solid var(--line); }
+.ingestion-summary div:last-child { border-right: 0; }
+.ingestion-summary strong { color: var(--navy); font: 700 1.2rem/1 var(--font-heading); }
+.ingestion-summary span { color: var(--muted); font-size: .65rem; font-weight: 700; }
+.chunk-list { max-height: 620px; overflow: auto; }
+.chunk-list article { padding: 1rem 1.1rem; border-bottom: 1px solid var(--line); }
+.chunk-list article:last-child { border-bottom: 0; }
+.chunk-list header { display: grid; grid-template-columns: 30px 1fr auto; gap: .65rem; align-items: center; }
+.chunk-list header > span { color: var(--gold); font-weight: 800; }
+.chunk-list h3 { margin: 0; font-size: .85rem; }
+.chunk-list header small, .chunk-list footer { color: var(--muted); font-size: .65rem; }
+.chunk-list article > p { margin: .7rem 0; color: #334155; font-size: .77rem; line-height: 1.65; white-space: pre-wrap; }
+.chunk-list footer { padding-top: .55rem; border-top: 1px dashed var(--line); }
+
 /* Monitoring kerja: dense, table-first command surface. */
 .work-manager { display: grid; gap: 1rem; }
 .work-tabs { display: flex; overflow-x: auto; border-bottom: 1px solid var(--line); scrollbar-width: thin; }
@@ -460,6 +493,7 @@ code { font-size: .8rem; background: var(--paper); padding: 0 .25rem; }
 }
 
 @media (max-width: 900px) {
+  .ingestion-layout { grid-template-columns: 1fr; }
   .app-shell { grid-template-columns: 1fr; }
   .sidebar { min-height: auto; }
   .sidebar-inner { position: static; min-height: auto; }

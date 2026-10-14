@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import type { KnowledgeEntry } from "@sunovate/contracts";
+import type { KnowledgeEntry, Principal } from "@sunovate/contracts";
 import { KNOWLEDGE_STATUSES } from "@sunovate/shared-types";
 import {
   ClassificationTag,
@@ -22,7 +22,10 @@ export default async function KnowledgePage({ searchParams }: { searchParams: Se
   const params = new URLSearchParams({ pageSize: "50" });
   if (q) params.set("q", q);
   if ((KNOWLEDGE_STATUSES as readonly string[]).includes(status)) params.set("status", status);
-  const { data, meta } = await apiGet<KnowledgeEntry[]>(`/knowledge?${params.toString()}`);
+  const [{ data, meta }, { data: me }] = await Promise.all([
+    apiGet<KnowledgeEntry[]>(`/knowledge?${params.toString()}`),
+    apiGet<Principal>("/auth/me"),
+  ]);
 
   return (
     <>
@@ -30,7 +33,9 @@ export default async function KnowledgePage({ searchParams }: { searchParams: Se
         eyebrow="Basis Pengetahuan"
         title="Pengetahuan institusional"
         description="Informasi dan ringkasan pengetahuan yang boleh Anda akses. Berkas resmi tetap berada pada tempat penyimpanan yang telah disetujui."
-        action={<SimulatedLabel />}
+        action={me.permissions.includes("knowledge:review") ? (
+          <Link className="button secondary" href="/knowledge/ingestion-preview">Periksa isi dokumen</Link>
+        ) : <SimulatedLabel />}
       />
       <form className="toolbar" role="search" aria-label="Penyaringan pengetahuan">
         <label>

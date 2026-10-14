@@ -1,7 +1,7 @@
 # Endpoint Catalog
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-13
+**Last Updated:** 2026-10-14
 
 ## Purpose
 Daftar seluruh endpoint `/api/v1` yang diimplementasikan (scaffold, data dari backend `DATA_BACKEND`: `simulated` default atau `postgres`; kontrak identik pada keduanya, ADR-015). Sumber: `apps/api/sunovate_api/modules/`. OpenAPI hidup: `http://localhost:8000/docs`.
@@ -22,6 +22,7 @@ Daftar seluruh endpoint `/api/v1` yang diimplementasikan (scaffold, data dari ba
 | GET | `/permissions` | `role:read` | katalog permission |
 | GET | `/classifications` | Auth | empat tingkat |
 | GET | `/knowledge` | `knowledge:read` | filter `q`, `status`, `type`, `teamCode`; paginasi |
+| POST | `/knowledge/chunk-preview` | `knowledge:review` | membagi teks contoh secara deterministik; hanya preview di memori, tidak menyimpan atau menerbitkan |
 | GET | `/knowledge/{id}` | `knowledge:read` | detail + dokumen + bagian teks |
 | POST | `/knowledge` | `knowledge:create` | draf baru untuk tim dalam scope; `tags` duplikat dibuang (kemunculan pertama dipertahankan) |
 | PATCH | `/knowledge/{id}` | `knowledge:update` | hanya DRAFT; wajib `revision`; `null` berarti field tidak diubah; `tags` didedupe seperti POST |
