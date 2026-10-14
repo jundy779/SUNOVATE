@@ -53,6 +53,20 @@ def test_sme_question_intake_requires_review_and_all_team_scope() -> None:
     assert all(case["runtimeEligibility"] == "BLOCKED" for case in body["data"]["cases"])
 
 
+def test_glossary_intake_requires_review_and_separates_runtime_states() -> None:
+    client = make_client()
+    path = f"{API}/hermes/glossary-intake"
+
+    assert client.get(path, headers=login(client, "sim.staff.pppsun")).status_code == 403
+    assert client.get(path, headers=login(client, "sim.reviewer.akpsun")).status_code == 403
+    body = client.get(path, headers=login(client, "sim.coordinator")).json()
+    assert body["meta"]["dataLabel"] == "CONTROLLED_GLOSSARY_DRAFT"
+    assert body["meta"]["runtimeEligibility"] == "MIXED_PER_ENTRY"
+    entries = body["data"]["entries"]
+    assert len(entries) == 12
+    assert sum(item["runtimeEligibility"] == "LIMITED_SPELLING_RETRY" for item in entries) == 5
+
+
 def test_data_quality_and_classifications() -> None:
     client = make_client()
     issues = client.get(f"{API}/data-quality-issues",

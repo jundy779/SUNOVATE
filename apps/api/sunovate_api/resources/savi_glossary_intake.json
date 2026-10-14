@@ -1,0 +1,139 @@
+{
+  "dataLabel": "CONTROLLED_GLOSSARY_DRAFT",
+  "source": "docs/00-project/glossary.md dan arahan tindak lanjut SAVI 2026-10-14",
+  "purpose": "Memisahkan variasi ejaan terbatas yang boleh dipakai saat pencarian ulang dari pemetaan istilah domain yang masih memerlukan pengesahan.",
+  "entries": [
+    {
+      "id": "GLS-001",
+      "canonicalTerm": "Setelmen",
+      "variants": ["settlement"],
+      "category": "SPELLING_VARIANT",
+      "definition": "Penyelesaian transaksi SUN yang terdiri dari setelmen dana dan/atau setelmen kepemilikan SUN.",
+      "sourceReferences": ["Kompilasi Peraturan SUN, PMK 111/2024, Pasal 1 angka 8, hal. 36"],
+      "validationStatus": "IMPLEMENTED_SPELLING_ONLY",
+      "runtimeEligibility": "LIMITED_SPELLING_RETRY",
+      "validationNotes": ["Hanya menyetarakan variasi ejaan; tidak menambahkan prosedur atau kewenangan."]
+    },
+    {
+      "id": "GLS-002",
+      "canonicalTerm": "Ritel",
+      "variants": ["retail"],
+      "category": "SPELLING_VARIANT",
+      "definition": "Variasi ejaan untuk membantu pencarian istilah SUN ritel tanpa mengubah definisi produk.",
+      "sourceReferences": ["docs/00-project/glossary.md, entri SUN ritel"],
+      "validationStatus": "IMPLEMENTED_SPELLING_ONLY",
+      "runtimeEligibility": "LIMITED_SPELLING_RETRY",
+      "validationNotes": ["Tidak memetakan ORI atau SBR secara otomatis."]
+    },
+    {
+      "id": "GLS-003",
+      "canonicalTerm": "Validasi",
+      "variants": ["validation"],
+      "category": "SPELLING_VARIANT",
+      "definition": "Variasi bahasa untuk pencarian istilah pemeriksaan atau validasi dokumen.",
+      "sourceReferences": ["docs/09-ui-ux/content-language.md"],
+      "validationStatus": "IMPLEMENTED_SPELLING_ONLY",
+      "runtimeEligibility": "LIMITED_SPELLING_RETRY",
+      "validationNotes": ["Tidak menyamakan validasi dengan persetujuan atau penerbitan."]
+    },
+    {
+      "id": "GLS-004",
+      "canonicalTerm": "Verifikasi",
+      "variants": ["verification"],
+      "category": "SPELLING_VARIANT",
+      "definition": "Variasi bahasa untuk pencarian istilah verifikasi.",
+      "sourceReferences": ["docs/09-ui-ux/content-language.md"],
+      "validationStatus": "IMPLEMENTED_SPELLING_ONLY",
+      "runtimeEligibility": "LIMITED_SPELLING_RETRY",
+      "validationNotes": ["Tidak menganggap verifikasi sebagai keputusan pejabat berwenang."]
+    },
+    {
+      "id": "GLS-005",
+      "canonicalTerm": "Rekonsiliasi",
+      "variants": ["reconciliation"],
+      "category": "SPELLING_VARIANT",
+      "definition": "Variasi bahasa untuk pencarian istilah rekonsiliasi.",
+      "sourceReferences": ["Intake pertanyaan mentor SME-001 dan SME-008"],
+      "validationStatus": "IMPLEMENTED_SPELLING_ONLY",
+      "runtimeEligibility": "LIMITED_SPELLING_RETRY",
+      "validationNotes": ["Tidak menghasilkan langkah operasional tanpa SOP yang disahkan."]
+    },
+    {
+      "id": "GLS-006",
+      "canonicalTerm": "Penukaran",
+      "variants": ["debt switch"],
+      "category": "DOMAIN_MAPPING",
+      "definition": "Kandidat pemetaan istilah deck debt switch ke penukaran SUN.",
+      "sourceReferences": ["Kompilasi Peraturan SUN, PMK 114/2023, Pasal 2 ayat (3) huruf b, hal. 121", "Pengayaan Kelas Magang 6 Mei 2026"],
+      "validationStatus": "PENDING_MENTOR_VALIDATION",
+      "runtimeEligibility": "BLOCKED",
+      "validationNotes": ["Istilah debt switch tidak ditemukan dalam kompilasi dan pemetaannya perlu disahkan mentor."]
+    },
+    {
+      "id": "GLS-007",
+      "canonicalTerm": "Pembelian kembali dengan cara tunai",
+      "variants": ["cash buyback"],
+      "category": "DOMAIN_MAPPING",
+      "definition": "Kandidat pemetaan istilah deck cash buyback ke pembelian kembali SUN dengan cara tunai.",
+      "sourceReferences": ["Kompilasi Peraturan SUN, PMK 114/2023, Pasal 2 ayat (3)-(4), hal. 121", "Pengayaan Kelas Magang 6 Mei 2026"],
+      "validationStatus": "PENDING_MENTOR_VALIDATION",
+      "runtimeEligibility": "BLOCKED",
+      "validationNotes": ["Istilah cash buyback tidak dipakai dalam teks regulasi pada kompilasi."]
+    },
+    {
+      "id": "GLS-008",
+      "canonicalTerm": "Surat Berharga Negara",
+      "variants": ["SBN"],
+      "category": "ABBREVIATION",
+      "definition": "Kandidat penggunaan SBN sebagai istilah payung; definisi dan batas pemakaiannya belum disahkan.",
+      "sourceReferences": ["docs/00-project/glossary.md, entri SBN"],
+      "validationStatus": "PENDING_MENTOR_VALIDATION",
+      "runtimeEligibility": "BLOCKED",
+      "validationNotes": ["Kompilasi tidak memverifikasi singkatan dan definisi payung SBN."]
+    },
+    {
+      "id": "GLS-009",
+      "canonicalTerm": "Obligasi Negara Ritel",
+      "variants": ["ORI"],
+      "category": "ABBREVIATION",
+      "definition": "Kandidat nama produk SUN ritel yang disebut pada deck pengayaan.",
+      "sourceReferences": ["Pengayaan Kelas Magang 6 Mei 2026", "docs/00-project/glossary.md, entri ORI"],
+      "validationStatus": "PENDING_MENTOR_VALIDATION",
+      "runtimeEligibility": "BLOCKED",
+      "validationNotes": ["Nama produk dan pemetaannya tidak ditemukan dalam kompilasi yang tersedia."]
+    },
+    {
+      "id": "GLS-010",
+      "canonicalTerm": "Savings Bond Ritel",
+      "variants": ["SBR"],
+      "category": "ABBREVIATION",
+      "definition": "Kandidat nama produk SUN ritel yang disebut pada deck pengayaan.",
+      "sourceReferences": ["Pengayaan Kelas Magang 6 Mei 2026", "docs/00-project/glossary.md, entri SBR"],
+      "validationStatus": "PENDING_MENTOR_VALIDATION",
+      "runtimeEligibility": "BLOCKED",
+      "validationNotes": ["Nama produk dan pemetaannya tidak ditemukan dalam kompilasi yang tersedia."]
+    },
+    {
+      "id": "GLS-011",
+      "canonicalTerm": "Terms and Conditions",
+      "variants": ["T&C"],
+      "category": "ABBREVIATION",
+      "definition": "Istilah dokumen pada pertanyaan mentor; nama resmi, fungsi, dan cakupannya belum tervalidasi.",
+      "sourceReferences": ["Intake pertanyaan mentor SME-004"],
+      "validationStatus": "PENDING_SME_VALIDATION",
+      "runtimeEligibility": "BLOCKED",
+      "validationNotes": ["Diperlukan contoh dokumen atau SOP yang disahkan sebelum istilah dipakai untuk retrieval."]
+    },
+    {
+      "id": "GLS-012",
+      "canonicalTerm": "Direktorat Jenderal Pengelolaan Pembiayaan dan Risiko",
+      "variants": ["Direktorat Jenderal Pengelolaan Utang"],
+      "category": "HISTORICAL_NAME",
+      "definition": "Kandidat hubungan nama institusi lama dan nama saat ini untuk membantu pencarian regulasi lintas waktu.",
+      "sourceReferences": ["OQ-33", "Kompilasi Peraturan SUN, PMK 111/2024, Pasal 1 angka 6, hal. 35"],
+      "validationStatus": "PENDING_LEGAL_VALIDATION",
+      "runtimeEligibility": "BLOCKED",
+      "validationNotes": ["Hubungan kelembagaan lintas waktu tidak boleh diasumsikan tanpa validasi."]
+    }
+  ]
+}

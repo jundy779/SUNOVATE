@@ -1,7 +1,7 @@
 # Pertanyaan Terbuka untuk Mentor
 
 **Status:** NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-13
+**Last Updated:** 2026-10-14
 
 ## Purpose
 
@@ -65,6 +65,7 @@ Status `ANSWERED` tanpa keterangan hanya dipakai setelah pengakuan mentor tercat
 | OQ-34 | Apakah mentor dan TIK/keamanan menyetujui demo sekitar 25 pengguna melalui komputer kantor khusus dan Cloudflare Tunnel + Access; siapa pemilik akun/domain, administrator, daftar pengguna, masa aktif, logging, egress policy, dan prosedur mematikan tunnel? | Tanpa keputusan, tunnel tidak boleh diaktifkan dan kapasitas 25 pengguna tidak boleh diklaim. | [deployment-architecture.md](../03-architecture/deployment-architecture.md), [deployment-runbook.md](../11-operations/deployment-runbook.md), [task-tracker.md](../13-handover/task-tracker.md) | Tinggi | OPEN |
 | OQ-35 | Untuk Draft Workspace file pekerjaan: siapa yang boleh memberi/mencabut permission per akun, mengajukan, mereview, menerbitkan, dan menarik file; apakah grant dibatasi tim, klasifikasi, dan masa berlaku; berapa retensinya; serta apakah setiap koreksi wajib menjadi versi baru? | Tanpa keputusan, akun utama berisiko menjadi super-admin konten dan rekaman resmi dapat diubah tanpa separation of duties. Baseline usulan: DRAFT dapat diubah/dihapus lunak oleh pemilik berizin; PUBLISHED immutable; koreksi melalui versi baru; penarikan mempertahankan file dan audit. | [document-lifecycle.md](../02-business/document-lifecycle.md), [permission-matrix.md](../06-security/permission-matrix.md), [functional-requirements.md](../01-product/functional-requirements.md) | Tinggi | OPEN |
 | OQ-36 | Siapa SME/PIC dan reviewer hukum yang mengesahkan delapan pertanyaan operasional SUN dari arahan 2026-10-13; apa sumber resmi per klaim, SOP/checklist internal, klasifikasi, hak akses, serta kondisi SAVI harus menolak atau mengeskalasi? | Pertanyaan dapat dipakai sebagai intake, tetapi jawaban awal memuat rujukan pasal yang perlu revisi dan langkah operasional yang belum didukung SOP. Seluruh kasus diblokir dari runtime sampai validasi selesai. Lembar keputusan mentor tersedia untuk pembahasan terstruktur. | [mentor-decision-oq36.md](mentor-decision-oq36.md), [sme-question-validation.md](../10-testing/sme-question-validation.md), [rag-testing.md](../10-testing/rag-testing.md) | Tinggi | OPEN |
+| OQ-37 | Siapa yang mengesahkan istilah dan pemetaan glosarium untuk pencarian SAVI; apakah debt switch, cash buyback, SBN, ORI, SBR, T&C, dan nama institusi lama boleh dipetakan ke istilah utama; serta sumber, klasifikasi, masa tinjau, dan mekanisme pencabutannya apa? | Pemetaan yang salah dapat mengarahkan SAVI ke dokumen yang tidak relevan atau menyamakan konsep yang berbeda. Seluruh kandidat domain diblokir; hanya lima kelompok variasi ejaan yang aktif untuk retry terbatas. | [glossary.md](glossary.md), [retrieval-strategy.md](../05-ai-rag/retrieval-strategy.md), [rag-testing.md](../10-testing/rag-testing.md) | Sedang | OPEN |
 
 ## Asal Jawaban dan Status Pengakuan
 
@@ -128,4 +129,4 @@ Jawaban yang hanya disampaikan lisan tetap dicatat dengan keterangan "arahan lis
 
 ## Last Updated
 
-2026-10-13
+2026-10-14

@@ -4,6 +4,7 @@ import type { Principal } from "@sunovate/contracts";
 import { PageHeader, Panel, StatusTag } from "@/components/page-elements";
 import { apiGet } from "@/lib/api";
 import { MentorDecisionForm } from "./mentor-decision-form";
+import { GlossaryRegister, type GlossaryEntry } from "./glossary-register";
 import { ValidationRegister, type IntakeCase } from "./validation-register";
 
 export const metadata: Metadata = { title: "Pemeriksaan SAVI" };
@@ -16,20 +17,30 @@ interface IntakeRegister {
   cases: IntakeCase[];
 }
 
+interface GlossaryIntake {
+  dataLabel: "CONTROLLED_GLOSSARY_DRAFT";
+  source: string;
+  purpose: string;
+  entries: GlossaryEntry[];
+}
+
 export default async function SaviValidationPage() {
   const { data: me } = await apiGet<Principal>("/auth/me");
   const canReview = me.permissions.includes("knowledge:review");
   const canSeeAllTeams = me.permissions.includes("scope:all_teams");
   if (!canReview || !canSeeAllTeams) redirect("/unauthorized");
 
-  const { data: intake } = await apiGet<IntakeRegister>("/hermes/sme-question-intake");
+  const [{ data: intake }, { data: glossary }] = await Promise.all([
+    apiGet<IntakeRegister>("/hermes/sme-question-intake"),
+    apiGet<GlossaryIntake>("/hermes/glossary-intake"),
+  ]);
 
   return (
     <>
       <PageHeader
         eyebrow="Tata kelola SAVI AI"
-        title="Pemeriksaan pertanyaan mentor"
-        description="Daftar baca saja untuk memeriksa rancangan jawaban, dasar sumber, dan kekurangan bukti sebelum sebuah pertanyaan boleh digunakan oleh SAVI."
+        title="Pemeriksaan pengetahuan SAVI"
+        description="Daftar baca saja untuk memeriksa rancangan jawaban dan istilah sebelum digunakan oleh SAVI."
         action={<span className="data-label">Bahan awal dari mentor</span>}
       />
 
@@ -50,6 +61,14 @@ export default async function SaviValidationPage() {
         action={<StatusTag tone="warning">Baca saja</StatusTag>}
       >
         <ValidationRegister cases={intake.cases} />
+      </Panel>
+
+      <Panel
+        eyebrow={`${glossary.entries.length} istilah`}
+        title="Register glosarium SAVI"
+        action={<StatusTag tone="warning">Pemeriksaan bertahap</StatusTag>}
+      >
+        <GlossaryRegister entries={glossary.entries} />
       </Panel>
     </>
   );

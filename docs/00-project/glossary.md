@@ -1,11 +1,19 @@
 # Glosarium
 
 **Status:** DRAFT
-**Last Updated:** 2026-10-06
+**Last Updated:** 2026-10-14
 
 ## Purpose
 
 Glosarium menyamakan istilah domain SUN, istilah knowledge management, dan istilah teknis yang dipakai di dokumentasi dan kode SUNOVATE. Definisi domain SUN bersifat ringkasan untuk keperluan pengembangan; rujukan hukum yang berlaku tetap peraturan aslinya.
+
+## Tata Kelola untuk SAVI
+
+- Dokumen ini tetap menjadi sumber utama definisi istilah proyek. Register terstruktur pada `savi_glossary_intake.json` bukan daftar tandingan, melainkan daftar pemeriksaan untuk pemakaian istilah oleh SAVI.
+- Lima kelompok variasi ejaan dapat dipakai hanya untuk retry pencarian terbatas: setelmen/settlement, ritel/retail, validasi/validation, verifikasi/verification, dan rekonsiliasi/reconciliation.
+- Pemetaan makna domain, singkatan, dan nama lintas waktu tetap diblokir sampai sumber dan validator yang sesuai ditetapkan. Kandidat awal: debt switch, cash buyback, SBN, ORI, SBR, T&C, serta hubungan nama institusi lama dan saat ini.
+- Status pada register tidak mengubah status hukum, klasifikasi dokumen, kewenangan pegawai, atau lifecycle knowledge.
+- Promosi kandidat ke runtime memerlukan keputusan OQ-37, pembaruan golden set retrieval, pengujian kebocoran akses, serta pencatatan pada decision log dan changelog.
 
 Sumber singkatan:
 - [Pengayaan] = `Pengayaan_Kelas_Magang_6_Mei_2026.pdf`, sesi berbagi Dit. SUN untuk peserta magang, 6 Mei 2026.
@@ -97,4 +105,4 @@ Format sumber kompilasi: `Kompilasi Peraturan SUN, <regulasi>, Pasal X, hal. N` 
 
 ## Last Updated
 
-2026-10-06
+2026-10-14

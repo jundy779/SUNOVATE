@@ -410,6 +410,8 @@ code { font-size: .8rem; background: var(--paper); padding: 0 .25rem; }
 .validation-item h4 { margin: 0 0 .45rem; color: var(--navy); font-size: .76rem; letter-spacing: .035em; text-transform: uppercase; }
 .validation-item p, .validation-item li { color: var(--muted); font-size: .82rem; line-height: 1.65; }
 .validation-item p, .validation-item ul { margin: 0; }
+.table-detail { display: block; margin-top: .35rem; color: var(--muted); font-size: .74rem; font-weight: 400; line-height: 1.5; }
+.compact-list { margin: 0; padding-left: 1rem; color: var(--muted); font-size: .74rem; line-height: 1.5; }
 .validation-item ul { padding-left: 1.15rem; }
 .validation-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 1.5rem; }
 .validation-grid section { min-width: 0; }

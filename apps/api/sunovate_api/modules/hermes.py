@@ -12,6 +12,7 @@ from ..authz.dependencies import Ctx, require
 from ..authz.principal import Principal
 from ..core.errors import not_found
 from ..core.responses import ApiModel, envelope
+from ..hermes.glossary import load_savi_glossary_intake
 from ..hermes.intake import load_sme_question_intake
 from ..store.records import AiFeedback
 
@@ -41,6 +42,22 @@ def get_sme_question_intake(
         intake.model_dump(by_alias=True),
         dataLabel=intake.data_label,
         runtimeEligibility="BLOCKED",
+    )
+
+
+@router.get("/glossary-intake")
+def get_glossary_intake(
+    _principal: Annotated[
+        Principal,
+        Depends(require("knowledge:review", "scope:all_teams", resource="glossary_intake")),
+    ],
+) -> dict[str, Any]:
+    """Return read-only glossary candidates with per-entry runtime eligibility."""
+    intake = load_savi_glossary_intake()
+    return envelope(
+        intake.model_dump(by_alias=True),
+        dataLabel=intake.data_label,
+        runtimeEligibility="MIXED_PER_ENTRY",
     )
 
 

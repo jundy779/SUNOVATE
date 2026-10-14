@@ -9,6 +9,9 @@
 - Test API dan antarmuka yang memastikan jawaban berhasil tidak membuat tindak lanjut, sedangkan bukti tidak cukup menampilkan panduan yang sesuai.
 - Pencarian ulang maksimal satu kali untuk lima kelompok variasi ejaan terdaftar, tanpa membuang konsep pertanyaan atau menurunkan filter akses, batas klasifikasi, dan ambang bukti.
 - Jumlah percobaan pencarian dicatat pada audit dan respons; antarmuka memberi tahu pengguna ketika pencarian lanjutan dilakukan.
+- Register glosarium SAVI berisi 12 entri: 5 variasi ejaan aktif dan 7 kandidat pemetaan domain yang tetap diblokir.
+- Endpoint baca terotorisasi dan panel glosarium pada halaman Pemeriksaan SAVI, lengkap dengan sumber, catatan, jenis istilah, dan status pemeriksaan.
+- OQ-37 untuk mengesahkan pemilik glosarium, pemetaan domain, sumber, klasifikasi, masa tinjau, dan mekanisme pencabutan.
 
 ### Batas
 
@@ -18,7 +21,7 @@
 ### Validasi aktual
 
 - Ruff, ESLint, mypy strict, dan TypeScript lulus.
-- 20 test frontend lulus; 189 test backend lulus dan 39 dilewati.
+- 21 test frontend lulus; 193 test backend lulus dan 39 dilewati.
 - Next.js production build dengan webpack lulus.
 - `pnpm db:sql` berhasil merender migrasi `0001` dan `0002` sampai `COMMIT`.
 
