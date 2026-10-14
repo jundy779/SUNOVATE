@@ -81,10 +81,11 @@ Urutan pekerjaan:
 2. Menyiapkan ekstraksi pada dokumen simulasi dan review manusia.
 3. Menggunakan preview chunking Python yang sudah tersedia untuk Pasal, tahap, dan bagian.
 4. Menyimpan chunk terverifikasi dan mengaktifkan PostgreSQL full-text search.
-5. Memilih model embedding dan LLM hanya setelah OQ-11 ditutup.
-6. Mengaktifkan hybrid retrieval bila evaluasi menunjukkan peningkatan yang nyata.
-7. Menjalankan scope guard, prompt-injection defense, penyaringan izin sebelum retrieval, validasi sitasi, dan respons bukti tidak cukup.
-8. Menguji pertanyaan mentor, golden set, akurasi retrieval, sitasi, penolakan, dan kebocoran akses.
+5. Menggunakan reranker leksikal dan evidence gate deterministik yang sudah tersedia sebagai baseline aman.
+6. Memilih model embedding, reranker model, dan LLM hanya setelah OQ-11 ditutup.
+7. Mengaktifkan hybrid retrieval bila evaluasi menunjukkan peningkatan yang nyata.
+8. Menjalankan scope guard, prompt-injection defense, penyaringan izin sebelum retrieval, validasi sitasi, dan respons bukti tidak cukup.
+9. Menguji pertanyaan mentor, golden set, akurasi retrieval, sitasi, penolakan, dan kebocoran akses.
 
 Pola Agentic AI dibatasi pada orkestrasi terkendali. Multi-agent, web search bebas, memori jangka panjang, dan tindakan otomatis tidak termasuk MVP.
 

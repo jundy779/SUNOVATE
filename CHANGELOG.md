@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-14 — Evidence reranking dan answer gate SAVI
+
+- Memisahkan reranking dari keputusan menjawab melalui `EvidenceGate` Python yang deterministik.
+- SAVI menolak sebelum provider jawaban dipanggil bila kandidat terotorisasi tidak memenuhi coverage, dukungan istilah, skor rerank, atau ambang relatif.
+- Audit mencatat alasan gate, jumlah kandidat, skor/coverage teratas, dan jumlah passage yang diterima tanpa menyimpan teks pertanyaan.
+- Menambahkan pengujian penerimaan kandidat kuat dan abstention kandidat lemah. Model reranker eksternal tetap tidak aktif sampai OQ-11 disetujui.
+
 ## 2026-10-14 — Rencana induk dan urutan implementasi
 
 - Menambahkan satu rencana induk yang mengurutkan perubahan requirement, fondasi platform, kontrol API Gateway, Knowledge Hub, SAVI AI, web workflow, integrasi, demo, UAT, dan handover.

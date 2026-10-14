@@ -25,6 +25,17 @@ class RetrievedChunk:
     score: float
 
 
+@dataclass(frozen=True)
+class EvidenceDecision:
+    """Auditable outcome of the deterministic evidence gate."""
+
+    accepted: tuple[RetrievedChunk, ...]
+    reason: str
+    candidate_count: int
+    top_coverage: float
+    top_score: float
+
+
 class RetrievalService:
     def __init__(self, store: Repository, authz: AuthorizationService) -> None:
         self._store = store
@@ -87,6 +98,53 @@ class LexicalReranker:
             return RetrievedChunk(item.chunk, item.entry, item.matched, item.coverage, score)
 
         return sorted((rescore(i) for i in items), key=lambda r: r.score, reverse=True)
+
+
+class EvidenceGate:
+    """Reject weak retrieval before any passage reaches the answer provider."""
+
+    def __init__(
+        self,
+        *,
+        min_coverage: float = 0.6,
+        min_score: float = 0.45,
+        relative_cutoff: float = 0.6,
+        max_passages: int = 3,
+    ) -> None:
+        self._min_coverage = min_coverage
+        self._min_score = min_score
+        self._relative_cutoff = relative_cutoff
+        self._max_passages = max_passages
+
+    def evaluate(
+        self, items: list[RetrievedChunk], query_terms: frozenset[str]
+    ) -> EvidenceDecision:
+        if not items:
+            return EvidenceDecision((), "no_candidates", 0, 0.0, 0.0)
+
+        top = items[0]
+        def reject(reason: str) -> EvidenceDecision:
+            return EvidenceDecision((), reason, len(items), top.coverage, top.score)
+
+        if top.coverage < self._min_coverage:
+            return reject("insufficient_coverage")
+        required_terms = min(2, len(query_terms))
+        if len(top.matched) < required_terms:
+            return reject("insufficient_term_support")
+        if top.score < self._min_score:
+            return reject("insufficient_rerank_score")
+
+        floor = max(top.score * self._relative_cutoff, self._min_score)
+        accepted = tuple(
+            item
+            for item in items
+            if item.coverage >= self._min_coverage and item.score >= floor
+        )[: self._max_passages]
+        if not accepted:
+            return reject("no_passage_above_gate")
+        return EvidenceDecision(
+            accepted, "evidence_sufficient", len(items), top.coverage, top.score
+        )
 
 
 def _matched_query_terms(

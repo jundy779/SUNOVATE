@@ -22,7 +22,13 @@ from ..providers.interfaces import ContextPassage, GenerationRequest, HermesClie
 from ..store.records import AiCitation, AiConversation, AiMessage, ApprovalRequest
 from ..store.repository import Repository
 from .guards import CitationValidator, OutputGuard
-from .retrieval import LexicalReranker, RetrievalService, RetrievedChunk, exclude_instruction_like
+from .retrieval import (
+    EvidenceDecision,
+    EvidenceGate,
+    LexicalReranker,
+    RetrievalService,
+    exclude_instruction_like,
+)
 from .scope_guard import ScopeGuard
 from .text import limited_retry_variants, terms
 
@@ -92,6 +98,12 @@ class HermesGateway:
         self._scope = ScopeGuard()
         self._retrieval = RetrievalService(store, authz)
         self._reranker = LexicalReranker()
+        self._evidence_gate = EvidenceGate(
+            min_coverage=MIN_COVERAGE,
+            min_score=MIN_SCORE,
+            relative_cutoff=RELATIVE_CUTOFF,
+            max_passages=MAX_PASSAGES,
+        )
         self._citations = CitationValidator()
 
     # Helpers -----------------------------------------------------------------
@@ -113,26 +125,6 @@ class HermesGateway:
                 raise not_found("Percakapan")
             return existing, False
         return AiConversation(user_id=principal.user_id, title=question[:80]), True
-
-    def _select(
-        self, items: list[RetrievedChunk], query_terms: frozenset[str]
-    ) -> list[RetrievedChunk]:
-        """Evidence threshold (PROPOSED values, see docs/05-ai-rag/retrieval-strategy.md):
-        - coverage (title + section + content) >= MIN_COVERAGE,
-        - >= 2 matched terms (or the only term for single-term queries),
-        - reranked score >= MIN_SCORE, so title/section-only matches are not evidence.
-        """
-        required_terms = min(2, len(query_terms))
-        if (
-            not items
-            or items[0].coverage < MIN_COVERAGE
-            or len(items[0].matched) < required_terms
-            or items[0].score < MIN_SCORE
-        ):
-            return []
-        floor = max(items[0].score * RELATIVE_CUTOFF, MIN_SCORE)
-        chosen = [i for i in items if i.coverage >= MIN_COVERAGE and i.score >= floor]
-        return chosen[:MAX_PASSAGES]
 
     def _approval_for_write(self, principal: Principal, question: str) -> ApprovalRequest | None:
         """Builds (does not save) the human-approval request. Execution is never implemented."""
@@ -171,6 +163,7 @@ class HermesGateway:
         approval: ApprovalRequest | None = None
         follow_up: HermesFollowUp | None = None
         search_attempts = 0
+        evidence = EvidenceDecision((), "not_evaluated", 0, 0.0, 0.0)
 
         scope = self._scope.evaluate(question)
         if scope.decision is not None:
@@ -188,7 +181,8 @@ class HermesGateway:
                 self._retrieval.candidates(principal, query_terms, max_classification=ceiling),
             )
             safe, excluded = exclude_instruction_like(ranked)
-            selected = self._select(safe, query_terms)
+            evidence = self._evidence_gate.evaluate(safe, query_terms)
+            selected = list(evidence.accepted)
             variants = limited_retry_variants(query_terms)
             has_variant = any(options != frozenset({term}) for term, options in variants.items())
             if not selected and has_variant:
@@ -205,7 +199,8 @@ class HermesGateway:
                 )
                 retry_safe, retry_excluded = exclude_instruction_like(retry_ranked)
                 excluded = max(excluded, retry_excluded)
-                selected = self._select(retry_safe, query_terms)
+                evidence = self._evidence_gate.evaluate(retry_safe, query_terms)
+                selected = list(evidence.accepted)
                 if selected:
                     safe = retry_safe
             if not selected:
@@ -336,6 +331,13 @@ class HermesGateway:
                     "excludedPassages": excluded,
                     "questionLength": len(question),
                     "searchAttempts": search_attempts,
+                    "evidenceGate": {
+                        "reason": evidence.reason,
+                        "candidateCount": evidence.candidate_count,
+                        "topCoverage": evidence.top_coverage,
+                        "topScore": evidence.top_score,
+                        "acceptedCount": len(evidence.accepted),
+                    },
                 },
             )
         return HermesResult(

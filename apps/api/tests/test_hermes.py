@@ -1,7 +1,7 @@
 from uuid import uuid4
 
 from sunovate_api.hermes.guards import CitationValidator, OutputGuard
-from sunovate_api.hermes.retrieval import RetrievalService, RetrievedChunk
+from sunovate_api.hermes.retrieval import EvidenceGate, RetrievalService, RetrievedChunk
 from sunovate_api.hermes.scope_guard import ScopeGuard
 from sunovate_api.hermes.text import limited_retry_variants, terms
 from sunovate_api.store.dataset import sid
@@ -109,6 +109,8 @@ def test_permission_gate_and_audit_without_question_text() -> None:
     logs = client.get("/api/v1/audit-logs?action=AI_QUERY",
                       headers=login(client, "sim.auditor")).json()["data"]
     assert logs and logs[0]["detail"]["decision"] == "ANSWERED"
+    assert logs[0]["detail"]["evidenceGate"]["reason"] == "evidence_sufficient"
+    assert logs[0]["detail"]["evidenceGate"]["acceptedCount"] >= 1
     assert "metadata" not in str(logs[0]["detail"]).lower()
 
 
@@ -176,6 +178,34 @@ def _item(entry_id: str = "x") -> RetrievedChunk:
     chunk = DocumentChunk(document_version_id=uuid4(), knowledge_entry_id=entry.id,
                           chunk_index=0, section_label=entry_id, content="c")
     return RetrievedChunk(chunk, entry, frozenset({"c"}), 1.0, 1.0)
+
+
+def test_evidence_gate_accepts_only_strong_relative_candidates() -> None:
+    strong = _item("strong")
+    weak = RetrievedChunk(
+        _item("weak").chunk,
+        strong.entry,
+        frozenset({"c"}),
+        0.7,
+        0.5,
+    )
+    decision = EvidenceGate().evaluate([strong, weak], frozenset({"c"}))
+    assert decision.reason == "evidence_sufficient"
+    assert decision.accepted == (strong,)
+    assert decision.candidate_count == 2
+
+
+def test_evidence_gate_abstains_before_answer_provider() -> None:
+    weak = RetrievedChunk(
+        _item("weak").chunk,
+        _item("weak").entry,
+        frozenset({"c"}),
+        0.4,
+        0.4,
+    )
+    decision = EvidenceGate().evaluate([weak], frozenset({"c", "d"}))
+    assert decision.accepted == ()
+    assert decision.reason == "insufficient_coverage"
 
 
 def test_citation_validator_rules() -> None:

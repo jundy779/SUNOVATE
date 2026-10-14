@@ -1,7 +1,7 @@
 # Retrieval Strategy
 
-**Status:** PROPOSED
-**Last Updated:** 2026-10-02
+**Status:** IN PROGRESS
+**Last Updated:** 2026-10-14
 
 ## Purpose
 
@@ -36,6 +36,7 @@ Konsekuensi: pengguna dengan clearance INTERNAL tidak pernah menerima chunk REST
 
 - Retrieval leksikal atas chunk PUBLISHED terotorisasi, identik pada kedua backend (`DATA_BACKEND=simulated` dan `DATA_BACKEND=postgres`). Pada postgres, SQL hanya mempersempit kandidat menurut otorisasi; scoring tetap di Python (`terms()`) dan `meta.mode` tetap `lexical`. FTS `search_vector` tidak dipakai karena konfigurasi `simple` tanpa stemming dapat menurunkan recall (ADR-015). Golden set RAG lulus pada kedua backend (`pnpm test` dan `pnpm db:test`).
 - Rerank leksikal terhadap kandidat.
+- Evidence gate deterministik memisahkan rerank dari keputusan menjawab. Gate mencatat jumlah kandidat terotorisasi, coverage teratas, skor teratas, alasan keputusan, dan jumlah passage yang lolos pada audit tanpa menyimpan teks pertanyaan.
 - Filter injeksi dokumen mengeluarkan chunk yang berisi teks menyerupai instruksi, setelah rerank dan sebelum penyusunan jawaban.
 - Tidak ada embedding, tidak ada model eksternal, tidak ada panggilan jaringan.
 
@@ -51,6 +52,8 @@ Nilai yang dipakai kode scaffold saat ini (`hermes/retrieval.py`, `hermes/gatewa
 | `MIN_SCORE` | 0,45 | minimum skor rerank chunk teratas dan chunk lain yang dipilih |
 | `RELATIVE_CUTOFF` | 0,6 | chunk lain harus >= 60 persen skor teratas |
 | `MAX_PASSAGES` | 3 | passage maksimum yang diberikan ke HermesClient |
+
+Implementasi gate berada pada `EvidenceGate` di `hermes/retrieval.py`. Alasan penolakan dibedakan menjadi tidak ada kandidat, coverage tidak cukup, dukungan istilah tidak cukup, skor rerank tidak cukup, atau tidak ada passage yang melewati ambang relatif. Hanya passage berstatus `evidence_sufficient` yang dapat dikirim ke provider jawaban.
 
 Kasus golden set RAG-16 (query yang hanya cocok dengan judul dan label "Langkah" dari SOP lain) memicu penambahan `MIN_SCORE`. RAG-21 memicu kenaikan `MIN_COVERAGE` karena kecocokan istilah umum SUN, regulasi, dan ketentuan belum membuktikan klaim "otomatis menghapus seluruh ketentuan lama".
 
