@@ -25,6 +25,7 @@ const answer = {
     excludedPassages: 0,
     approvalRequestId: null,
     followUp: null,
+    searchAttempts: 1,
   },
   meta: { dataLabel: "SIMULATED_DATA" },
 };
@@ -98,6 +99,7 @@ describe("HermesChat", () => {
           guidance: "Perjelas periode, nama dokumen, proses, atau unit yang dimaksud.",
           clarificationPrompt: "Sebutkan periode dan dokumen acuan yang ingin diperiksa.",
         },
+        searchAttempts: 2,
       },
     };
     vi.stubGlobal(
@@ -114,5 +116,6 @@ describe("HermesChat", () => {
       "Sumber belum mencukupi",
     );
     expect(screen.getByText(/tidak mengirim permintaan kepada pegawai/i)).toBeInTheDocument();
+    expect(screen.getByText(/pencarian lanjutan satu kali/i)).toBeInTheDocument();
   });
 });

@@ -56,7 +56,8 @@ sequenceDiagram
 Catatan alur:
 
 - Jika `ScopeGuard` menghasilkan keputusan penolakan, alur berhenti dan respons berisi decision `REFUSED_OUT_OF_SCOPE`, `REFUSED_GENERAL_CODING`, atau `REFUSED_POLICY`. Jika terdeteksi write intent, approval request PENDING dibuat dan decision `REQUIRES_HUMAN_APPROVAL` dikembalikan.
-- Jika tidak ada chunk terotorisasi yang memadai atau sitasi gagal divalidasi, decision `INSUFFICIENT_EVIDENCE`. Respons menyertakan tindak lanjut terstruktur: memperjelas periode/dokumen/proses/unit, atau meminta pemeriksaan pegawai berwenang. Sistem tidak membuat tiket, menunjuk PIC, mengirim pesan, atau menerbitkan pengetahuan secara otomatis.
+- Jika pencarian awal tidak menemukan bukti memadai, gateway hanya boleh mencoba satu pencarian tambahan untuk variasi ejaan yang terdaftar. Retry memakai filter akses, batas klasifikasi, filter injeksi, ambang bukti, dan validasi sitasi yang sama.
+- Jika bukti tetap tidak memadai atau sitasi gagal divalidasi, decision `INSUFFICIENT_EVIDENCE`. Respons menyertakan tindak lanjut terstruktur: memperjelas periode/dokumen/proses/unit, atau meminta pemeriksaan pegawai berwenang. Sistem tidak membuat tiket, menunjuk PIC, mengirim pesan, atau menerbitkan pengetahuan secara otomatis.
 - Jika `OutputGuard` memblokir, decision `BLOCKED_BY_OUTPUT_GUARD`.
 - Jika permission tidak dimiliki, API mengembalikan `PERMISSION_DENIED` (403) dan mencatat `ACCESS_DENIED`.
 

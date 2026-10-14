@@ -49,6 +49,7 @@ class RetrievalService:
         query_terms: frozenset[str],
         *,
         max_classification: str | None,
+        term_variants: dict[str, frozenset[str]] | None = None,
         limit: int = 20,
     ) -> list[RetrievedChunk]:
         if not query_terms:
@@ -59,7 +60,7 @@ class RetrievalService:
         for entry in entries:
             for chunk in chunks.get(entry.id, []):
                 text_terms = terms(f"{entry.title} {chunk.section_label} {chunk.content}")
-                matched = query_terms & text_terms
+                matched = _matched_query_terms(query_terms, text_terms, term_variants)
                 if not matched:
                     continue
                 coverage = len(matched) / len(query_terms)
@@ -72,14 +73,32 @@ class LexicalReranker:
     """Boosts passages whose content (not only title) covers the query terms."""
 
     def rerank(
-        self, query_terms: frozenset[str], items: list[RetrievedChunk]
+        self,
+        query_terms: frozenset[str],
+        items: list[RetrievedChunk],
+        term_variants: dict[str, frozenset[str]] | None = None,
     ) -> list[RetrievedChunk]:
         def rescore(item: RetrievedChunk) -> RetrievedChunk:
-            content_cov = len(query_terms & terms(item.chunk.content)) / max(len(query_terms), 1)
+            content_matched = _matched_query_terms(
+                query_terms, terms(item.chunk.content), term_variants
+            )
+            content_cov = len(content_matched) / max(len(query_terms), 1)
             score = round(0.6 * item.coverage + 0.4 * content_cov, 4)
             return RetrievedChunk(item.chunk, item.entry, item.matched, item.coverage, score)
 
         return sorted((rescore(i) for i in items), key=lambda r: r.score, reverse=True)
+
+
+def _matched_query_terms(
+    query_terms: frozenset[str],
+    text_terms: frozenset[str],
+    term_variants: dict[str, frozenset[str]] | None,
+) -> frozenset[str]:
+    if term_variants is None:
+        return query_terms & text_terms
+    return frozenset(
+        term for term in query_terms if term_variants.get(term, frozenset({term})) & text_terms
+    )
 
 
 def exclude_instruction_like(items: list[RetrievedChunk]) -> tuple[list[RetrievedChunk], int]:

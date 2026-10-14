@@ -104,7 +104,9 @@ Pesan kepada pengguna tidak boleh mengisyaratkan adanya dokumen yang tidak boleh
 - Sitasi tidak valid atau tidak mendukung jawaban: SAVI meminta pemeriksaan pegawai yang berwenang.
 - Tindak lanjut hanya berupa panduan pada layar. SAVI tidak otomatis menunjuk PIC, membuat tiket, mengirim notifikasi, mengubah data, atau memasukkan materi baru ke basis pengetahuan.
 - Nama PIC, batas waktu layanan, kanal notifikasi, dan kewenangan publikasi tetap menunggu keputusan OQ-36.
-- Pencarian ulang dengan perluasan istilah belum diimplementasikan; penambahan strategi tersebut wajib diuji agar tidak memperluas akses atau menurunkan ketepatan sumber.
+- **IMPLEMENTED terbatas 2026-10-14:** jika pencarian pertama gagal dan pertanyaan memuat variasi ejaan yang terdaftar, SAVI mengulang pencarian satu kali. Daftar awal hanya mencakup `setelmen/settlement`, `ritel/retail`, `validasi/validation`, `verifikasi/verification`, dan `rekonsiliasi/reconciliation`.
+- Retry mempertahankan seluruh konsep pertanyaan, filter otorisasi, batas klasifikasi, filter injeksi, ambang coverage, ambang score, serta validasi sitasi. Kata pertanyaan tidak dibuang dan ambang bukti tidak diturunkan.
+- Jika tidak ada variasi terdaftar, pencarian tidak diulang. Ekspansi sinonim domain, perubahan istilah berbasis model, dan pencarian bebas tetap belum diimplementasikan karena memerlukan glosarium tervalidasi serta evaluasi retrieval.
 
 ## Open Questions
 

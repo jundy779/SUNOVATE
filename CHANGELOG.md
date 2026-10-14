@@ -7,16 +7,18 @@
 - Respons terstruktur ketika sumber yang dapat diakses belum cukup: alasan yang jelas, panduan memperjelas periode/dokumen/proses/unit, dan arahan meminta pemeriksaan pegawai berwenang.
 - Panel "Langkah berikutnya" pada percakapan SAVI dengan bahasa pengguna nonteknis.
 - Test API dan antarmuka yang memastikan jawaban berhasil tidak membuat tindak lanjut, sedangkan bukti tidak cukup menampilkan panduan yang sesuai.
+- Pencarian ulang maksimal satu kali untuk lima kelompok variasi ejaan terdaftar, tanpa membuang konsep pertanyaan atau menurunkan filter akses, batas klasifikasi, dan ambang bukti.
+- Jumlah percobaan pencarian dicatat pada audit dan respons; antarmuka memberi tahu pengguna ketika pencarian lanjutan dilakukan.
 
 ### Batas
 
 - SAVI tidak otomatis menunjuk PIC, membuat tiket, mengirim pesan, mengubah data, atau menerbitkan pengetahuan.
-- Nama PIC, SLA, kanal notifikasi, alur persetujuan, dan pencarian ulang berbasis perluasan istilah belum ditetapkan dan tetap menunggu keputusan OQ-36.
+- Nama PIC, SLA, kanal notifikasi, alur persetujuan, sinonim domain, serta perubahan istilah berbasis model belum ditetapkan dan tetap menunggu keputusan OQ-36 atau glosarium tervalidasi.
 
 ### Validasi aktual
 
 - Ruff, ESLint, mypy strict, dan TypeScript lulus.
-- 20 test frontend lulus; 187 test backend lulus dan 39 dilewati.
+- 20 test frontend lulus; 189 test backend lulus dan 39 dilewati.
 - Next.js production build dengan webpack lulus.
 - `pnpm db:sql` berhasil merender migrasi `0001` dan `0002` sampai `COMMIT`.
 

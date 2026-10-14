@@ -101,6 +101,9 @@ export function HermesChat() {
                 <section className="savi-follow-up" aria-label="Langkah berikutnya">
                   <h3>{answer.followUp.title}</h3>
                   <p>{answer.followUp.guidance}</p>
+                  {answer.searchAttempts > 1 ? (
+                    <p>SAVI AI telah mencoba pencarian lanjutan satu kali.</p>
+                  ) : null}
                   {answer.followUp.clarificationPrompt ? (
                     <p>
                       <strong>Agar pertanyaan lebih jelas:</strong>{" "}

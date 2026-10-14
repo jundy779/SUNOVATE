@@ -159,6 +159,7 @@ export interface HermesAnswer {
   excludedPassages: number;
   approvalRequestId: string | null;
   followUp: HermesFollowUp | null;
+  searchAttempts: number;
 }
 
 // Request schemas ---------------------------------------------------------------

@@ -24,7 +24,7 @@ from ..store.repository import Repository
 from .guards import CitationValidator, OutputGuard
 from .retrieval import LexicalReranker, RetrievalService, RetrievedChunk, exclude_instruction_like
 from .scope_guard import ScopeGuard
-from .text import terms
+from .text import limited_retry_variants, terms
 
 MIN_COVERAGE = 0.6
 MIN_SCORE = 0.45
@@ -71,6 +71,7 @@ class HermesResult:
     excluded_passages: int
     approval_request_id: UUID | None
     follow_up: HermesFollowUp | None
+    search_attempts: int
 
 
 class HermesGateway:
@@ -169,6 +170,7 @@ class HermesGateway:
         excluded = 0
         approval: ApprovalRequest | None = None
         follow_up: HermesFollowUp | None = None
+        search_attempts = 0
 
         scope = self._scope.evaluate(question)
         if scope.decision is not None:
@@ -180,12 +182,32 @@ class HermesGateway:
         else:
             ceiling = self._ceiling(principal)
             query_terms = terms(question)
+            search_attempts = 1
             ranked = self._reranker.rerank(
                 query_terms,
                 self._retrieval.candidates(principal, query_terms, max_classification=ceiling),
             )
             safe, excluded = exclude_instruction_like(ranked)
             selected = self._select(safe, query_terms)
+            variants = limited_retry_variants(query_terms)
+            has_variant = any(options != frozenset({term}) for term, options in variants.items())
+            if not selected and has_variant:
+                search_attempts = 2
+                retry_ranked = self._reranker.rerank(
+                    query_terms,
+                    self._retrieval.candidates(
+                        principal,
+                        query_terms,
+                        max_classification=ceiling,
+                        term_variants=variants,
+                    ),
+                    term_variants=variants,
+                )
+                retry_safe, retry_excluded = exclude_instruction_like(retry_ranked)
+                excluded = max(excluded, retry_excluded)
+                selected = self._select(retry_safe, query_terms)
+                if selected:
+                    safe = retry_safe
             if not selected:
                 decision, reason, answer = (
                     "INSUFFICIENT_EVIDENCE",
@@ -313,6 +335,7 @@ class HermesGateway:
                     "citationCount": len(citations),
                     "excludedPassages": excluded,
                     "questionLength": len(question),
+                    "searchAttempts": search_attempts,
                 },
             )
         return HermesResult(
@@ -325,4 +348,5 @@ class HermesGateway:
             excluded,
             approval.id if approval is not None else None,
             follow_up,
+            search_attempts,
         )

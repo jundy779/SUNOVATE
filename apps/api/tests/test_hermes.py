@@ -3,6 +3,7 @@ from uuid import uuid4
 from sunovate_api.hermes.guards import CitationValidator, OutputGuard
 from sunovate_api.hermes.retrieval import RetrievalService, RetrievedChunk
 from sunovate_api.hermes.scope_guard import ScopeGuard
+from sunovate_api.hermes.text import limited_retry_variants, terms
 from sunovate_api.store.dataset import sid
 from sunovate_api.store.records import DocumentChunk, KnowledgeEntry
 from sunovate_api.testing import login, make_client
@@ -45,6 +46,28 @@ def test_answered_response_does_not_create_follow_up() -> None:
     )
     assert data["decision"] == "ANSWERED"
     assert data["followUp"] is None
+    assert data["searchAttempts"] == 1
+
+
+def test_limited_retry_uses_only_registered_spelling_variants() -> None:
+    setelmen = terms("setelmen")
+    variants = limited_retry_variants(setelmen)
+    assert variants[next(iter(setelmen))] == terms("setelmen settlement")
+    lelang = terms("lelang")
+    lelang_variants = limited_retry_variants(lelang)
+    assert lelang_variants[next(iter(lelang))] == lelang
+
+
+def test_limited_retry_runs_once_without_bypassing_evidence_threshold() -> None:
+    client = make_client()
+    data = _ask(
+        client,
+        login(client, "sim.staff.pppsun"),
+        "Bagaimana proses setelmen transaksi yang belum tersedia?",
+    )
+    assert data["decision"] == "INSUFFICIENT_EVIDENCE"
+    assert data["searchAttempts"] == 2
+    assert data["citations"] == []
 
 
 def test_owner_team_gets_answer() -> None:

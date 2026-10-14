@@ -110,6 +110,27 @@ def normalize_term(word: str) -> str:
     return term
 
 
+_LIMITED_RETRY_WORD_GROUPS = (
+    ("setelmen", "settlement"),
+    ("ritel", "retail"),
+    ("validasi", "validation"),
+    ("verifikasi", "verification"),
+    ("rekonsiliasi", "reconciliation"),
+)
+
+
+def limited_retry_variants(query_terms: frozenset[str]) -> dict[str, frozenset[str]]:
+    """Return conservative spelling variants without dropping query concepts."""
+    groups = [
+        frozenset(normalize_term(word) for word in group)
+        for group in _LIMITED_RETRY_WORD_GROUPS
+    ]
+    return {
+        term: next((group for group in groups if term in group), frozenset({term}))
+        for term in query_terms
+    }
+
+
 def terms(text: str) -> frozenset[str]:
     """Distinct normalized content terms of a text."""
     return frozenset(

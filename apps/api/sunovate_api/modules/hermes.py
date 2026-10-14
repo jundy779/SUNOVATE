@@ -85,6 +85,7 @@ def query(
                 if result.follow_up is not None
                 else None
             ),
+            "searchAttempts": result.search_attempts,
         },
         provider=ctx.providers.hermes.name,
     )
