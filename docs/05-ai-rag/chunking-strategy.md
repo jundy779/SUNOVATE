@@ -1,7 +1,7 @@
 # Chunking Strategy
 
-**Status:** PROPOSED
-**Last Updated:** 2026-10-06
+**Status:** IN PROGRESS
+**Last Updated:** 2026-10-14
 
 ## Purpose
 
@@ -9,13 +9,14 @@ Menetapkan usulan cara memotong dokumen menjadi chunk agar retrieval akurat dan 
 
 ## Status
 
-- **IMPLEMENTED** Chunk pada scaffold berasal dari dataset SIMULATED_DATA yang dimuat ke simulated store; belum ada proses chunking otomatis.
-- **PROPOSED** Seluruh strategi di dokumen ini, termasuk ukuran target dalam token. Ukuran dikalibrasi dengan [rag-evaluation.md](./rag-evaluation.md) dan menyesuaikan tokenizer model yang disetujui (OQ-11).
+- **IMPLEMENTED** Chunk pada scaffold berasal dari dataset SIMULATED_DATA yang dimuat ke simulated store.
+- **IMPLEMENTED (DEVELOPMENT PREVIEW)** Modul Python `hermes/chunking.py` memotong teks yang sudah diekstrak berdasarkan Pasal, tahap/langkah, heading terbatas, atau paragraf; menghasilkan label, jumlah kata, urutan, dan SHA-256 deterministik tanpa menulis database.
+- **PROPOSED** Ekstraksi berkas, review metadata, tokenizer model, ukuran produksi dalam token, overlap, penyimpanan chunk, dan pemicu ingestion. Ukuran dikalibrasi dengan [rag-evaluation.md](./rag-evaluation.md) setelah OQ-11 diputuskan.
 
 ## Prinsip
 
-- **PROPOSED** Potong berdasarkan struktur dokumen terlebih dahulu, lalu berdasarkan ukuran. Batas struktur tidak dipotong di tengah kalimat.
-- **PROPOSED** Setiap chunk membawa label bagian yang dapat ditampilkan pada sitasi.
+- **IMPLEMENTED (DEVELOPMENT PREVIEW)** Potong berdasarkan struktur dokumen terlebih dahulu, lalu pagar jumlah kata. Preview tidak menggabungkan batas Pasal atau tahapan.
+- **IMPLEMENTED (DEVELOPMENT PREVIEW)** Setiap preview chunk membawa label bagian yang dapat ditampilkan pada sitasi.
 - **PROPOSED** Setiap chunk mewarisi klasifikasi dan tim pemilik dari versi dokumen induknya. Chunk tidak boleh memiliki klasifikasi lebih rendah daripada dokumen induk.
 - **PROPOSED** Chunk hanya dibuat dari teks hasil ekstraksi yang sudah dinormalisasi dan lolos review metadata (lihat [ingestion-pipeline.md](./ingestion-pipeline.md)).
 
@@ -108,6 +109,7 @@ Nama kolom fisik mengikuti [database-schema.md](../04-data/database-schema.md); 
 
 ## Related Documents
 
+- [rag-pattern-reference.md](./rag-pattern-reference.md)
 - [ingestion-pipeline.md](./ingestion-pipeline.md)
 - [citation-policy.md](./citation-policy.md)
 - [metadata-schema.md](../04-data/metadata-schema.md)

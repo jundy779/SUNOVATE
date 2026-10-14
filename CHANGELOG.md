@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-14 — Referensi pola RAG dan preview chunking terstruktur
+
+- Memetakan referensi visual Agentic AI dan lima lapisan RAG ke arsitektur SAVI AI dengan status implementasi, batas kewenangan, dan human-in-the-loop yang eksplisit.
+- Menambahkan preview chunking Python deterministik untuk regulasi, SOP/playbook, kajian/laporan, dan teks umum. Preview mengenali `Pasal29`, menjaga batas struktur, serta menghasilkan label, jumlah kata, urutan, dan SHA-256 tanpa membaca berkas atau menulis database.
+- Menambahkan pengujian batas Pasal, tahapan SOP, batas jumlah kata, kestabilan hash, teks kosong, dan instruksi berbahaya sebagai konten inert.
+- Embedding, OCR, ingestion produksi, web search, multi-agent, serta koneksi dokumen internal tetap tidak aktif dan menunggu persetujuan terkait.
+
 ## Unreleased 2026-10-14 - Tindak lanjut aman SAVI AI
 
 ### Ditambahkan

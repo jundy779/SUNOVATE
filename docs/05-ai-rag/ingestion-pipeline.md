@@ -1,7 +1,7 @@
 # Ingestion Pipeline
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-06
+**Last Updated:** 2026-10-14
 
 ## Purpose
 
@@ -19,7 +19,8 @@ Menjelaskan alur usulan untuk memasukkan dokumen ke knowledge repository dan ind
 
 - **IMPLEMENTED** Registrasi versi dokumen melalui `POST /api/v1/documents/{id}/versions` dengan permission `document:version`, penolakan checksum ganda, dan audit `VERSION_REGISTER`.
 - **IMPLEMENTED** Chunk pada scaffold berasal dari dataset SIMULATED_DATA yang dimuat ke simulated store; tidak ada ekstraksi file nyata.
-- **PROPOSED** Seluruh tahap ekstraksi, normalisasi, chunking otomatis, pengisian FTS di PostgreSQL, embedding, dan OCR.
+- **IMPLEMENTED (DEVELOPMENT PREVIEW)** Pemotongan struktur deterministik dapat dijalankan terhadap teks yang sudah diekstrak, tanpa membaca berkas, menulis database, atau memublikasikan knowledge.
+- **PROPOSED** Ekstraksi berkas, review hasil ekstraksi, normalisasi produksi, pengisian FTS di PostgreSQL, embedding, dan OCR.
 
 ## Alur usulan
 
