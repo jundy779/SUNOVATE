@@ -31,6 +31,20 @@ def test_unauthorized_team_content_is_not_used() -> None:
     data = _ask(client, login(client, "sim.staff.pppsun"), "Bagaimana struktur close out note?")
     assert data["decision"] == "INSUFFICIENT_EVIDENCE"
     assert data["citations"] == []
+    assert data["followUp"]["status"] == "NEEDS_CLARIFICATION"
+    assert "pegawai yang berwenang" in data["followUp"]["guidance"]
+    assert data["followUp"]["clarificationPrompt"]
+
+
+def test_answered_response_does_not_create_follow_up() -> None:
+    client = make_client()
+    data = _ask(
+        client,
+        login(client, "sim.staff.pppsun"),
+        "Apa saja metadata wajib saat mendaftarkan dokumen knowledge?",
+    )
+    assert data["decision"] == "ANSWERED"
+    assert data["followUp"] is None
 
 
 def test_owner_team_gets_answer() -> None:

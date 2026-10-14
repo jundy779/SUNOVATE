@@ -351,6 +351,9 @@ tbody tr:hover { background: var(--paper); }
 .chat-question { justify-self: end; max-width: 80ch; margin: 0; background: var(--navy); color: var(--white); padding: .75rem 1rem; border-radius: var(--radius); }
 .chat-answer { max-width: 90ch; border: 1px solid var(--line); border-left: 4px solid var(--navy); background: var(--white); padding: .75rem 1rem; }
 .answer-text { white-space: pre-line; }
+.savi-follow-up { margin-top: .75rem; padding: .75rem .85rem; border: 1px solid var(--line); border-left: 3px solid var(--gold); background: var(--paper); }
+.savi-follow-up h3 { margin: 0 0 .35rem; color: var(--navy); font-size: .95rem; }
+.savi-follow-up p { margin: .25rem 0; }
 .citations { list-style: none; margin: .5rem 0; padding: .5rem 0 0; border-top: 1px solid var(--line); font-size: .85rem; display: grid; gap: .25rem; }
 .cite-index { font-weight: 700; color: var(--navy); }
 .feedback { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .5rem; }

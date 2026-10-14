@@ -33,7 +33,7 @@ RELATIVE_CUTOFF = 0.6
 
 INSUFFICIENT_MESSAGE = (
     "Bukti pada sumber yang dapat Anda akses belum cukup untuk menjawab pertanyaan ini. "
-    "Hermes tidak menebak jawaban."
+    "SAVI AI tidak akan menebak jawaban."
 )
 BLOCKED_MESSAGE = (
     "Jawaban ditahan oleh pemeriksaan keluaran karena berpotensi memuat data sensitif."
@@ -53,6 +53,14 @@ class HermesCitation:
 
 
 @dataclass(frozen=True)
+class HermesFollowUp:
+    status: str
+    title: str
+    guidance: str
+    clarification_prompt: str | None
+
+
+@dataclass(frozen=True)
 class HermesResult:
     conversation_id: UUID
     message_id: UUID
@@ -62,6 +70,7 @@ class HermesResult:
     citations: tuple[HermesCitation, ...]
     excluded_passages: int
     approval_request_id: UUID | None
+    follow_up: HermesFollowUp | None
 
 
 class HermesGateway:
@@ -159,6 +168,7 @@ class HermesGateway:
         citations: tuple[HermesCitation, ...] = ()
         excluded = 0
         approval: ApprovalRequest | None = None
+        follow_up: HermesFollowUp | None = None
 
         scope = self._scope.evaluate(question)
         if scope.decision is not None:
@@ -181,6 +191,19 @@ class HermesGateway:
                     "INSUFFICIENT_EVIDENCE",
                     "low_coverage",
                     (INSUFFICIENT_MESSAGE),
+                )
+                follow_up = HermesFollowUp(
+                    status="NEEDS_CLARIFICATION",
+                    title="Sumber belum mencukupi",
+                    guidance=(
+                        "Perjelas periode, nama dokumen, proses, atau unit yang dimaksud. "
+                        "Jika sumber tetap belum ditemukan, mintakan pemeriksaan kepada pegawai "
+                        "yang berwenang pada topik tersebut."
+                    ),
+                    clarification_prompt=(
+                        "Sebutkan periode, dokumen acuan, proses, dan unit terkait "
+                        "yang ingin diperiksa."
+                    ),
                 )
             else:
                 citation_map = {n: item for n, item in enumerate(selected, start=1)}
@@ -206,6 +229,16 @@ class HermesGateway:
                         "INSUFFICIENT_EVIDENCE",
                         check.reason,
                         (INSUFFICIENT_MESSAGE),
+                    )
+                    follow_up = HermesFollowUp(
+                        status="NEEDS_AUTHORIZED_REVIEW",
+                        title="Jawaban perlu diperiksa",
+                        guidance=(
+                            "Sumber ditemukan, tetapi dukungannya belum dapat dipastikan. "
+                            "Mintakan pemeriksaan kepada pegawai yang berwenang sebelum "
+                            "informasi digunakan."
+                        ),
+                        clarification_prompt=None,
                     )
                 elif not guard.allowed:
                     decision, reason, answer = (
@@ -291,4 +324,5 @@ class HermesGateway:
             citations,
             excluded,
             approval.id if approval is not None else None,
+            follow_up,
         )

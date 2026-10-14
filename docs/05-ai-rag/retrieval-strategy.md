@@ -98,6 +98,14 @@ Hermes mengembalikan `INSUFFICIENT_EVIDENCE` bila:
 
 Pesan kepada pengguna tidak boleh mengisyaratkan adanya dokumen yang tidak boleh dibaca pengguna. Pesan yang diusulkan: "Hermes belum menemukan sumber yang cukup pada dokumen yang dapat Anda akses untuk menjawab pertanyaan ini."
 
+### Tindak lanjut bukti tidak cukup (IMPLEMENTED 2026-10-14)
+
+- `low_coverage`: SAVI meminta pengguna memperjelas periode, dokumen, proses, atau unit terkait.
+- Sitasi tidak valid atau tidak mendukung jawaban: SAVI meminta pemeriksaan pegawai yang berwenang.
+- Tindak lanjut hanya berupa panduan pada layar. SAVI tidak otomatis menunjuk PIC, membuat tiket, mengirim notifikasi, mengubah data, atau memasukkan materi baru ke basis pengetahuan.
+- Nama PIC, batas waktu layanan, kanal notifikasi, dan kewenangan publikasi tetap menunggu keputusan OQ-36.
+- Pencarian ulang dengan perluasan istilah belum diimplementasikan; penambahan strategi tersebut wajib diuji agar tidak memperluas akses atau menurunkan ketepatan sumber.
+
 ## Open Questions
 
 - OQ-05 Klasifikasi dan hak akses tiap jenis dokumen.

@@ -142,6 +142,13 @@ export interface HermesCitation {
   classificationCode: ClassificationCode;
 }
 
+export interface HermesFollowUp {
+  status: "NEEDS_CLARIFICATION" | "NEEDS_AUTHORIZED_REVIEW";
+  title: string;
+  guidance: string;
+  clarificationPrompt: string | null;
+}
+
 export interface HermesAnswer {
   conversationId: string;
   messageId: string;
@@ -151,6 +158,7 @@ export interface HermesAnswer {
   citations: HermesCitation[];
   excludedPassages: number;
   approvalRequestId: string | null;
+  followUp: HermesFollowUp | null;
 }
 
 // Request schemas ---------------------------------------------------------------

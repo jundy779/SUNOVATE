@@ -1,5 +1,25 @@
 # Changelog
 
+## Unreleased 2026-10-14 - Tindak lanjut aman SAVI AI
+
+### Ditambahkan
+
+- Respons terstruktur ketika sumber yang dapat diakses belum cukup: alasan yang jelas, panduan memperjelas periode/dokumen/proses/unit, dan arahan meminta pemeriksaan pegawai berwenang.
+- Panel "Langkah berikutnya" pada percakapan SAVI dengan bahasa pengguna nonteknis.
+- Test API dan antarmuka yang memastikan jawaban berhasil tidak membuat tindak lanjut, sedangkan bukti tidak cukup menampilkan panduan yang sesuai.
+
+### Batas
+
+- SAVI tidak otomatis menunjuk PIC, membuat tiket, mengirim pesan, mengubah data, atau menerbitkan pengetahuan.
+- Nama PIC, SLA, kanal notifikasi, alur persetujuan, dan pencarian ulang berbasis perluasan istilah belum ditetapkan dan tetap menunggu keputusan OQ-36.
+
+### Validasi aktual
+
+- Ruff, ESLint, mypy strict, dan TypeScript lulus.
+- 20 test frontend lulus; 187 test backend lulus dan 39 dilewati.
+- Next.js production build dengan webpack lulus.
+- `pnpm db:sql` berhasil merender migrasi `0001` dan `0002` sampai `COMMIT`.
+
 ## Unreleased 2026-10-13 - Intake pertanyaan mentor untuk SAVI AI
 
 ### Ditambahkan

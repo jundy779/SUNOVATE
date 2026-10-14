@@ -1,7 +1,7 @@
 # AI Agent Handoff
 
 **Status:** ACTIVE
-**Last Updated:** 2026-10-13
+**Last Updated:** 2026-10-14
 
 ## Baca Sebelum Bertindak
 
@@ -17,6 +17,7 @@ Urutan wajib: root `AGENTS.md`, [task-tracker.md](task-tracker.md), [developer-h
 - Monitoring kerja memiliki CRUD terotorisasi untuk output, tugas, milestone, pending matter, dan follow-up. Approval khusus monitoring belum boleh dikarang; TASK-005 tetap IN PROGRESS sampai OQ-12/OQ-25 diputuskan.
 - Dashboard menyebut Yield SUN dan Kepemilikan SBN tanpa angka, masing-masing "Sumber data belum tersedia". Jangan menambahkan angka, grafik, atau tabel bisnis sebelum OQ-21 diputuskan.
 - ScopeGuard SAVI memiliki 24 golden cases sejak 2026-10-11. Pertanyaan tertolak harus berhenti sebelum retrieval; karakter zero-width sederhana dinormalisasi; permintaan kredensial/jailbreak/keputusan investasi ditolak; penyebutan Python dalam konteks SUNOVATE dan kata "menghapus" yang informasional tidak boleh menjadi false refusal.
+- Arahan mentor yang diteruskan project lead pada 2026-10-14 menyatakan mekanisme tindak lanjut bukti tidak cukup dapat dilanjutkan. Implementasi saat ini hanya menampilkan panduan memperjelas konteks atau meminta pemeriksaan pegawai berwenang. Jangan menambahkan penunjukan PIC, tiket, notifikasi, SLA, atau publikasi otomatis sebelum peran dan kewenangannya diputuskan. Pencarian ulang dengan perluasan istilah belum diimplementasikan.
 - Delapan pertanyaan operasional dari arahan mentor 2026-10-13 berada di `apps/api/sunovate_api/resources/sme_question_intake.json`, bukan golden set aktif. Halaman read-only `/savi-validation` tersedia bagi role simulasi dengan `knowledge:review` dan `scope:all_teams`, dilengkapi ringkasan status, pencarian, filter, format cetak, serta lembar persiapan keputusan mentor yang hanya hidup pada state browser. Pertanyaan tetap diblokir dari retrieval dan jawaban SAVI (OQ-36). Jangan menyimpan keputusan, menambahkan aksi approval, atau mempromosikan kasus sebelum keputusan mentor diterima melalui mekanisme resmi.
 - Draft Workspace untuk file hasil pekerjaan adalah proposal tertunda (FR-56/TASK-019), bukan fitur aktif. DRAFT boleh diubah/dihapus lunak oleh pemilik berizin; versi PUBLISHED harus immutable; koreksi menjadi versi baru; penarikan mempertahankan audit. Jangan implementasikan atau menganggap akun utama sebagai super-admin konten sebelum OQ-35 diputuskan.
 - Specification-ready package Draft Workspace ada di `docs/02-business/work-file-draft-workspace.md`, termasuk model dan endpoint kandidat serta AC-26 sampai AC-31. Jangan membuat migration atau route dari rancangan ini sebelum OQ-35, provider file, dan approval chain dikonfirmasi.

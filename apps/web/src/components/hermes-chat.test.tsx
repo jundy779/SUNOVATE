@@ -24,6 +24,7 @@ const answer = {
     ],
     excludedPassages: 0,
     approvalRequestId: null,
+    followUp: null,
   },
   meta: { dataLabel: "SIMULATED_DATA" },
 };
@@ -81,5 +82,37 @@ describe("HermesChat", () => {
     });
     fireEvent.click(screen.getByRole("button", { name: "Kirim pertanyaan" }));
     expect(await screen.findByRole("alert")).toHaveTextContent("Anda tidak memiliki izin");
+  });
+
+  it("shows safe next steps when available sources are insufficient", async () => {
+    const insufficient = {
+      ...answer,
+      data: {
+        ...answer.data,
+        decision: "INSUFFICIENT_EVIDENCE",
+        answer: "Bukti pada sumber yang dapat Anda akses belum cukup.",
+        citations: [],
+        followUp: {
+          status: "NEEDS_CLARIFICATION",
+          title: "Sumber belum mencukupi",
+          guidance: "Perjelas periode, nama dokumen, proses, atau unit yang dimaksud.",
+          clarificationPrompt: "Sebutkan periode dan dokumen acuan yang ingin diperiksa.",
+        },
+      },
+    };
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(new Response(JSON.stringify(insufficient), { status: 200 })),
+    );
+    renderChat();
+    fireEvent.change(screen.getByLabelText("Pertanyaan untuk SAVI AI"), {
+      target: { value: "Bagaimana proses yang belum ada sumbernya?" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Kirim pertanyaan" }));
+
+    expect(await screen.findByRole("region", { name: "Langkah berikutnya" })).toHaveTextContent(
+      "Sumber belum mencukupi",
+    );
+    expect(screen.getByText(/tidak mengirim permintaan kepada pegawai/i)).toBeInTheDocument();
   });
 });

@@ -97,6 +97,22 @@ export function HermesChat() {
                 {HERMES_DECISION_LABELS[answer.decision]}
               </StatusTag>
               <p className="answer-text">{answer.answer}</p>
+              {answer.followUp ? (
+                <section className="savi-follow-up" aria-label="Langkah berikutnya">
+                  <h3>{answer.followUp.title}</h3>
+                  <p>{answer.followUp.guidance}</p>
+                  {answer.followUp.clarificationPrompt ? (
+                    <p>
+                      <strong>Agar pertanyaan lebih jelas:</strong>{" "}
+                      {answer.followUp.clarificationPrompt}
+                    </p>
+                  ) : null}
+                  <p className="muted">
+                    SAVI AI tidak mengirim permintaan kepada pegawai dan tidak menerbitkan informasi
+                    secara otomatis.
+                  </p>
+                </section>
+              ) : null}
               {answer.citations.length ? (
                 <ol className="citations" aria-label="Sumber">
                   {answer.citations.map((citation) => (

@@ -75,6 +75,16 @@ def query(
             ],
             "excludedPassages": result.excluded_passages,
             "approvalRequestId": result.approval_request_id,
+            "followUp": (
+                {
+                    "status": result.follow_up.status,
+                    "title": result.follow_up.title,
+                    "guidance": result.follow_up.guidance,
+                    "clarificationPrompt": result.follow_up.clarification_prompt,
+                }
+                if result.follow_up is not None
+                else None
+            ),
         },
         provider=ctx.providers.hermes.name,
     )
