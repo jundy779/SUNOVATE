@@ -41,14 +41,16 @@ Menjadi sumber status pekerjaan lintas sesi dan lintas AI agent. Setiap perubaha
 | TASK-017 | PWA dan aplikasi Android/iOS (Flutter atau native wrapper) | Pasca-MVP | DEFERRED | API dan auth harus stabil; kebijakan distribusi perangkat belum ditentukan. |
 | TASK-018 | Keputusan hosting produksi: private cloud/Azure/internal data center/hybrid | Produksi | NEEDS APPROVAL | Keputusan instansi/TIK; komputer kantor bukan target produksi. |
 | TASK-019 | Draft Workspace dan file pekerjaan terbit yang immutable | Pasca-MVP | NEEDS APPROVAL | Desain teknis, status, model kandidat, API kandidat, UI, permission, dan AC-26 sampai AC-31 selesai 2026-10-11. Permission, provider, approval chain, penarikan, dan retensi menunggu OQ-35; kode belum diimplementasikan. |
+| TASK-021 | Kontrol API Gateway pada modular monolith: rate limit, batas request, timeout, security headers, metrik | Foundation | PLANNED | Routing `/api/v1`, request ID, error format, CORS, auth, RBAC, dan audit sudah ada. Kontrol tambahan mengikuti `implementation-master-plan.md`; load balancing dan gateway terpisah tetap DEFERRED untuk demo 25 pengguna. |
 
 ## Urutan Eksekusi Terdekat
 
-1. Tutup open question prioritas tinggi bersama mentor, khususnya OQ-05, OQ-07, OQ-11, OQ-20, OQ-23, OQ-24, dan OQ-25.
-2. Selesaikan fitur P0 yang belum lengkap dan perkuat SAVI AI beserta evaluasi domain SUN.
-3. Siapkan paket deployment demo tanpa mengaktifkan tunnel eksternal.
-4. Setelah persetujuan tertulis, lakukan security checklist, backup/restore drill, load test 25 pengguna, lalu UAT.
-5. Evaluasi Go, Rust, dan mobile hanya dari metrik dan kebutuhan pasca-MVP.
+1. Ikuti urutan pada `implementation-master-plan.md`; jangan memulai ide baru hanya dari gambar referensi.
+2. Tutup open question prioritas tinggi bersama mentor, khususnya OQ-05, OQ-07, OQ-11, OQ-20, OQ-23, OQ-24, dan OQ-25.
+3. Siapkan skenario demo bulan pertama dan selesaikan kontrol API dasar yang tidak bergantung pada integrasi.
+4. Lanjutkan PostgreSQL, ingestion simulasi, FTS, dan evaluasi SAVI sesuai gate persetujuan.
+5. Siapkan paket deployment tanpa mengaktifkan tunnel eksternal; setelah persetujuan, lakukan security checklist, backup/restore drill, load test, lalu UAT.
+6. Evaluasi Go, Rust, mobile, load balancing, dan gateway terpisah hanya dari metrik pasca-MVP.
 
 ## Kewajiban Handoff
 

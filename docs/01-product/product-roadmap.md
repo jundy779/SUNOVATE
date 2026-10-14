@@ -1,11 +1,13 @@
 # Roadmap Produk
 
 **Status:** NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-09
+**Last Updated:** 2026-10-14
 
 ## Purpose
 
 Dokumen ini memetakan roadmap enam bulan dari Proposal v2.4, slide 21, ke kalender periode magang 21 September 2026 sampai 20 Maret 2027. Periode berstatus CONFIRMED (sumber: brief sesi 2026-10-01). Isi setiap bulan, pemetaan kalender, dan gate berstatus PROPOSED.
+
+Urutan teknis lintas fitur, kontrol perubahan, serta pemetaan tambahan RAG dan API Gateway mengikuti [implementation-master-plan.md](../00-project/implementation-master-plan.md). Jika ada ide baru, roadmap waktu tidak diubah sebelum dampak dependensi dan persetujuannya dicatat.
 
 ## Pemetaan Bulan ke Kalender
 
@@ -75,6 +77,7 @@ Per 2026-10-09 proyek berada di bulan 1. Scaffold sudah mendahului sebagian peke
 ## Related Documents
 
 - [prd.md](prd.md)
+- [implementation-master-plan.md](../00-project/implementation-master-plan.md)
 - [mvp-scope.md](mvp-scope.md)
 - [future-development.md](../13-handover/future-development.md)
 - [uat-plan.md](../10-testing/uat-plan.md)

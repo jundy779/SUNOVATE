@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-14 — Rencana induk dan urutan implementasi
+
+- Menambahkan satu rencana induk yang mengurutkan perubahan requirement, fondasi platform, kontrol API Gateway, Knowledge Hub, SAVI AI, web workflow, integrasi, demo, UAT, dan handover.
+- Memisahkan status kontrol API yang sudah tersedia dari rate limiting, batas request, timeout, security headers, cache, load balancing, dan gateway terpisah yang belum diimplementasikan.
+- Menetapkan aturan intake ide baru agar gambar referensi atau tambahan teknologi tidak langsung mengubah scope dan urutan pengerjaan.
+- Menambahkan TASK-021 untuk kontrol API Gateway di dalam modular monolith; load balancing dan gateway terpisah tetap pengembangan setelah kebutuhan terukur.
+
 ## 2026-10-14 — Referensi pola RAG dan preview chunking terstruktur
 
 - Memetakan referensi visual Agentic AI dan lima lapisan RAG ke arsitektur SAVI AI dengan status implementasi, batas kewenangan, dan human-in-the-loop yang eksplisit.
