@@ -52,6 +52,7 @@ export interface KnowledgeEntry {
   sharingScope: "TEAM" | "DIRECTORATE";
   classificationCode: ClassificationCode;
   ownerTeamCode: string | null;
+  ownerUserId: string | null;
   versionLabel: string;
   revision: number;
   updatedAt: string;
@@ -59,6 +60,22 @@ export interface KnowledgeEntry {
   sourceNote?: string | null;
   sections?: { index: number; sectionLabel: string; content: string }[];
   documents?: { id: string; title: string; provider: string; providerLocation: string }[];
+}
+
+export interface ApprovalRequest {
+  id: string;
+  requestType: string;
+  targetEntityType: string;
+  targetEntityId: string | null;
+  status: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED";
+  requestedBy: string;
+  decidedBy: string | null;
+  decidedAt: string | null;
+  decisionReason: string | null;
+  ownerTeamCode: string | null;
+  classificationCode: ClassificationCode;
+  revision: number;
+  createdAt: string;
 }
 
 export interface WorkItem {

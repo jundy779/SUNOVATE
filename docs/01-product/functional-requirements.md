@@ -34,8 +34,8 @@ Kata "harus" berarti wajib untuk prioritas tersebut. Semua endpoint berprefiks `
 |---|---|---|---|---|---|
 | FR-10 | Pengguna dengan `knowledge:create` harus dapat membuat knowledge entry berstatus DRAFT dengan tipe dari daftar 14 tipe knowledge. Himpunan pemegang `knowledge:create` tunduk pada FR-50. | P0 | PROPOSED | US-05, US-35 | Ya |
 | FR-11 | Pembaruan knowledge harus menyertakan `revision`; revision basi menghasilkan 409 `REVISION_CONFLICT`. | P0 | PROPOSED (ADR-011) | US-06 | Ya |
-| FR-12 | Lifecycle: DRAFT ke IN_REVIEW ke PUBLISHED ke SUPERSEDED/ARCHIVED; IN_REVIEW kembali ke DRAFT bila perubahan diminta. | P0 | PROPOSED | US-07 | Sebagian |
-| FR-13 | Publikasi hanya melalui approval request `KNOWLEDGE_PUBLICATION` yang disetujui; pengaju tidak boleh memutuskan permintaannya sendiri. | P0 | PROPOSED | US-08 | Ya |
+| FR-12 | Lifecycle: DRAFT ke IN_REVIEW ke PUBLISHED ke SUPERSEDED/ARCHIVED; IN_REVIEW kembali ke DRAFT bila perubahan diminta. | P0 | PROPOSED | US-07 | **Sebagian**: DRAFT, pengajuan, pemeriksaan, pengembalian ke DRAFT, dan PUBLISHED tersedia pada API serta halaman detail; SUPERSEDED/ARCHIVED belum memiliki alur pengguna |
+| FR-13 | Publikasi hanya melalui approval request `KNOWLEDGE_PUBLICATION` yang disetujui; pengaju tidak boleh memutuskan permintaannya sendiri. | P0 | PROPOSED | US-08 | **Ya**: backend menegakkan pemisahan kewenangan; halaman detail hanya menampilkan keputusan kepada pemeriksa lain dan tombol terbit kepada pemilik `knowledge:publish` |
 | FR-14 | Hanya knowledge PUBLISHED yang masuk pencarian default dan retrieval Hermes. | P0 | PROPOSED | US-12, US-15 | Ya |
 | FR-15 | `sharing_scope` TEAM membatasi ke tim pemilik; DIRECTORATE membuka ke semua tim hanya bila PUBLISHED. | P0 | PROPOSED; kebijakan OQ-14 | US-04 | Ya |
 | FR-16 | Relasi antarperaturan AMENDS, REVOKES, IMPLEMENTS, REFERENCES, SUPERSEDES dapat dicatat dan ditampilkan. | P1 | PROPOSED | US-10 | Sebagian (tabel ada, endpoint belum) |

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { KnowledgeEntry } from "@sunovate/contracts";
+import type { ApprovalRequest, KnowledgeEntry, Principal } from "@sunovate/contracts";
 import {
   ClassificationTag,
   EmptyState,
@@ -11,6 +11,7 @@ import {
 import { apiGet } from "@/lib/api";
 import { formatDateTime } from "@/lib/format";
 import { knowledgeStatusLabel, knowledgeTypeLabel } from "@/lib/ui-labels";
+import { KnowledgeWorkflow } from "./knowledge-workflow";
 
 export default async function KnowledgeDetailPage({
   params,
@@ -18,7 +19,14 @@ export default async function KnowledgeDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const { data: entry } = await apiGet<KnowledgeEntry>(`/knowledge/${encodeURIComponent(id)}`);
+  const [{ data: entry }, { data: principal }] = await Promise.all([
+    apiGet<KnowledgeEntry>(`/knowledge/${encodeURIComponent(id)}`),
+    apiGet<Principal>("/auth/me"),
+  ]);
+  const approvals = principal.permissions.includes("approval:request") || principal.permissions.includes("approval:decide")
+    ? (await apiGet<ApprovalRequest[]>("/approvals?pageSize=100")).data
+    : [];
+  const approval = approvals.find((item) => item.requestType === "KNOWLEDGE_PUBLICATION" && item.targetEntityId === entry.id) ?? null;
 
   return (
     <>
@@ -65,6 +73,8 @@ export default async function KnowledgeDetailPage({
           <dd>{formatDateTime(entry.updatedAt)}</dd>
         </div>
       </dl>
+
+      <KnowledgeWorkflow entry={entry} principal={principal} approval={approval} />
 
       <Panel title="Isi per bagian" eyebrow="Teks hasil pembacaan dokumen (contoh)">
         {entry.sections?.length ? (

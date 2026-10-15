@@ -336,6 +336,18 @@ Status terhadap kode saat ini: **LULUS** pada backend simulasi dan unit test ant
 
 Status terhadap kode saat ini: **LULUS** pada backend simulasi melalui pengujian pemilik, pemeriksa, lintas tim, pengguna baca-saja, kecocokan isi bagian, dan audit aman. Jalur PostgreSQL memakai kontrak repository yang sama, tetapi pengujian database aktual tetap menunggu lingkungan PostgreSQL sementara yang dapat dijalankan.
 
+## AC-35 Alur draf sampai penerbitan tersedia pada halaman detail
+
+- **Given** pemilik membuka knowledge berstatus DRAFT
+- **When** pemilik memperbarui metadata atau mengajukan pemeriksaan
+- **Then** perubahan memakai revisi terakhir dan status pengajuan menjadi IN_REVIEW
+- **And** pengaju hanya melihat bahwa draf sedang menunggu, tanpa tombol keputusan
+- **And** pemeriksa lain dengan `approval:decide` dapat mengembalikan draf disertai alasan
+- **And** tombol menyetujui serta menerbitkan hanya tersedia bila pemeriksa juga memiliki `knowledge:publish`
+- **And** pengguna baca-saja tetap dapat membuka detail tanpa diminta mengakses daftar persetujuan.
+
+Status terhadap kode saat ini: **LULUS**. API lifecycle dan separation of duties telah diuji pada backend. Komponen web memiliki pengujian untuk tindakan pemilik, status pengaju, perbedaan pemeriksa dan penerbit, serta isi permintaan keputusan.
+
 ## Open Questions
 
 - Kode error untuk pelanggaran separation of duties belum dikunci di dokumentasi API; perlu diselaraskan dengan [error-format.md](../07-api/error-format.md).

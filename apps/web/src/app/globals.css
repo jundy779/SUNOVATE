@@ -404,6 +404,24 @@ code { font-size: .8rem; background: var(--paper); padding: 0 .25rem; }
 .ingestion-save .button { flex: 0 0 auto; min-height: 38px; padding: .5rem .8rem; font-size: .7rem; }
 .ingestion-summary-input { min-height: 76px !important; }
 
+/* Knowledge lifecycle: compact, auditable actions beside the record detail. */
+.knowledge-workflow { margin-top: 1.5rem; border: 1px solid var(--line); border-top: 3px solid var(--navy); background: var(--white); box-shadow: var(--shadow); }
+.knowledge-workflow > header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.1rem; border-bottom: 1px solid var(--line); }
+.knowledge-workflow h2, .knowledge-workflow header p { margin: 0; }
+.knowledge-workflow header p { margin-top: .2rem; color: var(--muted); font-size: .72rem; }
+.knowledge-edit-form { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem; padding: 1.1rem; background: var(--paper); }
+.knowledge-edit-form label, .workflow-decision label { display: grid; gap: .4rem; color: var(--navy); font-size: .7rem; font-weight: 700; }
+.knowledge-edit-form input, .knowledge-edit-form select, .knowledge-edit-form textarea, .workflow-decision textarea { width: 100%; border-color: var(--line); border-radius: 3px; font-size: .77rem; }
+.knowledge-edit-form textarea, .workflow-decision textarea { min-height: 90px; line-height: 1.5; }
+.workflow-wide { grid-column: 1 / -1; }
+.workflow-actions { display: flex; justify-content: flex-end; gap: .6rem; }
+.knowledge-edit-form > .workflow-actions { grid-column: 1 / -1; }
+.workflow-decision { display: grid; grid-template-columns: minmax(0, 1fr) minmax(240px, .55fr); gap: 1rem; align-items: end; padding: 1.1rem; }
+.workflow-decision > div > p { margin: 0 0 .7rem; color: var(--muted); font-size: .72rem; }
+.workflow-feedback, .workflow-waiting, .workflow-history { margin: 0; padding: .8rem 1.1rem; border-bottom: 1px solid var(--line); background: var(--paper); color: var(--navy); font-size: .76rem; }
+.workflow-feedback { border-left: 3px solid var(--success); }
+.workflow-waiting { border-left: 3px solid var(--gold); }
+
 /* Monitoring kerja: dense, table-first command surface. */
 .work-manager { display: grid; gap: 1rem; }
 .work-tabs { display: flex; overflow-x: auto; border-bottom: 1px solid var(--line); scrollbar-width: thin; }

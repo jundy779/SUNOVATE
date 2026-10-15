@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-10-15 — Alur draf sampai penerbitan pada halaman detail
+
+- Menambahkan ruang tindak lanjut kontekstual pada detail pengetahuan untuk mengubah draf dan mengajukannya kepada pemeriksa.
+- Pengaju hanya melihat status menunggu dan tidak memperoleh tombol keputusan atas permintaannya sendiri.
+- Pemeriksa dapat mengembalikan draf dengan alasan; tindakan menyetujui dan menerbitkan hanya tampil bagi pemeriksa dengan kewenangan penerbitan.
+- Pengguna baca-saja tetap dapat membuka detail tanpa membutuhkan akses persetujuan.
+- Menambahkan pengujian antarmuka untuk peran pemilik, pengaju, pemeriksa, penerbit, dan isi permintaan keputusan.
+- Validasi aktual: Ruff, ESLint, mypy strict, TypeScript, build produksi, 28 test frontend, dan 208 test backend lulus (39 pengujian PostgreSQL dilewati pada mode simulasi).
+
 ## 2026-10-15 — Pencarian draf terbatas bagi pemilik dan pemeriksa
 
 - Menambahkan ruang kerja `/knowledge/drafts` untuk mencari judul, ringkasan, dan bagian dokumen yang masih berstatus DRAFT.

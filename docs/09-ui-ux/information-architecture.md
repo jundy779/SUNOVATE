@@ -65,7 +65,7 @@ Delapan area domain dari prompt sesi sebelumnya (sumber: `14_NEW_SESSION_HANDOFF
 
 Route kandidat (PROPOSED, nama dapat berubah):
 
-- `/approvals` untuk antrean persetujuan (endpoint `GET /api/v1/approvals` sudah ada).
+- Keputusan publikasi knowledge saat ini ditempatkan kontekstual pada `/knowledge/[id]`; halaman antrean `/approvals` tetap pengembangan berikutnya untuk rekap lintas permintaan.
 - `/reports` untuk reporting dan ekspor (P1).
 - `/data-quality` untuk isu kualitas data (endpoint `GET /api/v1/data-quality-issues` sudah ada).
 - Halaman SUN Business tidak diusulkan sampai OQ-02, OQ-03, dan kebutuhan data divalidasi.
