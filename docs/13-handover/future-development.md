@@ -66,7 +66,7 @@ Semua item di bawah berstatus **PROPOSED** dan belum diimplementasikan. Sumber: 
 | Mengakhiri transaksi baca (`repo.end_read()`) sebelum `HermesClient.answer` | Generasi saat ini lokal; dipertimbangkan bersama provider AI remote (OUT OF SCOPE saat ini) | KL-23 |
 | Engine kecil terpisah untuk `audit_denial` | Mitigasi risiko pool koneksi kedua; tidak realistis pada skala `SIMULATED_DATA` | KL-22 |
 | Menutup celah `TRUNCATE` pada trigger append-only | OUT OF SCOPE requirements persistence | KL-21 |
-| Prefilter FTS `search_vector` untuk search dan retrieval | Konfigurasi `simple` tanpa stemming dapat menurunkan recall dibanding pencarian leksikal saat ini | [retrieval-strategy.md](../05-ai-rag/retrieval-strategy.md) |
+| Perluasan FTS `search_vector` dari endpoint pencarian ke retrieval SAVI | FTS endpoint sudah aktif; konfigurasi `simple` perlu diuji agar tidak menurunkan recall golden set SAVI | [retrieval-strategy.md](../05-ai-rag/retrieval-strategy.md) |
 
 ## Kandidat yang Ditunda
 

@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-10-15 — PostgreSQL Full-Text Search terotorisasi
+
+- Mengaktifkan indeks GIN `search_vector` untuk pencarian pengetahuan terbit dan draf pada mode PostgreSQL tanpa mengubah skema database.
+- Daftar entri yang boleh dibaca ditentukan sebelum query FTS; ID terotorisasi juga menjadi batas pada pencarian judul, ringkasan, dan bagian dokumen.
+- Mode simulasi mempertahankan pencarian leksikal deterministik. Penilaian akhir tetap memakai normalisasi Python agar urutan dan skor hasil tetap konsisten.
+- Retrieval SAVI belum diubah dan tetap memakai evidence gate yang ada; draf tidak menjadi sumber SAVI sebelum diterbitkan.
+- Menambahkan kontrak pengujian bahwa kandidat pencarian tidak dapat melebar di luar ID terotorisasi serta paritas hasil lintas backend.
+- Validasi aktual: Ruff, ESLint, mypy strict, TypeScript, 29 test frontend, 209 test backend, render SQL Alembic, dan build produksi lulus. Sebanyak 40 pengujian PostgreSQL dilewati pada mode simulasi; `pnpm db:test` belum dapat berjalan karena lingkungan tidak mengizinkan pembuatan user sistem `pgserver`.
+
 ## 2026-10-15 — Antrean pemeriksaan pengetahuan
 
 - Menambahkan halaman `/approvals` untuk merangkum pengajuan publikasi sesuai peran, tim, dan klasifikasi pengguna.

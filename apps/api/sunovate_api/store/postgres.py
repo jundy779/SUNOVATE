@@ -11,6 +11,7 @@ URL never reach responses or logs.
 from __future__ import annotations
 
 import logging
+import re
 from collections.abc import Callable, Collection, Iterable, Iterator, Mapping, Sequence
 from contextlib import contextmanager
 from dataclasses import fields
@@ -28,6 +29,7 @@ from sqlalchemy import (
     create_engine,
     delete,
     false,
+    func,
     insert,
     or_,
     select,
@@ -76,7 +78,7 @@ from .records import (
     WorkOutput,
     utcnow,
 )
-from .repository import PrincipalFacts, ReadScope, check_fields
+from .repository import PrincipalFacts, ReadScope, TextSearchCandidates, check_fields
 
 logger = logging.getLogger("sunovate")
 
@@ -138,6 +140,7 @@ _KNOWLEDGE_TAGS = _table(m.KnowledgeTag)
 
 _DUPLICATE_CHECKSUM = "uq_document_versions_reference_checksum"
 _SEPARATION_OF_DUTIES = "ck_approval_requests_separation_of_duties"
+_FTS_WORD = re.compile(r"[a-z0-9]+")
 
 
 def _tables_of(kind: type[Record]) -> Table:
@@ -517,6 +520,67 @@ class PostgresRepository:
             chunk = _from_row(DocumentChunk, row)
             grouped.setdefault(chunk.knowledge_entry_id, []).append(chunk)
         return grouped
+
+    def text_search_candidates(
+        self,
+        entry_ids: Sequence[UUID],
+        query: str,
+        *,
+        classification_codes: Collection[str],
+    ) -> TextSearchCandidates:
+        """Use GIN-backed FTS to preselect authorized entries and current chunks.
+
+        ``entry_ids`` has already passed the final Python authorization check.
+        Keeping that restriction inside both SQL statements prevents the text
+        index from revealing records outside the caller's scope.
+        """
+        authorized_ids = frozenset(entry_ids)
+        words = tuple(dict.fromkeys(_FTS_WORD.findall(query.lower())))
+        allowed_codes = tuple(classification_codes)
+        if not authorized_ids or not words:
+            return TextSearchCandidates(frozenset(), {})
+
+        entries = _TABLES[KnowledgeEntry]
+        chunks, documents = _TABLES[DocumentChunk], _TABLES[DocumentReference]
+        queries = [func.plainto_tsquery("simple", word) for word in words]
+        entry_match = or_(*(entries.c.search_vector.op("@@")(item) for item in queries))
+        chunk_match = or_(*(chunks.c.search_vector.op("@@")(item) for item in queries))
+
+        entry_rows = self._rows(
+            select(entries.c.id).where(entries.c.id.in_(list(authorized_ids)), entry_match)
+        )
+        _, chunk_statement = self._select(DocumentChunk)
+        chunk_rows = self._rows(
+            chunk_statement.select_from(
+                chunks.join(
+                    documents,
+                    and_(
+                        documents.c.current_version_id == chunks.c.document_version_id,
+                        documents.c.knowledge_entry_id == chunks.c.knowledge_entry_id,
+                        documents.c.deleted_at.is_(None),
+                    ),
+                )
+            )
+            .where(
+                chunks.c.knowledge_entry_id.in_(list(authorized_ids)),
+                documents.c.classification_code.in_(allowed_codes) if allowed_codes else false(),
+                chunk_match,
+            )
+            .order_by(
+                chunks.c.knowledge_entry_id,
+                chunks.c.chunk_index,
+                chunks.c.created_at,
+                chunks.c.id,
+            )
+        )
+        grouped: dict[UUID, list[DocumentChunk]] = {}
+        for row in chunk_rows:
+            chunk = _from_row(DocumentChunk, row)
+            grouped.setdefault(chunk.knowledge_entry_id, []).append(chunk)
+        matched_ids = frozenset(
+            {row["id"] for row in entry_rows} | set(grouped)
+        )
+        return TextSearchCandidates(matched_ids, grouped)
 
     # Hermes ------------------------------------------------------------------
 

@@ -603,10 +603,20 @@ def _search_results(client: TestClient) -> list[tuple[str, str, int, Any]]:
 
 
 def test_search_matches_simulated_backend_per_persona() -> None:
-    """AC-04.4: includes RESTRICTED K3 and DIRECTORATE-shared content."""
+    """AC-04.4: FTS preserves authorized results across both backends."""
     simulated = _search_results(make_client(backend="simulated"))
     postgres = _search_results(make_client(backend="postgres"))
-    assert postgres == simulated
+    assert [(p, q, s) for p, q, s, _ in postgres] == [
+        (p, q, s) for p, q, s, _ in simulated
+    ]
+    for (_, _, _, postgres_body), (_, _, _, simulated_body) in zip(
+        postgres, simulated, strict=True
+    ):
+        assert postgres_body["data"] == simulated_body["data"]
+        assert postgres_body["meta"]["total"] == simulated_body["meta"]["total"]
+        if "mode" in postgres_body["meta"]:
+            assert postgres_body["meta"]["mode"] == "postgres_fts"
+            assert simulated_body["meta"]["mode"] == "lexical"
     assert any(status == 200 and body["data"] for _, _, status, body in postgres)
 
 

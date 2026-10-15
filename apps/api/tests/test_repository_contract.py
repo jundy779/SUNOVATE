@@ -120,6 +120,17 @@ def test_get_governed_many(repo: Repository) -> None:
     assert set(found) == {K2}
 
 
+def test_text_search_candidates_never_widens_authorized_ids(repo: Repository) -> None:
+    allowed = [K2]
+
+    result = repo.text_search_candidates(
+        allowed, "simulasi close out note", classification_codes={"PUBLIC", "INTERNAL"}
+    )
+
+    assert result.entry_ids <= frozenset(allowed)
+    assert set(result.chunks_by_entry) <= set(allowed)
+
+
 def test_transaction_depth_is_thread_local() -> None:
     """One SimulatedStore is shared by concurrent requests: depth must be per thread."""
     store = SimulatedStore()

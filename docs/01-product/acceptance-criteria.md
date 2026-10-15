@@ -361,6 +361,17 @@ Status terhadap kode saat ini: **LULUS**. API lifecycle dan separation of duties
 
 Status terhadap kode saat ini: **LULUS** pada backend simulasi dan pemeriksaan kontrak frontend. Navigasi hanya menampilkan antrean kepada pemilik `approval:request` atau `approval:decide`; API tetap menjadi penegak akses utama.
 
+## AC-37 PostgreSQL FTS tidak melampaui otorisasi
+
+- **Given** pengguna mencari pengetahuan terbit atau draf yang menjadi kewenangannya
+- **When** backend PostgreSQL menjalankan Full-Text Search
+- **Then** query hanya menerima ID entri yang telah lolos pemeriksaan tim, klasifikasi, status, dan peran
+- **And** bagian dokumen dibatasi lagi menurut klasifikasi dokumennya
+- **And** hasil draf tetap terpisah dari pencarian umum dan retrieval SAVI
+- **And** backend simulated mempertahankan fallback leksikal dengan aturan akses dan bentuk hasil yang setara.
+
+Status terhadap kode saat ini: **LULUS pada kontrak simulated** dan tersedia sebagai pengujian paritas PostgreSQL. Eksekusi database aktual mengikuti `pnpm db:test` pada lingkungan yang dapat menjalankan PostgreSQL sementara.
+
 ## Open Questions
 
 - Kode error untuk pelanggaran separation of duties belum dikunci di dokumentasi API; perlu diselaraskan dengan [error-format.md](../07-api/error-format.md).

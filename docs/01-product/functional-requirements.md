@@ -54,8 +54,8 @@ Kata "harus" berarti wajib untuk prioritas tersebut. Semua endpoint berprefiks `
 
 | ID | Kebutuhan | Prioritas | Label | Story | Scaffold |
 |---|---|---|---|---|---|
-| FR-22 | `GET /search?q=` harus mengembalikan hanya konten yang boleh dibaca pengguna, dengan filter otorisasi diterapkan sebelum penilaian relevansi. | P0 | PROPOSED | US-12 | Ya (backend `simulated` dan `postgres`; pencocokan leksikal) |
-| FR-23 | Pencarian teks berbasis PostgreSQL FTS. Repository SQLAlchemy sudah tersedia (ADR-015); indeks FTS ada di skema tetapi belum dipakai query runtime (KL-02). | P0 | PROPOSED (ADR-003, ADR-015) | US-12 | Belum |
+| FR-22 | `GET /search?q=` harus mengembalikan hanya konten yang boleh dibaca pengguna, dengan filter otorisasi diterapkan sebelum penilaian relevansi. | P0 | PROPOSED | US-12 | Ya; ID terotorisasi membatasi query FTS PostgreSQL dan pemeriksaan Python tetap final |
+| FR-23 | Pencarian teks berbasis PostgreSQL FTS memakai `search_vector` dan indeks GIN untuk pengetahuan terbit serta draf terotorisasi. | P0 | PROPOSED (ADR-003, ADR-015) | US-12 | Ya untuk endpoint pencarian; retrieval SAVI belum memakai FTS |
 | FR-24 | Pencarian semantik berbasis pgvector setelah model embedding disetujui. | P0 | OPEN QUESTION (OQ-11) | US-14 | Belum |
 
 ## 6. Hermes

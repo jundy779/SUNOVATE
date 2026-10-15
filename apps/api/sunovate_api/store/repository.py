@@ -70,6 +70,19 @@ class PrincipalFacts:
     team_ids: frozenset[UUID]
 
 
+@dataclass(frozen=True)
+class TextSearchCandidates:
+    """Entries/chunks preselected by the active backend's text index.
+
+    PostgreSQL uses its GIN-backed ``search_vector`` columns. The simulated
+    backend returns the supplied records so the shared lexical scorer remains
+    deterministic in tests and local demonstrations.
+    """
+
+    entry_ids: frozenset[UUID]
+    chunks_by_entry: dict[UUID, list[DocumentChunk]]
+
+
 class Repository(Protocol):
     """Synchronous data access for one request. See design section 5.1 for semantics."""
 
@@ -109,6 +122,13 @@ class Repository(Protocol):
     def versions_of(self, document_id: UUID) -> list[DocumentVersion]: ...
     def chunks_of_entry(self, entry_id: UUID) -> list[DocumentChunk]: ...
     def chunks_of_entries(self, entry_ids: Sequence[UUID]) -> dict[UUID, list[DocumentChunk]]: ...
+    def text_search_candidates(
+        self,
+        entry_ids: Sequence[UUID],
+        query: str,
+        *,
+        classification_codes: Collection[str],
+    ) -> TextSearchCandidates: ...
 
     # Hermes --------------------------------------------------------------------
     def conversation(self, conversation_id: UUID) -> AiConversation | None: ...

@@ -320,12 +320,12 @@ def search_drafts(
         )
         raise permission_denied("Pencarian draf hanya tersedia bagi pemilik dan pemeriksa")
 
-    candidates = ctx.authz.list_readable(
+    authorized_entries = ctx.authz.list_readable(
         principal, KnowledgeEntry, where={"lifecycle_status": "DRAFT"}
     )
     drafts = [
         entry
-        for entry in candidates
+        for entry in authorized_entries
         if entry.owner_user_id == principal.user_id
         or (may_review and ctx.authz.team_in_scope(principal, entry.owner_team_id))
     ]
@@ -333,14 +333,30 @@ def search_drafts(
         drafts = [e for e in drafts if ctx.store.team_code(e.owner_team_id) == team_code]
 
     query_terms = terms(q or "")
-    chunks = ctx.store.chunks_of_entries([entry.id for entry in drafts])
+    draft_scope = ctx.authz.read_scope(principal, KnowledgeEntry)
+    search_candidates = (
+        ctx.store.text_search_candidates(
+            [entry.id for entry in drafts],
+            q,
+            classification_codes=draft_scope.classification_codes,
+        )
+        if q
+        else None
+    )
     hits: list[dict[str, Any]] = []
     for entry in drafts:
+        if search_candidates is not None and entry.id not in search_candidates.entry_ids:
+            continue
         entry_terms = terms(f"{entry.title} {entry.summary}")
         best_section: str | None = None
         best_snippet = entry.summary
         best = len(query_terms & entry_terms) if query_terms else 0
-        for chunk in chunks.get(entry.id, []):
+        entry_chunks = (
+            search_candidates.chunks_by_entry.get(entry.id, [])
+            if search_candidates is not None
+            else []
+        )
+        for chunk in entry_chunks:
             matched = len(query_terms & (entry_terms | terms(chunk.content))) if query_terms else 0
             if matched > best:
                 best_section, best_snippet, best = chunk.section_label, chunk.content, matched
@@ -372,7 +388,12 @@ def search_drafts(
         detail={"queryLength": len(q or ""), "resultCount": len(hits)},
     )
     page, meta = paginated(hits, pagination)
-    return envelope(page, **meta, mode="draft_lexical")
+    mode = (
+        "draft_postgres_fts"
+        if q and ctx.data_backend == "postgres"
+        else "draft_lexical"
+    )
+    return envelope(page, **meta, mode=mode)
 
 
 @router.get("/{entry_id}")

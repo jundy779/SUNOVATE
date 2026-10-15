@@ -34,7 +34,7 @@ Konsekuensi: pengguna dengan clearance INTERNAL tidak pernah menerima chunk REST
 
 ## Scoring saat ini (IMPLEMENTED)
 
-- Retrieval leksikal atas chunk PUBLISHED terotorisasi, identik pada kedua backend (`DATA_BACKEND=simulated` dan `DATA_BACKEND=postgres`). Pada postgres, SQL hanya mempersempit kandidat menurut otorisasi; scoring tetap di Python (`terms()`) dan `meta.mode` tetap `lexical`. FTS `search_vector` tidak dipakai karena konfigurasi `simple` tanpa stemming dapat menurunkan recall (ADR-015). Golden set RAG lulus pada kedua backend (`pnpm test` dan `pnpm db:test`).
+- Retrieval SAVI tetap leksikal atas chunk PUBLISHED terotorisasi pada kedua backend; scoring, rerank, dan evidence gate tetap di Python. Berbeda dari retrieval SAVI, endpoint `/search` dan `/knowledge/drafts/search` memakai `search_vector` berindeks GIN sebagai prefilter pada mode PostgreSQL, lalu menjalankan scoring `terms()` yang sama dengan mode simulated. Pemisahan ini mencegah perubahan diam-diam pada kualitas jawaban SAVI sebelum golden set FTS dievaluasi.
 - Rerank leksikal terhadap kandidat.
 - Evidence gate deterministik memisahkan rerank dari keputusan menjawab. Gate mencatat jumlah kandidat terotorisasi, coverage teratas, skor teratas, alasan keputusan, dan jumlah passage yang lolos pada audit tanpa menyimpan teks pertanyaan.
 - Filter injeksi dokumen mengeluarkan chunk yang berisi teks menyerupai instruksi, setelah rerank dan sebelum penyusunan jawaban.
@@ -74,7 +74,7 @@ flowchart LR
 ```
 
 - **PROPOSED** Filter otorisasi diterapkan sebagai klausa WHERE pada kedua kanal, bukan pasca-filter.
-- **PROPOSED** Kanal FTS memakai `document_chunks.search_vector` dengan konfigurasi teks yang sesuai Bahasa Indonesia; konfigurasi kamus adalah keputusan teknis yang perlu diuji dengan golden set.
+- **IMPLEMENTED untuk endpoint pencarian, PROPOSED untuk SAVI** Kanal FTS memakai `knowledge_entries.search_vector` dan `document_chunks.search_vector` dengan konfigurasi `simple`. Pemakaian pada retrieval SAVI menunggu evaluasi recall golden set dan keputusan konfigurasi Bahasa Indonesia.
 - **PROPOSED** Kanal vektor memakai `embedding_references` dengan `model_name` yang sama dengan embedding pertanyaan. Indeks ANN baru dibuat setelah model dan dimensi disetujui (ADR-009).
 - **PROPOSED** Fusi dengan reciprocal rank fusion: skor = jumlah 1 / (k + rank) dari setiap kanal, dengan k = 60 sebagai nilai awal.
 - **PROPOSED** Cross-encoder rerank hanya jika modelnya disetujui dan diproses di lokasi yang diizinkan (OQ-11). Tanpa itu, rerank leksikal tetap dipakai.

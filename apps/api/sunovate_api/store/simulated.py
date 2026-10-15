@@ -44,7 +44,7 @@ from .records import (
     WorkOutput,
     utcnow,
 )
-from .repository import PrincipalFacts, ReadScope, check_fields
+from .repository import PrincipalFacts, ReadScope, TextSearchCandidates, check_fields
 
 # Governed kind -> name of the private dict holding it.
 _GOVERNED: dict[type[Governed], str] = {
@@ -279,6 +279,32 @@ class SimulatedStore:
             entry_id: sorted(items, key=lambda c: (c.chunk_index, c.created_at, c.id))
             for entry_id, items in grouped.items()
         }
+
+    def text_search_candidates(
+        self,
+        entry_ids: Sequence[UUID],
+        query: str,
+        *,
+        classification_codes: Collection[str],
+    ) -> TextSearchCandidates:
+        """Preserve deterministic lexical behavior for the in-memory preview."""
+        del query
+        wanted = frozenset(entry_ids)
+        allowed_versions = {
+            document.current_version_id
+            for document in self._documents.values()
+            if document.knowledge_entry_id in wanted
+            and document.deleted_at is None
+            and document.classification_code in classification_codes
+        }
+        chunks = self.chunks_of_entries(list(wanted))
+        filtered = {
+            entry_id: [
+                chunk for chunk in entry_chunks if chunk.document_version_id in allowed_versions
+            ]
+            for entry_id, entry_chunks in chunks.items()
+        }
+        return TextSearchCandidates(wanted, filtered)
 
     # Hermes ------------------------------------------------------------------
 

@@ -24,7 +24,7 @@ Daftar seluruh endpoint `/api/v1` yang diimplementasikan (scaffold, data dari ba
 | GET | `/knowledge` | `knowledge:read` | filter `q`, `status`, `type`, `teamCode`; paginasi |
 | POST | `/knowledge/chunk-preview` | `knowledge:review` | membagi teks contoh secara deterministik; hanya preview di memori, tidak menyimpan atau menerbitkan |
 | POST | `/knowledge/chunk-drafts` | `knowledge:review` + `knowledge:create` + `document:create` + `document:version` | menyimpan hasil review sebagai knowledge DRAFT, referensi teks simulasi, versi, dan chunk; judul wajib diawali `SIMULASI -`; tidak masuk SAVI |
-| GET | `/knowledge/drafts/search` | Auth + `knowledge:read`; role `knowledge_owner` atau `knowledge:review` | pencarian leksikal draf terotorisasi; pemilik hanya draf miliknya, pemeriksa sesuai scope tim dan klasifikasi; audit tidak menyimpan kata kunci |
+| GET | `/knowledge/drafts/search` | Auth + `knowledge:read`; role `knowledge_owner` atau `knowledge:review` | FTS PostgreSQL atau fallback leksikal atas draf terotorisasi; pemilik hanya draf miliknya, pemeriksa sesuai scope tim dan klasifikasi; audit tidak menyimpan kata kunci |
 | GET | `/knowledge/{id}` | `knowledge:read` | detail + dokumen + bagian teks |
 | POST | `/knowledge` | `knowledge:create` | draf baru untuk tim dalam scope; `tags` duplikat dibuang (kemunculan pertama dipertahankan) |
 | PATCH | `/knowledge/{id}` | `knowledge:update` | hanya DRAFT; wajib `revision`; `null` berarti field tidak diubah; `tags` didedupe seperti POST |
@@ -35,7 +35,7 @@ Daftar seluruh endpoint `/api/v1` yang diimplementasikan (scaffold, data dari ba
 | GET | `/documents/{id}` | `document:read` | detail + status provider |
 | GET | `/documents/{id}/versions` | `document:read` | daftar versi |
 | POST | `/documents/{id}/versions` | `document:version` | hanya `local://`; checksum duplikat 409 |
-| GET | `/search?q=` | `search:query` + `knowledge:read` | leksikal atas knowledge PUBLISHED terbaca |
+| GET | `/search?q=` | `search:query` + `knowledge:read` | FTS PostgreSQL atau fallback leksikal atas knowledge PUBLISHED terbaca |
 | GET | `/dashboard/summary` | `work:read` | metrik, perlu perhatian, tugas per status, knowledge terbaru |
 | GET | `/work-outputs` | `work:read` | filter `teamCode`; `deadlineState` |
 | GET | `/work-outputs/{id}` | `work:read` | + tugas + milestone |
