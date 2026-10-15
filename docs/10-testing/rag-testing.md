@@ -2,7 +2,7 @@
 
 **Status:** PROPOSED
 
-**Last Updated:** 2026-10-13
+**Last Updated:** 2026-10-15
 
 ## Purpose
 
@@ -113,6 +113,7 @@ Prosedur ini **PROPOSED** dan tidak berlaku sekarang. Sampai semua syarat terpen
 - **CONFIRMED**: Karena provider ekstraktif dan retrieval leksikal, hasil evaluasi saat ini tidak mencerminkan kualitas model bahasa atau retrieval semantik (sumber: ADR-008).
 - **OPEN QUESTION**: Evaluasi ulang dibutuhkan setelah model AI dan embedding disetujui (OQ-11).
 - **OPEN QUESTION**: Dokumen apa yang boleh masuk RAG menentukan isi golden set lanjutan (OQ-04).
+- Evaluasi endpoint pencarian sekarang memakai `tests/fixtures/search_relevance_set.json` dan `pnpm search:eval`. Set ini bukan pengganti golden set jawaban SAVI; fungsinya menguji recall FTS serta kebocoran sebelum kandidat FTS dipertimbangkan untuk retrieval SAVI.
 
 ## Related Documents
 

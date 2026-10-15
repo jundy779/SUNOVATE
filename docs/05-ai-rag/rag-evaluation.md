@@ -1,7 +1,7 @@
 # RAG Evaluation
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-13
+**Last Updated:** 2026-10-15
 
 ## Purpose
 
@@ -56,6 +56,7 @@ Seluruh ambang berstatus **PROPOSED** dan dikalibrasi ulang ketika semantic retr
 
 ```text
 pnpm api:test
+pnpm search:eval
 ```
 
 - **CONFIRMED (implementasi)** `pnpm api:test` menjalankan suite pytest backend, termasuk `tests/rag-evaluation/test_rag_golden_set.py`. Gate yang ditegakkan test saat ini: leakage = 0, citation validity = 100 persen, dan akurasi decision = 100 persen pada 24 kasus (wajar untuk provider deterministik; perlu dilonggarkan dengan alasan tertulis bila LLM dipakai).
@@ -63,6 +64,15 @@ pnpm api:test
 - Evaluasi memakai provider `development_extractive` dan simulated store, sehingga hasilnya deterministik dan tidak memerlukan jaringan.
 - **PROPOSED** Evaluasi wajib dijalankan pada setiap perubahan pada modul Hermes, aturan `ScopeGuard`, filter injeksi, prompt, chunking, atau dataset SIMULATED.
 - Delapan pertanyaan mentor tanggal 2026-10-13 belum termasuk 24 kasus aktif. Pertanyaan berada pada register intake terpisah dan seluruhnya `BLOCKED` sampai validasi SME atau hukum, SOP, klasifikasi, serta sumber retrieval lengkap (lihat [sme-question-validation.md](../10-testing/sme-question-validation.md)).
+
+## Evaluasi pencarian sebelum integrasi SAVI
+
+- Dataset terpisah berada di `tests/fixtures/search_relevance_set.json` agar kualitas endpoint pencarian tidak tercampur dengan keputusan jawaban SAVI.
+- Sepuluh kasus mencakup metadata, kecocokan isi bagian, konten tim, konten lintas direktorat, penolakan lintas tim, batas klasifikasi, dan pengecualian draf.
+- `pnpm search:eval` melaporkan hit@5, mean reciprocal rank, kebocoran akses, dan peringkat pertama sumber yang diharapkan per ID kasus. Laporan tidak menyalin pertanyaan atau isi dokumen.
+- Gate awal: hit@5 minimal 0,90 dan unauthorized leakage 0. Nilai ini adalah baseline engineering, bukan keputusan kualitas final mentor.
+- Baseline 2026-10-15 pada backend simulated: hit@5 1,00; MRR 1,00; leakage 0. Evaluator yang sama berjalan dengan FTS bila `SUNOVATE_TEST_BACKEND=postgres`; hasil PostgreSQL aktual masih menunggu lingkungan database uji yang dapat dijalankan.
+- FTS tidak boleh dipakai retrieval SAVI hanya berdasarkan hasil simulated. Promosi membutuhkan hasil PostgreSQL, kebocoran 0, dan evaluasi golden set SAVI.
 
 ## Review manual faithfulness (PROPOSED)
 

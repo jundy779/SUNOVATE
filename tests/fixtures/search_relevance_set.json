@@ -1,0 +1,90 @@
+{
+  "dataLabel": "SIMULATED_DATA",
+  "description": "Evaluation set for authorized knowledge search. Entry keys map to sid('knowledge:<key>').",
+  "thresholds": {
+    "hitAt5": 0.9,
+    "unauthorizedLeakage": 0
+  },
+  "cases": [
+    {
+      "id": "SEARCH-01",
+      "category": "metadata",
+      "user": "sim.staff.pppsun",
+      "query": "metadata wajib dokumen knowledge",
+      "expectedEntries": ["K1"],
+      "forbiddenEntries": []
+    },
+    {
+      "id": "SEARCH-02",
+      "category": "team-content",
+      "user": "sim.owner.ppsun",
+      "query": "struktur close out note",
+      "expectedEntries": ["K2"],
+      "forbiddenEntries": []
+    },
+    {
+      "id": "SEARCH-03",
+      "category": "cross-team-denial",
+      "user": "sim.staff.pppsun",
+      "query": "struktur close out note",
+      "expectedEntries": [],
+      "forbiddenEntries": ["K2"]
+    },
+    {
+      "id": "SEARCH-04",
+      "category": "restricted-authorized",
+      "user": "sim.coordinator",
+      "query": "review dokumen hukum transaksi valas",
+      "expectedEntries": ["K3"],
+      "forbiddenEntries": []
+    },
+    {
+      "id": "SEARCH-05",
+      "category": "classification-denial",
+      "user": "sim.readonly.dhtv",
+      "query": "review dokumen hukum transaksi valas",
+      "expectedEntries": [],
+      "forbiddenEntries": ["K3"]
+    },
+    {
+      "id": "SEARCH-06",
+      "category": "draft-exclusion",
+      "user": "sim.reviewer.akpsun",
+      "query": "kerangka kajian analisis pasar",
+      "expectedEntries": [],
+      "forbiddenEntries": ["K4"]
+    },
+    {
+      "id": "SEARCH-07",
+      "category": "directorate-content",
+      "user": "sim.staff.pppsun",
+      "query": "materi edukasi SUN ritel",
+      "expectedEntries": ["K5"],
+      "forbiddenEntries": []
+    },
+    {
+      "id": "SEARCH-08",
+      "category": "regulation-metadata",
+      "user": "sim.lead.psun",
+      "query": "metadata entri regulasi",
+      "expectedEntries": ["K8"],
+      "forbiddenEntries": []
+    },
+    {
+      "id": "SEARCH-09",
+      "category": "chunk-only",
+      "user": "sim.staff.pppsun",
+      "query": "checksum SHA-256 duplikasi ingestion",
+      "expectedEntries": ["K1"],
+      "forbiddenEntries": []
+    },
+    {
+      "id": "SEARCH-10",
+      "category": "indonesian-phrase",
+      "user": "sim.staff.pppsun",
+      "query": "label versi dan lokasi dokumen",
+      "expectedEntries": ["K1"],
+      "forbiddenEntries": []
+    }
+  ]
+}

@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-15 — Baseline evaluasi kualitas pencarian
+
+- Menambahkan 10 skenario `SIMULATED_DATA` untuk pencarian metadata, isi bagian, akses lintas tim, klasifikasi, draf, dan konten lintas direktorat.
+- Menambahkan evaluator `pnpm search:eval` dengan metrik hit@5, mean reciprocal rank, dan unauthorized leakage tanpa menyimpan isi pertanyaan pada laporan.
+- Gate awal menetapkan hit@5 minimal 0,90 dan kebocoran akses wajib 0; suite yang sama otomatis memakai PostgreSQL FTS saat runtime pengujian PostgreSQL tersedia.
+- Baseline simulated lulus dengan hit@5 1,00, MRR 1,00, dan kebocoran 0. Hasil PostgreSQL aktual belum boleh diklaim sebelum `pnpm db:test` dapat dijalankan.
+- Validasi aktual: Ruff, ESLint, mypy strict, TypeScript, 29 test frontend, 211 test backend, evaluator pencarian, dan build produksi lulus; 40 pengujian PostgreSQL dilewati pada mode simulated.
+
 ## 2026-10-15 — PostgreSQL Full-Text Search terotorisasi
 
 - Mengaktifkan indeks GIN `search_vector` untuk pencarian pengetahuan terbit dan draf pada mode PostgreSQL tanpa mengubah skema database.

@@ -372,6 +372,17 @@ Status terhadap kode saat ini: **LULUS** pada backend simulasi dan pemeriksaan k
 
 Status terhadap kode saat ini: **LULUS pada kontrak simulated** dan tersedia sebagai pengujian paritas PostgreSQL. Eksekusi database aktual mengikuti `pnpm db:test` pada lingkungan yang dapat menjalankan PostgreSQL sementara.
 
+## AC-38 Kualitas pencarian diukur sebelum dipakai SAVI
+
+- **Given** dataset evaluasi pencarian berlabel `SIMULATED_DATA`
+- **When** evaluator dijalankan pada backend simulated atau PostgreSQL
+- **Then** sistem menghitung hit@5, mean reciprocal rank, dan kebocoran akses
+- **And** hit@5 minimal 0,90 serta kebocoran wajib 0
+- **And** laporan hanya memuat ID kasus, peringkat, dan jumlah kebocoran tanpa menyalin pertanyaan atau isi dokumen
+- **And** FTS belum boleh dipakai retrieval SAVI sebelum hasil PostgreSQL dan golden set SAVI memenuhi gate.
+
+Status terhadap kode saat ini: evaluator dan 10 kasus tersedia. Baseline simulated lulus dengan hit@5 1,00, MRR 1,00, dan leakage 0; baseline PostgreSQL menunggu lingkungan database uji.
+
 ## Open Questions
 
 - Kode error untuk pelanggaran separation of duties belum dikunci di dokumentasi API; perlu diselaraskan dengan [error-format.md](../07-api/error-format.md).
