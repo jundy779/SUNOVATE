@@ -5,7 +5,7 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 
 interface ChunkItem { index: number; sectionLabel: string; content: string; wordCount: number; contentHash: string; }
-interface ExtractionInfo { format: string; sizeBytes: number; checksum: string; pageCount: number | null; paragraphCount: number | null; persisted: false; }
+interface ExtractionInfo { format: string; sizeBytes: number; checksum: string; pageCount: number | null; paragraphCount: number | null; sheetCount: number | null; persisted: false; }
 interface PreviewData { documentLabel: string; knowledgeType: string; chunkCount: number; totalWords: number; persisted: false; extractedText?: string; extraction?: ExtractionInfo; chunks: ChunkItem[]; }
 interface TeamOption { id: string; code: string; name: string; }
 
@@ -91,7 +91,7 @@ export function ChunkPreviewWorkbench({ teams, canSave }: { teams: TeamOption[];
         <div className="ingestion-fields">
           <label>Nama bahan<input value={title} minLength={3} maxLength={255} onChange={(event) => { setTitle(event.target.value); setSavedDraftId(""); }} required /></label>
           <label>Jenis pengetahuan<select value={type} onChange={(event) => { setType(event.target.value); setSavedDraftId(""); }}>{TYPE_OPTIONS.map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
-          <label className="ingestion-text">Berkas simulasi<input aria-label="Berkas simulasi" type="file" accept=".txt,.md,.pdf,.docx" disabled={busy} onChange={(event) => void extractFile(event.target.files?.[0])} /><small>Nama berkas harus diawali SIMULASI. Maksimal 2 MB, tanpa kata sandi atau makro.</small></label>
+          <label className="ingestion-text">Berkas simulasi<input aria-label="Berkas simulasi" type="file" accept=".txt,.md,.pdf,.docx,.xlsx,.xls" disabled={busy} onChange={(event) => void extractFile(event.target.files?.[0])} /><small>Nama berkas harus diawali SIMULASI. Maksimal 2 MB, tanpa kata sandi, makro, atau tautan data luar.</small></label>
           <label className="ingestion-text">Ringkasan draf<textarea className="ingestion-summary-input" value={summary} minLength={10} maxLength={2000} rows={3} onChange={(event) => setSummary(event.target.value)} required /></label>
           {canSave ? <>
             <label>Tim pemilik<select value={teamId} onChange={(event) => setTeamId(event.target.value)} required>{teams.map((team) => <option key={team.id} value={team.id}>{team.code} · {team.name}</option>)}</select></label>

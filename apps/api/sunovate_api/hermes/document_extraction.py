@@ -12,8 +12,12 @@ import zipfile
 from dataclasses import dataclass
 from hashlib import sha256
 from pathlib import PurePath
+from typing import Any
 
+import xlrd
 from docx import Document
+from olefile import OleFileIO
+from openpyxl import load_workbook
 from pypdf import PdfReader
 
 MAX_FILE_BYTES = 2 * 1024 * 1024
@@ -21,6 +25,12 @@ MAX_EXTRACTED_CHARACTERS = 100_000
 MAX_PDF_PAGES = 50
 MAX_DOCX_ENTRIES = 500
 MAX_DOCX_UNCOMPRESSED_BYTES = 10 * 1024 * 1024
+MAX_SPREADSHEET_SHEETS = 20
+MAX_SPREADSHEET_ROWS = 5_000
+MAX_SPREADSHEET_COLUMNS = 100
+MAX_SPREADSHEET_CELLS = 50_000
+MAX_XLSX_ENTRIES = 1_000
+MAX_XLSX_UNCOMPRESSED_BYTES = 20 * 1024 * 1024
 
 _SIMULATED_NAME = re.compile(r"^simulasi(?:[-_. ]|$)", re.IGNORECASE)
 _ALLOWED_TYPES: dict[str, frozenset[str]] = {
@@ -30,6 +40,20 @@ _ALLOWED_TYPES: dict[str, frozenset[str]] = {
     ".docx": frozenset(
         {
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "application/octet-stream",
+            "",
+        }
+    ),
+    ".xlsx": frozenset(
+        {
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "application/octet-stream",
+            "",
+        }
+    ),
+    ".xls": frozenset(
+        {
+            "application/vnd.ms-excel",
             "application/octet-stream",
             "",
         }
@@ -50,6 +74,7 @@ class ExtractedDocument:
     checksum_sha256: str
     page_count: int | None
     paragraph_count: int | None
+    sheet_count: int | None
 
 
 def _clean(text: str) -> str:
@@ -133,6 +158,102 @@ def _extract_docx(payload: bytes) -> tuple[str, None, int]:
         raise ExtractionRejected("DOCX tidak dapat dibaca dengan aman") from exc
 
 
+def _spreadsheet_text(sheets: list[tuple[str, list[list[Any]]]]) -> tuple[str, None, None, int]:
+    if len(sheets) > MAX_SPREADSHEET_SHEETS:
+        raise ExtractionRejected("Berkas Excel dibatasi maksimal 20 lembar")
+    parts: list[str] = []
+    total_cells = 0
+    for sheet_name, rows in sheets:
+        parts.append(f"Lembar: {sheet_name}")
+        for row_number, row in enumerate(rows, start=1):
+            if row_number > MAX_SPREADSHEET_ROWS:
+                raise ExtractionRejected("Setiap lembar Excel dibatasi maksimal 5.000 baris")
+            values = [
+                str(value).strip()
+                for value in row[:MAX_SPREADSHEET_COLUMNS]
+                if value not in (None, "")
+            ]
+            total_cells += len(values)
+            if total_cells > MAX_SPREADSHEET_CELLS:
+                raise ExtractionRejected("Berkas Excel dibatasi maksimal 50.000 sel berisi")
+            if values:
+                parts.append(" | ".join(values))
+    return "\n".join(parts), None, None, len(sheets)
+
+
+def _extract_xlsx(payload: bytes) -> tuple[str, None, None, int]:
+    try:
+        with zipfile.ZipFile(io.BytesIO(payload)) as archive:
+            entries = archive.infolist()
+            names = {entry.filename.lower() for entry in entries}
+            if len(entries) > MAX_XLSX_ENTRIES:
+                raise ExtractionRejected("Struktur XLSX terlalu kompleks untuk tahap simulasi")
+            if sum(entry.file_size for entry in entries) > MAX_XLSX_UNCOMPRESSED_BYTES:
+                raise ExtractionRejected("Ukuran isi XLSX setelah dibuka melebihi batas aman")
+            if "[content_types].xml" not in names or "xl/workbook.xml" not in names:
+                raise ExtractionRejected("Isi berkas tidak sesuai dengan format XLSX")
+            if any(name.endswith("vbaproject.bin") for name in names):
+                raise ExtractionRejected("Dokumen yang mengandung makro tidak diizinkan")
+            if any(name.startswith("xl/externallinks/") for name in names):
+                raise ExtractionRejected("Tautan data luar pada Excel tidak diizinkan")
+    except ExtractionRejected:
+        raise
+    except (zipfile.BadZipFile, OSError) as exc:
+        raise ExtractionRejected("XLSX tidak dapat dibaca dengan aman") from exc
+
+    try:
+        workbook = load_workbook(io.BytesIO(payload), read_only=True, data_only=True)
+        if len(workbook.sheetnames) > MAX_SPREADSHEET_SHEETS:
+            raise ExtractionRejected("Berkas Excel dibatasi maksimal 20 lembar")
+        sheets: list[tuple[str, list[list[Any]]]] = []
+        for worksheet in workbook.worksheets:
+            if worksheet.max_column > MAX_SPREADSHEET_COLUMNS:
+                raise ExtractionRejected("Setiap lembar Excel dibatasi maksimal 100 kolom")
+            rows = [
+                [cell.value for cell in row]
+                for row in worksheet.iter_rows(max_row=MAX_SPREADSHEET_ROWS + 1)
+            ]
+            sheets.append((worksheet.title, rows))
+        workbook.close()
+        return _spreadsheet_text(sheets)
+    except ExtractionRejected:
+        raise
+    except Exception as exc:
+        raise ExtractionRejected("XLSX tidak dapat dibaca dengan aman") from exc
+
+
+def _extract_xls(payload: bytes) -> tuple[str, None, None, int]:
+    if not payload.startswith(bytes.fromhex("D0CF11E0A1B11AE1")):
+        raise ExtractionRejected("Isi berkas tidak sesuai dengan format XLS")
+    try:
+        with OleFileIO(io.BytesIO(payload)) as container:
+            stream_names = ["/".join(parts).lower() for parts in container.listdir()]
+            if any(
+                marker in name
+                for name in stream_names
+                for marker in ("vba", "_vba_project", "macros")
+            ):
+                raise ExtractionRejected("Dokumen yang mengandung makro tidak diizinkan")
+            if sum(container.get_size(parts) for parts in container.listdir()) > 20 * 1024 * 1024:
+                raise ExtractionRejected("Ukuran isi XLS setelah dibuka melebihi batas aman")
+        workbook = xlrd.open_workbook(file_contents=payload, on_demand=True)
+        if workbook.nsheets > MAX_SPREADSHEET_SHEETS:
+            raise ExtractionRejected("Berkas Excel dibatasi maksimal 20 lembar")
+        sheets: list[tuple[str, list[list[Any]]]] = []
+        for sheet in workbook.sheets():
+            if sheet.nrows > MAX_SPREADSHEET_ROWS:
+                raise ExtractionRejected("Setiap lembar Excel dibatasi maksimal 5.000 baris")
+            if sheet.ncols > MAX_SPREADSHEET_COLUMNS:
+                raise ExtractionRejected("Setiap lembar Excel dibatasi maksimal 100 kolom")
+            sheets.append((sheet.name, [sheet.row_values(index) for index in range(sheet.nrows)]))
+        workbook.release_resources()
+        return _spreadsheet_text(sheets)
+    except ExtractionRejected:
+        raise
+    except Exception as exc:
+        raise ExtractionRejected("XLS tidak dapat dibaca dengan aman") from exc
+
+
 def extract_simulated_document(
     *, filename: str, content_type: str | None, payload: bytes
 ) -> ExtractedDocument:
@@ -142,7 +263,9 @@ def extract_simulated_document(
     if not _SIMULATED_NAME.match(safe_name):
         raise ExtractionRejected("Nama berkas harus diawali 'SIMULASI'")
     if extension not in _ALLOWED_TYPES:
-        raise ExtractionRejected("Gunakan berkas simulasi berformat TXT, MD, PDF, atau DOCX")
+        raise ExtractionRejected(
+            "Gunakan berkas simulasi berformat TXT, MD, PDF, DOCX, XLSX, atau XLS"
+        )
     mime = (content_type or "").lower().split(";", 1)[0].strip()
     if mime not in _ALLOWED_TYPES[extension]:
         raise ExtractionRejected("Jenis berkas tidak sesuai dengan nama berkas")
@@ -151,12 +274,17 @@ def extract_simulated_document(
     if len(payload) > MAX_FILE_BYTES:
         raise ExtractionRejected("Ukuran berkas simulasi dibatasi maksimal 2 MB")
 
+    sheets: int | None = None
     if extension in {".txt", ".md"}:
         text, pages, paragraphs = _extract_plain(payload)
     elif extension == ".pdf":
         text, pages, paragraphs = _extract_pdf(payload)
-    else:
+    elif extension == ".docx":
         text, pages, paragraphs = _extract_docx(payload)
+    elif extension == ".xlsx":
+        text, pages, paragraphs, sheets = _extract_xlsx(payload)
+    else:
+        text, pages, paragraphs, sheets = _extract_xls(payload)
 
     return ExtractedDocument(
         text=_validate_text(text),
@@ -166,9 +294,12 @@ def extract_simulated_document(
             ".md": "text/markdown",
             ".pdf": "application/pdf",
             ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            ".xls": "application/vnd.ms-excel",
         }[extension],
         size_bytes=len(payload),
         checksum_sha256=sha256(payload).hexdigest(),
         page_count=pages,
         paragraph_count=paragraphs,
+        sheet_count=sheets,
     )

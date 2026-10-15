@@ -6,7 +6,9 @@ import io
 import zipfile
 
 import pytest
+import xlwt
 from docx import Document
+from openpyxl import Workbook
 
 from sunovate_api.hermes.document_extraction import (
     MAX_FILE_BYTES,
@@ -47,13 +49,60 @@ def test_extracts_docx_paragraphs_and_tables() -> None:
     assert result.paragraph_count == 2
 
 
+def test_extracts_xlsx_values_without_executing_formulas() -> None:
+    workbook = Workbook()
+    worksheet = workbook.active
+    worksheet.title = "Hasil Lelang"
+    worksheet.append(["Seri", "Nominal", "Catatan"])
+    worksheet.append(["SIMULASI-FR", 1_000_000, "Data untuk pemeriksaan manusia"])
+    worksheet.append(["Rumus", "=1+1", None])
+    buffer = io.BytesIO()
+    workbook.save(buffer)
+
+    result = extract_simulated_document(
+        filename="SIMULASI-hasil-lelang.xlsx",
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        payload=buffer.getvalue(),
+    )
+
+    assert "Lembar: Hasil Lelang" in result.text
+    assert "SIMULASI-FR | 1000000 | Data untuk pemeriksaan manusia" in result.text
+    assert "=1+1" not in result.text
+    assert result.sheet_count == 1
+
+
+def test_extracts_legacy_xls_values() -> None:
+    workbook = xlwt.Workbook()
+    worksheet = workbook.add_sheet("Rekonsiliasi")
+    rows = [
+        ("Seri", "Status"),
+        ("SIMULASI-FR", "Perlu pemeriksaan manusia"),
+    ]
+    for row_index, row in enumerate(rows):
+        for column_index, value in enumerate(row):
+            worksheet.write(row_index, column_index, value)
+    buffer = io.BytesIO()
+    workbook.save(buffer)
+
+    result = extract_simulated_document(
+        filename="SIMULASI-rekonsiliasi.xls",
+        content_type="application/vnd.ms-excel",
+        payload=buffer.getvalue(),
+    )
+
+    assert "Lembar: Rekonsiliasi" in result.text
+    assert "SIMULASI-FR | Perlu pemeriksaan manusia" in result.text
+    assert result.sheet_count == 1
+
+
 @pytest.mark.parametrize(
     ("filename", "content_type", "payload", "message"),
     [
         ("dokumen.txt", "text/plain", b"Isi simulasi yang panjang dan aman.", "diawali"),
-        ("SIMULASI.exe", "application/octet-stream", b"data", "TXT, MD, PDF, atau DOCX"),
+        ("SIMULASI.exe", "application/octet-stream", b"data", "XLSX, atau XLS"),
         ("SIMULASI.txt", "text/plain", b"teks\x00biner yang tidak aman", "data biner"),
         ("SIMULASI.pdf", "application/pdf", b"bukan pdf yang valid", "format PDF"),
+        ("SIMULASI.xls", "application/vnd.ms-excel", b"bukan xls", "format XLS"),
         ("SIMULASI.txt", "text/plain", b"a" * (MAX_FILE_BYTES + 1), "maksimal 2 MB"),
     ],
 )

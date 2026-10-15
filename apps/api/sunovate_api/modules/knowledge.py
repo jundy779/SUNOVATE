@@ -257,6 +257,7 @@ async def extract_preview(
         "checksum": extracted.checksum_sha256,
         "pageCount": extracted.page_count,
         "paragraphCount": extracted.paragraph_count,
+        "sheetCount": extracted.sheet_count,
         "persisted": False,
     }
     ctx.store.audit(

@@ -385,10 +385,11 @@ Status terhadap kode saat ini: evaluator dan 10 kasus tersedia. Baseline simulat
 
 ## AC-39 Ekstraksi berkas simulasi aman dan tidak menerbitkan otomatis
 
-- **Given** pemeriksa memilih berkas TXT, MD, PDF, atau DOCX yang nama berkasnya diawali `SIMULASI`
+- **Given** pemeriksa memilih berkas TXT, MD, PDF, DOCX, XLSX, atau XLS yang nama berkasnya diawali `SIMULASI`
 - **When** sistem membaca berkas melalui ruang pemeriksaan
 - **Then** ukuran, ekstensi, tipe media, dan struktur dasar diperiksa sebelum teks dibagi
-- **And** berkas maksimal 2 MB, hasil maksimal 100.000 karakter, PDF maksimal 50 halaman, serta DOCX bermakro dan PDF terenkripsi ditolak
+- **And** berkas maksimal 2 MB, hasil maksimal 100.000 karakter, PDF maksimal 50 halaman, dan Excel dibatasi menurut jumlah lembar, baris, kolom, serta sel berisi
+- **And** PDF terenkripsi, dokumen bermakro, tautan data luar Excel, dan format palsu ditolak; rumus Excel tidak dijalankan
 - **And** berkas sumber maupun isi tidak disalin ke audit atau disimpan sebagai lampiran
 - **And** hasil pembacaan dapat diperiksa dan diperbaiki manusia sebelum disimpan sebagai draf
 - **And** draf tidak masuk pencarian umum atau sumber SAVI sebelum melewati pemeriksaan dan penerbitan yang berwenang.

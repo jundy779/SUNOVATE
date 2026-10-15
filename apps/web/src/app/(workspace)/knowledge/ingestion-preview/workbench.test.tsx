@@ -46,7 +46,7 @@ describe("ChunkPreviewWorkbench", () => {
         documentLabel: "SIMULASI - Bahan pemeriksaan dokumen SUN", knowledgeType: "REGULATION",
         extractedText: "Pasal 1\nIsi hasil pembacaan berkas simulasi.", chunkCount: 1, totalWords: 6,
         persisted: false, extraction: { format: "TXT", sizeBytes: 48,
-          checksum: "abcdef1234567890", pageCount: null, paragraphCount: null, persisted: false },
+          checksum: "abcdef1234567890", pageCount: null, paragraphCount: null, sheetCount: null, persisted: false },
         chunks: [{ index: 0, sectionLabel: "Pasal 1", content: "Pasal 1\nIsi hasil pembacaan berkas simulasi.",
           wordCount: 6, contentHash: "abcdef1234567890" }],
       }, meta: { dataLabel: "SIMULATED_DATA" },

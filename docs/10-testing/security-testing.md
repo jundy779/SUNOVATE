@@ -81,7 +81,8 @@ Skenario SEC-40 sampai SEC-91 di bawah **PLANNED**: belum ada yang diimplementas
 
 ### Intake dokumen (FR-53, BR-35)
 
-- Endpoint ekstraksi simulasi wajib menolak akun tanpa `knowledge:review`, nama bahan/berkas non-simulasi, ekstensi atau tipe media yang tidak cocok, berkas kosong/terlalu besar, teks biner/non-UTF-8, PDF palsu/terenkripsi, dan DOCX bermakro atau berstruktur berlebihan.
+- Endpoint ekstraksi simulasi wajib menolak akun tanpa `knowledge:review`, nama bahan/berkas non-simulasi, ekstensi atau tipe media yang tidak cocok, berkas kosong/terlalu besar, teks biner/non-UTF-8, PDF palsu/terenkripsi, dokumen bermakro, tautan data luar Excel, dan struktur dokumen/lembar kerja yang melampaui batas.
+- Pembacaan Excel memakai nilai tersimpan dan tidak boleh menjalankan rumus, koneksi data luar, atau makro.
 - Berkas sumber tidak boleh menjadi knowledge, versi dokumen, lampiran, atau isi audit. Audit hanya boleh mencatat metadata teknis minimum dan jumlah hasil.
 - Keberhasilan ekstraksi hanya menghasilkan preview. Penyimpanan draf tetap membutuhkan kewenangan gabungan yang sudah ditetapkan, dan penerbitan tetap melalui pemeriksaan manusia.
 
