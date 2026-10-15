@@ -23,6 +23,7 @@ Daftar seluruh endpoint `/api/v1` yang diimplementasikan (scaffold, data dari ba
 | GET | `/classifications` | Auth | empat tingkat |
 | GET | `/knowledge` | `knowledge:read` | filter `q`, `status`, `type`, `teamCode`; paginasi |
 | POST | `/knowledge/chunk-preview` | `knowledge:review` | membagi teks contoh secara deterministik; hanya preview di memori, tidak menyimpan atau menerbitkan |
+| POST | `/knowledge/extract-preview` | `knowledge:review` | membaca TXT/MD/PDF/DOCX simulasi secara terbatas di memori, lalu mengembalikan teks dan pembagian; berkas sumber tidak disimpan |
 | POST | `/knowledge/chunk-drafts` | `knowledge:review` + `knowledge:create` + `document:create` + `document:version` | menyimpan hasil review sebagai knowledge DRAFT, referensi teks simulasi, versi, dan chunk; judul wajib diawali `SIMULASI -`; tidak masuk SAVI |
 | GET | `/knowledge/drafts/search` | Auth + `knowledge:read`; role `knowledge_owner` atau `knowledge:review` | FTS PostgreSQL atau fallback leksikal atas draf terotorisasi; pemilik hanya draf miliknya, pemeriksa sesuai scope tim dan klasifikasi; audit tidak menyimpan kata kunci |
 | GET | `/knowledge/{id}` | `knowledge:read` | detail + dokumen + bagian teks |
@@ -109,7 +110,7 @@ Nilai `decision` lain: `INSUFFICIENT_EVIDENCE`, `REFUSED_OUT_OF_SCOPE`, `REFUSED
 
 ## Belum diimplementasikan (PROPOSED)
 
-CRUD pengguna/tim/role, approval khusus monitoring kerja, arsip knowledge, upload/ekstraksi dokumen, notifikasi, eksekusi aksi setelah approval, regulation relations, document automation.
+CRUD pengguna/tim/role, approval khusus monitoring kerja, arsip knowledge, upload/ekstraksi dokumen produksi, notifikasi, eksekusi aksi setelah approval, regulation relations, document automation. Endpoint ekstraksi simulasi bukan upload produksi dan tidak menyimpan file.
 
 Draft Workspace FR-56 juga belum diimplementasikan. Kontrak kandidat mencakup `/work-attachments`, versi draft, submit, return, publish, revisions, withdraw, dan `/access-grants`. Endpoint tersebut tidak boleh ditambahkan ke OpenAPI aktif sebelum OQ-35 disetujui. Spesifikasi lengkap: [work-file-draft-workspace.md](../02-business/work-file-draft-workspace.md).
 

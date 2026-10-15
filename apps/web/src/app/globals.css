@@ -389,6 +389,7 @@ code { font-size: .8rem; background: var(--paper); padding: 0 .25rem; }
 .ingestion-summary div:last-child { border-right: 0; }
 .ingestion-summary strong { color: var(--navy); font: 700 1.2rem/1 var(--font-heading); }
 .ingestion-summary span { color: var(--muted); font-size: .65rem; font-weight: 700; }
+.extraction-note { margin: 0; border-bottom: 1px solid var(--line); background: #f7f9fc; padding: .7rem 1.1rem; color: var(--navy); font-size: .7rem; line-height: 1.5; }
 .chunk-list { max-height: 620px; overflow: auto; }
 .chunk-list article { padding: 1rem 1.1rem; border-bottom: 1px solid var(--line); }
 .chunk-list article:last-child { border-bottom: 0; }

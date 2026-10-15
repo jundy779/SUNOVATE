@@ -5,6 +5,7 @@ from sunovate_api.testing import login, make_client
 
 API = "/api/v1/knowledge/chunk-preview"
 DRAFT_API = "/api/v1/knowledge/chunk-drafts"
+EXTRACT_API = "/api/v1/knowledge/extract-preview"
 
 
 def _payload() -> dict[str, object]:
@@ -134,3 +135,74 @@ def test_draft_search_requires_owner_or_reviewer_role() -> None:
         headers=login(client, "sim.readonly.dhtv"),
     )
     assert response.status_code == 403
+
+
+def test_reviewer_extracts_simulated_text_file_without_persisting_source() -> None:
+    client = make_client()
+    reviewer = login(client, "sim.coordinator")
+    before = client.get("/api/v1/knowledge", params={"pageSize": 100}, headers=reviewer).json()[
+        "meta"
+    ]["total"]
+
+    response = client.post(
+        EXTRACT_API,
+        headers=reviewer,
+        data={
+            "documentLabel": "SIMULASI - Hasil pembacaan berkas",
+            "knowledgeType": "REGULATION",
+            "maxWords": "400",
+        },
+        files={
+            "sourceFile": (
+                "SIMULASI-contoh.txt",
+                b"Pasal 1\nKetentuan simulasi untuk pemeriksaan berkas yang aman.\n\n"
+                b"Pasal 2\nTahap berikutnya wajib diperiksa manusia sebelum diterbitkan.",
+                "text/plain",
+            )
+        },
+    )
+
+    assert response.status_code == 200, response.text
+    data = response.json()["data"]
+    assert data["extraction"]["format"] == "TXT"
+    assert data["extraction"]["persisted"] is False
+    assert data["chunkCount"] == 2
+    assert "Pasal 1" in data["extractedText"]
+    after = client.get("/api/v1/knowledge", params={"pageSize": 100}, headers=reviewer).json()[
+        "meta"
+    ]["total"]
+    assert after == before
+
+    audit = client.get("/api/v1/audit-logs", headers=login(client, "sim.admin")).json()["data"]
+    event = next(item for item in audit if item["action"] == "EXTRACT_PREVIEW")
+    assert event["detail"]["format"] == "txt"
+    assert "filename" not in event["detail"]
+    assert "content" not in event["detail"]
+
+
+def test_extract_preview_requires_reviewer_and_simulated_labels() -> None:
+    client = make_client()
+    files = {
+        "sourceFile": (
+            "SIMULASI-contoh.txt",
+            b"Isi simulasi yang cukup panjang.",
+            "text/plain",
+        )
+    }
+    data = {
+        "documentLabel": "SIMULASI - Contoh",
+        "knowledgeType": "OTHER",
+        "maxWords": "400",
+    }
+    denied = client.post(
+        EXTRACT_API, headers=login(client, "sim.staff.pppsun"), data=data, files=files
+    )
+    assert denied.status_code == 403
+
+    invalid = client.post(
+        EXTRACT_API,
+        headers=login(client, "sim.coordinator"),
+        data={**data, "documentLabel": "Dokumen tanpa tanda simulasi"},
+        files=files,
+    )
+    assert invalid.status_code == 422

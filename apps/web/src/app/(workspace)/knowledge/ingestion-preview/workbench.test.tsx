@@ -40,6 +40,31 @@ describe("ChunkPreviewWorkbench", () => {
     expect(await screen.findByRole("alert")).toHaveTextContent("Bahan tidak dapat diperiksa");
   });
 
+  it("membaca berkas simulasi lalu menampilkan hasil ekstraksi", async () => {
+    const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(JSON.stringify({
+      data: {
+        documentLabel: "SIMULASI - Bahan pemeriksaan dokumen SUN", knowledgeType: "REGULATION",
+        extractedText: "Pasal 1\nIsi hasil pembacaan berkas simulasi.", chunkCount: 1, totalWords: 6,
+        persisted: false, extraction: { format: "TXT", sizeBytes: 48,
+          checksum: "abcdef1234567890", pageCount: null, paragraphCount: null, persisted: false },
+        chunks: [{ index: 0, sectionLabel: "Pasal 1", content: "Pasal 1\nIsi hasil pembacaan berkas simulasi.",
+          wordCount: 6, contentHash: "abcdef1234567890" }],
+      }, meta: { dataLabel: "SIMULATED_DATA" },
+    }), { status: 200, headers: { "Content-Type": "application/json" } }));
+
+    render(<ChunkPreviewWorkbench teams={[]} canSave={false} />);
+    const file = new File(["Pasal 1\nIsi hasil pembacaan berkas simulasi."], "SIMULASI-contoh.txt", { type: "text/plain" });
+    fireEvent.change(screen.getByLabelText("Berkas simulasi"), { target: { files: [file] } });
+
+    expect(await screen.findByText(/Berkas TXT berhasil dibaca/)).toBeInTheDocument();
+    expect(screen.getByLabelText("Teks hasil pembacaan dokumen")).toHaveValue(
+      "Pasal 1\nIsi hasil pembacaan berkas simulasi.",
+    );
+    expect(fetchMock).toHaveBeenCalledWith("/api/knowledge/extract-preview", expect.objectContaining({
+      method: "POST", body: expect.any(FormData),
+    }));
+  });
+
   it("menyimpan hasil yang sudah diperiksa sebagai draf", async () => {
     const fetchMock = vi.spyOn(globalThis, "fetch");
     fetchMock.mockResolvedValueOnce(new Response(JSON.stringify({

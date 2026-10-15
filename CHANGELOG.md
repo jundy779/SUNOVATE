@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-10-15 — Ekstraksi aman berkas simulasi
+
+- Menambahkan pembacaan TXT, Markdown, PDF, dan DOCX melalui Python pada ruang pemeriksaan dokumen; hanya nama berkas berawalan `SIMULASI` dan nama bahan berawalan `SIMULASI -` yang diterima.
+- Membatasi berkas maksimal 2 MB, hasil pembacaan 100.000 karakter, PDF 50 halaman, serta struktur DOCX; PDF terenkripsi, tipe/isi yang tidak cocok, data biner, dan DOCX bermakro ditolak.
+- Berkas sumber diproses di memori dan tidak disimpan. Hanya teks yang sudah diperiksa pengguna yang dapat diteruskan ke draf; draf tetap tidak masuk pencarian umum atau SAVI sebelum diterbitkan.
+- Audit hanya mencatat format, ukuran, jumlah karakter, dan jumlah bagian tanpa nama berkas maupun isi dokumen.
+- Ekstraksi produksi, OCR, pemindai malware, penyimpanan objek, serta integrasi SharePoint/Azure tetap belum aktif dan memerlukan persetujuan.
+- Validasi aktual: Ruff, ESLint, mypy strict, TypeScript, 30 test frontend, 221 test backend, dan build produksi lulus; 40 pengujian PostgreSQL dilewati pada mode simulated.
+
 ## 2026-10-15 — Baseline evaluasi kualitas pencarian
 
 - Menambahkan 10 skenario `SIMULATED_DATA` untuk pencarian metadata, isi bagian, akses lintas tim, klasifikasi, draf, dan konten lintas direktorat.

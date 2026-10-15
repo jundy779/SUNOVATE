@@ -18,10 +18,10 @@ Menjelaskan alur usulan untuk memasukkan dokumen ke knowledge repository dan ind
 ## Status implementasi
 
 - **IMPLEMENTED** Registrasi versi dokumen melalui `POST /api/v1/documents/{id}/versions` dengan permission `document:version`, penolakan checksum ganda, dan audit `VERSION_REGISTER`.
-- **IMPLEMENTED** Chunk pada scaffold berasal dari dataset SIMULATED_DATA yang dimuat ke simulated store; tidak ada ekstraksi file nyata.
-- **IMPLEMENTED (DEVELOPMENT PREVIEW)** Pemotongan struktur deterministik dapat dijalankan melalui `POST /api/v1/knowledge/chunk-preview` dan layar `/knowledge/ingestion-preview`. Pengguna dengan gabungan kewenangan pemeriksa, pembuat knowledge, pendaftar dokumen, dan pendaftar versi dapat mengesahkan pembagian lalu menyimpannya melalui `POST /api/v1/knowledge/chunk-drafts` sebagai `SIMULATED_DATA` berstatus DRAFT. Tidak ada berkas asli yang dibaca atau diunggah, dan draf tidak masuk pencarian umum maupun SAVI.
+- **IMPLEMENTED (DEVELOPMENT PREVIEW)** Ekstraksi Python di memori tersedia melalui `POST /api/v1/knowledge/extract-preview` dan layar `/knowledge/ingestion-preview` untuk berkas TXT, MD, PDF, dan DOCX bernama awal `SIMULASI`. Batasnya 2 MB, 100.000 karakter, 50 halaman PDF, dan 500 entri/10 MB isi DOCX. PDF terenkripsi, format palsu, konten biner, tipe yang tidak cocok, serta DOCX bermakro ditolak. Berkas sumber tidak disimpan.
+- **IMPLEMENTED (DEVELOPMENT PREVIEW)** Pemotongan struktur deterministik dapat dijalankan melalui `POST /api/v1/knowledge/chunk-preview`. Pengguna dengan gabungan kewenangan pemeriksa, pembuat knowledge, pendaftar dokumen, dan pendaftar versi dapat mengesahkan teks hasil pemeriksaan lalu menyimpannya melalui `POST /api/v1/knowledge/chunk-drafts` sebagai `SIMULATED_DATA` berstatus DRAFT. Draf tidak masuk pencarian umum maupun SAVI.
 - **IMPLEMENTED (DEVELOPMENT PREVIEW)** Pencarian draf terpisah tersedia pada `/knowledge/drafts` dan `GET /api/v1/knowledge/drafts/search`. Penyaringan pemilik/pemeriksa, tim, dan klasifikasi dilakukan sebelum pencocokan judul, ringkasan, atau bagian. Jalur ini tidak digunakan retrieval SAVI dan audit hanya mencatat panjang kata kunci serta jumlah hasil.
-- **PROPOSED** Ekstraksi berkas, review hasil ekstraksi, normalisasi produksi, pengisian FTS di PostgreSQL, embedding, dan OCR.
+- **PROPOSED** Ekstraksi dokumen resmi/produksi, pemindai malware, penyimpanan objek, review hasil ekstraksi formal, normalisasi produksi, embedding, dan OCR.
 
 ## Alur usulan
 

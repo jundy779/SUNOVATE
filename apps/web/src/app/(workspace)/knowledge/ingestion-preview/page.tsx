@@ -24,8 +24,8 @@ export default async function IngestionPreviewPage() {
     <>
       <PageHeader
         eyebrow="Basis Pengetahuan"
-        title="Periksa pembagian isi dokumen"
-        description="Tinjau pembagian isi dokumen simulasi. Pengguna berwenang dapat menyimpan hasilnya sebagai draf, tetapi penerbitan tetap melalui pemeriksaan terpisah."
+        title="Periksa isi dokumen simulasi"
+        description="Baca berkas simulasi secara sementara, periksa hasil pembacaan dan pembagian isinya, lalu simpan sebagai draf bila sudah sesuai. Penerbitan tetap melalui pemeriksaan terpisah."
         action={<StatusTag tone="warning">Ruang draf simulasi</StatusTag>}
       />
       <ChunkPreviewWorkbench teams={teams} canSave={canSave} />

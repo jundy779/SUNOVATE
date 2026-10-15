@@ -16,7 +16,7 @@ export async function apiRequest<T>(path: string, init: RequestInit = {}): Promi
   const token = await getSessionToken();
   const headers = new Headers(init.headers);
   headers.set("Accept", "application/json");
-  if (init.body) headers.set("Content-Type", "application/json");
+  if (init.body && !(init.body instanceof FormData)) headers.set("Content-Type", "application/json");
   if (token) headers.set("Authorization", `Bearer ${token}`);
 
   let response: Response;

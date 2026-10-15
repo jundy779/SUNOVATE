@@ -383,6 +383,18 @@ Status terhadap kode saat ini: **LULUS pada kontrak simulated** dan tersedia seb
 
 Status terhadap kode saat ini: evaluator dan 10 kasus tersedia. Baseline simulated lulus dengan hit@5 1,00, MRR 1,00, dan leakage 0; baseline PostgreSQL menunggu lingkungan database uji.
 
+## AC-39 Ekstraksi berkas simulasi aman dan tidak menerbitkan otomatis
+
+- **Given** pemeriksa memilih berkas TXT, MD, PDF, atau DOCX yang nama berkasnya diawali `SIMULASI`
+- **When** sistem membaca berkas melalui ruang pemeriksaan
+- **Then** ukuran, ekstensi, tipe media, dan struktur dasar diperiksa sebelum teks dibagi
+- **And** berkas maksimal 2 MB, hasil maksimal 100.000 karakter, PDF maksimal 50 halaman, serta DOCX bermakro dan PDF terenkripsi ditolak
+- **And** berkas sumber maupun isi tidak disalin ke audit atau disimpan sebagai lampiran
+- **And** hasil pembacaan dapat diperiksa dan diperbaiki manusia sebelum disimpan sebagai draf
+- **And** draf tidak masuk pencarian umum atau sumber SAVI sebelum melewati pemeriksaan dan penerbitan yang berwenang.
+
+Status terhadap kode saat ini: **LULUS untuk berkas simulasi**. Ekstraksi berjalan di memori dan diuji terhadap berkas valid, format palsu, tipe tidak cocok, data biner, makro, ukuran berlebih, akses tanpa izin, audit aman, dan tidak adanya penambahan knowledge otomatis. Ini bukan ingestion produksi dan belum mencakup OCR maupun pemindaian malware.
+
 ## Open Questions
 
 - Kode error untuk pelanggaran separation of duties belum dikunci di dokumentasi API; perlu diselaraskan dengan [error-format.md](../07-api/error-format.md).

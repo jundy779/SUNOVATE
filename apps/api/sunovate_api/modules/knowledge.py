@@ -6,7 +6,7 @@ from hashlib import sha256
 from typing import Annotated, Any, Literal
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, File, Form, Query, UploadFile
 from pydantic import Field, field_validator
 
 from ..authz.dependencies import Ctx, require
@@ -15,6 +15,11 @@ from ..context import AppContext
 from ..core.errors import ApiError, invalid_state, permission_denied
 from ..core.responses import ApiModel, Pagination, envelope, paginated, serialize
 from ..hermes.chunking import chunk_text
+from ..hermes.document_extraction import (
+    MAX_FILE_BYTES,
+    ExtractionRejected,
+    extract_simulated_document,
+)
 from ..hermes.text import terms
 from ..store.records import (
     ApprovalRequest,
@@ -113,6 +118,34 @@ class ChunkDraftCreate(ChunkPreviewRequest):
         return title
 
 
+def _chunk_preview_payload(
+    *, document_label: str, knowledge_type: str, extracted_text: str, max_words: int
+) -> dict[str, Any]:
+    chunks = chunk_text(
+        extracted_text,
+        knowledge_type,
+        document_label=document_label,
+        max_words=max_words,
+    )
+    return {
+        "documentLabel": document_label,
+        "knowledgeType": knowledge_type,
+        "chunkCount": len(chunks),
+        "totalWords": sum(chunk.word_count for chunk in chunks),
+        "persisted": False,
+        "chunks": [
+            {
+                "index": chunk.index,
+                "sectionLabel": chunk.section_label,
+                "content": chunk.content,
+                "wordCount": chunk.word_count,
+                "contentHash": chunk.content_hash,
+            }
+            for chunk in chunks
+        ],
+    }
+
+
 def _view(ctx: AppContext, entry: KnowledgeEntry, *, detail: bool = False) -> dict[str, Any]:
     view = governed_view(ctx, entry)
     if detail:
@@ -173,32 +206,71 @@ def preview_chunks(
 ) -> dict[str, Any]:
     """Preview deterministic text sections without persisting source text or chunks."""
     del ctx, principal
-    chunks = chunk_text(
-        body.extracted_text,
-        body.knowledge_type,
-        document_label=body.document_label,
-        max_words=body.max_words,
-    )
     return envelope(
-        {
-            "documentLabel": body.document_label,
-            "knowledgeType": body.knowledge_type,
-            "chunkCount": len(chunks),
-            "totalWords": sum(chunk.word_count for chunk in chunks),
-            "persisted": False,
-            "chunks": [
-                {
-                    "index": chunk.index,
-                    "sectionLabel": chunk.section_label,
-                    "content": chunk.content,
-                    "wordCount": chunk.word_count,
-                    "contentHash": chunk.content_hash,
-                }
-                for chunk in chunks
-            ],
-        },
+        _chunk_preview_payload(
+            document_label=body.document_label,
+            knowledge_type=body.knowledge_type,
+            extracted_text=body.extracted_text,
+            max_words=body.max_words,
+        ),
         previewMode=True,
     )
+
+
+@router.post("/extract-preview")
+async def extract_preview(
+    ctx: Ctx,
+    principal: Annotated[
+        Principal, Depends(require("knowledge:review", resource="knowledge_extract_preview"))
+    ],
+    document_label: Annotated[str, Form(alias="documentLabel", min_length=3, max_length=255)],
+    knowledge_type: Annotated[KnowledgeType, Form(alias="knowledgeType")],
+    source_file: Annotated[UploadFile, File(alias="sourceFile")],
+    max_words: Annotated[int, Form(alias="maxWords", ge=50, le=800)] = 400,
+) -> dict[str, Any]:
+    """Extract and chunk a bounded simulated file entirely in memory."""
+    if not document_label.strip().upper().startswith("SIMULASI -"):
+        raise ApiError(422, "SIMULATED_FILE_REQUIRED", "Nama bahan harus diawali 'SIMULASI -'")
+    source_filename = source_file.filename or ""
+    source_content_type = source_file.content_type
+    payload = await source_file.read(MAX_FILE_BYTES + 1)
+    await source_file.close()
+    try:
+        extracted = extract_simulated_document(
+            filename=source_filename,
+            content_type=source_content_type,
+            payload=payload,
+        )
+    except ExtractionRejected as exc:
+        raise ApiError(422, "UNSAFE_SIMULATED_FILE", str(exc)) from None
+
+    result = _chunk_preview_payload(
+        document_label=document_label.strip(),
+        knowledge_type=knowledge_type,
+        extracted_text=extracted.text,
+        max_words=max_words,
+    )
+    result["extractedText"] = extracted.text
+    result["extraction"] = {
+        "format": extracted.extension.removeprefix(".").upper(),
+        "sizeBytes": extracted.size_bytes,
+        "checksum": extracted.checksum_sha256,
+        "pageCount": extracted.page_count,
+        "paragraphCount": extracted.paragraph_count,
+        "persisted": False,
+    }
+    ctx.store.audit(
+        actor_user_id=principal.user_id,
+        action="EXTRACT_PREVIEW",
+        entity_type="simulated_document",
+        detail={
+            "format": extracted.extension.removeprefix("."),
+            "sizeBytes": extracted.size_bytes,
+            "extractedCharacters": len(extracted.text),
+            "chunkCount": result["chunkCount"],
+        },
+    )
+    return envelope(result, previewMode=True)
 
 
 @router.post("/chunk-drafts", status_code=201)
