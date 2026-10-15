@@ -421,6 +421,15 @@ code { font-size: .8rem; background: var(--paper); padding: 0 .25rem; }
 .workflow-feedback, .workflow-waiting, .workflow-history { margin: 0; padding: .8rem 1.1rem; border-bottom: 1px solid var(--line); background: var(--paper); color: var(--navy); font-size: .76rem; }
 .workflow-feedback { border-left: 3px solid var(--success); }
 .workflow-waiting { border-left: 3px solid var(--gold); }
+.approval-summary { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 1.5rem; border: 1px solid var(--line); border-top: 3px solid var(--navy); background: var(--line); gap: 1px; }
+.approval-summary div { display: grid; gap: .35rem; padding: 1rem 1.1rem; background: var(--white); }
+.approval-summary strong { color: var(--navy); font: 700 1.45rem/1 var(--font-heading); }
+.approval-summary span { color: var(--muted); font-size: .7rem; }
+.approval-table table { min-width: 1080px; }
+.approval-table td:first-child { min-width: 240px; white-space: normal; }
+.approval-table td strong, .approval-table td small { display: block; }
+.approval-table td small { margin-top: .2rem; color: var(--muted); font-size: .65rem; }
+.approval-policy-note { margin: 1rem 0 0; color: var(--muted); font-size: .72rem; text-align: right; }
 
 /* Monitoring kerja: dense, table-first command surface. */
 .work-manager { display: grid; gap: 1rem; }

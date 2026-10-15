@@ -29,6 +29,8 @@ Daftar seluruh endpoint `/api/v1` yang diimplementasikan (scaffold, data dari ba
 | POST | `/knowledge` | `knowledge:create` | draf baru untuk tim dalam scope; `tags` duplikat dibuang (kemunculan pertama dipertahankan) |
 | PATCH | `/knowledge/{id}` | `knowledge:update` | hanya DRAFT; wajib `revision`; `null` berarti field tidak diubah; `tags` didedupe seperti POST |
 | POST | `/knowledge/{id}/submit` | `knowledge:submit` + `approval:request` | DRAFT ke IN_REVIEW, membuat approval `KNOWLEDGE_PUBLICATION` |
+| GET | `/approvals` | `approval:request` atau `approval:decide` | permintaan milik pengaju atau dalam cakupan pemeriksa; filter `status`, `requestType`, `teamCode`; hasil knowledge yang terbaca diperkaya dengan judul bahan, status bahan, dan nama pengaju |
+| POST | `/approvals/{id}/decision` | `approval:decide`; `knowledge:publish` juga wajib untuk APPROVE publikasi | keputusan manusia dengan alasan; pengaju tidak boleh memutuskan permintaannya sendiri |
 | GET | `/documents` | `document:read` | referensi yang terbaca |
 | GET | `/documents/{id}` | `document:read` | detail + status provider |
 | GET | `/documents/{id}/versions` | `document:read` | daftar versi |

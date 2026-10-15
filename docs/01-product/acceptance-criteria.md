@@ -348,6 +348,19 @@ Status terhadap kode saat ini: **LULUS** pada backend simulasi melalui pengujian
 
 Status terhadap kode saat ini: **LULUS**. API lifecycle dan separation of duties telah diuji pada backend. Komponen web memiliki pengujian untuk tindakan pemilik, status pengaju, perbedaan pemeriksa dan penerbit, serta isi permintaan keputusan.
 
+## AC-36 Antrean pemeriksaan sesuai peran dan cakupan
+
+- **Given** pengguna memiliki hak mengajukan atau memutuskan pemeriksaan
+- **When** pengguna membuka Antrean Pemeriksaan
+- **Then** pengaju melihat permintaannya sendiri dan pemeriksa melihat permintaan dalam cakupan tim serta klasifikasinya
+- **And** daftar dapat difilter menurut status dan tim
+- **And** setiap baris menampilkan judul bahan, nama pengaju, tim, status, klasifikasi, dan waktu pengajuan
+- **And** data pengaju serta bahan baru diperkaya setelah permintaan lolos pemeriksaan akses
+- **And** keputusan tetap dilakukan pada detail bahan untuk menjaga konteks pemeriksaan
+- **And** pengaju tidak memperoleh tindakan memutuskan permintaannya sendiri.
+
+Status terhadap kode saat ini: **LULUS** pada backend simulasi dan pemeriksaan kontrak frontend. Navigasi hanya menampilkan antrean kepada pemilik `approval:request` atau `approval:decide`; API tetap menjadi penegak akses utama.
+
 ## Open Questions
 
 - Kode error untuk pelanggaran separation of duties belum dikunci di dokumentasi API; perlu diselaraskan dengan [error-format.md](../07-api/error-format.md).

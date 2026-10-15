@@ -38,9 +38,12 @@ const APPROVAL = {
   targetEntityId: ENTRY.id,
   status: "PENDING",
   requestedBy: OWNER.id,
+  requestedByName: "Pemilik",
   decidedBy: null, decidedAt: null, decisionReason: null,
   ownerTeamCode: "PPSUN", classificationCode: "INTERNAL",
   revision: 1, createdAt: "2026-10-15T00:00:00Z",
+  targetTitle: ENTRY.title,
+  targetLifecycleStatus: "IN_REVIEW",
 } satisfies ApprovalRequest;
 
 afterEach(() => { vi.restoreAllMocks(); refresh.mockReset(); });

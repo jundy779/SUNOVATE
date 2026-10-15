@@ -9,10 +9,11 @@ from __future__ import annotations
 from typing import Annotated, Any, Literal
 from uuid import UUID
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from pydantic import Field
 
 from ..authz.dependencies import Ctx, CurrentPrincipal
+from ..authz.principal import Principal
 from ..context import AppContext
 from ..core.errors import ApiError, invalid_state, not_found, permission_denied
 from ..core.responses import ApiModel, Pagination, envelope, paginated
@@ -28,13 +29,36 @@ class DecisionRequest(ApiModel):
     reason: str = Field(min_length=3, max_length=1000)
 
 
-def _view(ctx: AppContext, request: ApprovalRequest) -> dict[str, Any]:
-    return governed_view(ctx, request, executionImplemented=False)
+def _view(ctx: AppContext, request: ApprovalRequest, principal: Principal) -> dict[str, Any]:
+    requester = ctx.store.user(request.requested_by)
+    target = (
+        ctx.store.get_governed(KnowledgeEntry, request.target_entity_id)
+        if request.request_type == "KNOWLEDGE_PUBLICATION" and request.target_entity_id
+        else None
+    )
+    target_title = None
+    target_status = None
+    if target is not None and ctx.authz.can_read(principal, target):
+        target_title = target.title
+        target_status = target.lifecycle_status
+    return governed_view(
+        ctx,
+        request,
+        executionImplemented=False,
+        requestedByName=requester.display_name if requester else None,
+        targetTitle=target_title,
+        targetLifecycleStatus=target_status,
+    )
 
 
 @router.get("")
 def list_approvals(
-    ctx: Ctx, principal: CurrentPrincipal, pagination: Annotated[Pagination, Depends()]
+    ctx: Ctx,
+    principal: CurrentPrincipal,
+    pagination: Annotated[Pagination, Depends()],
+    status: Annotated[str | None, Query(pattern="^(PENDING|APPROVED|REJECTED|CANCELLED)$")] = None,
+    request_type: Annotated[str | None, Query(alias="requestType", max_length=64)] = None,
+    team_code: Annotated[str | None, Query(alias="teamCode", max_length=32)] = None,
 ) -> dict[str, Any]:
     if not (principal.has("approval:decide") or principal.has("approval:request")):
         ctx.authz.require(principal, "approval:request", resource="approval_request")
@@ -45,9 +69,15 @@ def list_approvals(
         if a.requested_by == principal.user_id
         or (principal.has("approval:decide") and ctx.authz.can_read(principal, a))
     ]
+    if status:
+        items = [item for item in items if item.status == status]
+    if request_type:
+        items = [item for item in items if item.request_type == request_type]
+    if team_code:
+        items = [item for item in items if ctx.store.team_code(item.owner_team_id) == team_code]
     items.sort(key=lambda a: a.created_at, reverse=True)
     page, meta = paginated(items, pagination)
-    return envelope([_view(ctx, a) for a in page], **meta)
+    return envelope([_view(ctx, a, principal) for a in page], **meta)
 
 
 @router.post("/{approval_id}/decision")
@@ -126,4 +156,4 @@ def decide(
             entity_id=decided.id,
             detail={"requestType": decided.request_type},
         )
-    return envelope(_view(ctx, decided))
+    return envelope(_view(ctx, decided, principal))

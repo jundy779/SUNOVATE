@@ -9,6 +9,11 @@ describe("visibleNavItems", () => {
     expect(labels).toEqual(["Ringkasan", "Basis Pengetahuan", "Monitoring Kerja"]);
   });
 
+  it("shows the review queue to requesters and decision makers", () => {
+    expect(visibleNavItems(["approval:request"]).map((i) => i.href)).toEqual(["/approvals"]);
+    expect(visibleNavItems(["approval:decide"]).map((i) => i.href)).toEqual(["/approvals"]);
+  });
+
   it("shows administration for auditors", () => {
     expect(visibleNavItems(["audit:read"]).map((i) => i.href)).toEqual(["/admin"]);
   });

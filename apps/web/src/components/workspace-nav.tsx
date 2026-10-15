@@ -8,6 +8,7 @@ import { UiIcon, type IconName } from "@/components/ui-icons";
 const icons: Record<string, IconName> = {
   "/dashboard": "home",
   "/knowledge": "book",
+  "/approvals": "check",
   "/search": "search",
   "/work-monitoring": "chart",
   "/savi-ai": "chat",

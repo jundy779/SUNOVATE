@@ -69,6 +69,7 @@ export interface ApprovalRequest {
   targetEntityId: string | null;
   status: "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED";
   requestedBy: string;
+  requestedByName: string | null;
   decidedBy: string | null;
   decidedAt: string | null;
   decisionReason: string | null;
@@ -76,6 +77,8 @@ export interface ApprovalRequest {
   classificationCode: ClassificationCode;
   revision: number;
   createdAt: string;
+  targetTitle: string | null;
+  targetLifecycleStatus: KnowledgeStatus | null;
 }
 
 export interface WorkItem {

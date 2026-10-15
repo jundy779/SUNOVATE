@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-15 — Antrean pemeriksaan pengetahuan
+
+- Menambahkan halaman `/approvals` untuk merangkum pengajuan publikasi sesuai peran, tim, dan klasifikasi pengguna.
+- Menambahkan filter status dan tim, ringkasan jumlah permintaan, identitas pengaju, judul bahan, klasifikasi, waktu pengajuan, dan tautan pemeriksaan.
+- API antrean mendukung filter `status`, `requestType`, dan `teamCode`; nama pengaju serta informasi bahan baru ditambahkan setelah pemeriksaan akses.
+- Pengaju hanya melihat permintaannya sendiri. Pemeriksa melihat permintaan dalam kewenangannya, sedangkan keputusan tetap dilakukan pada detail bahan.
+- Validasi aktual: Ruff, ESLint, mypy strict, TypeScript, build produksi, 29 test frontend, dan 208 test backend lulus (39 pengujian PostgreSQL dilewati pada mode simulasi).
+
 ## 2026-10-15 — Alur draf sampai penerbitan pada halaman detail
 
 - Menambahkan ruang tindak lanjut kontekstual pada detail pengetahuan untuk mengubah draf dan mengajukannya kepada pemeriksa.

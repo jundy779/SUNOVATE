@@ -139,6 +139,17 @@ def test_full_publication_flow_with_separation_of_duties() -> None:
     assert submitted.json()["data"]["knowledge"]["lifecycleStatus"] == "IN_REVIEW"
     approval_id = submitted.json()["data"]["approvalRequestId"]
 
+    queue = client.get(
+        f"{API}/approvals",
+        params={"status": "PENDING", "requestType": "KNOWLEDGE_PUBLICATION", "teamCode": "PPSUN"},
+        headers=owner,
+    )
+    assert queue.status_code == 200, queue.text
+    queued = next(item for item in queue.json()["data"] if item["id"] == approval_id)
+    assert queued["requestedByName"] == "Knowledge Owner Simulasi PPSUN"
+    assert queued["targetTitle"] == entry["title"]
+    assert queued["targetLifecycleStatus"] == "IN_REVIEW"
+
     # Requester cannot hold approval:decide here, so the request is denied by permission.
     self_decide = client.post(f"{API}/approvals/{approval_id}/decision", headers=owner,
                               json={"decision": "APPROVE", "revision": 1, "reason": "Saya sendiri"})

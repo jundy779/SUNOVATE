@@ -8,6 +8,7 @@ export interface NavItem {
 export const NAV_ITEMS: NavItem[] = [
   { label: "Ringkasan", href: "/dashboard", anyOf: ["work:read"] },
   { label: "Basis Pengetahuan", href: "/knowledge", anyOf: ["knowledge:read"] },
+  { label: "Antrean Pemeriksaan", href: "/approvals", anyOf: ["approval:request", "approval:decide"] },
   { label: "Pencarian", href: "/search", anyOf: ["search:query"] },
   { label: "Monitoring Kerja", href: "/work-monitoring", anyOf: ["work:read"] },
   { label: "SAVI AI", href: "/savi-ai", anyOf: ["hermes:query"] },
