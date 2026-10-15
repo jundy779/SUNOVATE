@@ -33,8 +33,13 @@ export default async function KnowledgePage({ searchParams }: { searchParams: Se
         eyebrow="Basis Pengetahuan"
         title="Pengetahuan institusional"
         description="Informasi dan ringkasan pengetahuan yang boleh Anda akses. Berkas resmi tetap berada pada tempat penyimpanan yang telah disetujui."
-        action={me.permissions.includes("knowledge:review") ? (
-          <Link className="button secondary" href="/knowledge/ingestion-preview">Periksa isi dokumen</Link>
+        action={me.permissions.includes("knowledge:review") || me.roles.includes("knowledge_owner") ? (
+          <div className="page-actions">
+            <Link className="button secondary" href="/knowledge/drafts">Cari draf</Link>
+            {me.permissions.includes("knowledge:review") ? (
+              <Link className="button" href="/knowledge/ingestion-preview">Periksa isi dokumen</Link>
+            ) : null}
+          </div>
         ) : <SimulatedLabel />}
       />
       <form className="toolbar" role="search" aria-label="Penyaringan pengetahuan">

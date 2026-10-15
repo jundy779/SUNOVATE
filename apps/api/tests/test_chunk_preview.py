@@ -95,3 +95,42 @@ def test_chunk_draft_requires_all_write_permissions_and_simulated_title() -> Non
     payload["documentLabel"] = "Dokumen tanpa penanda simulasi"
     invalid = client.post(DRAFT_API, json=payload, headers=login(client, "sim.coordinator"))
     assert invalid.status_code == 422
+
+
+def test_draft_search_finds_chunk_content_for_authorized_reviewer_only() -> None:
+    client = make_client()
+    coordinator = login(client, "sim.coordinator")
+    payload = {
+        **_payload(),
+        "summary": "Ringkasan simulasi yang tidak memuat istilah pencarian khusus.",
+        "classificationCode": "INTERNAL",
+        "sharingScope": "TEAM",
+        "ownerTeamId": str(sid("team:PSUN")),
+    }
+    draft = client.post(DRAFT_API, json=payload, headers=coordinator).json()["data"]
+
+    reviewer = client.get(
+        "/api/v1/knowledge/drafts/search",
+        params={"q": "Ketentuan kedua"},
+        headers=login(client, "sim.lead.psun"),
+    )
+    assert reviewer.status_code == 200, reviewer.text
+    hit = next(item for item in reviewer.json()["data"] if item["knowledgeEntryId"] == draft["id"])
+    assert hit["accessReason"] == "REVIEWER"
+    assert hit["sectionLabel"] == "Pasal 2"
+
+    other_team = client.get(
+        "/api/v1/knowledge/drafts/search",
+        params={"q": "Ketentuan kedua"},
+        headers=login(client, "sim.staff.pppsun"),
+    )
+    assert other_team.status_code == 403
+
+
+def test_draft_search_requires_owner_or_reviewer_role() -> None:
+    client = make_client()
+    response = client.get(
+        "/api/v1/knowledge/drafts/search",
+        headers=login(client, "sim.readonly.dhtv"),
+    )
+    assert response.status_code == 403

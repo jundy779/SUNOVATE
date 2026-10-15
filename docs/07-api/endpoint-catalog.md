@@ -1,7 +1,7 @@
 # Endpoint Catalog
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-14
+**Last Updated:** 2026-10-15
 
 ## Purpose
 Daftar seluruh endpoint `/api/v1` yang diimplementasikan (scaffold, data dari backend `DATA_BACKEND`: `simulated` default atau `postgres`; kontrak identik pada keduanya, ADR-015). Sumber: `apps/api/sunovate_api/modules/`. OpenAPI hidup: `http://localhost:8000/docs`.
@@ -24,6 +24,7 @@ Daftar seluruh endpoint `/api/v1` yang diimplementasikan (scaffold, data dari ba
 | GET | `/knowledge` | `knowledge:read` | filter `q`, `status`, `type`, `teamCode`; paginasi |
 | POST | `/knowledge/chunk-preview` | `knowledge:review` | membagi teks contoh secara deterministik; hanya preview di memori, tidak menyimpan atau menerbitkan |
 | POST | `/knowledge/chunk-drafts` | `knowledge:review` + `knowledge:create` + `document:create` + `document:version` | menyimpan hasil review sebagai knowledge DRAFT, referensi teks simulasi, versi, dan chunk; judul wajib diawali `SIMULASI -`; tidak masuk SAVI |
+| GET | `/knowledge/drafts/search` | Auth + `knowledge:read`; role `knowledge_owner` atau `knowledge:review` | pencarian leksikal draf terotorisasi; pemilik hanya draf miliknya, pemeriksa sesuai scope tim dan klasifikasi; audit tidak menyimpan kata kunci |
 | GET | `/knowledge/{id}` | `knowledge:read` | detail + dokumen + bagian teks |
 | POST | `/knowledge` | `knowledge:create` | draf baru untuk tim dalam scope; `tags` duplikat dibuang (kemunculan pertama dipertahankan) |
 | PATCH | `/knowledge/{id}` | `knowledge:update` | hanya DRAFT; wajib `revision`; `null` berarti field tidak diubah; `tags` didedupe seperti POST |

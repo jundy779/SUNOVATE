@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-15 — Pencarian draf terbatas bagi pemilik dan pemeriksa
+
+- Menambahkan ruang kerja `/knowledge/drafts` untuk mencari judul, ringkasan, dan bagian dokumen yang masih berstatus DRAFT.
+- `knowledge_owner` hanya melihat draf miliknya; pemeriksa hanya melihat draf dalam lingkup tim dan klasifikasinya. Pengguna baca-saja dan staf tanpa peran terkait ditolak.
+- Penyaringan akses dilakukan sebelum pencocokan isi. Audit hanya menyimpan panjang kata kunci dan jumlah hasil, bukan kata kunci atau isi draf.
+- Pencarian draf tetap terpisah dari pencarian pengetahuan terbit dan retrieval SAVI.
+- Validasi aktual: Ruff, ESLint, mypy strict, TypeScript, build produksi, 24 test frontend, dan 208 test backend lulus (39 pengujian PostgreSQL dilewati pada mode simulasi).
+
 ## 2026-10-14 — Penyimpanan hasil pemeriksaan sebagai draf simulasi
 
 - Menambahkan aksi **Setujui pembagian dan simpan draf** pada layar pemeriksaan isi dokumen.

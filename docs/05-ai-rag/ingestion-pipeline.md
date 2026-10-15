@@ -1,7 +1,7 @@
 # Ingestion Pipeline
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-14
+**Last Updated:** 2026-10-15
 
 ## Purpose
 
@@ -20,6 +20,7 @@ Menjelaskan alur usulan untuk memasukkan dokumen ke knowledge repository dan ind
 - **IMPLEMENTED** Registrasi versi dokumen melalui `POST /api/v1/documents/{id}/versions` dengan permission `document:version`, penolakan checksum ganda, dan audit `VERSION_REGISTER`.
 - **IMPLEMENTED** Chunk pada scaffold berasal dari dataset SIMULATED_DATA yang dimuat ke simulated store; tidak ada ekstraksi file nyata.
 - **IMPLEMENTED (DEVELOPMENT PREVIEW)** Pemotongan struktur deterministik dapat dijalankan melalui `POST /api/v1/knowledge/chunk-preview` dan layar `/knowledge/ingestion-preview`. Pengguna dengan gabungan kewenangan pemeriksa, pembuat knowledge, pendaftar dokumen, dan pendaftar versi dapat mengesahkan pembagian lalu menyimpannya melalui `POST /api/v1/knowledge/chunk-drafts` sebagai `SIMULATED_DATA` berstatus DRAFT. Tidak ada berkas asli yang dibaca atau diunggah, dan draf tidak masuk pencarian umum maupun SAVI.
+- **IMPLEMENTED (DEVELOPMENT PREVIEW)** Pencarian draf terpisah tersedia pada `/knowledge/drafts` dan `GET /api/v1/knowledge/drafts/search`. Penyaringan pemilik/pemeriksa, tim, dan klasifikasi dilakukan sebelum pencocokan judul, ringkasan, atau bagian. Jalur ini tidak digunakan retrieval SAVI dan audit hanya mencatat panjang kata kunci serta jumlah hasil.
 - **PROPOSED** Ekstraksi berkas, review hasil ekstraksi, normalisasi produksi, pengisian FTS di PostgreSQL, embedding, dan OCR.
 
 ## Alur usulan

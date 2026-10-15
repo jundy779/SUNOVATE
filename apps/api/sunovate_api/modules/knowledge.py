@@ -15,6 +15,7 @@ from ..context import AppContext
 from ..core.errors import ApiError, invalid_state, permission_denied
 from ..core.responses import ApiModel, Pagination, envelope, paginated, serialize
 from ..hermes.chunking import chunk_text
+from ..hermes.text import terms
 from ..store.records import (
     ApprovalRequest,
     DocumentChunk,
@@ -295,6 +296,83 @@ def create_chunk_draft(
             },
         )
     return envelope(_view(ctx, entry, detail=True), persisted=True)
+
+
+@router.get("/drafts/search")
+def search_drafts(
+    ctx: Ctx,
+    principal: Annotated[
+        Principal, Depends(require("knowledge:read", resource="knowledge_draft_search"))
+    ],
+    pagination: Annotated[Pagination, Depends()],
+    q: Annotated[str | None, Query(min_length=2, max_length=200)] = None,
+    team_code: Annotated[str | None, Query(alias="teamCode", max_length=32)] = None,
+) -> dict[str, Any]:
+    """Search drafts owned by the caller or reviewable within their authorized scope."""
+    may_review = principal.has("knowledge:review")
+    may_own = "knowledge_owner" in principal.role_codes
+    if not (may_review or may_own):
+        ctx.store.audit_denial(
+            actor_user_id=principal.user_id,
+            action="ACCESS_DENIED",
+            entity_type="knowledge_draft_search",
+            detail={"reason": "not_owner_or_reviewer"},
+        )
+        raise permission_denied("Pencarian draf hanya tersedia bagi pemilik dan pemeriksa")
+
+    candidates = ctx.authz.list_readable(
+        principal, KnowledgeEntry, where={"lifecycle_status": "DRAFT"}
+    )
+    drafts = [
+        entry
+        for entry in candidates
+        if entry.owner_user_id == principal.user_id
+        or (may_review and ctx.authz.team_in_scope(principal, entry.owner_team_id))
+    ]
+    if team_code:
+        drafts = [e for e in drafts if ctx.store.team_code(e.owner_team_id) == team_code]
+
+    query_terms = terms(q or "")
+    chunks = ctx.store.chunks_of_entries([entry.id for entry in drafts])
+    hits: list[dict[str, Any]] = []
+    for entry in drafts:
+        entry_terms = terms(f"{entry.title} {entry.summary}")
+        best_section: str | None = None
+        best_snippet = entry.summary
+        best = len(query_terms & entry_terms) if query_terms else 0
+        for chunk in chunks.get(entry.id, []):
+            matched = len(query_terms & (entry_terms | terms(chunk.content))) if query_terms else 0
+            if matched > best:
+                best_section, best_snippet, best = chunk.section_label, chunk.content, matched
+        if query_terms and best == 0:
+            continue
+        hits.append(
+            {
+                "knowledgeEntryId": entry.id,
+                "title": entry.title,
+                "knowledgeType": entry.knowledge_type,
+                "ownerTeamCode": ctx.store.team_code(entry.owner_team_id),
+                "classificationCode": entry.classification_code,
+                "sectionLabel": best_section,
+                "snippet": best_snippet[:280],
+                "score": round(best / max(len(query_terms), 1), 3) if query_terms else 0.0,
+                "updatedAt": entry.updated_at,
+                "accessReason": "OWNER" if entry.owner_user_id == principal.user_id else "REVIEWER",
+            }
+        )
+    if query_terms:
+        hits.sort(key=lambda hit: (-float(hit["score"]), str(hit["title"])))
+    else:
+        hits.sort(key=lambda hit: str(hit["updatedAt"]), reverse=True)
+
+    ctx.store.audit(
+        actor_user_id=principal.user_id,
+        action="SEARCH",
+        entity_type="knowledge_draft_search",
+        detail={"queryLength": len(q or ""), "resultCount": len(hits)},
+    )
+    page, meta = paginated(hits, pagination)
+    return envelope(page, **meta, mode="draft_lexical")
 
 
 @router.get("/{entry_id}")

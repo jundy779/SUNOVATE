@@ -95,6 +95,11 @@ export interface SearchHit {
   score: number;
 }
 
+export interface DraftSearchHit extends SearchHit {
+  updatedAt: string;
+  accessReason: "OWNER" | "REVIEWER";
+}
+
 export interface DashboardSummary {
   scope: { allTeams: boolean; teamCodes: string[]; clearanceCode: ClassificationCode };
   metrics: {

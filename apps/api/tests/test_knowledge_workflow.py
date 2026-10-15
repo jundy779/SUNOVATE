@@ -108,6 +108,27 @@ def test_draft_is_private_to_owner_team() -> None:
     assert client.get(f"{API}/knowledge/{entry['id']}", headers=staff).status_code == 404
 
 
+def test_owner_draft_search_returns_only_owned_drafts() -> None:
+    client = make_client()
+    owner = login(client, "sim.owner.ppsun")
+    owned = _create(client, owner, title="SIMULASI - Draf rekonsiliasi milik saya")
+
+    response = client.get(
+        f"{API}/knowledge/drafts/search",
+        params={"q": "rekonsiliasi"},
+        headers=owner,
+    )
+    assert response.status_code == 200, response.text
+    hits = response.json()["data"]
+    assert {item["knowledgeEntryId"] for item in hits} == {owned["id"]}
+    assert hits[0]["accessReason"] == "OWNER"
+
+    audit = client.get(f"{API}/audit-logs", headers=login(client, "sim.admin")).json()["data"]
+    search_log = next(item for item in audit if item["entityType"] == "knowledge_draft_search")
+    assert search_log["detail"] == {"queryLength": 12, "resultCount": 1}
+    assert "rekonsiliasi" not in str(search_log["detail"])
+
+
 def test_full_publication_flow_with_separation_of_duties() -> None:
     client = make_client()
     owner = login(client, "sim.owner.ppsun")

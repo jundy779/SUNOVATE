@@ -322,6 +322,20 @@ Status terhadap kode saat ini: pemetaan terpusat tersedia untuk klasifikasi, sta
 
 Status terhadap kode saat ini: **LULUS** pada backend simulasi dan unit test antarmuka. Jalur repository PostgreSQL sudah mendukung record terkait, tetapi pengujian PostgreSQL untuk perubahan ini belum dapat dijalankan pada sesi 2026-10-14 karena lingkungan tidak mengizinkan pembuatan user sistem `pgserver`. Unggah dan ekstraksi berkas asli tetap di luar skenario ini.
 
+## AC-34 Pencarian draf terpisah dan terbatas
+
+- **Given** sebuah knowledge masih berstatus DRAFT
+- **When** `knowledge_owner` mencari draf
+- **Then** hanya draf miliknya yang dapat ditemukan
+- **And when** pengguna berkewenangan pemeriksa mencari draf
+- **Then** hanya draf dalam lingkup tim dan klasifikasinya yang dapat ditemukan
+- **And** pengguna baca-saja atau staf tanpa peran tersebut ditolak
+- **And** pencarian memeriksa judul, ringkasan, dan bagian dokumen setelah penyaringan akses
+- **And** kata kunci serta isi draf tidak disalin ke audit
+- **And** draf tetap tidak muncul pada pencarian umum atau retrieval SAVI.
+
+Status terhadap kode saat ini: **LULUS** pada backend simulasi melalui pengujian pemilik, pemeriksa, lintas tim, pengguna baca-saja, kecocokan isi bagian, dan audit aman. Jalur PostgreSQL memakai kontrak repository yang sama, tetapi pengujian database aktual tetap menunggu lingkungan PostgreSQL sementara yang dapat dijalankan.
+
 ## Open Questions
 
 - Kode error untuk pelanggaran separation of duties belum dikunci di dokumentasi API; perlu diselaraskan dengan [error-format.md](../07-api/error-format.md).
@@ -340,4 +354,4 @@ Status terhadap kode saat ini: **LULUS** pada backend simulasi dan unit test ant
 
 ## Last Updated
 
-2026-10-14
+2026-10-15
