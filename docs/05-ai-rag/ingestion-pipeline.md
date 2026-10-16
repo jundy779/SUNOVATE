@@ -19,6 +19,7 @@ Menjelaskan alur usulan untuk memasukkan dokumen ke knowledge repository dan ind
 
 - **IMPLEMENTED** Registrasi versi dokumen melalui `POST /api/v1/documents/{id}/versions` dengan permission `document:version`, penolakan checksum ganda, dan audit `VERSION_REGISTER`.
 - **IMPLEMENTED (DEVELOPMENT PREVIEW)** Ekstraksi Python di memori tersedia melalui `POST /api/v1/knowledge/extract-preview` dan layar `/knowledge/ingestion-preview` untuk berkas TXT, MD, PDF, DOCX, XLSX, dan XLS bernama awal `SIMULASI`. Batas umum 2 MB dan 100.000 karakter; PDF maksimal 50 halaman; DOCX maksimal 500 entri/10 MB isi; Excel maksimal 20 lembar, 5.000 baris per lembar, 100 kolom, dan 50.000 sel berisi. PDF terenkripsi, format palsu, konten biner, tipe yang tidak cocok, makro, serta tautan data luar Excel ditolak. Rumus Excel tidak dijalankan dan berkas sumber tidak disimpan.
+- **IMPLEMENTED (DEVELOPMENT PREVIEW)** Preview berhasil mengembalikan riwayat `PENDING → EXTRACTED` dan arahan pemeriksaan manusia. Pelanggaran batas/keamanan menghasilkan `QUARANTINED`; kegagalan pembacaan menghasilkan `FAILED`. Status penolakan hanya tercatat pada respons dan audit karena tidak ada file atau versi dokumen yang dipersistenkan.
 - **IMPLEMENTED (DEVELOPMENT PREVIEW)** Pemotongan struktur deterministik dapat dijalankan melalui `POST /api/v1/knowledge/chunk-preview`. Pengguna dengan gabungan kewenangan pemeriksa, pembuat knowledge, pendaftar dokumen, dan pendaftar versi dapat mengesahkan teks hasil pemeriksaan lalu menyimpannya melalui `POST /api/v1/knowledge/chunk-drafts` sebagai `SIMULATED_DATA` berstatus DRAFT. Draf tidak masuk pencarian umum maupun SAVI.
 - **IMPLEMENTED (DEVELOPMENT PREVIEW)** Pencarian draf terpisah tersedia pada `/knowledge/drafts` dan `GET /api/v1/knowledge/drafts/search`. Penyaringan pemilik/pemeriksa, tim, dan klasifikasi dilakukan sebelum pencocokan judul, ringkasan, atau bagian. Jalur ini tidak digunakan retrieval SAVI dan audit hanya mencatat panjang kata kunci serta jumlah hasil.
 - **PROPOSED** Ekstraksi dokumen resmi/produksi, pemindai malware, penyimpanan objek, review hasil ekstraksi formal, normalisasi produksi, embedding, dan OCR.
@@ -66,6 +67,8 @@ flowchart TD
 | File tanpa teks yang relevan | NOT_APPLICABLE | Referensi tetap ada, tidak diindeks |
 
 Chunk dari dokumen berstatus FAILED atau QUARANTINED tidak pernah masuk retrieval.
+
+Pemeriksaan manusia tidak menjadi nilai baru `extraction_status`. Setelah `EXTRACTED`, teks yang sudah diperiksa hanya dapat disimpan sebagai knowledge `DRAFT`, lalu mengikuti alur `IN_REVIEW` dan `PUBLISHED` yang terpisah.
 
 ## Data pengembangan
 

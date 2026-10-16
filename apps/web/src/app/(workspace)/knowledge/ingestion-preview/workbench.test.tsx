@@ -46,7 +46,8 @@ describe("ChunkPreviewWorkbench", () => {
         documentLabel: "SIMULASI - Bahan pemeriksaan dokumen SUN", knowledgeType: "REGULATION",
         extractedText: "Pasal 1\nIsi hasil pembacaan berkas simulasi.", chunkCount: 1, totalWords: 6,
         persisted: false, extraction: { format: "TXT", sizeBytes: 48,
-          checksum: "abcdef1234567890", pageCount: null, paragraphCount: null, sheetCount: null, persisted: false },
+          checksum: "abcdef1234567890", pageCount: null, paragraphCount: null, sheetCount: null,
+          status: "EXTRACTED", nextStep: "HUMAN_REVIEW", statusHistory: ["PENDING", "EXTRACTED"], persisted: false },
         chunks: [{ index: 0, sectionLabel: "Pasal 1", content: "Pasal 1\nIsi hasil pembacaan berkas simulasi.",
           wordCount: 6, contentHash: "abcdef1234567890" }],
       }, meta: { dataLabel: "SIMULATED_DATA" },
@@ -57,12 +58,29 @@ describe("ChunkPreviewWorkbench", () => {
     fireEvent.change(screen.getByLabelText("Berkas simulasi"), { target: { files: [file] } });
 
     expect(await screen.findByText(/Berkas TXT berhasil dibaca/)).toBeInTheDocument();
+    expect(screen.getByText("Menunggu pemeriksaan manusia")).toBeInTheDocument();
     expect(screen.getByLabelText("Teks hasil pembacaan dokumen")).toHaveValue(
       "Pasal 1\nIsi hasil pembacaan berkas simulasi.",
     );
     expect(fetchMock).toHaveBeenCalledWith("/api/knowledge/extract-preview", expect.objectContaining({
       method: "POST", body: expect.any(FormData),
     }));
+  });
+
+  it("menjelaskan bahwa berkas yang ditolak tidak disimpan", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(new Response(JSON.stringify({
+      code: "UNSAFE_SIMULATED_FILE", message: "Berkas mengandung isi yang tidak diizinkan",
+      details: { extractionStatus: "QUARANTINED", reasonCode: "BINARY_CONTENT", persisted: false },
+    }), { status: 422, headers: { "Content-Type": "application/json" } }));
+
+    render(<ChunkPreviewWorkbench teams={[]} canSave={false} />);
+    const file = new File(["isi"], "SIMULASI-ditolak.txt", { type: "text/plain" });
+    fireEvent.change(screen.getByLabelText("Berkas simulasi"), { target: { files: [file] } });
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Berkas mengandung isi yang tidak diizinkan. Berkas tidak disimpan.",
+    );
+    expect(screen.queryByText("Menunggu pemeriksaan manusia")).not.toBeInTheDocument();
   });
 
   it("menyimpan hasil yang sudah diperiksa sebagai draf", async () => {

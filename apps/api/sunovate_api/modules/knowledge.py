@@ -242,7 +242,26 @@ async def extract_preview(
             payload=payload,
         )
     except ExtractionRejected as exc:
-        raise ApiError(422, "UNSAFE_SIMULATED_FILE", str(exc)) from None
+        ctx.store.audit(
+            actor_user_id=principal.user_id,
+            action="EXTRACT_PREVIEW_REJECTED",
+            entity_type="simulated_document",
+            detail={
+                "extractionStatus": exc.extraction_status,
+                "reasonCode": exc.reason_code,
+                "sizeBytes": len(payload),
+            },
+        )
+        raise ApiError(
+            422,
+            "UNSAFE_SIMULATED_FILE",
+            str(exc),
+            {
+                "extractionStatus": exc.extraction_status,
+                "reasonCode": exc.reason_code,
+                "persisted": False,
+            },
+        ) from None
 
     result = _chunk_preview_payload(
         document_label=document_label.strip(),
@@ -258,6 +277,9 @@ async def extract_preview(
         "pageCount": extracted.page_count,
         "paragraphCount": extracted.paragraph_count,
         "sheetCount": extracted.sheet_count,
+        "status": "EXTRACTED",
+        "nextStep": "HUMAN_REVIEW",
+        "statusHistory": ["PENDING", "EXTRACTED"],
         "persisted": False,
     }
     ctx.store.audit(
@@ -269,6 +291,7 @@ async def extract_preview(
             "sizeBytes": extracted.size_bytes,
             "extractedCharacters": len(extracted.text),
             "chunkCount": result["chunkCount"],
+            "extractionStatus": "EXTRACTED",
         },
     )
     return envelope(result, previewMode=True)

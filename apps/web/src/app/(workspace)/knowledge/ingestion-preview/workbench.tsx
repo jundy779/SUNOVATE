@@ -5,7 +5,7 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 
 interface ChunkItem { index: number; sectionLabel: string; content: string; wordCount: number; contentHash: string; }
-interface ExtractionInfo { format: string; sizeBytes: number; checksum: string; pageCount: number | null; paragraphCount: number | null; sheetCount: number | null; persisted: false; }
+interface ExtractionInfo { format: string; sizeBytes: number; checksum: string; pageCount: number | null; paragraphCount: number | null; sheetCount: number | null; status: "EXTRACTED"; nextStep: "HUMAN_REVIEW"; statusHistory: ["PENDING", "EXTRACTED"]; persisted: false; }
 interface PreviewData { documentLabel: string; knowledgeType: string; chunkCount: number; totalWords: number; persisted: false; extractedText?: string; extraction?: ExtractionInfo; chunks: ChunkItem[]; }
 interface TeamOption { id: string; code: string; name: string; }
 
@@ -45,7 +45,7 @@ export function ChunkPreviewWorkbench({ teams, canSave }: { teams: TeamOption[];
       form.set("maxWords", "400"); form.set("sourceFile", file);
       const response = await fetch("/api/knowledge/extract-preview", { method: "POST", body: form });
       const payload = await response.json();
-      if (!response.ok) throw new Error(payload.message ?? "Berkas belum dapat dibaca");
+      if (!response.ok) throw new Error(`${payload.message ?? "Berkas belum dapat dibaca"}. Berkas tidak disimpan.`);
       const data = payload.data as PreviewData;
       const extractedText = data.extractedText ?? "";
       setText(extractedText); setResult(data);
@@ -108,7 +108,7 @@ export function ChunkPreviewWorkbench({ teams, canSave }: { teams: TeamOption[];
         <div className="ingestion-heading"><div><p className="eyebrow">Hasil pemeriksaan</p><h2>Bagian isi dokumen</h2></div>{result ? <span className="status status-neutral">{result.chunkCount} bagian</span> : null}</div>
         {!result ? <div className="ingestion-empty"><strong>Belum ada hasil</strong><p>Isi bahan di sebelah kiri, lalu pilih “Periksa pembagian”.</p></div> : <>
           <div className="ingestion-summary"><div><strong>{result.chunkCount}</strong><span>Bagian</span></div><div><strong>{result.totalWords}</strong><span>Jumlah kata</span></div><div><strong>{savedDraftId ? "Ya" : "Tidak"}</strong><span>Disimpan</span></div></div>
-          {result.extraction ? <p className="extraction-note" role="status">Berkas {result.extraction.format} berhasil dibaca di ruang sementara. Sumber tidak disimpan. Kode pemeriksaan {result.extraction.checksum.slice(0, 12)}.</p> : null}
+          {result.extraction ? <><ol className="extraction-steps" aria-label="Tahapan pemeriksaan berkas"><li className="complete">Pemeriksaan awal selesai</li><li className="complete">Isi berhasil dibaca</li><li className="current">Menunggu pemeriksaan manusia</li></ol><p className="extraction-note" role="status">Berkas {result.extraction.format} berhasil dibaca di ruang sementara. Sumber tidak disimpan. Kode pemeriksaan {result.extraction.checksum.slice(0, 12)}.</p></> : null}
           <div className="chunk-list">{result.chunks.map((chunk) => <article key={chunk.contentHash}><header><span>{String(chunk.index + 1).padStart(2, "0")}</span><h3>{chunk.sectionLabel}</h3><small>{chunk.wordCount} kata</small></header><p>{chunk.content}</p><footer>Kode pemeriksaan: {chunk.contentHash.slice(0, 12)}</footer></article>)}</div>
           <div className="ingestion-save">{savedDraftId ? <p role="status">Draf berhasil disimpan. <Link href={`/knowledge/${savedDraftId}`}>Buka draf</Link></p> : canSave ? <><p>Hasil akan disimpan sebagai draf dan belum dapat digunakan SAVI.</p><button className="button" type="button" disabled={busy || !teamId} onClick={saveDraft}>{busy ? "Menyimpan…" : "Setujui pembagian dan simpan draf"}</button></> : <p>Akun ini dapat memeriksa pembagian, tetapi tidak memiliki kewenangan membuat draf.</p>}</div>
         </>}

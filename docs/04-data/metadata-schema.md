@@ -27,7 +27,7 @@ Mendefinisikan metadata wajib dan opsional untuk knowledge entry dan dokumen.
 | `versionLabel` | Ya | 1 sampai 64 karakter |
 | `checksumSha256` | Ya | 64 hex huruf kecil; duplikat per dokumen ditolak |
 | `sizeBytes` | Tidak | >= 0 |
-| `extractionStatus` | Sistem | versi baru `PENDING` karena pipeline ekstraksi belum ada |
+| `extractionStatus` | Sistem | versi baru hasil registrasi tetap `PENDING`; draf simulasi yang berhasil dibagi memakai `EXTRACTED`. Preview yang ditolak mengembalikan `FAILED`/`QUARANTINED` pada respons dan audit tanpa membuat versi dokumen |
 
 ## Metadata regulasi (PROPOSED)
 

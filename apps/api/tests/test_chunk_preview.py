@@ -165,6 +165,9 @@ def test_reviewer_extracts_simulated_text_file_without_persisting_source() -> No
     assert response.status_code == 200, response.text
     data = response.json()["data"]
     assert data["extraction"]["format"] == "TXT"
+    assert data["extraction"]["status"] == "EXTRACTED"
+    assert data["extraction"]["nextStep"] == "HUMAN_REVIEW"
+    assert data["extraction"]["statusHistory"] == ["PENDING", "EXTRACTED"]
     assert data["extraction"]["persisted"] is False
     assert data["chunkCount"] == 2
     assert "Pasal 1" in data["extractedText"]
@@ -176,6 +179,7 @@ def test_reviewer_extracts_simulated_text_file_without_persisting_source() -> No
     audit = client.get("/api/v1/audit-logs", headers=login(client, "sim.admin")).json()["data"]
     event = next(item for item in audit if item["action"] == "EXTRACT_PREVIEW")
     assert event["detail"]["format"] == "txt"
+    assert event["detail"]["extractionStatus"] == "EXTRACTED"
     assert "filename" not in event["detail"]
     assert "content" not in event["detail"]
 
@@ -206,3 +210,36 @@ def test_extract_preview_requires_reviewer_and_simulated_labels() -> None:
         files=files,
     )
     assert invalid.status_code == 422
+
+
+def test_unsafe_extraction_is_classified_and_audited_without_filename() -> None:
+    client = make_client()
+    response = client.post(
+        EXTRACT_API,
+        headers=login(client, "sim.coordinator"),
+        data={
+            "documentLabel": "SIMULASI - Berkas tidak aman",
+            "knowledgeType": "OTHER",
+            "maxWords": "400",
+        },
+        files={
+            "sourceFile": (
+                "SIMULASI-biner.txt",
+                b"teks\x00biner yang tidak aman untuk dibaca",
+                "text/plain",
+            )
+        },
+    )
+
+    assert response.status_code == 422
+    assert response.json()["details"] == {
+        "extractionStatus": "QUARANTINED",
+        "reasonCode": "BINARY_CONTENT",
+        "persisted": False,
+    }
+    audit = client.get("/api/v1/audit-logs", headers=login(client, "sim.admin")).json()["data"]
+    event = next(item for item in audit if item["action"] == "EXTRACT_PREVIEW_REJECTED")
+    assert event["detail"]["extractionStatus"] == "QUARANTINED"
+    assert event["detail"]["reasonCode"] == "BINARY_CONTENT"
+    assert "filename" not in event["detail"]
+    assert "content" not in event["detail"]

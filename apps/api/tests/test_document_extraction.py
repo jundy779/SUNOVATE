@@ -122,7 +122,7 @@ def test_rejects_macro_payload_before_docx_parsing() -> None:
         archive.writestr("word/document.xml", "<document />")
         archive.writestr("word/vbaProject.bin", b"macro")
 
-    with pytest.raises(ExtractionRejected, match="makro"):
+    with pytest.raises(ExtractionRejected, match="makro") as rejected:
         extract_simulated_document(
             filename="SIMULASI-makro.docx",
             content_type=(
@@ -130,3 +130,5 @@ def test_rejects_macro_payload_before_docx_parsing() -> None:
             ),
             payload=buffer.getvalue(),
         )
+    assert rejected.value.extraction_status == "QUARANTINED"
+    assert rejected.value.reason_code == "MACRO_DETECTED"

@@ -47,7 +47,7 @@ Kata "harus" berarti wajib untuk prioritas tersebut. Semua endpoint berprefiks `
 |---|---|---|---|---|---|
 | FR-18 | Sistem harus menyimpan referensi dokumen beserta metadata, klasifikasi, lokasi provider, dan versi; file tidak disimpan sebagai BLOB. | P0 | CONFIRMED (sumber: brief sesi 2026-10-01, ADR-003) | US-09 | Ya |
 | FR-19 | Registrasi versi harus menyimpan checksum SHA-256; pasangan (document_reference_id, checksum_sha256) ganda ditolak dengan 409 `DUPLICATE_CHECKSUM`. | P0 | PROPOSED | US-09 | Ya |
-| FR-20 | Status ekstraksi: PENDING, EXTRACTED, FAILED, QUARANTINED, NOT_APPLICABLE. | P0 | PROPOSED | US-09 | Sebagian |
+| FR-20 | Status ekstraksi: PENDING, EXTRACTED, FAILED, QUARANTINED, NOT_APPLICABLE. | P0 | PROPOSED | US-09 | **Sebagian**: preview simulasi mengembalikan PENDING/EXTRACTED dan mengklasifikasikan penolakan sebagai FAILED/QUARANTINED; persistence status untuk ingestion produksi belum ada |
 | FR-21 | Registrasi versi dicatat sebagai audit `VERSION_REGISTER`. | P0 | PROPOSED | US-26 | Ya |
 
 ## 5. Pencarian

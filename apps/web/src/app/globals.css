@@ -390,6 +390,10 @@ code { font-size: .8rem; background: var(--paper); padding: 0 .25rem; }
 .ingestion-summary strong { color: var(--navy); font: 700 1.2rem/1 var(--font-heading); }
 .ingestion-summary span { color: var(--muted); font-size: .65rem; font-weight: 700; }
 .extraction-note { margin: 0; border-bottom: 1px solid var(--line); background: #f7f9fc; padding: .7rem 1.1rem; color: var(--navy); font-size: .7rem; line-height: 1.5; }
+.extraction-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; margin: 1rem 0 .75rem; padding: 0; list-style: none; }
+.extraction-steps li { border-top: 3px solid var(--line); padding-top: .55rem; color: var(--muted); font-size: .78rem; font-weight: 650; }
+.extraction-steps li.complete { border-color: var(--success); color: var(--navy-deep); }
+.extraction-steps li.current { border-color: var(--gold); color: var(--navy-deep); }
 .chunk-list { max-height: 620px; overflow: auto; }
 .chunk-list article { padding: 1rem 1.1rem; border-bottom: 1px solid var(--line); }
 .chunk-list article:last-child { border-bottom: 0; }
@@ -558,6 +562,7 @@ code { font-size: .8rem; background: var(--paper); padding: 0 .25rem; }
 }
 
 @media (max-width: 560px) {
+  .extraction-steps { grid-template-columns: 1fr; }
   .public-header { height: auto; padding-block: 1rem; }
   .public-brand > img { width: 112px; }
   .brand-divider, .product-wordmark { display: none; }

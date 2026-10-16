@@ -396,6 +396,20 @@ Status terhadap kode saat ini: evaluator dan 10 kasus tersedia. Baseline simulat
 
 Status terhadap kode saat ini: **LULUS untuk berkas simulasi**. Ekstraksi berjalan di memori dan diuji terhadap berkas valid, format palsu, tipe tidak cocok, data biner, makro, ukuran berlebih, akses tanpa izin, audit aman, dan tidak adanya penambahan knowledge otomatis. Ini bukan ingestion produksi dan belum mencakup OCR maupun pemindaian malware.
 
+## AC-40 Status ekstraksi dan penolakan dapat ditelusuri tanpa menyimpan berkas
+
+- **Given** pemeriksa mengirim berkas simulasi melalui ruang pemeriksaan
+- **When** validasi dan pembacaan berhasil
+- **Then** respons mencatat urutan `PENDING` lalu `EXTRACTED` serta tindak lanjut pemeriksaan manusia
+- **When** batas keamanan, makro, tautan luar, tipe media, atau format yang diizinkan dilanggar
+- **Then** respons menyatakan `QUARANTINED`, berkas tidak disimpan, dan proses berhenti
+- **When** isi berkas tidak dapat dibaca karena rusak atau tidak didukung
+- **Then** respons menyatakan `FAILED` tanpa membuat draf atau bagian dokumen
+- **And** audit penolakan hanya memuat status, kode alasan, dan ukuran tanpa nama atau isi berkas
+- **And** pemeriksaan manusia tetap diwakili oleh alur draf/persetujuan, bukan nilai baru pada `extraction_status`.
+
+Status terhadap kode saat ini: **LULUS untuk preview simulasi**. Status dan kode alasan tersedia pada respons serta audit; penyimpanan status ingestion produksi belum diaktifkan karena berkas sumber tidak disimpan.
+
 ## Open Questions
 
 - Kode error untuk pelanggaran separation of duties belum dikunci di dokumentasi API; perlu diselaraskan dengan [error-format.md](../07-api/error-format.md).

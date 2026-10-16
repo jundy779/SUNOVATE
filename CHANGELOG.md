@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-16 — Status ekstraksi dan karantina simulasi
+
+- Respons ekstraksi berhasil kini menyertakan status `PENDING → EXTRACTED` dan tindak lanjut pemeriksaan manusia; antarmuka menerjemahkannya menjadi tiga tahapan kerja yang mudah dipahami.
+- Penolakan keamanan diklasifikasikan sebagai `QUARANTINED`, sedangkan kegagalan pembacaan biasa sebagai `FAILED`. Berkas tetap tidak disimpan pada kedua kondisi.
+- Audit penolakan hanya mencatat status, kode alasan, dan ukuran berkas tanpa nama maupun isi berkas.
+- Status pemeriksaan manusia tidak ditambahkan ke `extraction_status`; hasil ekstraksi tetap harus masuk draf dan alur pemeriksaan/penerbitan yang sudah ada.
+- Validasi aktual: Ruff, ESLint, mypy strict, TypeScript, 31 test frontend, 225 test backend, dan build produksi lulus; 40 pengujian PostgreSQL dilewati pada mode simulated.
+
 ## 2026-10-15 — Ekstraksi aman berkas simulasi
 
 - Menambahkan pembacaan TXT, Markdown, PDF, DOCX, XLSX, dan XLS melalui Python pada ruang pemeriksaan dokumen; hanya nama berkas berawalan `SIMULASI` dan nama bahan berawalan `SIMULASI -` yang diterima.
