@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-10-17 — Batas data privat dan pencegahan exfiltration
+
+- Mengunci SUNOVATE pada mode privat: public indexing, egress data ke AI, akses agent eksternal, dan telemetry egress tidak dapat diaktifkan melalui konfigurasi; nilai tidak aman menggagalkan startup.
+- Menambahkan `no-store`, anti-index/anti-archive, no-referrer, frame denial, CSP, resource same-origin, serta `robots.txt` yang menolak seluruh path pada web dan API.
+- Menonaktifkan telemetry Next.js sebelum development, build, dan start serta menambahkan konfigurasi environment yang eksplisit.
+- Menyembunyikan OpenAPI dan dokumentasi interaktif API di luar development/test.
+- Memperluas ScopeGuard untuk menolak sebelum retrieval ketika diminta mengirim data ke AI/agent/MCP/webhook, memublikasikan atau mengindeks ke AI Search/SEO/GEO/AIO/crawler, menyamarkan data sensitif melalui encoding, atau memecahnya menjadi beberapa pesan.
+- Menambahkan ADR-018, TASK-023, R-24, keputusan project lead, dan pedoman private-data boundary. Data asli tetap dilarang sampai kontrol jaringan, firewall egress, identitas, enkripsi, audit, pentest, dan persetujuan resmi selesai.
+- Validasi aktual: Ruff, ESLint, mypy strict, TypeScript, 33 test frontend, 238 test backend, build produksi, dan render SQL Alembic lulus; 40 pengujian PostgreSQL dilewati pada mode simulated.
+
 ## 2026-10-16 — Fondasi pilot RAG-Anything terisolasi
 
 - Menetapkan RAG-Anything sebagai kandidat adapter parser-only untuk dokumen multimodal, bukan pengganti SAVI AI, kontrol akses, PostgreSQL, pemeriksaan manusia, atau alur penerbitan SUNOVATE.

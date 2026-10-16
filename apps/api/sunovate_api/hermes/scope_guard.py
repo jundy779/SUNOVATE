@@ -36,6 +36,18 @@ POLICY_PATTERNS = tuple(
         r"\b(akses|buka|rangkum)\s+(dokumen|data|file)\s+(tim\s+lain|yang\s+bukan\s+hak|"
         r"tanpa\s+izin)\b",
         r"\binstruksi\s+(untuk|kepada)\s+(ai|asisten|hermes|model)\b",
+        r"\b(kirim|unggah|upload|bagikan|salin|ekspor|export|teruskan|forward)\b.{0,80}"
+        r"\b(chatgpt|claude|gemini|copilot|ai\s+eksternal|model\s+eksternal|agent\s+eksternal|"
+        r"mcp|plugin|webhook|url\s+publik)\b",
+        r"\b(publikasikan|terbitkan|indeks(kan)?|masukkan)\b.{0,80}"
+        r"\b(search\s*engine|mesin\s+pencari|ai\s*search|seo|geo|aio|crawler|scraper|publik|umum)\b",
+        r"\b(buat|jadikan)\b.{0,50}\b(dokumen|data|isi|jawaban)\b.{0,50}"
+        r"\b(dapat\s+dicari|terindeks|publik|terbuka\s+untuk\s+umum)\b",
+        r"\b(base64|rot13|hex(?:adecimal)?|obfuscate|samarkan|encode)\b.{0,80}"
+        r"\b(dokumen|data|rahasia|terbatas|confidential|instruksi|prompt)\b",
+        r"\b(pecah|bagi|split)\b.{0,50}\b(dokumen|data|rahasia|terbatas)\b.{0,50}"
+        r"\b(pesan|bagian|chunk)\b",
+        r"\bgunakan\s+(browser|tool|alat|mcp|agent)\b.{0,80}\b(kirim|unggah|bocorkan|ekspor|publik)\b",
     )
 )
 

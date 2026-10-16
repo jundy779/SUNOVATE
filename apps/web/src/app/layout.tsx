@@ -4,7 +4,13 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: { default: "SUNOVATE", template: "%s | SUNOVATE" },
   description: "Ruang pengelolaan pengetahuan dan koordinasi kerja Direktorat Surat Utang Negara",
-  robots: { index: false, follow: false },
+  robots: {
+    index: false,
+    follow: false,
+    noarchive: true,
+    nosnippet: true,
+    noimageindex: true,
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

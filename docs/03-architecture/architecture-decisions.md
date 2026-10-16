@@ -1,7 +1,7 @@
 # Architecture Decisions (ADR)
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-16
+**Last Updated:** 2026-10-17
 
 ## Purpose
 Rincian konteks, keputusan, alternatif, dan konsekuensi. Ringkasan dan status ada di [decision-log.md](../12-governance/decision-log.md).
@@ -108,6 +108,17 @@ Rincian konteks, keputusan, alternatif, dan konsekuensi. Ringkasan dan status ad
 - **Fallback:** Ekstraktor Python deterministik tetap baseline. Kegagalan worker tidak boleh menandai dokumen berhasil atau memasukkannya ke indeks.
 - **Gate:** threat test, SBOM/dependency scan, benchmark akurasi dan resource, ketertelusuran halaman/sheet, serta persetujuan alat dan lokasi pemrosesan.
 - **Rincian:** [rag-anything-pilot](../05-ai-rag/rag-anything-pilot.md).
+
+### ADR-018 Batas data privat deny-by-default
+
+- **Status:** ACTIVE PROJECT SAFETY BASELINE; keputusan deployment tetap membutuhkan persetujuan TIK/keamanan dan pemilik data.
+- **Konteks:** Project lead menegaskan pada 2026-10-17 bahwa data SUNOVATE tidak boleh menjadi publik, ditemukan AI Search/SEO/GEO/AIO/crawler, dikirim ke agent/model eksternal, atau diekstraksi melalui jailbreak. Kontrol metadata saja tidak cukup karena crawler jahat dapat mengabaikannya.
+- **Keputusan aplikasi:** konfigurasi mode privat dikunci menggunakan tipe literal; public indexing, egress AI, agent eksternal, dan telemetry egress tidak dapat diaktifkan melalui environment. Web dan API mengirim `no-store`, anti-index, anti-archive, no-referrer, frame denial, serta kebijakan resource same-origin. CSP web membatasi `connect-src` ke origin sendiri. `robots.txt` menolak seluruh path. OpenAPI dan dokumentasi interaktif hanya tersedia di development/test.
+- **Keputusan SAVI:** pola permintaan pengiriman ke AI/agent/MCP/webhook, publikasi/indexing, encoding data sensitif, pemecahan pesan, dan tool-mediated exfiltration ditolak sebelum retrieval. Pemeriksaan izin, tim, dan klasifikasi tetap menjadi kontrol utama.
+- **Batas:** Kode aplikasi tidak dapat menjamin nol kebocoran. Data asli tetap dilarang sampai jaringan privat, firewall egress deny-by-default, SSO/MFA, TLS, enkripsi, audit, pentest, klasifikasi, provider, dan lokasi pemrosesan disetujui serta diverifikasi.
+- **Alternatif ditolak:** hanya mengandalkan `robots.txt`, prompt larangan, nama route tersembunyi, atau pernyataan kebijakan. Keempatnya bukan security boundary.
+- **Konsekuensi:** Integrasi eksternal, tunnel, analytics, web search, RAG pihak ketiga, dan model AI publik fail-closed. Perubahan lock ini memerlukan ADR pengganti, review keamanan, dan persetujuan resmi.
+- **Rincian:** [private-data-boundary](../06-security/private-data-boundary.md).
 
 ## Related Documents
 - [decision-log.md](../12-governance/decision-log.md)

@@ -1,7 +1,7 @@
 # Security Overview
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-17
 
 ## Purpose
 
@@ -15,6 +15,7 @@ Merangkum prinsip keamanan SUNOVATE, batas kepercayaan (trust boundary) antarkom
 - **CONFIRMED** File tidak disimpan sebagai BLOB; database hanya menyimpan referensi, metadata, checksum SHA-256, versi, klasifikasi, dan lokasi provider (sumber: ADR-003).
 - **CONFIRMED** Integrasi produksi (identitas, dokumen, notifikasi, AI) dinonaktifkan sampai divalidasi; provider pengembangan bersifat lokal dan deterministik (sumber: ADR-005, ADR-008; fact sheet bagian 9).
 - **CONFIRMED** Seluruh data demonstrasi berlabel `SIMULATED_DATA`; respons API membawa `meta.dataLabel` (sumber: fact sheet bagian 9).
+- **CONFIRMED (project lead, 2026-10-17)** SUNOVATE beroperasi dengan batas data privat: tidak boleh ada publikasi, pengindeksan publik, atau egress ke AI/agent/telemetry eksternal tanpa persetujuan resmi dan verifikasi keamanan. Data asli masih dilarang.
 
 ## Prinsip keamanan
 
@@ -28,6 +29,7 @@ Merangkum prinsip keamanan SUNOVATE, batas kepercayaan (trust boundary) antarkom
 | Secrets di luar repository | `.env` diabaikan git; `.env.example` hanya placeholder | CONFIRMED |
 | Audit | Login, perubahan data, keputusan approval, penolakan akses, query dan feedback Hermes dicatat di `audit_logs` yang append-only | CONFIRMED (scaffold) |
 | Human approval | Write intent Hermes tidak pernah dieksekusi, hanya membuat approval request `PENDING` | CONFIRMED (scaffold) |
+| Private by construction | API menolak konfigurasi public indexing/AI egress/agent eksternal/telemetry egress; web dan API memakai anti-index serta no-store | CONFIRMED (scaffold, ADR-018) |
 
 ## Trust boundary
 
@@ -84,6 +86,7 @@ R-02 kebocoran data melalui pencarian/Hermes, R-03 data asli masuk repository at
 ## Related Documents
 
 - [authentication](authentication.md)
+- [private-data-boundary](private-data-boundary.md)
 - [authorization-rbac](authorization-rbac.md)
 - [permission-matrix](permission-matrix.md)
 - [data-classification](data-classification.md)

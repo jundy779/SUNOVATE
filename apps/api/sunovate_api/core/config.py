@@ -32,6 +32,15 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     api_prefix: str = "/api/v1"
 
+    # Non-negotiable private-data boundary. These Literal locks deliberately make
+    # unsafe environment overrides fail validation instead of silently enabling
+    # public discovery or outbound processing.
+    private_data_mode: Literal[True] = True
+    public_indexing_enabled: Literal[False] = False
+    external_ai_data_egress_enabled: Literal[False] = False
+    external_agent_access_enabled: Literal[False] = False
+    telemetry_data_egress_enabled: Literal[False] = False
+
     # Runtime data backend. `postgres` uses DATABASE_URL (validated by db/urls.py at startup).
     data_backend: DataBackendName = "simulated"
     database_url: str = "postgresql+asyncpg://sunovate:sunovate_local@localhost:5432/sunovate"

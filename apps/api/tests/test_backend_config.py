@@ -138,6 +138,42 @@ def test_default_data_backend_is_simulated() -> None:
     assert Settings(_env_file=None).data_backend == "simulated"
 
 
+@pytest.mark.parametrize(
+    ("field", "unsafe_value"),
+    [
+        ("private_data_mode", False),
+        ("public_indexing_enabled", True),
+        ("external_ai_data_egress_enabled", True),
+        ("external_agent_access_enabled", True),
+        ("telemetry_data_egress_enabled", True),
+    ],
+)
+def test_private_data_boundary_cannot_be_disabled(field: str, unsafe_value: bool) -> None:
+    with pytest.raises(ValidationError):
+        Settings(_env_file=None, **{field: unsafe_value})
+
+
+def test_private_response_headers_are_applied_to_every_api_response() -> None:
+    client = TestClient(create_app(make_settings()))
+    response = client.get("/api/v1/health")
+    assert response.headers["cache-control"] == "no-store, private, max-age=0, must-revalidate"
+    assert response.headers["pragma"] == "no-cache"
+    assert response.headers["expires"] == "0"
+    assert response.headers["x-robots-tag"] == (
+        "noindex, nofollow, noarchive, nosnippet, noimageindex"
+    )
+    assert response.headers["x-content-type-options"] == "nosniff"
+    assert response.headers["x-frame-options"] == "DENY"
+    assert response.headers["referrer-policy"] == "no-referrer"
+    assert response.headers["cross-origin-resource-policy"] == "same-origin"
+
+
+def test_api_schema_and_interactive_docs_are_hidden_outside_development() -> None:
+    client = TestClient(create_app(make_settings(app_env="staging")))
+    assert client.get("/docs").status_code == 404
+    assert client.get("/openapi.json").status_code == 404
+
+
 # Reset guard (AC-06.3) ---------------------------------------------------------------
 
 

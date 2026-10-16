@@ -19,6 +19,21 @@ from .core.logging import configure_logging, request_id_var
 from .modules import build_api_router
 
 _REQUEST_ID_MAX = 128
+_PRIVATE_RESPONSE_HEADERS = {
+    "Cache-Control": "no-store, private, max-age=0, must-revalidate",
+    "Pragma": "no-cache",
+    "Expires": "0",
+    "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet, noimageindex",
+    "Content-Security-Policy": (
+        "default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+    ),
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "Referrer-Policy": "no-referrer",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=(), browsing-topics=()",
+    "Cross-Origin-Resource-Policy": "same-origin",
+    "Cross-Origin-Opener-Policy": "same-origin",
+}
 
 
 def create_app(settings: Settings | None = None, runtime: AppRuntime | None = None) -> FastAPI:
@@ -37,10 +52,14 @@ def create_app(settings: Settings | None = None, runtime: AppRuntime | None = No
             except Exception as exc:  # noqa: BLE001 - shutdown must not raise
                 logger.warning("backend close gagal", extra={"errorType": type(exc).__name__})
 
+    expose_development_docs = settings.app_env in {"development", "test"}
     app = FastAPI(
         lifespan=lifespan,
         title=settings.app_name,
         version=settings.app_version,
+        docs_url="/docs" if expose_development_docs else None,
+        redoc_url=None,
+        openapi_url="/openapi.json" if expose_development_docs else None,
         description=(
             "SUNOVATE modular-monolith API scaffold. Development only; all data is "
             "SIMULATED_DATA and production integrations are disabled."
@@ -73,6 +92,8 @@ def create_app(settings: Settings | None = None, runtime: AppRuntime | None = No
                     error_body("INTERNAL_ERROR", "Terjadi kesalahan internal"), 500
                 )
             response.headers["X-Request-ID"] = request_id
+            for name, value in _PRIVATE_RESPONSE_HEADERS.items():
+                response.headers[name] = value
             logger.info(
                 "request",
                 extra={

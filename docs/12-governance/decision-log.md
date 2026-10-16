@@ -1,7 +1,7 @@
 # Decision Log
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-16
+**Last Updated:** 2026-10-17
 
 ## Purpose
 
@@ -34,6 +34,7 @@ Dokumen ini mencatat ringkasan keputusan proyek SUNOVATE beserta status dan damp
 | ADR-015 | 2026-10-02 | Backend kedua `DATA_BACKEND=postgres` di belakang interface `Repository` sinkron per request (SQLAlchemy sinkron + `psycopg[binary]==3.3.6`); `simulated` tetap default; revisi `0002_ordering_columns` | Data runtime hilang saat restart (R-10, KL-01); handler tetap `def` sehingga driver sinkron menghindari migrasi async seluruh jalur request | PROPOSED | Data bertahan setelah restart pada mode postgres; satu dependency baru; `pnpm db:test` menjalankan seluruh suite pada PostgreSQL sementara; melanjutkan ADR-007 | [architecture-decisions](../03-architecture/architecture-decisions.md), [data-architecture](../04-data/data-architecture.md) |
 | ADR-016 | 2026-10-09 | Baseline demo sekitar 25 pengguna pada satu komputer kantor; Docker Compose + Nginx; Cloudflare Tunnel/Access sebagai opsi akses; Go/Rust/mobile ditunda | Menyediakan demo realistis tanpa menyamakan komputer kantor dengan produksi atau menambah stack sebelum kebutuhan terbukti | PROPOSED (project lead); NEEDS APPROVAL mentor dan TIK/keamanan | Hanya `SIMULATED_DATA`; wajib load/security/backup test; produksi menunggu keputusan instansi | [deployment-architecture](../03-architecture/deployment-architecture.md), [task-tracker](../13-handover/task-tracker.md) |
 | ADR-017 | 2026-10-16 | Menilai RAG-Anything sebagai adapter parser-only terisolasi, bukan pengganti SAVI atau kontrol SUNOVATE | Menambah kemampuan dokumen multimodal tanpa memberi framework pihak ketiga kewenangan data, publikasi, atau akses database | PROPOSED; preflight implemented, parser NOT ENABLED | Versi 1.4.1 diblokir, kandidat minimal 1.4.2; tanpa egress; hanya fixture simulasi; adopsi menunggu OQ-11, security test, dan benchmark | [rag-anything-pilot](../05-ai-rag/rag-anything-pilot.md), [architecture-decisions](../03-architecture/architecture-decisions.md) |
+| ADR-018 | 2026-10-17 | Menetapkan private-data boundary deny-by-default dan memblokir public indexing serta egress AI/agent/telemetry | Data SUNOVATE tidak boleh menjadi publik, ditemukan mesin/AI pencari, atau keluar melalui integrasi dan jailbreak | ACTIVE PROJECT SAFETY BASELINE; deployment data asli NEEDS APPROVAL | Lock konfigurasi, no-store/anti-index/CSP, robots deny-all, docs API nonpublik, serta penolakan exfiltration; kontrol jaringan dan persetujuan masih wajib | [private-data-boundary](../06-security/private-data-boundary.md), [architecture-decisions](../03-architecture/architecture-decisions.md) |
 
 ### DEC-20261016-01
 
@@ -42,6 +43,13 @@ Dokumen ini mencatat ringkasan keputusan proyek SUNOVATE beserta status dan damp
 - **Status:** PROPOSED; bukan persetujuan memasang pada lingkungan pemerintah atau memproses data SUN asli.
 - **Gate:** OQ-11, data simulasi, tanpa egress, versi aman yang dikunci, dependency review, pengujian path/reference, benchmark resource, dan pemeriksaan manusia.
 - **Dampak:** ADR-017, TASK-022, R-23, dokumen pilot, serta preflight fail-closed ditambahkan. Dependency dan jalur runtime aplikasi tidak berubah.
+
+### DEC-20261017-01
+
+- **Sumber:** Arahan project lead, sesi 2026-10-17.
+- **Keputusan kerja:** SUNOVATE wajib privat. Data tidak boleh dipublikasikan, diindeks mesin pencari/AI Search/SEO/GEO/AIO, dikirim ke AI atau agent eksternal, maupun diambil melalui jailbreak.
+- **Status:** CONFIRMED sebagai baseline keselamatan proyek. Bukan pengganti penetapan klasifikasi resmi atau persetujuan deployment dari TIK/keamanan dan pemilik data.
+- **Dampak:** ADR-018, TASK-023, R-24, hard lock konfigurasi, header no-store/anti-index/CSP, robots deny-all, pembatasan docs API, dan perluasan ScopeGuard. Data asli tetap dilarang sampai kontrol infrastruktur diverifikasi.
 
 ### DEC-20261009-01
 

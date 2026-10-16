@@ -4,9 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "predev": "pnpm telemetry:disable",
     "dev": "next dev",
+    "prebuild": "pnpm telemetry:disable",
     "build": "next build",
+    "prestart": "pnpm telemetry:disable",
     "start": "next start",
+    "telemetry:disable": "next telemetry disable",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",

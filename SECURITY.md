@@ -13,5 +13,7 @@ resmi instansi belum ditetapkan (OPEN QUESTION). Prosedur insiden: `docs/06-secu
 - Hermes hanya mengakses data melalui `HermesGateway`; tidak ada kredensial database untuk Hermes. Aksi tulis memerlukan persetujuan manusia.
 - `audit_logs` append-only (trigger PostgreSQL menolak UPDATE/DELETE).
 - Integrasi produksi tetap nonaktif sampai disetujui.
+- SUNOVATE bersifat privat. Jangan memasukkan data ke mesin pencari, AI Search, SEO/GEO/AIO, crawler, model atau agent eksternal, MCP, plugin, webhook, telemetry, issue, chat publik, atau repository.
+- `robots.txt` dan header anti-index bukan pengganti autentikasi. Lingkungan yang memproses data asli wajib memakai jaringan privat dan firewall egress deny-by-default yang diverifikasi pihak berwenang.
 
 Scaffold ini belum melalui security review, penetration test, atau audit aksesibilitas formal.

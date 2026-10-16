@@ -1,7 +1,7 @@
 # Rencana Induk Implementasi SUNOVATE
 
 **Status:** ACTIVE, NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-16
+**Last Updated:** 2026-10-17
 
 ## Tujuan
 
@@ -17,6 +17,7 @@ Roadmap enam bulan tetap mengikuti [product-roadmap.md](../01-product/product-ro
 4. Implementasi baru harus memiliki pengujian, bukti validasi, pembaruan task tracker, dan changelog.
 5. Frontend memakai nama **SAVI AI**. Nama internal lama hanya boleh muncul pada kode atau catatan migrasi yang memang diperlukan.
 6. Modular monolith tetap menjadi baseline. Go, Rust, microservices, mobile, dan gateway terpisah hanya masuk setelah ada kebutuhan yang terbukti.
+7. Batas data privat adalah gate sebelum seluruh fitur. Tidak ada data asli, publikasi, indexing, atau egress AI/agent eksternal sampai persetujuan dan kontrol infrastruktur diverifikasi.
 
 ## Empat Jalur Kerja
 
@@ -39,6 +40,7 @@ Roadmap enam bulan tetap mengikuti [product-roadmap.md](../01-product/product-ro
 | Menjaga daftar pertanyaan mentor dan keputusan terbuka | IN PROGRESS | Pertanyaan prioritas memiliki pemilik keputusan dan dampak |
 | Menetapkan skenario demo berbasis `SIMULATED_DATA` | PLANNED | Alur login, dashboard, monitoring, Knowledge Hub, dan SAVI terdokumentasi |
 | Membekukan penambahan framework tanpa alasan terukur | ACTIVE RULE | Stack baru hanya masuk melalui keputusan arsitektur |
+| Mengunci batas data privat | IN PROGRESS | Kontrol aplikasi lulus uji; firewall egress, jaringan privat, SSO/MFA, dan persetujuan TIK/pemilik data wajib sebelum data asli |
 
 **Gate T0:** scope P0, tim, klasifikasi, login target, sumber dokumen, dan batas demo dibawa ke validasi mentor.
 
