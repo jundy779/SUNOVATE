@@ -2,7 +2,7 @@
 
 **Status:** PROPOSED
 
-**Last Updated:** 2026-10-11
+**Last Updated:** 2026-10-16
 
 ## Purpose
 
@@ -41,6 +41,7 @@ flowchart TB
 | 11 | Integrasi yang disetujui saja, melalui checklist kesiapan integrasi | Bulan 5 | OQ-06, OQ-07, OQ-08 | PROPOSED |
 | 12 | Audit aksesibilitas, security test, UAT, bug fixing, dokumentasi, handover | Bulan 6 | OQ-20 | PROPOSED |
 | 13 | Paket demo sekitar 25 pengguna pada komputer kantor: Compose, Nginx, backup/restore, load test; tunnel hanya setelah approval | Demo/UAT | OQ-20, OQ-23, OQ-34 | NEEDS APPROVAL |
+| 14 | Pilot parser-only RAG-Anything dalam worker terisolasi untuk tabel/layout/OCR dokumen simulasi; baseline Python tetap fallback | Bulan 2–3 | OQ-11, ADR-017, R-23 | IN PROGRESS: rencana dan preflight tersedia; parser belum dipasang |
 
 ## Item Tertunda dari Jawaban Knowledge Owner (2026-10-02)
 

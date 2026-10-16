@@ -1,7 +1,7 @@
 # Architecture Decisions (ADR)
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-09
+**Last Updated:** 2026-10-16
 
 ## Purpose
 Rincian konteks, keputusan, alternatif, dan konsekuensi. Ringkasan dan status ada di [decision-log.md](../12-governance/decision-log.md).
@@ -97,6 +97,17 @@ Rincian konteks, keputusan, alternatif, dan konsekuensi. Ringkasan dan status ad
 - **Batas:** Ini bukan target produksi dan bukan klaim kapasitas. Load test, backup/restore, security checklist, daftar akses, logging, serta kill switch tunnel wajib sebelum UAT.
 - **Roadmap:** Go dapat dipertimbangkan untuk gateway/webhook/worker konkuren dan Rust untuk pemrosesan file berisiko tinggi hanya setelah metrik dan threat review menunjukkan kebutuhan. PWA/Android/iOS ditunda sampai API dan autentikasi stabil.
 - **Alasan:** Menjaga MVP dapat diselesaikan dan diaudit tanpa mengunci jalur skala jangka panjang atau menambah kompleksitas prematur.
+
+### ADR-017 RAG-Anything sebagai adapter pilot terisolasi
+
+- **Status:** PROPOSED; preflight tersedia, parser belum dipasang atau diaktifkan.
+- **Konteks:** Ekstraktor Python SUNOVATE telah mendukung TXT/MD/PDF/DOCX/XLSX/XLS, tetapi dokumen kompleks dapat membutuhkan pemahaman layout, tabel, gambar, rumus, dan OCR. RAG-Anything menawarkan pipeline multimodal berbasis LightRAG/MinerU, namun status upstream masih Beta dan dependency serta penggunaan model visual memperluas permukaan serangan dan kebutuhan resource.
+- **Keputusan:** Nilai RAG-Anything sebagai adapter parser-only di worker terisolasi. Ia menerima hanya file simulasi yang telah melewati validasi SUNOVATE dan mengembalikan konten/metadata untuk diperiksa manusia. Ia tidak mendapat kredensial database, tidak menentukan izin/klasifikasi, tidak menerbitkan knowledge, dan tidak menggantikan retrieval SAVI.
+- **Versi:** `1.4.1` diblokir; kandidat awal minimal `1.4.2` berdasarkan catatan keamanan upstream. Versi final dikunci eksak setelah review supply chain.
+- **Jaringan:** Tidak ada egress pada pilot awal. LLM/VLM/OCR eksternal serta telemetry tidak aktif. Penggunaan model/provider harus menunggu OQ-11 dan review klasifikasi data.
+- **Fallback:** Ekstraktor Python deterministik tetap baseline. Kegagalan worker tidak boleh menandai dokumen berhasil atau memasukkannya ke indeks.
+- **Gate:** threat test, SBOM/dependency scan, benchmark akurasi dan resource, ketertelusuran halaman/sheet, serta persetujuan alat dan lokasi pemrosesan.
+- **Rincian:** [rag-anything-pilot](../05-ai-rag/rag-anything-pilot.md).
 
 ## Related Documents
 - [decision-log.md](../12-governance/decision-log.md)

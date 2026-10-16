@@ -1,7 +1,7 @@
 # Ingestion Pipeline
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-15
+**Last Updated:** 2026-10-16
 
 ## Purpose
 
@@ -24,6 +24,7 @@ Menjelaskan alur usulan untuk memasukkan dokumen ke knowledge repository dan ind
 - **IMPLEMENTED (DEVELOPMENT PREVIEW)** Pemotongan struktur deterministik dapat dijalankan melalui `POST /api/v1/knowledge/chunk-preview`. Pengguna dengan gabungan kewenangan pemeriksa, pembuat knowledge, pendaftar dokumen, dan pendaftar versi dapat mengesahkan teks hasil pemeriksaan lalu menyimpannya melalui `POST /api/v1/knowledge/chunk-drafts` sebagai `SIMULATED_DATA` berstatus DRAFT. Draf tidak masuk pencarian umum maupun SAVI.
 - **IMPLEMENTED (DEVELOPMENT PREVIEW)** Pencarian draf terpisah tersedia pada `/knowledge/drafts` dan `GET /api/v1/knowledge/drafts/search`. Penyaringan pemilik/pemeriksa, tim, dan klasifikasi dilakukan sebelum pencocokan judul, ringkasan, atau bagian. Jalur ini tidak digunakan retrieval SAVI dan audit hanya mencatat panjang kata kunci serta jumlah hasil.
 - **PROPOSED** Ekstraksi dokumen resmi/produksi, pemindai malware, penyimpanan objek, review hasil ekstraksi formal, normalisasi produksi, embedding, dan OCR.
+- **PROPOSED, NOT ENABLED** RAG-Anything dinilai sebagai adapter parser-only terisolasi untuk format multimodal. Ia tidak menggantikan validasi SUNOVATE, pemeriksaan manusia, lifecycle draf/publikasi, atau retrieval SAVI. Rencana dan gate ada di [rag-anything-pilot.md](./rag-anything-pilot.md).
 
 ## Alur usulan
 
@@ -92,6 +93,7 @@ Pemeriksaan manusia tidak menjadi nilai baru `extraction_status`. Setelah `EXTRA
 - R-03 Data asli/sensitif masuk repository atau log.
 - R-07 Prompt injection dari dokumen.
 - R-11 Kualitas metadata rendah sehingga retrieval buruk.
+- R-23 Framework pemrosesan multimodal membaca sumber lokal atau mengirim konten tanpa izin.
 
 ## Acceptance Criteria
 
@@ -106,3 +108,4 @@ Pemeriksaan manusia tidak menjadi nilai baru `extraction_status`. Setelah `EXTRA
 - [data-quality.md](../04-data/data-quality.md)
 - [chunking-strategy.md](./chunking-strategy.md)
 - [rag-architecture.md](./rag-architecture.md)
+- [rag-anything-pilot.md](./rag-anything-pilot.md)

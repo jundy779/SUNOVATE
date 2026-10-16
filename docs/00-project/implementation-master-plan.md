@@ -1,7 +1,7 @@
 # Rencana Induk Implementasi SUNOVATE
 
 **Status:** ACTIVE, NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-14
+**Last Updated:** 2026-10-16
 
 ## Tujuan
 
@@ -80,12 +80,13 @@ Urutan pekerjaan:
 1. Menyetujui jenis dokumen, klasifikasi, pemilik, retensi, dan sumber resmi.
 2. Menyiapkan ekstraksi pada dokumen simulasi dan review manusia.
 3. Menggunakan preview chunking Python dan layar pemeriksaan manusia yang sudah tersedia untuk Pasal, tahap, dan bagian; hasil tetap tidak tersimpan sebelum gerbang intake disetujui.
-4. Menyimpan chunk terverifikasi dan mengaktifkan PostgreSQL full-text search.
-5. Menggunakan reranker leksikal dan evidence gate deterministik yang sudah tersedia sebagai baseline aman.
-6. Memilih model embedding, reranker model, dan LLM hanya setelah OQ-11 ditutup.
-7. Mengaktifkan hybrid retrieval bila evaluasi menunjukkan peningkatan yang nyata.
-8. Menjalankan scope guard, prompt-injection defense, penyaringan izin sebelum retrieval, validasi sitasi, dan respons bukti tidak cukup.
-9. Menguji pertanyaan mentor, golden set, akurasi retrieval, sitasi, penolakan, dan kebocoran akses.
+4. Menilai RAG-Anything sebagai adapter parser-only terisolasi melalui pilot dokumen simulasi; paket tidak menjadi dependency aplikasi sebelum gate keamanan, resource, dan OQ-11 terpenuhi.
+5. Menyimpan chunk terverifikasi dan mengaktifkan PostgreSQL full-text search.
+6. Menggunakan reranker leksikal dan evidence gate deterministik yang sudah tersedia sebagai baseline aman.
+7. Memilih model embedding, reranker model, dan LLM hanya setelah OQ-11 ditutup.
+8. Mengaktifkan hybrid retrieval bila evaluasi menunjukkan peningkatan yang nyata.
+9. Menjalankan scope guard, prompt-injection defense, penyaringan izin sebelum retrieval, validasi sitasi, dan respons bukti tidak cukup.
+10. Menguji pertanyaan mentor, golden set, akurasi retrieval, sitasi, penolakan, dan kebocoran akses.
 
 Pola Agentic AI dibatasi pada orkestrasi terkendali. Multi-agent, web search bebas, memori jangka panjang, dan tindakan otomatis tidak termasuk MVP.
 
@@ -146,7 +147,7 @@ Urutan ini berlaku sampai ada keputusan mentor yang mengubah prioritas:
 2. Siapkan naskah serta alur demo bulan pertama menggunakan data simulasi.
 3. Tuntaskan kontrol API yang tidak bergantung pada integrasi: rate limit, batas request, dan security headers.
 4. Tuntaskan pengujian repository PostgreSQL dan otorisasi.
-5. Siapkan ingestion dokumen simulasi dari ekstraksi sampai preview chunk, tetapi belum memublikasikan hasilnya.
+5. Siapkan ingestion dokumen simulasi dari ekstraksi sampai preview chunk. Jalankan preflight dan benchmark parser-only RAG-Anything secara terisolasi tanpa memublikasikan hasilnya.
 6. Minta keputusan mentor untuk sumber RAG, model AI, login, klasifikasi, server, dan UAT.
 7. Setelah keputusan tersedia, lanjutkan ingestion tersimpan, FTS, dan evaluasi SAVI.
 

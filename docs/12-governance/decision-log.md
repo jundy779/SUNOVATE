@@ -1,7 +1,7 @@
 # Decision Log
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-14
+**Last Updated:** 2026-10-16
 
 ## Purpose
 
@@ -33,6 +33,15 @@ Dokumen ini mencatat ringkasan keputusan proyek SUNOVATE beserta status dan damp
 | ADR-014 | 2026-10-01 | File sumber biner (PDF/PPTX) di root dikecualikan dari Git melalui `.gitignore` | Klasifikasi penyimpanan di repository belum dikonfirmasi (OQ-18) | PROPOSED | File sumber tetap lokal | [simulated-data-policy](../04-data/simulated-data-policy.md) |
 | ADR-015 | 2026-10-02 | Backend kedua `DATA_BACKEND=postgres` di belakang interface `Repository` sinkron per request (SQLAlchemy sinkron + `psycopg[binary]==3.3.6`); `simulated` tetap default; revisi `0002_ordering_columns` | Data runtime hilang saat restart (R-10, KL-01); handler tetap `def` sehingga driver sinkron menghindari migrasi async seluruh jalur request | PROPOSED | Data bertahan setelah restart pada mode postgres; satu dependency baru; `pnpm db:test` menjalankan seluruh suite pada PostgreSQL sementara; melanjutkan ADR-007 | [architecture-decisions](../03-architecture/architecture-decisions.md), [data-architecture](../04-data/data-architecture.md) |
 | ADR-016 | 2026-10-09 | Baseline demo sekitar 25 pengguna pada satu komputer kantor; Docker Compose + Nginx; Cloudflare Tunnel/Access sebagai opsi akses; Go/Rust/mobile ditunda | Menyediakan demo realistis tanpa menyamakan komputer kantor dengan produksi atau menambah stack sebelum kebutuhan terbukti | PROPOSED (project lead); NEEDS APPROVAL mentor dan TIK/keamanan | Hanya `SIMULATED_DATA`; wajib load/security/backup test; produksi menunggu keputusan instansi | [deployment-architecture](../03-architecture/deployment-architecture.md), [task-tracker](../13-handover/task-tracker.md) |
+| ADR-017 | 2026-10-16 | Menilai RAG-Anything sebagai adapter parser-only terisolasi, bukan pengganti SAVI atau kontrol SUNOVATE | Menambah kemampuan dokumen multimodal tanpa memberi framework pihak ketiga kewenangan data, publikasi, atau akses database | PROPOSED; preflight implemented, parser NOT ENABLED | Versi 1.4.1 diblokir, kandidat minimal 1.4.2; tanpa egress; hanya fixture simulasi; adopsi menunggu OQ-11, security test, dan benchmark | [rag-anything-pilot](../05-ai-rag/rag-anything-pilot.md), [architecture-decisions](../03-architecture/architecture-decisions.md) |
+
+### DEC-20261016-01
+
+- **Sumber:** Arahan project lead, sesi 2026-10-16, setelah peninjauan repository upstream.
+- **Keputusan kerja:** RAG-Anything layak masuk rencana pilot multimodal SUNOVATE sebagai adapter parser-only terisolasi.
+- **Status:** PROPOSED; bukan persetujuan memasang pada lingkungan pemerintah atau memproses data SUN asli.
+- **Gate:** OQ-11, data simulasi, tanpa egress, versi aman yang dikunci, dependency review, pengujian path/reference, benchmark resource, dan pemeriksaan manusia.
+- **Dampak:** ADR-017, TASK-022, R-23, dokumen pilot, serta preflight fail-closed ditambahkan. Dependency dan jalur runtime aplikasi tidak berubah.
 
 ### DEC-20261009-01
 

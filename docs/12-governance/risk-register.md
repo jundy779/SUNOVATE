@@ -1,7 +1,7 @@
 # Register Risiko
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-10
+**Last Updated:** 2026-10-16
 
 ## Purpose
 
@@ -43,6 +43,7 @@ Seluruh penilaian di bawah PROPOSED. Pemilik "Pengembang" berarti peserta magang
 | R-20 | Target 25 pengguna dianggap kapasitas terjamin tanpa load test pada host aktual | Demo lambat/gagal, database kehabisan koneksi, atau data rusak saat beban | Sedang | Sedang | Tetapkan skenario dan SLA; uji ramp-up, steady state, spike, koneksi DB, CPU/RAM/disk; uji backup/restore; jangan gunakan data asli | Pengembang; administrator OPEN QUESTION | Terbuka |
 | R-21 | Go/Rust/mobile ditambahkan sebelum boundary dan kebutuhan stabil | Kompleksitas deployment, keamanan, test, dan handover meningkat; MVP terlambat | Sedang | Sedang | Modular monolith tetap baseline; butuh metrik, ADR baru, owner operasional, dan acceptance criteria sebelum ekstraksi service/klien | Project lead, Mentor | Diterima untuk roadmap; dicegah pada MVP |
 | R-22 | Akun utama memiliki override konten atau file terbit dapat ditimpa/dihapus | Hilangnya bukti kerja, manipulasi rekaman, versi RAG tidak dapat ditelusuri, dan audit tidak dapat dipercaya | Sedang | Tinggi | Pisahkan administrasi akses dari kepemilikan konten; PUBLISHED immutable; koreksi lewat versi baru; withdrawal mempertahankan bukti; grant terbatas scope/waktu; separation of duties dan audit wajib | Mentor, knowledge owner, TIK/keamanan | Terbuka (OQ-35) |
+| R-23 | Framework pemrosesan multimodal pihak ketiga membaca path lokal, mengikuti referensi tidak tepercaya, mengirim konten ke provider eksternal, atau menghabiskan resource host | Kebocoran dokumen/kredensial, hasil ingestion salah, denial of service, dan pelanggaran lokasi pemrosesan | Sedang | Tinggi | Adapter terisolasi tanpa DB/egress; input/output volume terbatas; tolak symlink/path/URL eksternal; pin minimal 1.4.2 dan blokir 1.4.1; SBOM/dependency scan; batas CPU/RAM/waktu/disk; fallback parser Python; hanya data simulasi sampai OQ-11 dan review keamanan selesai | Pengembang; TIK/keamanan dan pemilik data OPEN QUESTION | Terbuka |
 
 ## Status Risiko
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-16 — Fondasi pilot RAG-Anything terisolasi
+
+- Menetapkan RAG-Anything sebagai kandidat adapter parser-only untuk dokumen multimodal, bukan pengganti SAVI AI, kontrol akses, PostgreSQL, pemeriksaan manusia, atau alur penerbitan SUNOVATE.
+- Menambahkan ADR-017, TASK-022, R-23, tahapan pilot P0 sampai P4, gate supply-chain/security/resource, dataset simulasi, metrik, dan kriteria adopsi.
+- Menambahkan preflight fail-closed yang tidak membaca isi dokumen dan tidak menjalankan parser. Pemeriksaan membatasi lokasi input/output, label `SIMULASI`, format, symlink, jaringan, serta versi paket; versi 1.4.1 diblokir dan kandidat minimal 1.4.2.
+- Tidak menambahkan dependency RAG-Anything, tidak mengaktifkan jaringan/model/OCR eksternal, tidak mengubah database atau runtime aplikasi, dan tidak memproses dokumen SUN asli.
+- Validasi aktual: Ruff, ESLint, mypy strict, TypeScript, 31 test frontend, 231 test backend, build produksi, dan render SQL Alembic lulus; 40 pengujian PostgreSQL dilewati pada mode simulated.
+
 ## 2026-10-16 — Karantina indikasi prompt injection saat ingestion
 
 - Memeriksa teks hasil ekstraksi sebelum chunking dan menghentikan berkas yang menyerupai instruksi untuk AI dengan status `QUARANTINED` serta kode `PROMPT_INJECTION_SUSPECTED`.
