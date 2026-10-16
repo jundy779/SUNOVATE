@@ -410,6 +410,18 @@ Status terhadap kode saat ini: **LULUS untuk berkas simulasi**. Ekstraksi berjal
 
 Status terhadap kode saat ini: **LULUS untuk preview simulasi**. Status dan kode alasan tersedia pada respons serta audit; penyimpanan status ingestion produksi belum diaktifkan karena berkas sumber tidak disimpan.
 
+## AC-41 Indikasi instruksi untuk AI dikarantina sebelum menjadi draf
+
+- **Given** teks hasil ekstraksi atau teks yang akan disimpan manual menyerupai instruksi untuk mengubah aturan, membuka instruksi internal, atau melewati otorisasi
+- **When** pemeriksa menjalankan ekstraksi atau mencoba menyimpan draf
+- **Then** sistem menghentikan proses dengan status `QUARANTINED` dan kode `PROMPT_INJECTION_SUSPECTED`
+- **And** normalisasi dilakukan sebelum pemeriksaan agar karakter format tersembunyi tidak mudah melewati pola
+- **And** knowledge, versi, dan bagian dokumen tidak dibuat
+- **And** audit hanya mencatat status dan kode alasan tanpa isi yang terdeteksi
+- **And** hasil tersebut diperlakukan sebagai indikasi untuk pemeriksaan manusia, bukan keputusan final bahwa dokumen berbahaya.
+
+Status terhadap kode saat ini: **LULUS untuk data simulasi** pada ekstraksi berkas dan jalur simpan draf manual, termasuk variasi karakter zero-width.
+
 ## Open Questions
 
 - Kode error untuk pelanggaran separation of duties belum dikunci di dokumentasi API; perlu diselaraskan dengan [error-format.md](../07-api/error-format.md).

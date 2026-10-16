@@ -171,7 +171,7 @@ def _is_general_coding(text: str) -> bool:
 
 def is_instruction_like(text: str) -> bool:
     """Used for both user questions and retrieved passages (indirect injection)."""
-    return _matches(POLICY_PATTERNS, text)
+    return _matches(POLICY_PATTERNS, _normalize(text))
 
 
 class ScopeGuard:

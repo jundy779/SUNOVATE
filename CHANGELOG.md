@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-16 — Karantina indikasi prompt injection saat ingestion
+
+- Memeriksa teks hasil ekstraksi sebelum chunking dan menghentikan berkas yang menyerupai instruksi untuk AI dengan status `QUARANTINED` serta kode `PROMPT_INJECTION_SUSPECTED`.
+- Menerapkan gerbang yang sama pada penyimpanan draf manual agar pemeriksaan tidak dapat dilewati dengan menempelkan teks langsung.
+- Normalisasi Unicode menghapus karakter format tersembunyi sebelum pola diperiksa; isi yang ditolak tidak disimpan dan tidak disalin ke audit.
+- Deteksi tetap berbasis aturan dan diperlakukan sebagai indikasi untuk pemeriksaan manusia, bukan keputusan bahwa dokumen berbahaya.
+- Validasi aktual: Ruff, ESLint, mypy strict, TypeScript, 31 test frontend, 227 test backend, dan build produksi lulus; 40 pengujian PostgreSQL dilewati pada mode simulated.
+
 ## 2026-10-16 — Status ekstraksi dan karantina simulasi
 
 - Respons ekstraksi berhasil kini menyertakan status `PENDING → EXTRACTED` dan tindak lanjut pemeriksaan manusia; antarmuka menerjemahkannya menjadi tiga tahapan kerja yang mudah dipahami.

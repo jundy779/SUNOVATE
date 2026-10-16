@@ -20,6 +20,7 @@ from ..hermes.document_extraction import (
     ExtractionRejected,
     extract_simulated_document,
 )
+from ..hermes.scope_guard import is_instruction_like
 from ..hermes.text import terms
 from ..store.records import (
     ApprovalRequest,
@@ -241,6 +242,12 @@ async def extract_preview(
             content_type=source_content_type,
             payload=payload,
         )
+        if is_instruction_like(extracted.text):
+            raise ExtractionRejected(
+                "Isi berkas memerlukan pemeriksaan keamanan oleh petugas berwenang",
+                extraction_status="QUARANTINED",
+                reason_code="PROMPT_INJECTION_SUSPECTED",
+            )
     except ExtractionRejected as exc:
         ctx.store.audit(
             actor_user_id=principal.user_id,
@@ -316,6 +323,26 @@ def create_chunk_draft(
 ) -> dict[str, Any]:
     """Persist a reviewed SIMULATED_DATA preview as a non-retrievable draft."""
     _check_target(ctx, principal, body.owner_team_id, body.classification_code)
+    if is_instruction_like(body.extracted_text):
+        ctx.store.audit(
+            actor_user_id=principal.user_id,
+            action="KNOWLEDGE_DRAFT_QUARANTINED",
+            entity_type="simulated_document",
+            detail={
+                "extractionStatus": "QUARANTINED",
+                "reasonCode": "PROMPT_INJECTION_SUSPECTED",
+            },
+        )
+        raise ApiError(
+            422,
+            "DOCUMENT_REQUIRES_SECURITY_REVIEW",
+            "Isi bahan memerlukan pemeriksaan keamanan oleh petugas berwenang",
+            {
+                "extractionStatus": "QUARANTINED",
+                "reasonCode": "PROMPT_INJECTION_SUSPECTED",
+                "persisted": False,
+            },
+        )
     chunks = chunk_text(
         body.extracted_text,
         body.knowledge_type,
