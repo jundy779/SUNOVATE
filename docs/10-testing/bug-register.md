@@ -1,7 +1,7 @@
 # Register Bug
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-06
+**Last Updated:** 2026-10-19
 
 ## Purpose
 
@@ -9,7 +9,7 @@ Register sementara cacat SUNOVATE yang dapat ditelusuri di riwayat Git dan catat
 
 ## Sumber dan Aturan
 
-- **CONFIRMED (riwayat repository)**: Cacat BUG-001 sampai BUG-013 dan REQ-GAP dirujuk ke commit, `CHANGELOG.md`, `docs/13-handover/known-limitations.md`, atau catatan review yang disebut di sini. Setiap SHA diperiksa dengan `git cat-file -e <sha>^{commit}` pada 2026-10-06. BUG-014 sampai BUG-018 bersumber dari pengamatan pengembang pada sesi pembangunan (bagian "Cacat Tambahan dari Sesi Pengembangan") dan tidak meninggalkan catatan selain commit perbaikannya.
+- **CONFIRMED (riwayat repository)**: Cacat BUG-001 sampai BUG-013 dan REQ-GAP dirujuk ke commit, `CHANGELOG.md`, `docs/13-handover/known-limitations.md`, atau catatan review yang disebut di sini. Setiap SHA lama diperiksa dengan `git cat-file -e <sha>^{commit}` pada 2026-10-06. BUG-014 sampai BUG-018 bersumber dari pengamatan pengembang pada sesi pembangunan. BUG-019 ditemukan lewat review konfigurasi paket demo dan dicatat pada changelog 2026-10-19.
 - **Catatan review (tidak masuk Git)**: `.agents/tasks/postgres-persistence/review.md` dan `review.json` (review implementasi, 2026-10-02, verdict APPROVED dengan empat temuan NIT) serta `design-review.md` (review desain sebelum kode). Berkas tersebut adalah catatan kerja lokal yang tidak di-commit; dirujuk sebagai catatan, bukan sumber yang dapat diverifikasi dari repository. Temuan `design-review.md` adalah temuan desain sebelum ada kode (satu MEDIUM dan dua belas NIT, seluruhnya diselesaikan di desain atau kode sebelum review implementasi) dan tidak dihitung sebagai cacat kode.
 - **PROPOSED**: Severity adalah usulan menurut [bug-severity.md](bug-severity.md); definisi P0 sampai P3 berasal dari Proposal v2.4 slide 20 (tidak berubah pada deck `v1_`). "NIT" pada kolom deskripsi adalah skala reviewer, bukan P0 sampai P3.
 - Hanya `SIMULATED_DATA`. Tidak ada data asli, data pribadi, atau isi dokumen di register ini.
@@ -62,6 +62,7 @@ Cacat berikut tidak meninggalkan catatan di riwayat Git (riwayat sebelum fitur P
 | BUG-017 | Sama dengan BUG-016 | Frontend, Hermes | Nomor sitasi `[n]` tidak tampil pada daftar sumber jawaban Hermes, sehingga pengguna tidak dapat memetakan penanda di teks jawaban ke sumbernya. Nomor kini ditampilkan di daftar sumber | P2 | Tinjauan tangkapan layar pada aplikasi berjalan (pengamatan pengembang) | Selesai | `357df94` | `apps/web/src/components/hermes-chat.test.tsx` (menguji tautan sumber, bukan nomor sitasi) |
 | BUG-018 | 2026-10-11 | SAVI AI, retrieval | Pertanyaan apakah regulasi SUN "otomatis menghapus seluruh ketentuan lama" dijawab dari materi edukasi SUN ritel yang hanya menyebut ketentuan/regulasi secara umum. Coverage 0,4 terlalu longgar. | P1 | Golden case RAG-21 | Selesai | Kenaikan `MIN_COVERAGE` menjadi 0,6 | `tests/rag-evaluation/test_rag_golden_set.py::test_golden_case[RAG-21]` |
 | BUG-018 | Sama dengan BUG-016 | Frontend, tata letak | Panel sidebar tidak setinggi layar penuh ketika konten panjang. Kini memakai `.sidebar-inner` dengan `position: sticky` | P3 | Tinjauan tangkapan layar pada aplikasi berjalan (pengamatan pengembang) | Selesai | `357df94` | Tidak ada uji visual otomatis |
+| BUG-019 | 2026-10-19 | Reverse proxy, privasi log | Format access log Nginx memakai `$request`, sehingga query string pada URL pencarian berpotensi masuk log proxy. Format diganti menjadi `$request_method $uri`; preflight menolak `$request`, `$request_uri`, `$args`, dan `$query_string` | P1 untuk data internal; P2 selama hanya `SIMULATED_DATA` | Review konfigurasi paket demo sebelum aktivasi | Selesai | `deploy/demo/nginx/nginx.conf`; changelog 2026-10-19 | `apps/api/tests/test_demo_preflight.py::test_scaffold_rejects_query_string_logging`; `pnpm demo:preflight` |
 
 ## Kandidat yang Tidak Dicatat
 

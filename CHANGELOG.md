@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-10-19 — Preflight keamanan paket demo privat
+
+- Menambahkan `pnpm demo:preflight` untuk memeriksa bind loopback, network internal, lock data
+  privat, container non-root/read-only, header keamanan, contoh tunnel nonaktif, dan status
+  `demo.env` tanpa menjalankan container atau tunnel.
+- Validasi environment menolak placeholder, secret pendek atau sama, izin file terlalu luas,
+  origin non-loopback, URL database eksternal/tidak cocok, database sistem, debug logging, dan
+  variabel tambahan yang tidak diizinkan. Nilai environment tidak dicetak.
+- Memperbaiki BUG-019: access log Nginx tidak lagi memakai `$request` yang dapat memuat query
+  string. Log hanya mencatat metode dan path; preflight menolak empat token query berisiko.
+- Menambahkan 10 test fail-closed. Preflight scaffold lulus dengan 10 pemeriksaan,
+  `environmentFile: NOT_CHECKED`, `containersStarted: false`, dan `tunnelActivated: false`.
+- Docker, environment host aktual, firewall, TLS, restore, dan scan port tetap belum divalidasi;
+  paket masih `PROPOSED — NOT ACTIVATED`.
+- Validasi aktual: Ruff, ESLint, mypy strict (62 source files), TypeScript, 33 tes frontend,
+  275 tes backend lulus dengan 40 tes PostgreSQL dilewati, build produksi bersih, preflight
+  scaffold lulus, dan SQL Alembic ter-render.
+
 ## 2026-10-19 — Alat latihan backup-restore dan evaluator PostgreSQL
 
 - Menambahkan `pnpm db:restore-drill` untuk dump custom sementara dan restore ke database uji

@@ -17,6 +17,10 @@ Mencatat langkah deployment yang sudah dapat dijalankan (lokal) dan kerangka usu
 - **PROPOSED (project lead, 2026-10-09)**: Target demo sekitar 25 pengguna; Docker Compose + Nginx pada komputer khusus; Cloudflare Tunnel + Access sebagai opsi yang belum diaktifkan (OQ-34, ADR-016).
 - **CONFIRMED**: SUNOVATE belum siap produksi; lihat [known-limitations.md](../13-handover/known-limitations.md).
 - **PROPOSED, IMPLEMENTED package**: `deploy/demo/` berisi Compose/Nginx/Dockerfile serta contoh konfigurasi tunnel yang sengaja tidak aktif. Paket hanya bind ke localhost dan belum diuji dengan Docker pada mesin pengembangan.
+- **CONFIRMED (implementasi)**: `pnpm demo:preflight` memeriksa invariant privat pada scaffold.
+  Dengan `--env-file`, alat juga menolak placeholder, secret pendek/sama, izin berkas yang terlalu
+  luas, origin non-loopback, URL database eksternal, serta variabel tambahan yang tidak dikenal.
+  Nilai environment tidak pernah ditampilkan.
 
 ## Bagian A: Deployment Lokal (Diimplementasikan)
 
@@ -40,6 +44,7 @@ Mencatat langkah deployment yang sudah dapat dijalankan (lokal) dan kerangka usu
 Paket tersedia di `deploy/demo/README.md`. Environment nyata tidak disertakan dan tidak boleh masuk Git. Pemeriksaan berikut baru boleh dijalankan pada host yang disetujui:
 
 ```bash
+pnpm demo:preflight -- --env-file deploy/demo/demo.env
 docker compose --env-file deploy/demo/demo.env \
   -f deploy/demo/docker-compose.demo.yml config --quiet
 ```
@@ -47,6 +52,11 @@ docker compose --env-file deploy/demo/demo.env \
 Tidak ada service `cloudflared` di Compose. `cloudflared.example.yml` memakai domain `.invalid`, tanpa ID tunnel dan tanpa kredensial, sehingga tidak mengaktifkan akses eksternal.
 
 Probe lokal dapat dijalankan dengan `pnpm demo:load`. Baseline 2026-10-19 hanya menguji FastAPI lokal: 25 pengguna virtual, 100 request, error 0%, p95 41,26 ms. Pengujian seluruh Compose pada komputer kantor tetap PLANNED.
+
+Access log Nginx tidak merekam query string. Format hanya mencatat request ID, alamat klien,
+metode, path, status, ukuran respons, durasi, dan user agent. Dengan demikian istilah pencarian
+dan parameter URL tidak masuk log proxy. Retensi serta akses log pada host aktual tetap menunggu
+OQ-23.
 
 ## Bagian B: Kerangka Deployment Lingkungan Lain (PROPOSED)
 
@@ -56,6 +66,8 @@ Kerangka berikut hanya struktur. Isinya baru dapat dilengkapi setelah OQ-07 (log
 
 - [ ] Mentor menyetujui skenario demo dan TIK/keamanan menyetujui host, egress, domain/subdomain, Cloudflare, serta daftar pengguna (OQ-34).
 - [ ] Server memakai akun layanan non-admin, firewall deny-by-default, patch terbaru, full-disk encryption bila tersedia, dan secret di luar Git.
+- [ ] `pnpm demo:preflight -- --env-file deploy/demo/demo.env` berstatus `PASSED`, termasuk
+  `environmentFile: PASSED`; hasil tidak memuat secret.
 - [ ] Cloudflare Access memakai MFA/identity yang disetujui, allowlist eksplisit, masa aktif terbatas, log akses, dan prosedur revoke/kill switch.
 - [ ] Hanya `SIMULATED_DATA`; tidak ada dokumen internal, data pribadi, kredensial produksi, atau angka keuangan nyata.
 - [ ] Backup disimpan di luar host dan satu restore drill berhasil.

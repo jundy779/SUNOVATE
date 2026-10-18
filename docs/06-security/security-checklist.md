@@ -1,7 +1,7 @@
 # Security Checklist
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-06
+**Last Updated:** 2026-10-19
 
 ## Purpose
 
@@ -38,6 +38,8 @@ Daftar periksa keamanan yang dijalankan sebelum merge dan sebelum rilis (termasu
 - [ ] Perubahan rekaman memakai `revision`; pembaruan basi menghasilkan 409 `REVISION_CONFLICT`.
 - [ ] Audit log tetap append-only; tidak ada kode yang mengubah atau menghapus baris audit.
 - [ ] Log dan audit tidak memuat token, secret, isi dokumen, atau prompt lengkap berkonteks RESTRICTED.
+- [ ] Access log reverse proxy tidak memuat query string (`$request`, `$request_uri`, `$args`,
+  dan `$query_string` dilarang pada format log).
 - [ ] Error mengikuti [error-format](../07-api/error-format.md) tanpa stack trace.
 
 ### Dependency dan kualitas
@@ -72,6 +74,8 @@ Daftar periksa keamanan yang dijalankan sebelum merge dan sebelum rilis (termasu
 
 ## Server Pilot (komputer tersendiri sebagai server, PROPOSED)
 
+- [ ] `pnpm demo:preflight -- --env-file deploy/demo/demo.env` lulus dengan
+  `environmentFile: PASSED`; hasil tidak memuat nilai environment.
 - [ ] `DATA_BACKEND=postgres` dan hanya `SIMULATED_DATA` sampai klasifikasi dan persetujuan ada (NFR-40, BR-37).
 - [ ] Hanya web atau reverse proxy yang terjangkau dari jaringan pengguna; port API dan PostgreSQL tidak dipaparkan (NFR-42, SEC-71).
 - [ ] TLS terpasang sesuai persyaratan server (OQ-23) dan `CORS_ORIGINS` hanya berisi origin yang diperlukan (SEC-72).

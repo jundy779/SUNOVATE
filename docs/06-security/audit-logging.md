@@ -1,7 +1,7 @@
 # Audit Logging
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-19
 
 ## Purpose
 
@@ -61,6 +61,11 @@ Daftar berikut adalah isi minimum yang diusulkan. Nama kolom final mengikuti mig
 - Data pribadi di luar identitas akun simulasi yang diperlukan untuk atribusi.
 
 Aturan yang sama berlaku untuk log aplikasi JSON (lihat [observability](../11-operations/observability.md)).
+
+Untuk paket demo, access log Nginx hanya mencatat metode dan path (`$request_method $uri`),
+bukan `$request`, `$request_uri`, `$args`, atau `$query_string`. Tujuannya mencegah istilah
+pencarian dan parameter URL masuk log proxy. `pnpm demo:preflight` menegakkan invariant ini.
+Isi body, header Authorization, cookie, dan respons tidak ditambahkan ke format log.
 
 ## Integritas
 

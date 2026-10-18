@@ -13,17 +13,29 @@ Jangan jalankan pada komputer kantor atau mengaktifkan tunnel sebelum mentor ser
 ## Validasi paket
 
 1. Salin `demo.env.example` ke `demo.env` dan ganti seluruh placeholder dengan rahasia acak. `demo.env` tidak boleh masuk Git.
-2. Tinjau `docker-compose.demo.yml`, `nginx/nginx.conf`, dan image yang dipakai bersama administrator.
-3. Jalankan pemeriksaan konfigurasi:
+2. Pada Linux, batasi izin berkas dengan `chmod 600 deploy/demo/demo.env`.
+3. Jalankan preflight statis dan environment. Pemeriksaan ini tidak menyalakan container atau tunnel:
+
+   ```bash
+   pnpm demo:preflight -- --env-file deploy/demo/demo.env
+   ```
+
+4. Tinjau `docker-compose.demo.yml`, `nginx/nginx.conf`, dan image yang dipakai bersama administrator.
+5. Jalankan pemeriksaan konfigurasi Docker:
 
    ```bash
    docker compose --env-file deploy/demo/demo.env \
      -f deploy/demo/docker-compose.demo.yml config --quiet
    ```
 
-4. Setelah seluruh gate disetujui, administrator dapat membangun dan menjalankan paket. Aktivasi Cloudflare tetap langkah terpisah dan tidak disediakan sebagai perintah otomatis.
+6. Setelah seluruh gate disetujui, administrator dapat membangun dan menjalankan paket. Aktivasi Cloudflare tetap langkah terpisah dan tidak disediakan sebagai perintah otomatis.
 
 `cloudflared.example.yml` hanya kerangka tanpa kredensial. Konfigurasi tersebut memakai domain `.invalid` dan tidak dapat menjadi akses publik yang berfungsi.
+
+Preflight tanpa `--env-file` hanya memeriksa scaffold yang dilacak Git. Status
+`environmentFile: NOT_CHECKED` berarti secret dan kesesuaian URL database nyata belum diperiksa.
+Access log Nginx hanya menyimpan metode dan path, bukan query string, agar istilah pencarian tidak
+masuk log proxy.
 
 ## Batas teknis
 

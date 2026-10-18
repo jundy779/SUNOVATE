@@ -120,7 +120,7 @@ Skenario SEC-40 sampai SEC-91 di bawah **PLANNED**: belum ada yang diimplementas
 | SEC-76 | Login dengan mekanisme yang disetujui | Berhasil; dev auth tertutup | OPEN QUESTION (OQ-07); belum dapat ditulis |
 | SEC-77 | Direct peer tidak terdaftar mengirim `X-Forwarded-For` palsu | Header diabaikan; limiter memakai direct peer | Ada: `test_untrusted_peer_cannot_spoof_forwarded_client_ip` |
 | SEC-78 | Proxy tepercaya mengirim chain valid atau cacat | Alamat untrusted terdekat dipakai; chain cacat fail-closed ke direct peer | Ada: `test_trusted_proxy_uses_nearest_untrusted_forwarded_address`, `test_malformed_forwarded_chain_fails_closed_to_direct_peer` |
-| SEC-79 | Paket demo Nginx/Compose | Hanya proxy bind ke `127.0.0.1`; API dan PostgreSQL hanya `expose` pada network internal; body maksimal 3 MiB | Konfigurasi dan parse YAML ada; build/scan port pada host aktual PLANNED karena Docker tidak tersedia di mesin pengembangan |
+| SEC-79 | Paket demo Nginx/Compose dan `demo.env` | Hanya proxy bind ke `127.0.0.1`; API/PostgreSQL hanya `expose`; network internal; body 3 MiB; query string tidak dicatat; placeholder, secret sama/pendek, origin non-loopback, DB eksternal, dan izin file luas ditolak | Ada: `pnpm demo:preflight` dan 10 test fail-closed. Build container serta scan port/log pada host aktual tetap PLANNED karena Docker tidak tersedia |
 
 ### Kanal pesan dan isolasi pilot (FR-55, FR-52)
 
