@@ -98,6 +98,22 @@ pnpm db:test
 - Exit code sama dengan exit code pytest. Direktori data sementara dihapus setelahnya; URL database tidak dicetak.
 - Butuh beberapa menit (sekitar 4 sampai 5 menit di mesin pengembang Windows) karena reset per test. `pnpm test` tetap memakai backend simulated dan tidak butuh PostgreSQL.
 
+## Latihan Restore dan Evaluasi Pencarian PostgreSQL
+
+Setelah dua database uji terpisah tersedia, isi variabel yang tercantum pada
+[backup-and-restore.md](backup-and-restore.md), lalu jalankan:
+
+```powershell
+pnpm db:restore-drill
+pnpm search:eval:postgres
+```
+
+Perintah pertama hanya menerima sumber `SIMULATED_DATA` dan target kosong bernama restore.
+Perintah kedua menggunakan `SUNOVATE_TEST_DATABASE_URL`, `APP_ENV=test`, dan
+`SUNOVATE_SEARCH_EVAL_CONFIRM=SIMULATED_DATA_ONLY`. Keduanya menolak host publik yang tidak
+diizinkan dan tidak mencetak URL database. Jangan menjalankannya terhadap database bersama,
+database produksi, atau database yang datanya perlu dipertahankan.
+
 ## Login Pengembangan
 
 - **PROPOSED**: Login pengembangan memakai token bertanda tangan (HMAC) yang diterbitkan oleh `POST /api/v1/auth/dev/login` untuk pengguna simulasi yang di-seed. Fitur ini nonaktif di luar development (sumber: ADR-005).

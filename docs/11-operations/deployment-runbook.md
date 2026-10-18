@@ -59,6 +59,10 @@ Kerangka berikut hanya struktur. Isinya baru dapat dilengkapi setelah OQ-07 (log
 - [ ] Cloudflare Access memakai MFA/identity yang disetujui, allowlist eksplisit, masa aktif terbatas, log akses, dan prosedur revoke/kill switch.
 - [ ] Hanya `SIMULATED_DATA`; tidak ada dokumen internal, data pribadi, kredensial produksi, atau angka keuangan nyata.
 - [ ] Backup disimpan di luar host dan satu restore drill berhasil.
+- [ ] `pnpm db:restore-drill` berhasil pada dua database uji terpisah; hasil jumlah tabel/baris,
+  revision, trigger audit, ukuran, dan durasi dicatat tanpa URL/kredensial.
+- [ ] `pnpm search:eval:postgres` berhasil pada database hasil restore dengan unauthorized
+  leakage nol.
 - [ ] Load test target 25 pengguna lulus berdasarkan SLA yang disepakati; hasil CPU, RAM, disk, latency, error rate, dan koneksi DB dicatat.
 - [ ] UAT dan rollback owner ditetapkan. Tunnel dimatikan setelah masa demo berakhir.
 

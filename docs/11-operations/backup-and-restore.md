@@ -1,16 +1,21 @@
 # Backup dan Restore
 
-**Status:** PROPOSED
+**Status:** DRAFT
 
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-19
 
 ## Purpose
 
-Mengusulkan pendekatan backup dan restore database SUNOVATE untuk pengembangan lokal, serta mencatat hal yang masih terbuka untuk produksi.
+Menjelaskan latihan backup dan restore yang sudah diotomasi untuk database uji berisi
+`SIMULATED_DATA`, serta mencatat hal yang masih terbuka untuk produksi.
 
 ## Status
 
-- **PROPOSED**: Seluruh prosedur di dokumen ini adalah usulan dan belum diotomasi dalam skrip proyek.
+- **CONFIRMED (implementasi)**: `pnpm db:restore-drill` membuat backup custom sementara,
+  memulihkannya ke database kosong yang berbeda, lalu membandingkan seluruh jumlah baris,
+  revision Alembic, asal data, dan trigger append-only audit.
+- **CONFIRMED (batas validasi)**: Alat dan 11 uji pengamannya tersedia, tetapi latihan aktual
+  belum dijalankan di lingkungan ini karena PostgreSQL/Docker yang dapat dipakai tidak tersedia.
 - **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Hosting pilot adalah komputer tersendiri sebagai server (OQ-07, DEC-20261002-05). Pada satu host, disk yang rusak dapat menghilangkan database dan backup sekaligus bila backup disimpan di host yang sama (R-13).
 - **OPEN QUESTION**: Kebijakan backup produksi (frekuensi, retensi, lokasi di luar host, enkripsi, penanggung jawab) bergantung pada persyaratan server (OQ-23) dan kebijakan retensi (OQ-13).
 
@@ -30,16 +35,41 @@ Mengusulkan pendekatan backup dan restore database SUNOVATE untuk pengembangan l
 | File dokumen | Provider dokumen | Tidak | Tanggung jawab provider (OQ-06) |
 | Konfigurasi dan rahasia | Environment | Tidak | Dikelola terpisah; lihat [secrets-management.md](../06-security/secrets-management.md) |
 
-## Pendekatan Lokal (PROPOSED)
+## Latihan Otomatis untuk Data Simulasi
 
-Untuk lokal, backup biasanya tidak diperlukan karena database dapat dibangun ulang dari migration dan seed. Bila ingin menyimpan keadaan tertentu:
+Prasyarat:
 
-- Backup: gunakan `pg_dump` format custom terhadap database lokal yang ditunjuk `DATABASE_URL`, lalu simpan file hasil di luar folder repository.
-- Restore: buat database kosong, lalu gunakan `pg_restore` dengan file backup tersebut.
-- Bila PostgreSQL berjalan di Docker Compose, jalankan alat tersebut di dalam container service `postgres` atau dari klien PostgreSQL di host dengan versi yang kompatibel dengan pg17.
+- `pg_dump` dan `pg_restore` tersedia pada `PATH`;
+- database sumber hanya memuat `SIMULATED_DATA` dan sudah memiliki migration serta seed;
+- database tujuan sudah dibuat, benar-benar kosong, berbeda dari sumber, dan namanya memuat
+  kata `restore`;
+- kedua host bersifat lokal/private. Nama host internal seperti `postgres` harus dimasukkan
+  secara eksplisit pada `SUNOVATE_BACKUP_ALLOWED_HOSTS`.
 
-- **PROPOSED**: File backup tidak pernah di-commit dan tidak dibagikan, walaupun isinya SIMULATED_DATA.
-- **PROPOSED**: Opsi perintah `pg_dump` dan `pg_restore` mengikuti dokumentasi resmi PostgreSQL; skrip proyek untuk ini belum ada.
+Isi variabel berikut melalui shell atau penyimpanan rahasia lokal. Jangan memasukkan URL nyata
+ke Git atau riwayat perintah bersama.
+
+| Variabel | Nilai yang diwajibkan |
+|---|---|
+| `APP_ENV` | `test` |
+| `SUNOVATE_BACKUP_DRILL_CONFIRM` | `SIMULATED_DATA_ONLY` |
+| `SUNOVATE_BACKUP_SOURCE_URL` | URL database sumber dengan skema `postgresql+psycopg` atau `postgresql+asyncpg` |
+| `SUNOVATE_BACKUP_RESTORE_URL` | URL database kosong dan terpisah; nama database memuat `restore` |
+| `SUNOVATE_BACKUP_ALLOWED_HOSTS` | Opsional; allowlist nama host internal, dipisahkan koma |
+| `SUNOVATE_BACKUP_ALLOWED_SOURCE_DATABASE` | Opsional; nama database sumber persis bila namanya tidak memuat `test`, `simul`, `demo`, atau `restore` |
+
+Jalankan:
+
+```bash
+pnpm db:restore-drill
+```
+
+Alat menolak database sistem, parameter query pada URL, host publik yang tidak diizinkan,
+sumber dan target yang sama, target yang sudah berisi tabel, sumber kosong, serta baris dengan
+`data_origin` selain `SIMULATED_DATA`. Kredensial diteruskan kepada klien PostgreSQL melalui
+environment proses, bukan argumen, dan tidak ditampilkan. File backup sementara dibuat di luar
+repository lalu dihapus otomatis. Alat tidak melakukan `DROP`, `TRUNCATE`, atau penghapusan
+otomatis pada database tujuan.
 
 ## Alur Restore
 
@@ -51,7 +81,7 @@ flowchart LR
     D --> E["Cek health dan sampel data"]
 ```
 
-## Uji Restore (PROPOSED)
+## Pemeriksaan yang Diotomasi
 
 Backup dianggap valid hanya bila pernah berhasil di-restore. Langkah uji:
 
@@ -59,8 +89,14 @@ Backup dianggap valid hanya bila pernah berhasil di-restore. Langkah uji:
 2. Pastikan revision Alembic sama dengan revision saat backup dibuat.
 3. Pastikan trigger append-only `audit_logs` masih aktif.
 4. Bandingkan jumlah baris tabel utama dengan sumber.
-5. Arahkan `DATABASE_URL` ke database hasil restore dan periksa `GET /api/v1/health/database`.
-6. Catat tanggal, ukuran, durasi, dan hasil uji.
+5. Pastikan semua tabel berkolom `data_origin` hanya memuat `SIMULATED_DATA`.
+6. Catat jumlah tabel/baris, ukuran backup, durasi dump/restore/verifikasi, dan revision tanpa
+   mencatat URL atau kredensial.
+
+Pemeriksaan health API dan penyimpanan backup di luar host tetap langkah operasional manual.
+Setelah restore lulus, baseline pencarian PostgreSQL dapat dijalankan terhadap database hasil
+restore dengan `pnpm search:eval:postgres`; lihat
+[integration-testing.md](../10-testing/integration-testing.md).
 
 ## Kebutuhan Produksi (OPEN QUESTION)
 
@@ -72,8 +108,11 @@ Backup dianggap valid hanya bila pernah berhasil di-restore. Langkah uji:
 
 ## Risks
 
-- R-03 Data asli atau sensitif masuk repository atau log; file backup berisiko serupa bila disimpan di folder repository.
+- R-03 Data asli atau sensitif masuk repository atau log; alat latihan sengaja menolak
+  `data_origin` non-simulasi dan tidak mempertahankan file dump.
 - R-10 Simulated store disangka persistence produksi.
+- R-13 Backup pada host yang sama tidak melindungi dari kegagalan host; alat latihan bukan
+  kebijakan backup produksi atau bukti penyimpanan off-host.
 
 ## Related Documents
 

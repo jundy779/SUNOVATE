@@ -116,7 +116,7 @@ Skenario SEC-40 sampai SEC-91 di bawah **PLANNED**: belum ada yang diimplementas
 | SEC-72 | `CORS_ORIGINS` di server | Hanya origin yang diperlukan; tanpa wildcard | PLANNED, pemeriksaan konfigurasi |
 | SEC-73 | `POST /auth/dev/login` dari jaringan pengguna | 404 `DEV_AUTH_DISABLED` | Perilaku ada (`test_dev_auth_disabled_blocks_login_and_access`); pemeriksaan di server PLANNED |
 | SEC-74 | Secret (`DEV_AUTH_SECRET`, password database) berada di luar repository dan berbeda dari `.env.example` | Terbukti lewat inspeksi | PLANNED, pemeriksaan manual |
-| SEC-75 | Latihan backup di luar host lalu restore ke database terpisah | Revision sama, trigger append-only aktif, baris cocok, `/health/database` sukses | PLANNED (AC-24); belum pernah dijalankan |
+| SEC-75 | Latihan backup di luar host lalu restore ke database terpisah | Revision sama, trigger append-only aktif, seluruh jumlah baris cocok, hanya `SIMULATED_DATA`, `/health/database` sukses | PARTIAL: `pnpm db:restore-drill` dan 11 uji fail-closed tersedia; latihan database aktual, penyimpanan off-host, dan health API belum dijalankan karena PostgreSQL/Docker tidak tersedia pada lingkungan validasi ini |
 | SEC-76 | Login dengan mekanisme yang disetujui | Berhasil; dev auth tertutup | OPEN QUESTION (OQ-07); belum dapat ditulis |
 | SEC-77 | Direct peer tidak terdaftar mengirim `X-Forwarded-For` palsu | Header diabaikan; limiter memakai direct peer | Ada: `test_untrusted_peer_cannot_spoof_forwarded_client_ip` |
 | SEC-78 | Proxy tepercaya mengirim chain valid atau cacat | Alamat untrusted terdekat dipakai; chain cacat fail-closed ke direct peer | Ada: `test_trusted_proxy_uses_nearest_untrusted_forwarded_address`, `test_malformed_forwarded_chain_fails_closed_to_direct_peer` |

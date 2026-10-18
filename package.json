@@ -29,7 +29,9 @@
     "db:sql": "uv run --directory apps/api --extra dev alembic upgrade head --sql",
     "db:check": "uv run --no-project --python 3.12 --with pgserver python scripts/validation/db_check_pgserver.py",
     "db:test": "uv run --no-project --python 3.12 --with pgserver python scripts/validation/db_test_pgserver.py",
+    "db:restore-drill": "uv run --directory apps/api --extra dev python -m sunovate_api.db.backup_restore_drill",
     "search:eval": "uv run --directory apps/api --extra dev python -m sunovate_api.evaluation.search_recall",
+    "search:eval:postgres": "uv run --directory apps/api --extra dev python -m sunovate_api.evaluation.search_recall_postgres",
     "demo:load": "uv run --directory apps/api --extra dev python ../../scripts/validation/demo_load_test.py",
     "compose:demo:check": "docker compose --env-file deploy/demo/demo.env.example -f deploy/demo/docker-compose.demo.yml config --quiet",
     "compose:check": "docker compose config --quiet"

@@ -26,13 +26,13 @@ Menjadi sumber status pekerjaan lintas sesi dan lintas AI agent. Setiap perubaha
 | TASK-003 | Fondasi FastAPI, Repository, PostgreSQL, pgvector, Alembic, RBAC, dan audit | MVP | DONE | ADR-002, ADR-003, ADR-015; mode simulated tetap default. |
 | TASK-004 | Monitoring kerja: pembacaan output, tugas, milestone, pending matter, follow-up | MVP | DONE | Endpoint dan halaman baca tersedia. |
 | TASK-005 | CRUD lengkap monitoring kerja dan alur persetujuan | MVP | IN PROGRESS | CRUD API/UI, scope, revision, soft delete, audit, dan test selesai 2026-10-10. Approval tetap NEEDS APPROVAL karena OQ-12/OQ-25. |
-| TASK-006 | Knowledge Hub: ingestion, ekstraksi, chunking, FTS dan semantic retrieval | MVP | IN PROGRESS | Ekstraksi Python di memori untuk TXT/MD/PDF/DOCX/XLSX/XLS simulasi, status `PENDING/EXTRACTED/FAILED/QUARANTINED`, review manusia, chunking, draf, FTS PostgreSQL untuk pencarian umum/draf, dan evaluator 10 kasus telah ada. Rumus Excel tidak dijalankan, berkas sumber tidak disimpan, dan draf tidak masuk pencarian umum/SAVI. Persistensi status ingestion produksi, OCR, pemindai malware, baseline FTS PostgreSQL aktual, FTS untuk retrieval SAVI, dan semantic retrieval belum selesai. |
+| TASK-006 | Knowledge Hub: ingestion, ekstraksi, chunking, FTS dan semantic retrieval | MVP | IN PROGRESS | Ekstraksi Python di memori untuk TXT/MD/PDF/DOCX/XLSX/XLS simulasi, status `PENDING/EXTRACTED/FAILED/QUARANTINED`, review manusia, chunking, draf, FTS PostgreSQL untuk pencarian umum/draf, evaluator 10 kasus, dan runner eksplisit `search:eval:postgres` telah ada. Rumus Excel tidak dijalankan, berkas sumber tidak disimpan, dan draf tidak masuk pencarian umum/SAVI. Baseline PostgreSQL aktual, persistensi status ingestion produksi, OCR, pemindai malware, FTS untuk retrieval SAVI, dan semantic retrieval belum selesai. |
 | TASK-007 | SAVI AI: RAG bersitasi dengan provider AI yang disetujui | MVP | IN PROGRESS | Provider ekstraktif development, reranker leksikal, evidence gate deterministik, respons bukti tidak cukup, dan retry satu kali untuk lima kelompok variasi ejaan tersedia. Kebijakan glosarium OQ-37 dijawab sebagian oleh mentor pada 2026-10-14: sumber peraturan/playbook, review tiga bulanan, singkatan tanpa sumber dilarang, admin belum dipetakan. Tujuh kandidat domain tetap terblokir; reranker model dan ekspansi domain menunggu OQ-11/OQ-37 final. |
 | TASK-008 | Guard domain SUN, prompt-injection defense, output guard, dan human approval | MVP | IN PROGRESS | Guard deterministik, filter retrieval, karantina indikasi injeksi pada ekstraksi/simpan draf simulasi, output guard, approval, dan 24 golden cases tersedia. Deteksi ingestion berbasis aturan dan bukan keputusan final; antrean karantina produksi belum ada. Delapan pertanyaan mentor tetap diblokir dari retrieval/jawaban SAVI sambil menunggu validasi. |
 | TASK-020 | Bahasa antarmuka pengguna nonteknis | MVP | DONE | Pemetaan label terpusat, penggantian istilah teknis pada halaman publik dan ruang kerja, pedoman UI, AC-32, serta test fallback label tersedia. Audit kanal Telegram/WhatsApp dilakukan saat kanal diimplementasikan. |
 | TASK-009 | Generator dokumen/arsip resmi berbasis Python dan template yang disetujui | P1 | PLANNED | Diblokir OQ-16; tidak boleh membuat format resmi dari asumsi. |
 | TASK-010 | Reward/trophy pegawai untuk mendorong kontribusi | P1 | NEEDS APPROVAL | Mekanisme, indikator, fairness, dan dampak perilaku harus disetujui mentor. |
-| TASK-011 | Paket demo satu komputer kantor: Docker Compose, Nginx, web, API, PostgreSQL | Demo | NEEDS APPROVAL | Scaffold `deploy/demo/` tersedia dengan bind localhost-only, network internal, limit Nginx, non-root app container, healthcheck, dan placeholder secret. Belum dibangun karena Docker tidak tersedia; OS, admin, backup, TLS, dan aktivasi menunggu OQ-23. |
+| TASK-011 | Paket demo satu komputer kantor: Docker Compose, Nginx, web, API, PostgreSQL | Demo | NEEDS APPROVAL | Scaffold `deploy/demo/` tersedia dengan bind localhost-only, network internal, limit Nginx, non-root app container, healthcheck, dan placeholder secret. Alat latihan backup-restore fail-closed untuk dua database uji sudah tersedia, tetapi belum dijalankan aktual. Docker/host, OS, admin, backup off-host, TLS, dan aktivasi menunggu OQ-23. |
 | TASK-012 | Akses demo melalui Cloudflare Tunnel dan Cloudflare Access | Demo | NEEDS APPROVAL | Contoh konfigurasi nonaktif memakai domain `.invalid`, tanpa tunnel ID/kredensial dan tanpa service Compose. Aktivasi tetap wajib persetujuan mentor dan TIK/keamanan. |
 | TASK-013 | Load test target sekitar 25 pengguna demo | Demo | IN PROGRESS | Probe privat tersedia. Baseline API-only lokal 25 pengguna/100 request lulus dengan error 0% dan p95 41,26 ms; ini bukan uji aplikasi penuh. Host aktual, SLA, CPU/RAM/disk/DB, ramp-up/steady/spike masih wajib. |
 | TASK-014 | UAT terbatas sekitar 25 pengguna dengan `SIMULATED_DATA` | Demo | NEEDS APPROVAL | Daftar pengguna dan lingkungan menunggu OQ-20; sign-off mentor. |
@@ -51,9 +51,15 @@ Menjadi sumber status pekerjaan lintas sesi dan lintas AI agent. Setiap perubaha
 2. Ikuti urutan pada `implementation-master-plan.md`; jangan memulai ide baru hanya dari gambar referensi.
 3. Tutup open question prioritas tinggi bersama mentor, khususnya OQ-05, OQ-07, OQ-11, OQ-20, OQ-23, OQ-24, dan OQ-25.
 4. Siapkan skenario demo bulan pertama dan selesaikan kontrol API dasar yang tidak bergantung pada integrasi.
-5. Jalankan baseline evaluator pada PostgreSQL di lingkungan yang mendukung database uji, lalu perluas pengujian ekstraksi simulasi dengan PDF/DOCX representatif yang telah disanitasi. Jalankan TASK-022 hanya sebagai pilot parser terisolasi; jangan memasang dependency ke runtime atau mengaktifkan FTS pada retrieval SAVI sebelum gate evaluasi lulus.
-6. Siapkan paket deployment tanpa mengaktifkan tunnel eksternal; setelah persetujuan, lakukan security checklist, backup/restore drill, load test, lalu UAT.
-7. Evaluasi Go, Rust, mobile, load balancing, dan gateway terpisah hanya dari metrik pasca-MVP.
+5. Pada host PostgreSQL uji yang disetujui, jalankan `pnpm db:restore-drill`, lalu
+   `pnpm search:eval:postgres` pada hasil restore. Jangan menganggap uji unit alat sebagai bukti
+   restore aktual atau baseline FTS PostgreSQL.
+6. Perluas pengujian ekstraksi simulasi dengan PDF/DOCX representatif yang telah disanitasi.
+   Jalankan TASK-022 hanya sebagai pilot parser terisolasi; jangan memasang dependency ke runtime
+   atau mengaktifkan FTS pada retrieval SAVI sebelum gate evaluasi lulus.
+7. Siapkan paket deployment tanpa mengaktifkan tunnel eksternal; setelah persetujuan, lakukan
+   security checklist, backup/restore aktual, load test, lalu UAT.
+8. Evaluasi Go, Rust, mobile, load balancing, dan gateway terpisah hanya dari metrik pasca-MVP.
 
 ## Kewajiban Handoff
 

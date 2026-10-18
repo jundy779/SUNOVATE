@@ -64,13 +64,20 @@ Nilai ini adalah baseline pengembangan/demo, bukan angka kapasitas final. Limite
 
 ### Test (hanya diset oleh tooling test)
 
-Variabel berikut tidak dimasukkan ke `.env.example` karena hanya dipakai oleh test dan skrip `pnpm db:test`.
+Variabel berikut tidak dimasukkan ke `.env.example` karena hanya dipakai oleh test dan alat
+validasi database. URL nyata harus diberikan melalui environment lokal, bukan file yang di-commit.
 
 | Variabel | Default | Arti | Nilai yang diizinkan |
 |---|---|---|---|
 | `SUNOVATE_TEST_BACKEND` | `simulated` | Backend yang dipakai `sunovate_api.testing.make_client()` untuk seluruh suite pytest | `simulated` atau `postgres`; nilai lain membuat impor `sunovate_api.testing` gagal |
 | `SUNOVATE_TEST_DATABASE_URL` | Tidak diset | URL database sementara untuk test postgres dan `tests/integration` | URL dengan skema yang diizinkan; wajib bila `SUNOVATE_TEST_BACKEND=postgres` |
 | `SUNOVATE_DB_RESET_ALLOWED` | Tidak diset | Mengizinkan reset `TRUNCATE` + seed per test | Hanya `1`, dan hanya berlaku bersama `APP_ENV=test`; diset oleh `scripts/validation/db_test_pgserver.py` pada database pgserver sementara. Jangan diset terhadap database yang berisi data yang ingin disimpan |
+| `SUNOVATE_BACKUP_SOURCE_URL` | Tidak diset | Sumber `pnpm db:restore-drill` | URL PostgreSQL lokal/private berisi `SIMULATED_DATA`; nama bertanda test/simul/demo/restore atau diizinkan persis |
+| `SUNOVATE_BACKUP_RESTORE_URL` | Tidak diset | Target latihan restore | URL database berbeda, kosong, dan namanya memuat `restore` |
+| `SUNOVATE_BACKUP_DRILL_CONFIRM` | Tidak diset | Konfirmasi data latihan | Harus persis `SIMULATED_DATA_ONLY` bersama `APP_ENV=test` |
+| `SUNOVATE_BACKUP_ALLOWED_HOSTS` | Tidak diset | Allowlist nama host internal non-IP untuk latihan | Daftar nama host dipisahkan koma; tidak diperlukan untuk loopback/private IP |
+| `SUNOVATE_BACKUP_ALLOWED_SOURCE_DATABASE` | Tidak diset | Pengecualian nama sumber tanpa penanda test | Nama database persis; tidak melonggarkan guard host/data |
+| `SUNOVATE_SEARCH_EVAL_CONFIRM` | Tidak diset | Konfirmasi evaluator PostgreSQL | Harus persis `SIMULATED_DATA_ONLY` bersama `APP_ENV=test` |
 
 ### Autentikasi Pengembangan
 

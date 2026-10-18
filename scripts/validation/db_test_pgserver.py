@@ -39,7 +39,16 @@ def prepare(*args: str, env: dict[str, str]) -> None:
 
 def main() -> int:
     data_dir = Path(tempfile.mkdtemp(prefix="sunovate-pg-test-"))
-    server = pgserver.get_server(str(data_dir), cleanup_mode="stop")
+    try:
+        server = pgserver.get_server(str(data_dir), cleanup_mode="stop")
+    except Exception as exc:  # noqa: BLE001 - third-party bootstrap has no stable error type
+        shutil.rmtree(data_dir, ignore_errors=True)
+        print(
+            "DATABASE TEST BLOCKED: pgserver tidak dapat dimulai pada lingkungan ini "
+            f"({type(exc).__name__}); gunakan Docker atau host PostgreSQL uji yang disetujui.",
+            flush=True,
+        )
+        return 2
     try:
         uri = server.get_uri().replace("postgresql://", "postgresql+asyncpg://", 1)
         env = {

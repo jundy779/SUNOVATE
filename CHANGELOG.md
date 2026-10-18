@@ -1,5 +1,25 @@
 # Changelog
 
+## 2026-10-19 — Alat latihan backup-restore dan evaluator PostgreSQL
+
+- Menambahkan `pnpm db:restore-drill` untuk dump custom sementara dan restore ke database uji
+  kosong yang berbeda, kemudian memverifikasi jumlah baris seluruh tabel, revision Alembic,
+  trigger append-only audit, serta asal data `SIMULATED_DATA`.
+- Alat bersifat fail-closed: hanya `APP_ENV=test`, perlu konfirmasi eksplisit, menolak database
+  sistem/sumber sama/target berisi/public host tanpa allowlist, tidak melakukan penghapusan,
+  tidak mencetak URL, dan menghapus file dump sementara di luar repository.
+- Menambahkan `pnpm search:eval:postgres` agar relevance set 10 kasus dapat dijalankan terhadap
+  database uji PostgreSQL atau hasil restore dengan guard yang sama.
+- Menambahkan 15 uji pengaman. Baseline pencarian simulated tetap lulus dengan hit@5 1,00,
+  MRR 1,00, dan kebocoran akses 0.
+- Restore aktual dan baseline FTS PostgreSQL belum diklaim: `pnpm db:test` terblokir karena
+  lingkungan tidak mengizinkan `pgserver` membuat user sistem; Docker juga tidak tersedia.
+- Validasi aktual: Ruff, ESLint, mypy strict (62 source files), TypeScript, 33 tes frontend,
+  265 tes backend lulus dengan 40 tes PostgreSQL dilewati, build produksi bersih setelah cache
+  `.next` dibuat ulang, evaluator simulated lulus, dan SQL Alembic ter-render. Guard tanpa
+  konfigurasi pada kedua alat baru menolak dengan pesan aman; `pnpm db:test` berstatus BLOCKED
+  tanpa traceback kredensial.
+
 ## 2026-10-19 — Paket demo privat dan probe 25 pengguna
 
 - Menambahkan resolusi client IP fail-closed: `X-Forwarded-For` hanya dipakai jika direct peer berada pada CIDR proxy tepercaya; chain berlebih, kosong, atau cacat kembali ke direct peer.

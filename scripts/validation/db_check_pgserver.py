@@ -83,16 +83,25 @@ asyncio.run(main())
 """
 
 
-def main() -> None:
+def main() -> int:
     data_dir = Path(tempfile.mkdtemp(prefix="sunovate-pg-"))
-    server = pgserver.get_server(str(data_dir), cleanup_mode="stop")
+    try:
+        server = pgserver.get_server(str(data_dir), cleanup_mode="stop")
+    except Exception as exc:  # noqa: BLE001 - third-party bootstrap has no stable error type
+        shutil.rmtree(data_dir, ignore_errors=True)
+        print(
+            "DATABASE CHECK BLOCKED: pgserver tidak dapat dimulai pada lingkungan ini "
+            f"({type(exc).__name__}); gunakan Docker atau host PostgreSQL uji yang disetujui.",
+            flush=True,
+        )
+        return 2
     try:
         uri = server.get_uri().replace("postgresql://", "postgresql+asyncpg://", 1)
         env = {**os.environ, "DATABASE_URL": uri, "APP_ENV": "test", "PYTHONIOENCODING": "utf-8"}
         if len(sys.argv) > 2 and sys.argv[1] == "--autogenerate":
             server.psql("CREATE EXTENSION IF NOT EXISTS vector;")
             run("-m", "alembic", "revision", "--autogenerate", "-m", sys.argv[2], env=env)
-            return
+            return 0
         run("-m", "alembic", "upgrade", "head", env=env)
         run("-m", "alembic", "check", env=env)
         run("-m", "sunovate_api.db.seed", env=env)
@@ -100,10 +109,11 @@ def main() -> None:
         run("-c", CHECK_SQL, env=env)
         run("-m", "alembic", "downgrade", "base", env=env)
         print("DATABASE CHECK PASSED")
+        return 0
     finally:
         server.cleanup()
         shutil.rmtree(data_dir, ignore_errors=True)
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

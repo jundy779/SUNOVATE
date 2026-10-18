@@ -73,6 +73,25 @@ pnpm db:sql
 - **CONFIRMED**: Merender SQL migration secara offline tanpa koneksi database (sumber: implementasi scaffold sesi 2026-10-01).
 - **PROPOSED**: Hasil render dipakai untuk review perubahan skema; lihat [migration-guide.md](../11-operations/migration-guide.md).
 
+## Jalur D: Restore dan Evaluasi Pencarian PostgreSQL
+
+```powershell
+pnpm db:restore-drill
+pnpm search:eval:postgres
+```
+
+- **CONFIRMED (implementasi)**: Latihan restore membutuhkan dua URL database uji melalui
+  environment, target kosong, `APP_ENV=test`, dan konfirmasi `SIMULATED_DATA_ONLY`. Alat menolak
+  data non-simulasi, tidak menghapus objek, tidak mempertahankan dump, dan tidak mencetak URL.
+- **CONFIRMED (implementasi)**: Setelah restore, alat membandingkan jumlah baris seluruh tabel,
+  revision Alembic, serta status trigger `audit_logs_append_only`.
+- **CONFIRMED (implementasi)**: `pnpm search:eval:postgres` menjalankan relevance set yang sama
+  melalui backend PostgreSQL eksplisit. Database harus lokal/private dan bertanda
+  test/simul/demo/restore atau diizinkan persis.
+- **PLANNED**: Kedua perintah belum berhasil dijalankan terhadap PostgreSQL aktual pada
+  lingkungan ini. `pnpm db:test` kembali terblokir karena `pgserver` tidak dapat membuat user
+  sistem dan Docker tidak tersedia. Uji unit guard bukan pengganti latihan aktual.
+
 ## Alur Validasi
 
 ```mermaid
