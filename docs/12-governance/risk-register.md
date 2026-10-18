@@ -1,7 +1,7 @@
 # Register Risiko
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-17
+**Last Updated:** 2026-10-18
 
 ## Purpose
 
@@ -45,6 +45,7 @@ Seluruh penilaian di bawah PROPOSED. Pemilik "Pengembang" berarti peserta magang
 | R-22 | Akun utama memiliki override konten atau file terbit dapat ditimpa/dihapus | Hilangnya bukti kerja, manipulasi rekaman, versi RAG tidak dapat ditelusuri, dan audit tidak dapat dipercaya | Sedang | Tinggi | Pisahkan administrasi akses dari kepemilikan konten; PUBLISHED immutable; koreksi lewat versi baru; withdrawal mempertahankan bukti; grant terbatas scope/waktu; separation of duties dan audit wajib | Mentor, knowledge owner, TIK/keamanan | Terbuka (OQ-35) |
 | R-23 | Framework pemrosesan multimodal pihak ketiga membaca path lokal, mengikuti referensi tidak tepercaya, mengirim konten ke provider eksternal, atau menghabiskan resource host | Kebocoran dokumen/kredensial, hasil ingestion salah, denial of service, dan pelanggaran lokasi pemrosesan | Sedang | Tinggi | Adapter terisolasi tanpa DB/egress; input/output volume terbatas; tolak symlink/path/URL eksternal; pin minimal 1.4.2 dan blokir 1.4.1; SBOM/dependency scan; batas CPU/RAM/waktu/disk; fallback parser Python; hanya data simulasi sampai OQ-11 dan review keamanan selesai | Pengembang; TIK/keamanan dan pemilik data OPEN QUESTION | Terbuka |
 | R-24 | Aplikasi, respons, dokumen, atau hasil SAVI terekspos ke internet, cache, crawler, AI Search, SEO/GEO/AIO, agent/model eksternal, telemetry, atau exfiltration melalui jailbreak | Kebocoran data sensitif, penyebaran tidak terkendali, pelanggaran tata kelola, dan hilangnya kepercayaan | Sedang | Tinggi | Private-data lock fail-closed; no-store; anti-index; robots deny-all; CSP same-origin; docs API nonpublik; RBAC dan klasifikasi sebelum retrieval; pola exfiltration ditolak; data asli dilarang; sebelum data asli wajib jaringan privat, firewall egress deny-by-default, SSO/MFA, TLS, audit, dan pentest | Project lead, Pengembang; TIK/keamanan dan pemilik data OPEN QUESTION | Termitigasi sebagian; infrastruktur belum diverifikasi |
+| R-25 | Limiter memori dianggap perlindungan produksi atau alamat proxy dianggap IP pengguna | Batas dapat terpecah antarworker, hilang saat restart, atau seluruh pengguna berbagi satu identitas; abuse dan denial of service tetap mungkin | Sedang | Sedang | Label satu proses; tidak percaya `X-Forwarded-For`; batas key; limit global dan per kelompok; Nginx/firewall limit, trusted proxy, load test, dan observability wajib sebelum deployment | Pengembang; administrator dan TIK/keamanan OPEN QUESTION | Termitigasi sebagian |
 
 ## Status Risiko
 

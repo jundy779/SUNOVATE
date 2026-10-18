@@ -1,7 +1,7 @@
 # Architecture Decisions (ADR)
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-17
+**Last Updated:** 2026-10-18
 
 ## Purpose
 Rincian konteks, keputusan, alternatif, dan konsekuensi. Ringkasan dan status ada di [decision-log.md](../12-governance/decision-log.md).
@@ -119,6 +119,16 @@ Rincian konteks, keputusan, alternatif, dan konsekuensi. Ringkasan dan status ad
 - **Alternatif ditolak:** hanya mengandalkan `robots.txt`, prompt larangan, nama route tersembunyi, atau pernyataan kebijakan. Keempatnya bukan security boundary.
 - **Konsekuensi:** Integrasi eksternal, tunnel, analytics, web search, RAG pihak ketiga, dan model AI publik fail-closed. Perubahan lock ini memerlukan ADR pengganti, review keamanan, dan persetujuan resmi.
 - **Rincian:** [private-data-boundary](../06-security/private-data-boundary.md).
+
+### ADR-019 Kontrol API satu proses sebelum reverse proxy
+
+- **Status:** PROPOSED, IMPLEMENTED untuk baseline demo; belum menjadi klaim kesiapan produksi.
+- **Konteks:** TASK-021 membutuhkan pembatasan request sebelum handler berjalan tanpa menambah Redis, gateway terpisah, atau dependency baru pada modular monolith.
+- **Keputusan:** FastAPI menerapkan sliding-window rate limiter dalam memori dengan batas global serta kelompok login, SAVI, pencarian, ingestion, dan default. Identitas memakai alamat koneksi dan hash satu arah authorization; nilai token mentah tidak disimpan. Body dibaca maksimal 3 MiB, termasuk aliran tanpa `Content-Length`, dengan timeout 15 detik. Penolakan menghasilkan envelope standar 408, 413, atau 429 serta `Retry-After` untuk 429.
+- **Metrik:** Hanya counter agregat per proses yang disimpan pada state aplikasi dan log aman. Tidak ada endpoint metrik publik. Body, token, dan isi pertanyaan tidak dicatat.
+- **Batas:** State hilang saat restart dan tidak dibagi antarworker/host. Alamat `X-Forwarded-For` tidak dipercaya. Deployment harus menambahkan batas di reverse proxy/firewall dan konfigurasi trusted proxy yang ditinjau. Timeout respons menyeluruh tidak dipaksakan pada handler sinkron karena pembatalan respons tidak menghentikan thread yang mungkin masih menjalankan transaksi; DB tetap memakai statement timeout, sedangkan circuit breaker menunggu provider eksternal disetujui.
+- **Alternatif ditolak:** Redis atau API gateway terpisah sebelum ada kebutuhan multi-instance; kepercayaan langsung pada forwarded header; timeout global yang dapat meninggalkan operasi tulis berjalan setelah klien menerima kegagalan.
+- **Konsekuensi:** Baseline satu host lebih tahan request berlebih dan payload besar, tetapi load test, Nginx limit, observability resmi, dan review TIK/keamanan tetap menjadi gate deployment.
 
 ## Related Documents
 - [decision-log.md](../12-governance/decision-log.md)

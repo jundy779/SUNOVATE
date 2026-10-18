@@ -2,7 +2,7 @@
 
 **Status:** DRAFT
 
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-18
 
 ## Purpose
 
@@ -26,6 +26,28 @@ Kolom "Default" berisi nilai pengembangan. Bila tertulis "lihat `.env.example`",
 | `LOG_LEVEL` | `INFO` | Level log JSON | `DEBUG`, `INFO`, `WARNING`, `ERROR` |
 | `CORS_ORIGINS` | Lihat `.env.example` | Origin yang boleh memanggil API dari browser | Daftar origin; lokal `http://localhost:3000` |
 | `SUNOVATE_API_URL` | Lihat `.env.example` | Alamat API yang dipanggil server Next.js (sisi server) | URL; lokal `http://localhost:8000` |
+| `PRIVATE_DATA_MODE` | `true` | Lock bahwa runtime selalu privat | Hanya `true`; nilai lain menggagalkan startup |
+| `PUBLIC_INDEXING_ENABLED` | `false` | Lock pengindeksan publik | Hanya `false` |
+| `EXTERNAL_AI_DATA_EGRESS_ENABLED` | `false` | Lock pengiriman data ke AI luar | Hanya `false` |
+| `EXTERNAL_AGENT_ACCESS_ENABLED` | `false` | Lock agent/tool eksternal | Hanya `false` |
+| `TELEMETRY_DATA_EGRESS_ENABLED` | `false` | Lock telemetry yang membawa data aplikasi | Hanya `false` |
+
+### Kontrol API satu host
+
+| Variabel | Default | Arti | Batas konfigurasi |
+|---|---|---|---|
+| `API_MAX_REQUEST_BYTES` | `3145728` | Batas body aktual/deklaratif sebelum handler | 65.536 sampai 52.428.800 byte; reverse proxy harus sama atau lebih ketat |
+| `API_BODY_READ_TIMEOUT_SECONDS` | `15` | Batas waktu menerima body | 1 sampai 60 detik |
+| `API_RATE_LIMIT_WINDOW_SECONDS` | `60` | Jendela sliding limiter | 10 sampai 3.600 detik |
+| `API_RATE_LIMIT_MAX_KEYS` | `10000` | Batas identitas dalam memori | 100 sampai 100.000 |
+| `API_GLOBAL_RATE_LIMIT` | `600` | Batas global per alamat koneksi per jendela | 10 sampai 100.000 |
+| `API_DEFAULT_RATE_LIMIT` | `180` | Batas endpoint umum per identitas | 1 sampai 100.000 |
+| `API_LOGIN_RATE_LIMIT` | `20` | Batas login pengembangan | 1 sampai 10.000 |
+| `API_SAVI_RATE_LIMIT` | `60` | Batas pertanyaan SAVI | 1 sampai 10.000 |
+| `API_SEARCH_RATE_LIMIT` | `120` | Batas pencarian | 1 sampai 10.000 |
+| `API_INGESTION_RATE_LIMIT` | `20` | Batas preview ekstraksi | 1 sampai 10.000 |
+
+Nilai ini adalah baseline pengembangan/demo, bukan angka kapasitas final. Limiter berada di memori satu proses, tidak dibagi antarworker, tidak mempercayai `X-Forwarded-For`, dan tidak menggantikan Nginx, firewall, atau load test host aktual (ADR-019).
 
 ### Data
 
@@ -87,6 +109,8 @@ Variabel berikut tidak dimasukkan ke `.env.example` karena hanya dipakai oleh te
 5. **PROPOSED**: Nilai contoh di `.env.example` hanya untuk mesin lokal dan harus diganti di lingkungan lain.
 6. **PROPOSED**: Penambahan variabel baru wajib diikuti pembaruan `.env.example` dan dokumen ini pada perubahan yang sama.
 7. **OPEN QUESTION**: Mekanisme penyimpanan rahasia di lingkungan produksi bergantung pada hosting yang disetujui (OQ-07); lihat [secrets-management.md](../06-security/secrets-management.md).
+8. **Diimplementasikan**: lock data privat menerima hanya nilai aman; upaya mengaktifkan indexing/AI egress/agent/telemetry menggagalkan startup (ADR-018).
+9. **PROPOSED**: nilai kontrol API di lingkungan demo ditetapkan setelah load test dan harus sama atau lebih ketat pada reverse proxy. Jangan memperbesar batas hanya untuk meloloskan file yang tidak sesuai kebijakan.
 
 ## Related Documents
 

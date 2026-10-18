@@ -1,7 +1,7 @@
 # Task Tracker SUNOVATE
 
 **Status:** ACTIVE
-**Last Updated:** 2026-10-17
+**Last Updated:** 2026-10-18
 
 ## Purpose
 
@@ -41,7 +41,7 @@ Menjadi sumber status pekerjaan lintas sesi dan lintas AI agent. Setiap perubaha
 | TASK-017 | PWA dan aplikasi Android/iOS (Flutter atau native wrapper) | Pasca-MVP | DEFERRED | API dan auth harus stabil; kebijakan distribusi perangkat belum ditentukan. |
 | TASK-018 | Keputusan hosting produksi: private cloud/Azure/internal data center/hybrid | Produksi | NEEDS APPROVAL | Keputusan instansi/TIK; komputer kantor bukan target produksi. |
 | TASK-019 | Draft Workspace dan file pekerjaan terbit yang immutable | Pasca-MVP | NEEDS APPROVAL | Desain teknis, status, model kandidat, API kandidat, UI, permission, dan AC-26 sampai AC-31 selesai 2026-10-11. Permission, provider, approval chain, penarikan, dan retensi menunggu OQ-35; kode belum diimplementasikan. |
-| TASK-021 | Kontrol API Gateway pada modular monolith: rate limit, batas request, timeout, security headers, metrik | Foundation | IN PROGRESS | Routing `/api/v1`, request ID, error format, CORS, auth, RBAC, audit, no-store, anti-index, CSP, frame denial, no-referrer, dan resource policy sudah ada. Rate limit, batas request menyeluruh, timeout, dan metrik masih direncanakan; load balancing dan gateway terpisah tetap DEFERRED untuk demo 25 pengguna. |
+| TASK-021 | Kontrol API Gateway pada modular monolith: rate limit, batas request, timeout, security headers, metrik | Foundation | IN PROGRESS | Routing `/api/v1`, request ID, error format, CORS, auth, RBAC, audit, security headers, limiter global/per kelompok, batas body aktual/deklaratif, timeout penerimaan body, `Retry-After`, dan counter privat per proses sudah ada. Reverse-proxy limit, trusted client IP, timeout respons menyeluruh, metrik operasional resmi, dan circuit breaker provider tetap menunggu paket deployment/integrasi; gateway terpisah DEFERRED. |
 | TASK-022 | Pilot RAG-Anything sebagai pemroses dokumen multimodal terisolasi | AI & Data | IN PROGRESS | ADR-017, rencana pilot, risk R-23, dan preflight fail-closed tersedia. Parser/dependency belum dipasang; hanya fixture `SIMULATED_DATA`; benchmark, sandbox worker, SBOM, security test, dan OQ-11 masih diperlukan. |
 | TASK-023 | Batas data privat dan pencegahan publikasi/AI exfiltration | Foundation | IN PROGRESS | Lock startup untuk mode privat dan larangan public indexing/AI egress/agent eksternal/telemetry egress; header no-store dan anti-index; robots menolak semua path; CSP same-origin; docs API disembunyikan di non-development; pola exfiltration/jailbreak ditolak sebelum retrieval. Verifikasi firewall egress, jaringan privat, SSO/MFA, pentest, dan persetujuan TIK/pemilik data masih wajib sebelum data asli. |
 

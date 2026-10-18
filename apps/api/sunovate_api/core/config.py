@@ -41,6 +41,19 @@ class Settings(BaseSettings):
     external_agent_access_enabled: Literal[False] = False
     telemetry_data_egress_enabled: Literal[False] = False
 
+    # Single-host API controls (ADR-019). Reverse proxy controls remain mandatory
+    # for an approved deployment and must not trust arbitrary forwarded headers.
+    api_max_request_bytes: int = Field(default=3_145_728, ge=65_536, le=52_428_800)
+    api_body_read_timeout_seconds: int = Field(default=15, ge=1, le=60)
+    api_rate_limit_window_seconds: int = Field(default=60, ge=10, le=3_600)
+    api_rate_limit_max_keys: int = Field(default=10_000, ge=100, le=100_000)
+    api_global_rate_limit: int = Field(default=600, ge=10, le=100_000)
+    api_default_rate_limit: int = Field(default=180, ge=1, le=100_000)
+    api_login_rate_limit: int = Field(default=20, ge=1, le=10_000)
+    api_savi_rate_limit: int = Field(default=60, ge=1, le=10_000)
+    api_search_rate_limit: int = Field(default=120, ge=1, le=10_000)
+    api_ingestion_rate_limit: int = Field(default=20, ge=1, le=10_000)
+
     # Runtime data backend. `postgres` uses DATABASE_URL (validated by db/urls.py at startup).
     data_backend: DataBackendName = "simulated"
     database_url: str = "postgresql+asyncpg://sunovate:sunovate_local@localhost:5432/sunovate"

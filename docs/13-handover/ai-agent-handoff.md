@@ -1,7 +1,7 @@
 # AI Agent Handoff
 
 **Status:** ACTIVE
-**Last Updated:** 2026-10-17
+**Last Updated:** 2026-10-18
 
 ## Baca Sebelum Bertindak
 
@@ -11,6 +11,7 @@ Urutan wajib: root `AGENTS.md`, [task-tracker.md](task-tracker.md), [developer-h
 
 - SUNOVATE adalah modular monolith Next.js/TypeScript + FastAPI/Python + PostgreSQL/pgvector. Nama asisten pada frontend adalah **SAVI AI**; beberapa nama internal lama masih dapat memakai `HermesGateway` dan tidak boleh diganti massal tanpa migration plan.
 - **Aturan yang tidak boleh dinegosiasikan:** SUNOVATE privat. Jangan memublikasikan, mengindeks, atau mengirim data ke AI Search, SEO/GEO/AIO, crawler, scraper, model/agent eksternal, MCP, plugin, webhook, telemetry, atau kanal umum. Data asli tetap dilarang. Jangan melonggarkan lock konfigurasi, header anti-index/no-store, CSP, RBAC, batas klasifikasi, dan penolakan exfiltration/jailbreak. Lihat `private-data-boundary.md` dan ADR-018.
+- Kontrol API ADR-019 menggunakan limiter memori satu proses, batas body 3 MiB, timeout penerimaan body, dan counter privat. Jangan mengklaimnya distributed atau production-ready. Jangan percaya `X-Forwarded-For` tanpa konfigurasi proxy tepercaya; deployment tetap membutuhkan limit Nginx/firewall, pengujian host, dan observability yang disetujui.
 - Semua demo memakai `SIMULATED_DATA`. Tidak ada integrasi produksi yang aktif atau boleh diklaim tersedia.
 - Target demo yang sedang diusulkan adalah sekitar 25 pengguna pada satu komputer kantor khusus, menggunakan Docker Compose dan reverse proxy. Cloudflare Tunnel + Cloudflare Access adalah **PROPOSED** dan belum boleh diaktifkan tanpa persetujuan mentor serta TIK/keamanan.
 - Komputer kantor adalah target demo/UAT sementara, bukan arsitektur produksi. Produksi menunggu keputusan private cloud/Azure/internal data center/hybrid.

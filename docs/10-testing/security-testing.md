@@ -2,7 +2,7 @@
 
 **Status:** PROPOSED
 
-**Last Updated:** 2026-10-11
+**Last Updated:** 2026-10-18
 
 ## Purpose
 
@@ -33,6 +33,10 @@ Menetapkan skenario pengujian keamanan SUNOVATE untuk autentikasi, otorisasi, kl
 | SEC-11 | Dev auth dimatikan | `POST /auth/dev/login` mengembalikan 404 `DEV_AUTH_DISABLED` |
 | SEC-12 | `APP_ENV=production` dengan dev auth aktif | Aplikasi menolak start (sumber: ADR-005) |
 | SEC-13 | Menu disembunyikan di frontend tetapi API dipanggil langsung | API tetap menolak (menu hanya kosmetik, ADR-006) |
+| SEC-14 | Login melampaui batas dalam satu jendela waktu | 429 `RATE_LIMITED`, `Retry-After`, handler tidak dijalankan |
+| SEC-15 | `Content-Length` atau body aktual melampaui batas | 413 `REQUEST_TOO_LARGE`, body tidak masuk validasi endpoint |
+| SEC-16 | Authorization dipakai sebagai identitas limiter | Nilai mentah tidak disimpan; hanya hash satu arah berumur proses |
+| SEC-17 | Penolakan kontrol API | Counter agregat bertambah tanpa endpoint metrik publik dan tanpa body/token pada log |
 
 ## Skenario Hermes
 

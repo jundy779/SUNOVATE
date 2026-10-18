@@ -1,7 +1,7 @@
 # Rencana Induk Implementasi SUNOVATE
 
 **Status:** ACTIVE, NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-17
+**Last Updated:** 2026-10-18
 
 ## Tujuan
 
@@ -65,9 +65,10 @@ Urutan pekerjaan:
 | RBAC, scope tim, dan klasifikasi | IMPLEMENTED pada scaffold | Validasi matriks bersama mentor dan uji PostgreSQL |
 | Audit logging | IMPLEMENTED | Tinjau retensi dan akses auditor |
 | CORS | IMPLEMENTED, perlu konfigurasi lingkungan | Batasi ke origin demo yang disetujui |
-| Rate limiting | PLANNED | Prioritaskan login, pencarian, unggah, dan SAVI |
-| Batas ukuran request dan unggahan | PLANNED | Tetapkan berdasarkan kebijakan dokumen |
-| Timeout dan circuit breaker layanan eksternal | PARTIAL / PLANNED | Terapkan saat provider eksternal pertama disetujui |
+| Rate limiting | IMPLEMENTED untuk satu proses | Validasi pada host demo; tambahkan limit reverse proxy sebelum deployment |
+| Batas ukuran request dan unggahan | IMPLEMENTED baseline 3 MiB | Selaraskan dengan kebijakan dokumen dan reverse proxy |
+| Timeout dan circuit breaker layanan eksternal | PARTIAL | Timeout penerimaan body dan DB sudah ada; timeout respons/circuit breaker diterapkan saat provider eksternal disetujui |
+| Metrik kontrol API | IMPLEMENTED privat per proses | Hubungkan ke observability resmi tanpa body, token, atau data sensitif setelah alat disetujui |
 | Cache | DEFERRED | Hanya untuk data tidak sensitif dan setelah pola akses terukur |
 | Load balancing | DEFERRED | Tidak dibutuhkan untuk demo satu komputer sekitar 25 pengguna |
 

@@ -1,7 +1,7 @@
 # Error Format
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-18
 
 ## Purpose
 Format error yang konsisten untuk semua endpoint `/api/v1` (implementasi: `apps/api/sunovate_api/core/errors.py`).
@@ -32,6 +32,9 @@ Format error yang konsisten untuk semua endpoint `/api/v1` (implementasi: `apps/
 | 404 | `NOT_FOUND` | record tidak ada **atau** tidak boleh dibaca (BR-20) |
 | 404 | `DEV_AUTH_DISABLED` | login dev dipanggil saat dev auth nonaktif |
 | 405 | `METHOD_NOT_ALLOWED` | metode HTTP tidak didukung |
+| 408 | `REQUEST_BODY_TIMEOUT` | body tidak selesai diterima dalam batas waktu konfigurasi |
+| 413 | `REQUEST_TOO_LARGE` | ukuran body melebihi `API_MAX_REQUEST_BYTES`; handler tidak dijalankan |
+| 429 | `RATE_LIMITED` | batas global atau kelompok endpoint terlampaui; respons membawa `Retry-After` |
 | 409 | `REVISION_CONFLICT` | `revision` tidak cocok; `details.currentRevision` |
 | 409 | `DUPLICATE_CHECKSUM` | versi dokumen dengan checksum yang sama sudah ada |
 | 409 | `INVALID_STATE` | transisi status tidak sah (mis. mengubah knowledge PUBLISHED, memutuskan approval yang sudah diputuskan) |
@@ -57,6 +60,8 @@ Format error yang konsisten untuk semua endpoint `/api/v1` (implementasi: `apps/
 - 403: tampilkan halaman `/unauthorized`.
 - 404: tampilkan not-found; jangan menyiratkan bahwa record ada.
 - 409 `REVISION_CONFLICT`: minta pengguna memuat ulang data.
+- 408/429: tunggu sesuai kebijakan klien dan `Retry-After`; jangan mengulang tanpa batas.
+- 413: kecilkan berkas atau payload. Jangan memecah data untuk melewati kebijakan ukuran.
 
 ## Related Documents
 - [api-conventions.md](api-conventions.md)

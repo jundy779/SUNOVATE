@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-10-18 — Kontrol API satu proses
+
+- Menambahkan sliding-window rate limiter tanpa dependency baru dengan batas global serta kelompok login, SAVI, pencarian, ingestion, dan endpoint umum.
+- Menolak body deklaratif maupun aktual di atas 3 MiB sebelum handler dengan 413, memberi timeout penerimaan body 15 detik dengan 408, dan mengembalikan 429 plus `Retry-After` saat batas request tercapai.
+- Menggunakan hash satu arah authorization untuk identitas limiter tanpa menyimpan token mentah, membatasi jumlah key, dan tidak mempercayai `X-Forwarded-For`.
+- Menambahkan counter agregat privat per proses tanpa endpoint metrik publik dan tanpa mencatat body, token, atau isi pertanyaan.
+- Menambahkan ADR-019, R-25, SEC-14 sampai SEC-17, dokumentasi konfigurasi, error contract, serta delapan pengujian regresi. Reverse proxy, trusted client IP, metrik resmi, dan limit multi-instance tetap gate deployment.
+- Validasi aktual: Ruff, ESLint, mypy strict, TypeScript, 33 tes frontend, 246 tes backend, build produksi, dan render SQL Alembic lulus; 40 pengujian PostgreSQL dilewati pada mode simulated.
+
 ## 2026-10-17 — Batas data privat dan pencegahan exfiltration
 
 - Mengunci SUNOVATE pada mode privat: public indexing, egress data ke AI, akses agent eksternal, dan telemetry egress tidak dapat diaktifkan melalui konfigurasi; nilai tidak aman menggagalkan startup.

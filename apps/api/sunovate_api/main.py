@@ -13,6 +13,12 @@ from fastapi.responses import JSONResponse
 from starlette.concurrency import run_in_threadpool
 
 from .context import AppRuntime, build_runtime
+from .core.api_controls import (
+    ApiControlMetrics,
+    InMemoryRateLimiter,
+    buffer_request_body,
+    client_rate_identity,
+)
 from .core.config import Settings, get_settings
 from .core.errors import error_body, log_unhandled_error, register_error_handlers
 from .core.logging import configure_logging, request_id_var
@@ -34,6 +40,19 @@ _PRIVATE_RESPONSE_HEADERS = {
     "Cross-Origin-Resource-Policy": "same-origin",
     "Cross-Origin-Opener-Policy": "same-origin",
 }
+
+
+def _rate_bucket(request: Request, settings: Settings) -> tuple[str, int]:
+    path = request.url.path
+    if path.endswith("/auth/dev/login"):
+        return "login", settings.api_login_rate_limit
+    if path.endswith("/hermes/query"):
+        return "savi", settings.api_savi_rate_limit
+    if "/search" in path:
+        return "search", settings.api_search_rate_limit
+    if path.endswith("/knowledge/extract-preview"):
+        return "ingestion", settings.api_ingestion_rate_limit
+    return "default", settings.api_default_rate_limit
 
 
 def create_app(settings: Settings | None = None, runtime: AppRuntime | None = None) -> FastAPI:
@@ -66,6 +85,9 @@ def create_app(settings: Settings | None = None, runtime: AppRuntime | None = No
         ),
     )
     app.state.runtime = runtime
+    limiter = InMemoryRateLimiter(max_keys=settings.api_rate_limit_max_keys)
+    control_metrics = ApiControlMetrics()
+    app.state.api_control_metrics = control_metrics
 
     app.add_middleware(
         CORSMiddleware,
@@ -83,9 +105,52 @@ def create_app(settings: Settings | None = None, runtime: AppRuntime | None = No
         request_id = incoming if 0 < len(incoming) <= _REQUEST_ID_MAX else str(uuid4())
         token = request_id_var.set(request_id)
         started = time.perf_counter()
+        rejection: str | None = None
+        response: Response
         try:
             try:
-                response = await call_next(request)
+                identity = client_rate_identity(request)
+                global_decision = limiter.check(
+                    f"global:{request.client.host if request.client else 'unknown'}",
+                    limit=settings.api_global_rate_limit,
+                    window_seconds=settings.api_rate_limit_window_seconds,
+                )
+                bucket, bucket_limit = _rate_bucket(request, settings)
+                rate_decision = global_decision
+                if global_decision.allowed:
+                    rate_decision = limiter.check(
+                        f"{bucket}:{identity}",
+                        limit=bucket_limit,
+                        window_seconds=settings.api_rate_limit_window_seconds,
+                    )
+                if not rate_decision.allowed:
+                    rejection = "rate_limit"
+                    response = JSONResponse(
+                        error_body(
+                            "RATE_LIMITED",
+                            "Terlalu banyak permintaan. Silakan coba kembali beberapa saat lagi.",
+                        ),
+                        429,
+                        headers={"Retry-After": str(rate_decision.retry_after_seconds)},
+                    )
+                else:
+                    body_decision = await buffer_request_body(
+                        request,
+                        max_bytes=settings.api_max_request_bytes,
+                        timeout_seconds=settings.api_body_read_timeout_seconds,
+                    )
+                    if body_decision.status_code is not None:
+                        rejection = (body_decision.error_code or "request_body").lower()
+                        response = JSONResponse(
+                            error_body(
+                                body_decision.error_code or "BAD_REQUEST",
+                                body_decision.message or "Permintaan tidak dapat diproses",
+                            ),
+                            body_decision.status_code,
+                            headers={"Connection": "close"},
+                        )
+                    else:
+                        response = await call_next(request)
             except Exception as exc:  # noqa: BLE001 - last resort: sanitized log + generic 500
                 log_unhandled_error(exc)
                 response = JSONResponse(
@@ -94,14 +159,23 @@ def create_app(settings: Settings | None = None, runtime: AppRuntime | None = No
             response.headers["X-Request-ID"] = request_id
             for name, value in _PRIVATE_RESPONSE_HEADERS.items():
                 response.headers[name] = value
+            duration_ms = round((time.perf_counter() - started) * 1000, 2)
+            control_metrics.record(
+                status_code=response.status_code,
+                duration_ms=duration_ms,
+                rejection=rejection,
+            )
+            log_extra: dict[str, object] = {
+                "method": request.method,
+                "path": request.url.path,
+                "status": response.status_code,
+                "durationMs": duration_ms,
+            }
+            if rejection is not None:
+                log_extra["controlRejection"] = rejection
             logger.info(
                 "request",
-                extra={
-                    "method": request.method,
-                    "path": request.url.path,
-                    "status": response.status_code,
-                    "durationMs": round((time.perf_counter() - started) * 1000, 2),
-                },
+                extra=log_extra,
             )
             return response
         finally:
