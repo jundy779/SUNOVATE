@@ -7,6 +7,7 @@ types make it impossible to configure an unimplemented production provider.
 from __future__ import annotations
 
 from functools import lru_cache
+from ipaddress import IPv4Network, IPv6Network, ip_network
 from pathlib import Path
 from typing import Literal
 
@@ -53,6 +54,9 @@ class Settings(BaseSettings):
     api_savi_rate_limit: int = Field(default=60, ge=1, le=10_000)
     api_search_rate_limit: int = Field(default=120, ge=1, le=10_000)
     api_ingestion_rate_limit: int = Field(default=20, ge=1, le=10_000)
+    # Empty by default: forwarded client addresses are ignored unless the direct
+    # peer belongs to one of these explicitly reviewed proxy networks.
+    api_trusted_proxy_cidrs: str = ""
 
     # Runtime data backend. `postgres` uses DATABASE_URL (validated by db/urls.py at startup).
     data_backend: DataBackendName = "simulated"
@@ -89,6 +93,21 @@ class Settings(BaseSettings):
     @property
     def cors_origin_list(self) -> list[str]:
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
+
+    @property
+    def api_trusted_proxy_networks(self) -> tuple[IPv4Network | IPv6Network, ...]:
+        networks: list[IPv4Network | IPv6Network] = []
+        for raw_network in self.api_trusted_proxy_cidrs.split(","):
+            candidate = raw_network.strip()
+            if not candidate:
+                continue
+            try:
+                networks.append(ip_network(candidate, strict=True))
+            except ValueError as exc:
+                raise ValueError(
+                    "API_TRUSTED_PROXY_CIDRS must contain canonical IPv4/IPv6 CIDRs"
+                ) from exc
+        return tuple(networks)
 
 
 @lru_cache

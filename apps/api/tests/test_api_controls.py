@@ -10,7 +10,9 @@ from sunovate_api.core.api_controls import (
     InMemoryRateLimiter,
     buffer_request_body,
     client_rate_identity,
+    resolve_client_ip,
 )
+from sunovate_api.core.config import Settings
 from sunovate_api.testing import make_client
 
 
@@ -165,3 +167,56 @@ def test_rate_identity_never_contains_raw_authorization_value() -> None:
     identity = client_rate_identity(request)
     assert secret not in identity
     assert "127.0.0.1" in identity
+
+
+def _request_with_forwarded_for(*, peer: str, forwarded_for: str) -> Request:
+    return Request(
+        {
+            "type": "http",
+            "method": "GET",
+            "path": "/api/v1/health",
+            "headers": [(b"x-forwarded-for", forwarded_for.encode("ascii"))],
+            "client": (peer, 1234),
+        }
+    )
+
+
+def test_untrusted_peer_cannot_spoof_forwarded_client_ip() -> None:
+    request = _request_with_forwarded_for(peer="198.51.100.20", forwarded_for="203.0.113.9")
+    settings = Settings(_env_file=None, api_trusted_proxy_cidrs="127.0.0.1/32")
+
+    assert (
+        resolve_client_ip(request, trusted_proxy_networks=settings.api_trusted_proxy_networks)
+        == "198.51.100.20"
+    )
+
+
+def test_trusted_proxy_uses_nearest_untrusted_forwarded_address() -> None:
+    request = _request_with_forwarded_for(
+        peer="172.30.0.10", forwarded_for="192.0.2.44, 172.30.0.11"
+    )
+    settings = Settings(_env_file=None, api_trusted_proxy_cidrs="172.30.0.0/28")
+
+    assert (
+        resolve_client_ip(request, trusted_proxy_networks=settings.api_trusted_proxy_networks)
+        == "192.0.2.44"
+    )
+
+
+def test_malformed_forwarded_chain_fails_closed_to_direct_peer() -> None:
+    request = _request_with_forwarded_for(
+        peer="172.30.0.10", forwarded_for="not-an-ip, 192.0.2.44"
+    )
+    settings = Settings(_env_file=None, api_trusted_proxy_cidrs="172.30.0.10/32")
+
+    assert (
+        resolve_client_ip(request, trusted_proxy_networks=settings.api_trusted_proxy_networks)
+        == "172.30.0.10"
+    )
+
+
+def test_trusted_proxy_cidrs_must_be_canonical() -> None:
+    settings = Settings(_env_file=None, api_trusted_proxy_cidrs="172.30.0.10/24")
+
+    with pytest.raises(ValueError, match="canonical"):
+        _ = settings.api_trusted_proxy_networks

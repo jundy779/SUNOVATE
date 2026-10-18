@@ -1,7 +1,7 @@
 # Decision Log
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-18
+**Last Updated:** 2026-10-19
 
 ## Purpose
 
@@ -35,7 +35,7 @@ Dokumen ini mencatat ringkasan keputusan proyek SUNOVATE beserta status dan damp
 | ADR-016 | 2026-10-09 | Baseline demo sekitar 25 pengguna pada satu komputer kantor; Docker Compose + Nginx; Cloudflare Tunnel/Access sebagai opsi akses; Go/Rust/mobile ditunda | Menyediakan demo realistis tanpa menyamakan komputer kantor dengan produksi atau menambah stack sebelum kebutuhan terbukti | PROPOSED (project lead); NEEDS APPROVAL mentor dan TIK/keamanan | Hanya `SIMULATED_DATA`; wajib load/security/backup test; produksi menunggu keputusan instansi | [deployment-architecture](../03-architecture/deployment-architecture.md), [task-tracker](../13-handover/task-tracker.md) |
 | ADR-017 | 2026-10-16 | Menilai RAG-Anything sebagai adapter parser-only terisolasi, bukan pengganti SAVI atau kontrol SUNOVATE | Menambah kemampuan dokumen multimodal tanpa memberi framework pihak ketiga kewenangan data, publikasi, atau akses database | PROPOSED; preflight implemented, parser NOT ENABLED | Versi 1.4.1 diblokir, kandidat minimal 1.4.2; tanpa egress; hanya fixture simulasi; adopsi menunggu OQ-11, security test, dan benchmark | [rag-anything-pilot](../05-ai-rag/rag-anything-pilot.md), [architecture-decisions](../03-architecture/architecture-decisions.md) |
 | ADR-018 | 2026-10-17 | Menetapkan private-data boundary deny-by-default dan memblokir public indexing serta egress AI/agent/telemetry | Data SUNOVATE tidak boleh menjadi publik, ditemukan mesin/AI pencari, atau keluar melalui integrasi dan jailbreak | ACTIVE PROJECT SAFETY BASELINE; deployment data asli NEEDS APPROVAL | Lock konfigurasi, no-store/anti-index/CSP, robots deny-all, docs API nonpublik, serta penolakan exfiltration; kontrol jaringan dan persetujuan masih wajib | [private-data-boundary](../06-security/private-data-boundary.md), [architecture-decisions](../03-architecture/architecture-decisions.md) |
-| ADR-019 | 2026-10-18 | Menambahkan limiter dan batas body satu proses sebelum reverse proxy | Mengurangi abuse dan payload berlebih pada demo modular monolith tanpa Redis/gateway baru | PROPOSED, IMPLEMENTED baseline | 408/413/429, `Retry-After`, body 3 MiB, timeout body 15 detik, counter privat; reverse proxy dan multi-instance belum tercakup | [architecture-decisions](../03-architecture/architecture-decisions.md), [environment-configuration](../11-operations/environment-configuration.md) |
+| ADR-019 | 2026-10-18 | Menambahkan kontrol API satu proses dan paket reverse proxy demo | Mengurangi abuse dan payload berlebih tanpa Redis/gateway baru | PROPOSED, IMPLEMENTED baseline/package | 408/413/429, body 3 MiB, timeout body/proxy, counter privat, trusted CIDR fail-closed, Nginx localhost-only; multi-instance dan observability resmi belum tercakup | [architecture-decisions](../03-architecture/architecture-decisions.md), [environment-configuration](../11-operations/environment-configuration.md) |
 
 ### DEC-20261016-01
 

@@ -2,7 +2,7 @@
 
 **Status:** PROPOSED
 
-**Last Updated:** 2026-10-09
+**Last Updated:** 2026-10-19
 
 ## Purpose
 
@@ -16,6 +16,7 @@ Mencatat langkah deployment yang sudah dapat dijalankan (lokal) dan kerangka usu
 - **OPEN QUESTION**: Lingkungan UAT (OQ-20).
 - **PROPOSED (project lead, 2026-10-09)**: Target demo sekitar 25 pengguna; Docker Compose + Nginx pada komputer khusus; Cloudflare Tunnel + Access sebagai opsi yang belum diaktifkan (OQ-34, ADR-016).
 - **CONFIRMED**: SUNOVATE belum siap produksi; lihat [known-limitations.md](../13-handover/known-limitations.md).
+- **PROPOSED, IMPLEMENTED package**: `deploy/demo/` berisi Compose/Nginx/Dockerfile serta contoh konfigurasi tunnel yang sengaja tidak aktif. Paket hanya bind ke localhost dan belum diuji dengan Docker pada mesin pengembangan.
 
 ## Bagian A: Deployment Lokal (Diimplementasikan)
 
@@ -33,6 +34,19 @@ Mencatat langkah deployment yang sudah dapat dijalankan (lokal) dan kerangka usu
 
 - **CONFIRMED**: Docker Compose hanya berisi service `postgres` (image `pgvector/pgvector:pg17`); web dan API dijalankan langsung di host (sumber: implementasi scaffold sesi 2026-10-01).
 - **CONFIRMED**: Jalur Docker belum divalidasi di mesin pengembangan saat ini karena Docker tidak terpasang.
+
+## Bagian A2: Paket Demo yang Belum Diaktifkan
+
+Paket tersedia di `deploy/demo/README.md`. Environment nyata tidak disertakan dan tidak boleh masuk Git. Pemeriksaan berikut baru boleh dijalankan pada host yang disetujui:
+
+```bash
+docker compose --env-file deploy/demo/demo.env \
+  -f deploy/demo/docker-compose.demo.yml config --quiet
+```
+
+Tidak ada service `cloudflared` di Compose. `cloudflared.example.yml` memakai domain `.invalid`, tanpa ID tunnel dan tanpa kredensial, sehingga tidak mengaktifkan akses eksternal.
+
+Probe lokal dapat dijalankan dengan `pnpm demo:load`. Baseline 2026-10-19 hanya menguji FastAPI lokal: 25 pengguna virtual, 100 request, error 0%, p95 41,26 ms. Pengujian seluruh Compose pada komputer kantor tetap PLANNED.
 
 ## Bagian B: Kerangka Deployment Lingkungan Lain (PROPOSED)
 

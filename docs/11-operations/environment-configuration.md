@@ -2,7 +2,7 @@
 
 **Status:** DRAFT
 
-**Last Updated:** 2026-10-18
+**Last Updated:** 2026-10-19
 
 ## Purpose
 
@@ -46,8 +46,9 @@ Kolom "Default" berisi nilai pengembangan. Bila tertulis "lihat `.env.example`",
 | `API_SAVI_RATE_LIMIT` | `60` | Batas pertanyaan SAVI | 1 sampai 10.000 |
 | `API_SEARCH_RATE_LIMIT` | `120` | Batas pencarian | 1 sampai 10.000 |
 | `API_INGESTION_RATE_LIMIT` | `20` | Batas preview ekstraksi | 1 sampai 10.000 |
+| `API_TRUSTED_PROXY_CIDRS` | kosong | CIDR direct peer yang boleh meneruskan `X-Forwarded-For` | Daftar CIDR IPv4/IPv6 kanonis dipisahkan koma; kosong berarti seluruh forwarded address diabaikan |
 
-Nilai ini adalah baseline pengembangan/demo, bukan angka kapasitas final. Limiter berada di memori satu proses, tidak dibagi antarworker, tidak mempercayai `X-Forwarded-For`, dan tidak menggantikan Nginx, firewall, atau load test host aktual (ADR-019).
+Nilai ini adalah baseline pengembangan/demo, bukan angka kapasitas final. Limiter berada di memori satu proses dan tidak dibagi antarworker. `X-Forwarded-For` hanya dibaca jika direct peer cocok dengan `API_TRUSTED_PROXY_CIDRS`; chain cacat kembali ke direct peer. Konfigurasi ini tidak menggantikan Nginx, firewall, atau load test host aktual (ADR-019).
 
 ### Data
 

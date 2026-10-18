@@ -1,0 +1,12 @@
+# PROPOSED ONLY — do not run before mentor and TIK/security approval (OQ-34).
+# This file contains no tunnel ID, credential, token, internal hostname, or user list.
+tunnel: <APPROVED_TUNNEL_UUID>
+credentials-file: <APPROVED_CREDENTIALS_FILE>
+
+ingress:
+  - hostname: sunovate-demo.example.invalid
+    service: http://127.0.0.1:8080
+    originRequest:
+      connectTimeout: 5s
+      httpHostHeader: sunovate-demo.example.invalid
+  - service: http_status:404

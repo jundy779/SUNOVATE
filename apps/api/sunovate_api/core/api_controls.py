@@ -14,6 +14,7 @@ import time
 from collections import defaultdict, deque
 from collections.abc import Callable
 from dataclasses import dataclass
+from ipaddress import IPv4Address, IPv4Network, IPv6Address, IPv6Network, ip_address
 from threading import Lock
 
 from fastapi import Request
@@ -129,9 +130,55 @@ async def buffer_request_body(
     return RequestBodyDecision(total)
 
 
-def client_rate_identity(request: Request) -> str:
+IpAddress = IPv4Address | IPv6Address
+IpNetwork = IPv4Network | IPv6Network
+
+
+def resolve_client_ip(
+    request: Request,
+    *,
+    trusted_proxy_networks: tuple[IpNetwork, ...] = (),
+) -> str:
+    """Resolve a client address without trusting arbitrary forwarded headers.
+
+    A forwarded chain is considered only when the direct peer is an IP inside an
+    explicitly configured trusted proxy network. Malformed or excessive chains
+    fail closed to the direct peer.
+    """
+    direct_peer = request.client.host if request.client is not None else "unknown"
+    try:
+        peer_address = ip_address(direct_peer)
+    except ValueError:
+        return direct_peer
+    if not _address_in_networks(peer_address, trusted_proxy_networks):
+        return str(peer_address)
+
+    raw_forwarded = request.headers.get("x-forwarded-for", "")
+    if not raw_forwarded or len(raw_forwarded) > 2_048:
+        return str(peer_address)
+    parts = [part.strip() for part in raw_forwarded.split(",")]
+    if not parts or len(parts) > 32 or any(not part for part in parts):
+        return str(peer_address)
+    try:
+        forwarded = [ip_address(part) for part in parts]
+    except ValueError:
+        return str(peer_address)
+
+    # Walk from the proxy nearest to the application towards the client. The
+    # first address outside the trusted proxy set is the effective client.
+    for candidate in reversed([*forwarded, peer_address]):
+        if not _address_in_networks(candidate, trusted_proxy_networks):
+            return str(candidate)
+    return str(forwarded[0])
+
+
+def _address_in_networks(address: IpAddress, networks: tuple[IpNetwork, ...]) -> bool:
+    return any(address.version == network.version and address in network for network in networks)
+
+
+def client_rate_identity(request: Request, *, client_ip: str | None = None) -> str:
     """Return a non-secret identity; raw authorization values are never retained."""
-    client_host = request.client.host if request.client is not None else "unknown"
+    client_host = client_ip or resolve_client_ip(request)
     authorization = request.headers.get("authorization")
     if not authorization:
         return f"ip:{client_host}"

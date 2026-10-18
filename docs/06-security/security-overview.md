@@ -1,7 +1,7 @@
 # Security Overview
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-18
+**Last Updated:** 2026-10-19
 
 ## Purpose
 
@@ -30,7 +30,7 @@ Merangkum prinsip keamanan SUNOVATE, batas kepercayaan (trust boundary) antarkom
 | Audit | Login, perubahan data, keputusan approval, penolakan akses, query dan feedback Hermes dicatat di `audit_logs` yang append-only | CONFIRMED (scaffold) |
 | Human approval | Write intent Hermes tidak pernah dieksekusi, hanya membuat approval request `PENDING` | CONFIRMED (scaffold) |
 | Private by construction | API menolak konfigurasi public indexing/AI egress/agent eksternal/telemetry egress; web dan API memakai anti-index serta no-store | CONFIRMED (scaffold, ADR-018) |
-| Abuse controls | Limiter satu proses, batas body aktual/deklaratif, timeout body, dan counter privat berjalan sebelum handler | PROPOSED, IMPLEMENTED baseline (ADR-019) |
+| Abuse controls | Limiter satu proses, batas body aktual/deklaratif, timeout body, trusted proxy fail-closed, counter privat, dan paket Nginx demo | PROPOSED, IMPLEMENTED baseline/package (ADR-019); host aktual belum diuji |
 
 ## Trust boundary
 

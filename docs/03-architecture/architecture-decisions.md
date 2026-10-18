@@ -1,7 +1,7 @@
 # Architecture Decisions (ADR)
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-18
+**Last Updated:** 2026-10-19
 
 ## Purpose
 Rincian konteks, keputusan, alternatif, dan konsekuensi. Ringkasan dan status ada di [decision-log.md](../12-governance/decision-log.md).
@@ -124,11 +124,12 @@ Rincian konteks, keputusan, alternatif, dan konsekuensi. Ringkasan dan status ad
 
 - **Status:** PROPOSED, IMPLEMENTED untuk baseline demo; belum menjadi klaim kesiapan produksi.
 - **Konteks:** TASK-021 membutuhkan pembatasan request sebelum handler berjalan tanpa menambah Redis, gateway terpisah, atau dependency baru pada modular monolith.
-- **Keputusan:** FastAPI menerapkan sliding-window rate limiter dalam memori dengan batas global serta kelompok login, SAVI, pencarian, ingestion, dan default. Identitas memakai alamat koneksi dan hash satu arah authorization; nilai token mentah tidak disimpan. Body dibaca maksimal 3 MiB, termasuk aliran tanpa `Content-Length`, dengan timeout 15 detik. Penolakan menghasilkan envelope standar 408, 413, atau 429 serta `Retry-After` untuk 429.
+- **Keputusan:** FastAPI menerapkan sliding-window rate limiter dalam memori dengan batas global serta kelompok login, SAVI, pencarian, ingestion, dan default. Identitas memakai alamat koneksi dan hash satu arah authorization; nilai token mentah tidak disimpan. Body dibaca maksimal 3 MiB, termasuk aliran tanpa `Content-Length`, dengan timeout 15 detik. Penolakan menghasilkan envelope standar 408, 413, atau 429 serta `Retry-After` untuk 429. Forwarded client IP hanya dipakai bila direct peer berada pada CIDR proxy tepercaya yang dikonfigurasi eksplisit; chain cacat kembali ke direct peer.
 - **Metrik:** Hanya counter agregat per proses yang disimpan pada state aplikasi dan log aman. Tidak ada endpoint metrik publik. Body, token, dan isi pertanyaan tidak dicatat.
-- **Batas:** State hilang saat restart dan tidak dibagi antarworker/host. Alamat `X-Forwarded-For` tidak dipercaya. Deployment harus menambahkan batas di reverse proxy/firewall dan konfigurasi trusted proxy yang ditinjau. Timeout respons menyeluruh tidak dipaksakan pada handler sinkron karena pembatalan respons tidak menghentikan thread yang mungkin masih menjalankan transaksi; DB tetap memakai statement timeout, sedangkan circuit breaker menunggu provider eksternal disetujui.
+- **Reverse proxy demo:** Paket `deploy/demo/` menambahkan Nginx dengan batas 3 MiB, timeout koneksi/body/upstream, limit koneksi/request, header privat, dan error JSON. Compose hanya bind `127.0.0.1`; API/PostgreSQL tidak dipublikasikan. Paket dan contoh Cloudflare tetap `PROPOSED` serta tidak diaktifkan.
+- **Batas:** State aplikasi hilang saat restart dan tidak dibagi antarworker/host. CIDR proxy kosong secara default dan wajib ditinjau per lingkungan. Timeout Nginx menghentikan koneksi klien tetapi tidak diklaim membatalkan transaksi backend. DB tetap memakai statement timeout, sedangkan circuit breaker menunggu provider eksternal disetujui.
 - **Alternatif ditolak:** Redis atau API gateway terpisah sebelum ada kebutuhan multi-instance; kepercayaan langsung pada forwarded header; timeout global yang dapat meninggalkan operasi tulis berjalan setelah klien menerima kegagalan.
-- **Konsekuensi:** Baseline satu host lebih tahan request berlebih dan payload besar, tetapi load test, Nginx limit, observability resmi, dan review TIK/keamanan tetap menjadi gate deployment.
+- **Konsekuensi:** Baseline satu host lebih tahan request berlebih dan payload besar. Probe lokal 25 pengguna virtual tersedia, tetapi pengujian Docker/host aktual, observability resmi, dan review TIK/keamanan tetap menjadi gate deployment.
 
 ## Related Documents
 - [decision-log.md](../12-governance/decision-log.md)

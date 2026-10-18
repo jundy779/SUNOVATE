@@ -1,7 +1,7 @@
 # Deployment Architecture
 
 **Status:** NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-09
+**Last Updated:** 2026-10-19
 
 ## Purpose
 Menjelaskan deployment lokal yang sudah ada dan usulan deployment yang menunggu keputusan hosting.
@@ -50,6 +50,8 @@ flowchart TB
 - **PROPOSED** Cloudflare Access menjadi lapisan pembatas akses demo, bukan identity provider bisnis SUNOVATE. Tunnel tidak membuka port inbound langsung, tetapi tetap merupakan jalur pihak ketiga yang harus masuk threat review, logging, daftar akun, dan prosedur pencabutan akses.
 - **PROPOSED** Target sekitar 25 pengguna wajib dibuktikan dengan load test berdasarkan spesifikasi host aktual; angka ini bukan klaim kapasitas.
 - **NEEDS APPROVAL** Domain/subdomain, akun Cloudflare milik instansi, egress firewall, administrator, daftar pengguna, durasi demo, dan penghentian tunnel.
+- **PROPOSED, IMPLEMENTED package** `deploy/demo/` memuat Dockerfile web/API, Compose, Nginx, environment contoh, dan konfigurasi Cloudflare nonaktif. Hanya Nginx bind ke `127.0.0.1`; API serta PostgreSQL berada pada network internal. Paket belum dibangun di Docker atau dijalankan pada komputer kantor.
+- **CONFIRMED (baseline pengembangan 2026-10-19)** Probe API-only 25 pengguna virtual/100 request lulus tanpa error dengan p95 41,26 ms. Ini memvalidasi probe lokal saja dan bukan klaim kapasitas aplikasi penuh atau host demo.
 
 ## Usulan target (PROPOSED)
 

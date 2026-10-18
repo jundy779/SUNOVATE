@@ -1,7 +1,7 @@
 # Rencana Induk Implementasi SUNOVATE
 
 **Status:** ACTIVE, NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-18
+**Last Updated:** 2026-10-19
 
 ## Tujuan
 
@@ -65,9 +65,10 @@ Urutan pekerjaan:
 | RBAC, scope tim, dan klasifikasi | IMPLEMENTED pada scaffold | Validasi matriks bersama mentor dan uji PostgreSQL |
 | Audit logging | IMPLEMENTED | Tinjau retensi dan akses auditor |
 | CORS | IMPLEMENTED, perlu konfigurasi lingkungan | Batasi ke origin demo yang disetujui |
-| Rate limiting | IMPLEMENTED untuk satu proses | Validasi pada host demo; tambahkan limit reverse proxy sebelum deployment |
-| Batas ukuran request dan unggahan | IMPLEMENTED baseline 3 MiB | Selaraskan dengan kebijakan dokumen dan reverse proxy |
-| Timeout dan circuit breaker layanan eksternal | PARTIAL | Timeout penerimaan body dan DB sudah ada; timeout respons/circuit breaker diterapkan saat provider eksternal disetujui |
+| Rate limiting | IMPLEMENTED untuk satu proses dan konfigurasi Nginx demo | Validasi paket pada Docker/host demo yang disetujui |
+| Batas ukuran request dan unggahan | IMPLEMENTED baseline 3 MiB pada API dan Nginx demo | Selaraskan dengan kebijakan dokumen sebelum deployment |
+| Trusted client IP | IMPLEMENTED fail-closed | CIDR proxy kosong secara default; validasi alamat proxy pada host demo |
+| Timeout dan circuit breaker layanan eksternal | PARTIAL | Timeout body, database, dan proxy tersedia; circuit breaker diterapkan saat provider eksternal disetujui |
 | Metrik kontrol API | IMPLEMENTED privat per proses | Hubungkan ke observability resmi tanpa body, token, atau data sensitif setelah alat disetujui |
 | Cache | DEFERRED | Hanya untuk data tidak sensitif dan setelah pola akses terukur |
 | Load balancing | DEFERRED | Tidak dibutuhkan untuk demo satu komputer sekitar 25 pengguna |
@@ -148,7 +149,7 @@ Urutan ini berlaku sampai ada keputusan mentor yang mengubah prioritas:
 
 1. Rapikan baseline requirement dan daftar keputusan yang masih terbuka.
 2. Siapkan naskah serta alur demo bulan pertama menggunakan data simulasi.
-3. Tuntaskan kontrol API yang tidak bergantung pada integrasi: rate limit, batas request, dan security headers.
+3. Validasi paket Nginx/Compose, trusted proxy, dan probe 25 pengguna pada host demo yang disetujui; jangan aktifkan tunnel.
 4. Tuntaskan pengujian repository PostgreSQL dan otorisasi.
 5. Siapkan ingestion dokumen simulasi dari ekstraksi sampai preview chunk. Jalankan preflight dan benchmark parser-only RAG-Anything secara terisolasi tanpa memublikasikan hasilnya.
 6. Minta keputusan mentor untuk sumber RAG, model AI, login, klasifikasi, server, dan UAT.

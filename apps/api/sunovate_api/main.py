@@ -18,6 +18,7 @@ from .core.api_controls import (
     InMemoryRateLimiter,
     buffer_request_body,
     client_rate_identity,
+    resolve_client_ip,
 )
 from .core.config import Settings, get_settings
 from .core.errors import error_body, log_unhandled_error, register_error_handlers
@@ -87,6 +88,7 @@ def create_app(settings: Settings | None = None, runtime: AppRuntime | None = No
     app.state.runtime = runtime
     limiter = InMemoryRateLimiter(max_keys=settings.api_rate_limit_max_keys)
     control_metrics = ApiControlMetrics()
+    trusted_proxy_networks = settings.api_trusted_proxy_networks
     app.state.api_control_metrics = control_metrics
 
     app.add_middleware(
@@ -109,9 +111,12 @@ def create_app(settings: Settings | None = None, runtime: AppRuntime | None = No
         response: Response
         try:
             try:
-                identity = client_rate_identity(request)
+                client_ip = resolve_client_ip(
+                    request, trusted_proxy_networks=trusted_proxy_networks
+                )
+                identity = client_rate_identity(request, client_ip=client_ip)
                 global_decision = limiter.check(
-                    f"global:{request.client.host if request.client else 'unknown'}",
+                    f"global:{client_ip}",
                     limit=settings.api_global_rate_limit,
                     window_seconds=settings.api_rate_limit_window_seconds,
                 )

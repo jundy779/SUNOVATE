@@ -2,7 +2,7 @@
 
 **Status:** PROPOSED
 
-**Last Updated:** 2026-10-18
+**Last Updated:** 2026-10-19
 
 ## Purpose
 
@@ -118,6 +118,9 @@ Skenario SEC-40 sampai SEC-91 di bawah **PLANNED**: belum ada yang diimplementas
 | SEC-74 | Secret (`DEV_AUTH_SECRET`, password database) berada di luar repository dan berbeda dari `.env.example` | Terbukti lewat inspeksi | PLANNED, pemeriksaan manual |
 | SEC-75 | Latihan backup di luar host lalu restore ke database terpisah | Revision sama, trigger append-only aktif, baris cocok, `/health/database` sukses | PLANNED (AC-24); belum pernah dijalankan |
 | SEC-76 | Login dengan mekanisme yang disetujui | Berhasil; dev auth tertutup | OPEN QUESTION (OQ-07); belum dapat ditulis |
+| SEC-77 | Direct peer tidak terdaftar mengirim `X-Forwarded-For` palsu | Header diabaikan; limiter memakai direct peer | Ada: `test_untrusted_peer_cannot_spoof_forwarded_client_ip` |
+| SEC-78 | Proxy tepercaya mengirim chain valid atau cacat | Alamat untrusted terdekat dipakai; chain cacat fail-closed ke direct peer | Ada: `test_trusted_proxy_uses_nearest_untrusted_forwarded_address`, `test_malformed_forwarded_chain_fails_closed_to_direct_peer` |
+| SEC-79 | Paket demo Nginx/Compose | Hanya proxy bind ke `127.0.0.1`; API dan PostgreSQL hanya `expose` pada network internal; body maksimal 3 MiB | Konfigurasi dan parse YAML ada; build/scan port pada host aktual PLANNED karena Docker tidak tersedia di mesin pengembangan |
 
 ### Kanal pesan dan isolasi pilot (FR-55, FR-52)
 

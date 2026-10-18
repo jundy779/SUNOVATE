@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-10-19 — Paket demo privat dan probe 25 pengguna
+
+- Menambahkan resolusi client IP fail-closed: `X-Forwarded-For` hanya dipakai jika direct peer berada pada CIDR proxy tepercaya; chain berlebih, kosong, atau cacat kembali ke direct peer.
+- Menambahkan paket `deploy/demo/` berisi image web/API, Compose satu host, Nginx dengan rate/body/connection limit, timeout, security header, network internal, healthcheck, dan bind hanya ke `127.0.0.1`.
+- Menyediakan contoh Cloudflare Tunnel yang tidak aktif, memakai domain `.invalid`, tanpa tunnel ID, kredensial, service Compose, atau perintah aktivasi.
+- Menambahkan probe load berbasis pustaka standar Python yang menolak target publik. Baseline API-only lokal 25 pengguna virtual/100 request lulus: error 0%, p95 41,26 ms; hasil bukan klaim kapasitas aplikasi penuh atau komputer kantor.
+- Docker/host kantor, backup/restore, login resmi, TLS, observability resmi, circuit breaker provider, dan UAT tetap memerlukan persetujuan serta validasi.
+- Validasi aktual: Ruff, ESLint, mypy strict, TypeScript, 33 tes frontend, 250 tes backend, build produksi bersih, parse YAML paket demo, probe lokal 25 pengguna, dan render SQL Alembic lulus; 40 pengujian PostgreSQL dilewati pada mode simulated. Docker Compose/Nginx belum dapat dibangun karena Docker tidak tersedia di lingkungan pengembangan.
+
 ## 2026-10-18 — Kontrol API satu proses
 
 - Menambahkan sliding-window rate limiter tanpa dependency baru dengan batas global serta kelompok login, SAVI, pencarian, ingestion, dan endpoint umum.

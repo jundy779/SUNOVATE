@@ -23,6 +23,7 @@ __pycache__/
 .env
 .env.*
 !.env.example
+deploy/demo/demo.env
 
 # Local document storage (references only; never commit files)
 infrastructure/local/documents/*

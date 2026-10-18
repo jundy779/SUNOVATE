@@ -2,7 +2,7 @@
 
 **Status:** DRAFT
 
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-19
 
 ## Purpose
 
@@ -15,6 +15,8 @@ Menjelaskan log, korelasi request, health check, dan audit pada SUNOVATE, serta 
 - **CONFIRMED**: Endpoint health: `GET /api/v1/health` dan `GET /api/v1/health/database` (sumber: implementasi scaffold sesi 2026-10-01).
 - **CONFIRMED**: Level log diatur oleh `LOG_LEVEL` (sumber: implementasi scaffold sesi 2026-10-01).
 - **CONFIRMED**: Audit log adalah data bisnis yang bersifat append-only; di PostgreSQL ditegakkan oleh trigger (sumber: ADR-010).
+- **CONFIRMED (implementasi)**: Kontrol API menyimpan counter agregat privat per proses; tidak ada endpoint metrik publik (ADR-019).
+- **PROPOSED, IMPLEMENTED package**: Nginx demo mencatat request ID, alamat koneksi, method/path, status, ukuran respons, durasi, dan user-agent tanpa body atau header otorisasi. Paket belum dijalankan pada host kantor.
 
 ## Korelasi Request
 
@@ -80,6 +82,8 @@ sequenceDiagram
 - Alerting dan penanggung jawabnya.
 
 Semua butir di atas bergantung pada hosting yang disetujui (OQ-07) dan tidak ditambahkan tanpa kebutuhan yang divalidasi.
+
+Probe load lokal menulis ringkasan ke terminal atau berkas yang dipilih operator: jumlah request, status, error rate, throughput, serta p50/p95/p99. Probe tidak mengirim kredensial maupun data bisnis dan tidak mengukur CPU/RAM/disk host; metrik host tetap harus dicatat oleh administrator saat uji sebenarnya.
 
 ## Related Documents
 

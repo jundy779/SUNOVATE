@@ -1,7 +1,7 @@
 # Task Tracker SUNOVATE
 
 **Status:** ACTIVE
-**Last Updated:** 2026-10-18
+**Last Updated:** 2026-10-19
 
 ## Purpose
 
@@ -32,16 +32,16 @@ Menjadi sumber status pekerjaan lintas sesi dan lintas AI agent. Setiap perubaha
 | TASK-020 | Bahasa antarmuka pengguna nonteknis | MVP | DONE | Pemetaan label terpusat, penggantian istilah teknis pada halaman publik dan ruang kerja, pedoman UI, AC-32, serta test fallback label tersedia. Audit kanal Telegram/WhatsApp dilakukan saat kanal diimplementasikan. |
 | TASK-009 | Generator dokumen/arsip resmi berbasis Python dan template yang disetujui | P1 | PLANNED | Diblokir OQ-16; tidak boleh membuat format resmi dari asumsi. |
 | TASK-010 | Reward/trophy pegawai untuk mendorong kontribusi | P1 | NEEDS APPROVAL | Mekanisme, indikator, fairness, dan dampak perilaku harus disetujui mentor. |
-| TASK-011 | Paket demo satu komputer kantor: Docker Compose, Nginx, web, API, PostgreSQL | Demo | NEEDS APPROVAL | Komputer khusus berasal dari jawaban knowledge owner; detail OS, admin, backup, TLS menunggu OQ-23. |
-| TASK-012 | Akses demo melalui Cloudflare Tunnel dan Cloudflare Access | Demo | NEEDS APPROVAL | Usulan project lead 2026-10-09; wajib persetujuan mentor dan TIK/keamanan sebelum aktivasi. |
-| TASK-013 | Load test target sekitar 25 pengguna demo | Demo | PLANNED | Skenario, SLA, spesifikasi host, dan data uji harus dicatat. |
+| TASK-011 | Paket demo satu komputer kantor: Docker Compose, Nginx, web, API, PostgreSQL | Demo | NEEDS APPROVAL | Scaffold `deploy/demo/` tersedia dengan bind localhost-only, network internal, limit Nginx, non-root app container, healthcheck, dan placeholder secret. Belum dibangun karena Docker tidak tersedia; OS, admin, backup, TLS, dan aktivasi menunggu OQ-23. |
+| TASK-012 | Akses demo melalui Cloudflare Tunnel dan Cloudflare Access | Demo | NEEDS APPROVAL | Contoh konfigurasi nonaktif memakai domain `.invalid`, tanpa tunnel ID/kredensial dan tanpa service Compose. Aktivasi tetap wajib persetujuan mentor dan TIK/keamanan. |
+| TASK-013 | Load test target sekitar 25 pengguna demo | Demo | IN PROGRESS | Probe privat tersedia. Baseline API-only lokal 25 pengguna/100 request lulus dengan error 0% dan p95 41,26 ms; ini bukan uji aplikasi penuh. Host aktual, SLA, CPU/RAM/disk/DB, ramp-up/steady/spike masih wajib. |
 | TASK-014 | UAT terbatas sekitar 25 pengguna dengan `SIMULATED_DATA` | Demo | NEEDS APPROVAL | Daftar pengguna dan lingkungan menunggu OQ-20; sign-off mentor. |
 | TASK-015 | Layanan Go untuk gateway, webhook, notifikasi, atau worker berkongkurensi tinggi | Pasca-MVP | DEFERRED | Hanya ditambahkan jika metrik beban menunjukkan kebutuhan; bukan syarat 25 pengguna. |
 | TASK-016 | Komponen Rust untuk validasi file, checksum, parsing aman, atau redaction | Pasca-MVP | DEFERRED | Hanya setelah kebutuhan keamanan/performa terbukti dan threat review selesai. |
 | TASK-017 | PWA dan aplikasi Android/iOS (Flutter atau native wrapper) | Pasca-MVP | DEFERRED | API dan auth harus stabil; kebijakan distribusi perangkat belum ditentukan. |
 | TASK-018 | Keputusan hosting produksi: private cloud/Azure/internal data center/hybrid | Produksi | NEEDS APPROVAL | Keputusan instansi/TIK; komputer kantor bukan target produksi. |
 | TASK-019 | Draft Workspace dan file pekerjaan terbit yang immutable | Pasca-MVP | NEEDS APPROVAL | Desain teknis, status, model kandidat, API kandidat, UI, permission, dan AC-26 sampai AC-31 selesai 2026-10-11. Permission, provider, approval chain, penarikan, dan retensi menunggu OQ-35; kode belum diimplementasikan. |
-| TASK-021 | Kontrol API Gateway pada modular monolith: rate limit, batas request, timeout, security headers, metrik | Foundation | IN PROGRESS | Routing `/api/v1`, request ID, error format, CORS, auth, RBAC, audit, security headers, limiter global/per kelompok, batas body aktual/deklaratif, timeout penerimaan body, `Retry-After`, dan counter privat per proses sudah ada. Reverse-proxy limit, trusted client IP, timeout respons menyeluruh, metrik operasional resmi, dan circuit breaker provider tetap menunggu paket deployment/integrasi; gateway terpisah DEFERRED. |
+| TASK-021 | Kontrol API Gateway pada modular monolith: rate limit, batas request, timeout, security headers, metrik | Foundation | IN PROGRESS | Kontrol aplikasi sebelumnya ditambah trusted proxy CIDR fail-closed serta paket Nginx dengan limit request/body/koneksi, timeout, header privat, dan error JSON. Compose belum diuji pada Docker/host aktual; timeout proxy bukan pembatalan transaksi; metrik resmi dan circuit breaker provider tetap menunggu alat/provider disetujui. |
 | TASK-022 | Pilot RAG-Anything sebagai pemroses dokumen multimodal terisolasi | AI & Data | IN PROGRESS | ADR-017, rencana pilot, risk R-23, dan preflight fail-closed tersedia. Parser/dependency belum dipasang; hanya fixture `SIMULATED_DATA`; benchmark, sandbox worker, SBOM, security test, dan OQ-11 masih diperlukan. |
 | TASK-023 | Batas data privat dan pencegahan publikasi/AI exfiltration | Foundation | IN PROGRESS | Lock startup untuk mode privat dan larangan public indexing/AI egress/agent eksternal/telemetry egress; header no-store dan anti-index; robots menolak semua path; CSP same-origin; docs API disembunyikan di non-development; pola exfiltration/jailbreak ditolak sebelum retrieval. Verifikasi firewall egress, jaringan privat, SSO/MFA, pentest, dan persetujuan TIK/pemilik data masih wajib sebelum data asli. |
 

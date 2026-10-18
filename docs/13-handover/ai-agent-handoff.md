@@ -1,7 +1,7 @@
 # AI Agent Handoff
 
 **Status:** ACTIVE
-**Last Updated:** 2026-10-18
+**Last Updated:** 2026-10-19
 
 ## Baca Sebelum Bertindak
 
@@ -11,9 +11,10 @@ Urutan wajib: root `AGENTS.md`, [task-tracker.md](task-tracker.md), [developer-h
 
 - SUNOVATE adalah modular monolith Next.js/TypeScript + FastAPI/Python + PostgreSQL/pgvector. Nama asisten pada frontend adalah **SAVI AI**; beberapa nama internal lama masih dapat memakai `HermesGateway` dan tidak boleh diganti massal tanpa migration plan.
 - **Aturan yang tidak boleh dinegosiasikan:** SUNOVATE privat. Jangan memublikasikan, mengindeks, atau mengirim data ke AI Search, SEO/GEO/AIO, crawler, scraper, model/agent eksternal, MCP, plugin, webhook, telemetry, atau kanal umum. Data asli tetap dilarang. Jangan melonggarkan lock konfigurasi, header anti-index/no-store, CSP, RBAC, batas klasifikasi, dan penolakan exfiltration/jailbreak. Lihat `private-data-boundary.md` dan ADR-018.
-- Kontrol API ADR-019 menggunakan limiter memori satu proses, batas body 3 MiB, timeout penerimaan body, dan counter privat. Jangan mengklaimnya distributed atau production-ready. Jangan percaya `X-Forwarded-For` tanpa konfigurasi proxy tepercaya; deployment tetap membutuhkan limit Nginx/firewall, pengujian host, dan observability yang disetujui.
+- Kontrol API ADR-019 menggunakan limiter memori satu proses, batas body 3 MiB, timeout penerimaan body, counter privat, serta trusted proxy CIDR fail-closed. Paket `deploy/demo/` memuat Nginx/Compose localhost-only, tetapi belum dibangun di Docker atau di host kantor. Jangan mengklaim distributed/production-ready atau kapasitas 25 pengguna dari baseline API-only lokal.
 - Semua demo memakai `SIMULATED_DATA`. Tidak ada integrasi produksi yang aktif atau boleh diklaim tersedia.
 - Target demo yang sedang diusulkan adalah sekitar 25 pengguna pada satu komputer kantor khusus, menggunakan Docker Compose dan reverse proxy. Cloudflare Tunnel + Cloudflare Access adalah **PROPOSED** dan belum boleh diaktifkan tanpa persetujuan mentor serta TIK/keamanan.
+- Probe `pnpm demo:load` hanya menerima loopback secara default dan IP privat literal dengan opt-in. Baseline 2026-10-19 (25 pengguna/100 health request, p95 41,26 ms, error 0%) tidak melalui web/Nginx/PostgreSQL dan bukan hasil host aktual.
 - Komputer kantor adalah target demo/UAT sementara, bukan arsitektur produksi. Produksi menunggu keputusan private cloud/Azure/internal data center/hybrid.
 - Go, Rust, PWA, Android, dan iOS adalah roadmap pasca-MVP. Jangan menambah service atau dependency hanya agar stack tampak lebih banyak.
 - Monitoring kerja memiliki CRUD terotorisasi untuk output, tugas, milestone, pending matter, dan follow-up. Approval khusus monitoring belum boleh dikarang; TASK-005 tetap IN PROGRESS sampai OQ-12/OQ-25 diputuskan.

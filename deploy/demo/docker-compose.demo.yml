@@ -1,0 +1,162 @@
+name: sunovate-demo
+
+# PROPOSED package for an approved single-computer demo. It binds only to
+# localhost and does not include or activate Cloudflare Tunnel.
+services:
+  proxy:
+    image: nginx:stable-alpine
+    depends_on:
+      api:
+        condition: service_healthy
+      web:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${DEMO_HTTP_PORT:-8080}:8080"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/includes:/etc/nginx/includes:ro
+    networks:
+      app:
+        ipv4_address: 172.30.0.10
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx
+      - /var/run
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8080/nginx-health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ../..
+      dockerfile: deploy/demo/Dockerfile.web
+    environment:
+      NEXT_TELEMETRY_DISABLED: "1"
+      SUNOVATE_API_URL: http://api:8000
+    expose:
+      - "3000"
+    networks:
+      app:
+        ipv4_address: 172.30.0.20
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /app/apps/web/.next/cache
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3000/login').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ../..
+      dockerfile: deploy/demo/Dockerfile.api
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      PRIVATE_DATA_MODE: "true"
+      PUBLIC_INDEXING_ENABLED: "false"
+      EXTERNAL_AI_DATA_EGRESS_ENABLED: "false"
+      EXTERNAL_AGENT_ACCESS_ENABLED: "false"
+      TELEMETRY_DATA_EGRESS_ENABLED: "false"
+      DATA_BACKEND: postgres
+      DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL in the demo environment file}
+      DEV_AUTH_ENABLED: ${DEV_AUTH_ENABLED:-true}
+      DEV_AUTH_SECRET: ${DEV_AUTH_SECRET:?Set a non-placeholder DEV_AUTH_SECRET}
+      CORS_ORIGINS: ${DEMO_ORIGIN:-http://127.0.0.1:8080}
+      API_TRUSTED_PROXY_CIDRS: 172.30.0.10/32
+      API_MAX_REQUEST_BYTES: "3145728"
+      API_BODY_READ_TIMEOUT_SECONDS: "15"
+      API_RATE_LIMIT_WINDOW_SECONDS: "60"
+      API_RATE_LIMIT_MAX_KEYS: "10000"
+      API_GLOBAL_RATE_LIMIT: "600"
+      API_DEFAULT_RATE_LIMIT: "180"
+      API_LOGIN_RATE_LIMIT: "20"
+      API_SAVI_RATE_LIMIT: "60"
+      API_SEARCH_RATE_LIMIT: "120"
+      API_INGESTION_RATE_LIMIT: "20"
+      DOCUMENT_PROVIDER: local
+      IDENTITY_PROVIDER: development
+      NOTIFICATION_PROVIDER: disabled
+      AI_PROVIDER: development_extractive
+      EMBEDDING_PROVIDER: disabled
+      HERMES_MODE: development
+    expose:
+      - "8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      app:
+        ipv4_address: 172.30.0.30
+      data:
+        ipv4_address: 172.31.0.20
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test:
+        [
+          "CMD",
+          ".venv/bin/python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health', timeout=3).read()",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  postgres:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-sunovate}
+      POSTGRES_USER: ${POSTGRES_USER:-sunovate}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set a non-placeholder POSTGRES_PASSWORD}
+    expose:
+      - "5432"
+    volumes:
+      - sunovate-demo-postgres:/var/lib/postgresql/data
+    networks:
+      data:
+        ipv4_address: 172.31.0.10
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+networks:
+  app:
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.30.0.0/24
+  data:
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.31.0.0/24
+
+volumes:
+  sunovate-demo-postgres:
