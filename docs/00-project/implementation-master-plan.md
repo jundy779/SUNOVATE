@@ -151,7 +151,9 @@ Urutan ini berlaku sampai ada keputusan mentor yang mengubah prioritas:
 2. Siapkan naskah serta alur demo bulan pertama menggunakan data simulasi.
 3. Validasi paket Nginx/Compose, trusted proxy, dan probe 25 pengguna pada host demo yang disetujui; jangan aktifkan tunnel.
 4. Tuntaskan pengujian repository PostgreSQL dan otorisasi.
-5. Siapkan ingestion dokumen simulasi dari ekstraksi sampai preview chunk. Jalankan preflight dan benchmark parser-only RAG-Anything secara terisolasi tanpa memublikasikan hasilnya.
+5. Pertahankan baseline `pnpm extraction:eval` untuk ingestion dokumen simulasi dari ekstraksi
+   sampai preview chunk. Perluas corpus secara bertahap, lalu jalankan preflight dan benchmark
+   parser-only RAG-Anything secara terisolasi tanpa memublikasikan isi atau hasil dokumen.
 6. Minta keputusan mentor untuk sumber RAG, model AI, login, klasifikasi, server, dan UAT.
 7. Setelah keputusan tersedia, lanjutkan ingestion tersimpan, FTS, dan evaluasi SAVI.
 

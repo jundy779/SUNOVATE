@@ -1,7 +1,7 @@
 # Technology Stack
 
 **Status:** CONFIRMED (pilihan stack), PROPOSED (versi dapat diperbarui)
-**Last Updated:** 2026-10-09
+**Last Updated:** 2026-10-19
 
 ## Purpose
 Mencatat teknologi dan versi yang benar-benar terpasang dan dipakai pada scaffold.
@@ -11,7 +11,7 @@ Mencatat teknologi dan versi yang benar-benar terpasang dan dipakai pada scaffol
 |---|---|---|
 | Node.js | 24.19.0 (min. 22) | |
 | pnpm | 11.4.0 | workspace `apps/web`, `packages/*` |
-| Next.js (App Router, Turbopack) | 16.3.8 | `output: standalone` |
+| Next.js App Router | 16.3.8 | `output: standalone`; `next dev` untuk pengembangan, Webpack untuk build produksi yang deterministik |
 | React | 19.3 | server components default |
 | TypeScript | 5.9.3 | strict, `noUncheckedIndexedAccess` |
 | Tailwind CSS | 4.3.3 | token SUNOVATE di `globals.css` |

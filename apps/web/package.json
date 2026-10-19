@@ -7,7 +7,7 @@
     "predev": "pnpm telemetry:disable",
     "dev": "next dev",
     "prebuild": "pnpm telemetry:disable",
-    "build": "next build",
+    "build": "next build --webpack",
     "prestart": "pnpm telemetry:disable",
     "start": "next start",
     "telemetry:disable": "next telemetry disable",

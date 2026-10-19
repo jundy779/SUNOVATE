@@ -2,7 +2,7 @@
 
 **Status:** PROPOSED
 
-**Last Updated:** 2026-10-15
+**Last Updated:** 2026-10-19
 
 ## Purpose
 
@@ -114,6 +114,12 @@ Prosedur ini **PROPOSED** dan tidak berlaku sekarang. Sampai semua syarat terpen
 - **OPEN QUESTION**: Evaluasi ulang dibutuhkan setelah model AI dan embedding disetujui (OQ-11).
 - **OPEN QUESTION**: Dokumen apa yang boleh masuk RAG menentukan isi golden set lanjutan (OQ-04).
 - Evaluasi endpoint pencarian sekarang memakai `tests/fixtures/search_relevance_set.json` dan `pnpm search:eval`. Set ini bukan pengganti golden set jawaban SAVI; fungsinya menguji recall FTS serta kebocoran sebelum kandidat FTS dipertimbangkan untuk retrieval SAVI.
+- Evaluasi pemasukan dokumen memakai `tests/fixtures/document_extraction_set.json` dan
+  `pnpm extraction:eval`. Tujuh kasus sintetis mencakup enam format dasar, urutan struktur,
+  rumus Excel, lembar tersembunyi, serta indikasi prompt injection. Set ini mengukur kualitas
+  pembacaan sebelum chunking dan bukan pengganti golden set jawaban SAVI.
+- Baseline ekstraksi 2026-10-19: seluruh rasio 1,00 dan forbidden hits 0. Angka ini hanya berlaku
+  pada corpus simulasi kecil, bukan klaim akurasi seluruh dokumen resmi atau hasil pindai.
 
 ## Related Documents
 

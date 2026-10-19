@@ -1,5 +1,27 @@
 # Changelog
 
+## 2026-10-19 — Build produksi frontend yang deterministik
+
+- Memperbaiki BUG-021: build produksi berulang dengan Turbopack dua kali gagal membaca database
+  cache persisten lokal (`invalid digit found in string`) walaupun lint, typecheck, dan test lulus.
+- Perintah `pnpm build` kini memakai `next build --webpack`. Mode pengembangan tetap memakai
+  `next dev`; tidak ada dependency atau perubahan perilaku aplikasi yang ditambahkan.
+- Validasi aktual: Ruff, ESLint, mypy strict (63 source files), TypeScript, 33 tes frontend,
+  280 tes backend lulus dengan 40 tes PostgreSQL dilewati, evaluator ekstraksi tujuh kasus lulus,
+  dua build produksi Webpack berturut-turut lulus, dan SQL Alembic ter-render.
+
+## 2026-10-19 — Baseline kualitas ekstraksi dokumen simulasi
+
+- Menambahkan corpus evaluasi `SIMULATED_DATA` berisi tujuh kasus untuk TXT, Markdown, PDF,
+  DOCX, XLSX, dan XLS. Kasus mencakup dokumen multi-halaman, judul dan tabel berurutan,
+  beberapa lembar, rumus, lembar tersembunyi, serta instruksi mencurigakan tersisip.
+- Menambahkan `pnpm extraction:eval` dengan gate keberhasilan ekstraksi, ketercakupan fragmen,
+  konten yang tidak boleh muncul, ketepatan struktur, dan klasifikasi indikasi instruksi.
+- Output evaluator hanya memuat metrik dan ID kasus. Nama berkas, checksum, teks sumber, dan
+  hasil ekstraksi tidak dicetak.
+- Baseline tujuh kasus lulus: extraction success 1,00; fragment recall 1,00; forbidden hits 0;
+  structure pass 1,00; instruction classification accuracy 1,00.
+
 ## 2026-10-19 — Penguatan ekstraksi dokumen simulasi representatif
 
 - Memperbaiki BUG-020: ekstraksi DOCX kini mempertahankan urutan paragraf dan tabel sesuai
