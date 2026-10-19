@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-10-19 — Penguatan ekstraksi dokumen simulasi representatif
+
+- Memperbaiki BUG-020: ekstraksi DOCX kini mempertahankan urutan paragraf dan tabel sesuai
+  dokumen, bukan memindahkan seluruh tabel ke akhir hasil pembacaan.
+- Gaya judul Word tingkat 1 sampai 6 dipertahankan sebagai penanda bagian agar pembagian isi
+  laporan dapat mengikuti struktur dokumen.
+- Menambahkan pengujian PDF teks dua halaman, DOCX dengan judul dan tabel di tengah dokumen,
+  XLSX serta XLS multi-lembar, dan verifikasi rumus XLSX tetap tidak dijalankan.
+- Lembar XLSX tersembunyi tetap dibaca untuk pemeriksaan keamanan. Uji integrasi membuktikan
+  instruksi mencurigakan pada lembar tersembunyi menghasilkan `QUARANTINED`, tidak membuat
+  bagian, serta tidak menyalin nama atau isi berkas ke audit.
+- Seluruh fixture dibuat di memori dan hanya memuat `SIMULATED_DATA`; tidak ada berkas internal,
+  dependency runtime baru, penyimpanan sumber, atau koneksi eksternal.
+- Validasi aktual: Ruff, ESLint, mypy strict (62 source files), TypeScript, 33 tes frontend,
+  277 tes backend lulus dengan 40 tes PostgreSQL dilewati, build produksi bersih setelah cache
+  `.next` lama dipindahkan keluar workspace, dan SQL Alembic ter-render.
+
 ## 2026-10-19 — Preflight keamanan paket demo privat
 
 - Menambahkan `pnpm demo:preflight` untuk memeriksa bind loopback, network internal, lock data

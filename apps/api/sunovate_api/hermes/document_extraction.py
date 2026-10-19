@@ -16,6 +16,8 @@ from typing import Any
 
 import xlrd
 from docx import Document
+from docx.table import Table
+from docx.text.paragraph import Paragraph
 from olefile import OleFileIO
 from openpyxl import load_workbook
 from pypdf import PdfReader
@@ -181,11 +183,22 @@ def _extract_docx(payload: bytes) -> tuple[str, None, int]:
     _docx_preflight(payload)
     try:
         document = Document(io.BytesIO(payload))
-        paragraphs = [paragraph.text for paragraph in document.paragraphs if paragraph.text.strip()]
-        for table in document.tables:
-            for row in table.rows:
-                paragraphs.append(" | ".join(cell.text.strip() for cell in row.cells))
-        return "\n\n".join(paragraphs), None, len(paragraphs)
+        blocks: list[str] = []
+        for item in document.iter_inner_content():
+            if isinstance(item, Paragraph):
+                text = item.text.strip()
+                if not text:
+                    continue
+                style_name = item.style.name if item.style is not None else ""
+                heading = re.fullmatch(r"Heading\s+([1-6])", style_name, re.IGNORECASE)
+                blocks.append(f"{'#' * int(heading.group(1))} {text}" if heading else text)
+                continue
+            if isinstance(item, Table):
+                for row in item.rows:
+                    value = " | ".join(cell.text.strip() for cell in row.cells)
+                    if value.strip(" |"):
+                        blocks.append(value)
+        return "\n\n".join(blocks), None, len(blocks)
     except Exception as exc:
         raise ExtractionRejected("DOCX tidak dapat dibaca dengan aman") from exc
 

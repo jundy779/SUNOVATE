@@ -2,7 +2,7 @@
 
 **Status:** DRAFT
 
-**Last Updated:** 2026-10-06
+**Last Updated:** 2026-10-19
 
 ## Purpose
 
@@ -62,6 +62,22 @@ Otorisasi = permission DAN team scope DAN klasifikasi data, deny by default (sum
 | Deadline state | Dihitung backend: SAFE, DUE_SOON, DUE_TODAY, OVERDUE, COMPLETED dengan `DEADLINE_DUE_SOON_DAYS` | Fact sheet bagian 6 |
 | Validasi input | 422 `VALIDATION_ERROR`; `pageSize` di luar 1–100 ditolak | Fact sheet bagian 9 |
 | Dev auth dimatikan | `POST /auth/dev/login` mengembalikan 404 `DEV_AUTH_DISABLED` | ADR-005 |
+
+## Pengujian Ekstraksi Dokumen Simulasi
+
+Pengujian ekstraksi memakai fixture sintetis yang dibuat di memori. Tidak ada dokumen internal
+atau berkas sumber yang disimpan di repository.
+
+| Format | Struktur yang diuji | Gerbang keamanan yang diuji |
+|---|---|---|
+| PDF | Dua halaman teks dan jumlah halaman | Header/struktur PDF tidak valid ditolak |
+| DOCX | Judul Word, paragraf, tabel di tengah dokumen, dan urutan setelah tabel | Makro dikarantina; hasil dapat dibagi menurut judul |
+| XLSX | Beberapa lembar, termasuk lembar tersembunyi, nilai teks/angka, dan rumus | Rumus tidak dijalankan; instruksi mencurigakan pada lembar tersembunyi dikarantina |
+| XLS | Beberapa lembar dan nilai tabel | Struktur OLE palsu ditolak; makro dideteksi sebelum pembacaan |
+| TXT/MD | UTF-8 dan penanda struktur | Data biner, ukuran berlebih, dan instruksi mencurigakan dikarantina |
+
+Lembar tersembunyi tidak dianggap sebagai batas keamanan. Isinya tetap masuk pemeriksaan agar
+instruksi yang disisipkan tidak lolos hanya karena tidak terlihat pada tampilan awal Excel.
 
 ## Kasus Terencana dari Jawaban Knowledge Owner (PLANNED)
 
