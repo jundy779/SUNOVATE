@@ -38,7 +38,7 @@ Roadmap enam bulan tetap mengikuti [product-roadmap.md](../01-product/product-ro
 |---|---|---|
 | Menyatukan roadmap, task tracker, arsitektur, dan changelog | IN PROGRESS | Tidak ada fitur yang memiliki status saling bertentangan |
 | Menjaga daftar pertanyaan mentor dan keputusan terbuka | IN PROGRESS | Pertanyaan prioritas memiliki pemilik keputusan dan dampak |
-| Menetapkan skenario demo berbasis `SIMULATED_DATA` | PLANNED | Alur login, dashboard, monitoring, Knowledge Hub, dan SAVI terdokumentasi |
+| Menetapkan skenario demo berbasis `SIMULATED_DATA` | READY FOR MENTOR REVIEW | Alur 8-10 menit terdokumentasi; pemeriksa API di memori memvalidasi login, dashboard, monitoring, Knowledge Hub, pencarian, jawaban bersumber, dan dua penolakan SAVI |
 | Membekukan penambahan framework tanpa alasan terukur | ACTIVE RULE | Stack baru hanya masuk melalui keputusan arsitektur |
 | Mengunci batas data privat | IN PROGRESS | Kontrol aplikasi lulus uji; firewall egress, jaringan privat, SSO/MFA, dan persetujuan TIK/pemilik data wajib sebelum data asli |
 
@@ -148,7 +148,7 @@ Urutan pekerjaan:
 Urutan ini berlaku sampai ada keputusan mentor yang mengubah prioritas:
 
 1. Rapikan baseline requirement dan daftar keputusan yang masih terbuka.
-2. Siapkan naskah serta alur demo bulan pertama menggunakan data simulasi.
+2. Tinjau naskah demo bulan pertama bersama mentor; pemeriksa API simulasi sudah tersedia melalui `pnpm demo:smoke`, tetapi browser, PostgreSQL, Nginx, jaringan, dan host aktual belum tervalidasi.
 3. Validasi paket Nginx/Compose, trusted proxy, dan probe 25 pengguna pada host demo yang disetujui; jangan aktifkan tunnel.
 4. Tuntaskan pengujian repository PostgreSQL dan otorisasi.
 5. Pertahankan baseline `pnpm extraction:eval` untuk ingestion dokumen simulasi dari ekstraksi

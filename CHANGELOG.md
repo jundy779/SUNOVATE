@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-10-19 — Skenario dan pemeriksaan perjalanan demo bulan pertama
+
+- Menambahkan naskah demo 8 sampai 10 menit untuk halaman utama, login, dashboard, Monitoring
+  Kerja, Knowledge Hub, pencarian, jawaban SAVI bersumber, dan dua contoh penolakan aman.
+- Menambahkan `pnpm demo:smoke` yang menjalankan sembilan langkah API pada backend baru
+  `SIMULATED_DATA` di memori dan menolak mode PostgreSQL.
+- Laporan hanya memuat nama langkah dan jumlah agregat. Pertanyaan, jawaban, sitasi, token, ID,
+  dan isi dokumen tidak dicetak; tidak ada koneksi eksternal atau penulisan persisten.
+- Hasil tidak dianggap sebagai bukti browser, PostgreSQL, Nginx, jaringan, atau komputer kantor.
+  Skenario masih memerlukan review mentor dan pengujian lingkungan demo yang disetujui.
+- Validasi aktual: lint, TypeScript, mypy strict (64 source files), 33 tes frontend, 284 tes
+  backend lulus dengan 40 tes PostgreSQL dilewati, sembilan langkah demo lulus, build produksi
+  bersih, dan SQL Alembic ter-render.
+
 ## 2026-10-19 — Build produksi frontend yang deterministik
 
 - Memperbaiki BUG-021: build produksi berulang dengan Turbopack dua kali gagal membaca database

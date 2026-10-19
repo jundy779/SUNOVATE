@@ -28,6 +28,22 @@ Menjelaskan pengujian yang membutuhkan PostgreSQL nyata: migration upgrade dan d
 | Unique checksum | Duplikasi (`document_reference_id`, `checksum_sha256`) ditolak | PROPOSED |
 | Downgrade ke base | Semua objek terhapus bersih tanpa sisa | PROPOSED |
 
+## Baseline Perjalanan Demo Tanpa PostgreSQL
+
+```powershell
+pnpm demo:smoke
+```
+
+- **CONFIRMED (implementasi)**: Perintah menggunakan backend baru `SIMULATED_DATA` di memori,
+  menolak backend lain, dan tidak membuka koneksi eksternal.
+- **CONFIRMED (implementasi)**: Pemeriksaan mencakup health, login pegawai simulasi, dashboard
+  sesuai akses, Monitoring Kerja, Knowledge Hub, pencarian terotorisasi, jawaban SAVI dengan
+  sumber, penolakan pertanyaan di luar SUN, serta penolakan upaya pengabaian aturan.
+- **CONFIRMED (implementasi)**: Laporan hanya mencetak nama langkah dan jumlah agregat. Isi
+  pertanyaan, jawaban, sitasi, token, ID, dan dokumen tidak dicetak.
+- **PROPOSED**: Hasil lulus tidak menggantikan Jalur A sampai D, pengujian browser, Nginx,
+  jaringan, ataupun host kantor.
+
 ## Jalur A: Docker Compose
 
 Prasyarat: Docker terpasang (belum divalidasi di mesin pengembangan saat ini).

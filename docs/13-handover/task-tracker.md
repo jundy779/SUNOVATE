@@ -44,13 +44,14 @@ Menjadi sumber status pekerjaan lintas sesi dan lintas AI agent. Setiap perubaha
 | TASK-021 | Kontrol API Gateway pada modular monolith: rate limit, batas request, timeout, security headers, metrik | Foundation | IN PROGRESS | Kontrol aplikasi sebelumnya ditambah trusted proxy CIDR fail-closed serta paket Nginx dengan limit request/body/koneksi, timeout, header privat, error JSON, dan format log tanpa query string. `demo:preflight` mengunci invariant ini. Compose belum diuji pada Docker/host aktual; timeout proxy bukan pembatalan transaksi; metrik resmi dan circuit breaker provider tetap menunggu alat/provider disetujui. |
 | TASK-022 | Pilot RAG-Anything sebagai pemroses dokumen multimodal terisolasi | AI & Data | IN PROGRESS | ADR-017, rencana pilot, risk R-23, dan preflight fail-closed tersedia. Parser/dependency belum dipasang; hanya fixture `SIMULATED_DATA`; benchmark, sandbox worker, SBOM, security test, dan OQ-11 masih diperlukan. |
 | TASK-023 | Batas data privat dan pencegahan publikasi/AI exfiltration | Foundation | IN PROGRESS | Lock startup untuk mode privat dan larangan public indexing/AI egress/agent eksternal/telemetry egress; header no-store dan anti-index; robots menolak semua path; CSP same-origin; docs API disembunyikan di non-development; pola exfiltration/jailbreak ditolak sebelum retrieval; preflight menolak konfigurasi demo yang tidak aman tanpa menampilkan secret. Verifikasi firewall egress, jaringan privat, SSO/MFA, pentest, dan persetujuan TIK/pemilik data masih wajib sebelum data asli. |
+| TASK-024 | Skenario dan pemeriksaan perjalanan demo bulan pertama | Demo | IN PROGRESS | Naskah 8-10 menit dan `pnpm demo:smoke` tersedia. Sembilan langkah API simulasi memeriksa health, login, dashboard, monitoring, Knowledge Hub, pencarian, jawaban SAVI bersumber, serta dua penolakan aman tanpa mencetak konten. Review mentor, pengujian browser, PostgreSQL, Nginx, jaringan, dan host aktual masih diperlukan. |
 
 ## Urutan Eksekusi Terdekat
 
 1. Pertahankan TASK-023 sebagai gate paling awal. Dilarang memasukkan data asli sampai kontrol infrastruktur privat dan persetujuan terkait tervalidasi.
 2. Ikuti urutan pada `implementation-master-plan.md`; jangan memulai ide baru hanya dari gambar referensi.
 3. Tutup open question prioritas tinggi bersama mentor, khususnya OQ-05, OQ-07, OQ-11, OQ-20, OQ-23, OQ-24, dan OQ-25.
-4. Siapkan skenario demo bulan pertama dan selesaikan kontrol API dasar yang tidak bergantung pada integrasi.
+4. Minta mentor meninjau skenario demo bulan pertama. Baseline API simulasi sudah tersedia melalui `pnpm demo:smoke`; lanjutkan validasi browser dan host hanya pada lingkungan yang disetujui.
 5. Pada host PostgreSQL uji yang disetujui, jalankan `pnpm db:restore-drill`, lalu
    `pnpm search:eval:postgres` pada hasil restore. Jangan menganggap uji unit alat sebagai bukti
    restore aktual atau baseline FTS PostgreSQL.

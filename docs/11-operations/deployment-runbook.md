@@ -99,6 +99,7 @@ flowchart LR
 - [ ] `IDENTITY_PROVIDER`, `DOCUMENT_PROVIDER`, `NOTIFICATION_PROVIDER`, `AI_PROVIDER`, dan `EMBEDDING_PROVIDER` hanya memakai provider yang sudah divalidasi; provider lain tetap nonaktif.
 - [ ] `HERMES_MAX_CLASSIFICATION` sesuai keputusan klasifikasi (OQ-05).
 - [ ] `pnpm validate` dan `pnpm api:test` selesai tanpa kegagalan pada commit yang akan dirilis.
+- [ ] `pnpm demo:smoke` selesai tanpa kegagalan; hasil hanya membuktikan perjalanan API pada backend simulasi di memori.
 - [ ] Gate kebocoran RAG bernilai nol (lihat [rag-testing.md](../10-testing/rag-testing.md)).
 - [ ] Tidak ada bug P0 terbuka; P1 terbuka memiliki keputusan tertulis mentor.
 - [ ] `pnpm audit` dan audit dependensi Python sudah ditinjau.
@@ -114,10 +115,21 @@ flowchart LR
 3. Deploy API versi baru.
 4. Jalankan migration.
 5. Deploy web versi baru dengan `SUNOVATE_API_URL` yang benar.
-6. Jalankan smoke test.
+6. Jalankan smoke test lingkungan yang disetujui dan bandingkan dengan baseline `pnpm demo:smoke`.
 7. Catat versi, waktu, dan hasil di CHANGELOG.md.
 
 ### Smoke Test (kerangka)
+
+Baseline aman yang dapat dijalankan tanpa server eksternal:
+
+```powershell
+pnpm demo:smoke
+```
+
+Perintah tersebut memeriksa health, login simulasi, dashboard, monitoring, Knowledge Hub,
+pencarian terotorisasi, jawaban SAVI bersumber, penolakan di luar topik, dan penolakan upaya
+pengabaian aturan. Output tidak memuat pertanyaan, jawaban, sitasi, token, ID, atau isi dokumen.
+Perintah ini tidak membuktikan PostgreSQL, Nginx, browser, jaringan, ataupun host kantor.
 
 - `GET /api/v1/health` dan `GET /api/v1/health/database` merespons.
 - Login dengan mekanisme yang disetujui berhasil; `POST /api/v1/auth/dev/login` mengembalikan 404 `DEV_AUTH_DISABLED`.
