@@ -138,6 +138,30 @@ def test_default_data_backend_is_simulated() -> None:
     assert Settings(_env_file=None).data_backend == "simulated"
 
 
+def test_private_data_boundary_accepts_secure_dotenv_strings(tmp_path: Path) -> None:
+    env_file = tmp_path / ".env"
+    env_file.write_text(
+        "\n".join(
+            (
+                "PRIVATE_DATA_MODE=true",
+                "PUBLIC_INDEXING_ENABLED=false",
+                "EXTERNAL_AI_DATA_EGRESS_ENABLED=false",
+                "EXTERNAL_AGENT_ACCESS_ENABLED=false",
+                "TELEMETRY_DATA_EGRESS_ENABLED=false",
+            )
+        ),
+        encoding="utf-8",
+    )
+
+    settings = Settings(_env_file=env_file)
+
+    assert settings.private_data_mode is True
+    assert settings.public_indexing_enabled is False
+    assert settings.external_ai_data_egress_enabled is False
+    assert settings.external_agent_access_enabled is False
+    assert settings.telemetry_data_egress_enabled is False
+
+
 @pytest.mark.parametrize(
     ("field", "unsafe_value"),
     [
@@ -151,6 +175,26 @@ def test_default_data_backend_is_simulated() -> None:
 def test_private_data_boundary_cannot_be_disabled(field: str, unsafe_value: bool) -> None:
     with pytest.raises(ValidationError):
         Settings(_env_file=None, **{field: unsafe_value})
+
+
+@pytest.mark.parametrize(
+    ("key", "value"),
+    [
+        ("PRIVATE_DATA_MODE", "false"),
+        ("PUBLIC_INDEXING_ENABLED", "true"),
+        ("EXTERNAL_AI_DATA_EGRESS_ENABLED", "true"),
+        ("EXTERNAL_AGENT_ACCESS_ENABLED", "true"),
+        ("TELEMETRY_DATA_EGRESS_ENABLED", "true"),
+    ],
+)
+def test_private_data_boundary_rejects_unsafe_dotenv_strings(
+    tmp_path: Path, key: str, value: str
+) -> None:
+    env_file = tmp_path / ".env"
+    env_file.write_text(f"{key}={value}\n", encoding="utf-8")
+
+    with pytest.raises(ValidationError):
+        Settings(_env_file=env_file)
 
 
 def test_private_response_headers_are_applied_to_every_api_response() -> None:

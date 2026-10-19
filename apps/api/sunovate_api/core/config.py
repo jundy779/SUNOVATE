@@ -36,11 +36,14 @@ class Settings(BaseSettings):
     # Non-negotiable private-data boundary. These Literal locks deliberately make
     # unsafe environment overrides fail validation instead of silently enabling
     # public discovery or outbound processing.
-    private_data_mode: Literal[True] = True
-    public_indexing_enabled: Literal[False] = False
-    external_ai_data_egress_enabled: Literal[False] = False
-    external_agent_access_enabled: Literal[False] = False
-    telemetry_data_egress_enabled: Literal[False] = False
+    # These are typed as bool so pydantic-settings can parse the string values
+    # used by .env files and operating-system environments. The model validator
+    # below still makes the secure values immutable at runtime.
+    private_data_mode: bool = True
+    public_indexing_enabled: bool = False
+    external_ai_data_egress_enabled: bool = False
+    external_agent_access_enabled: bool = False
+    telemetry_data_egress_enabled: bool = False
 
     # Single-host API controls (ADR-019). Reverse proxy controls remain mandatory
     # for an approved deployment and must not trust arbitrary forwarded headers.
@@ -83,6 +86,17 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def _secure_defaults(self) -> Settings:
+        if not self.private_data_mode:
+            raise ValueError("PRIVATE_DATA_MODE must remain true")
+        disabled_security_locks = {
+            "PUBLIC_INDEXING_ENABLED": self.public_indexing_enabled,
+            "EXTERNAL_AI_DATA_EGRESS_ENABLED": self.external_ai_data_egress_enabled,
+            "EXTERNAL_AGENT_ACCESS_ENABLED": self.external_agent_access_enabled,
+            "TELEMETRY_DATA_EGRESS_ENABLED": self.telemetry_data_egress_enabled,
+        }
+        unsafe_locks = [name for name, enabled in disabled_security_locks.items() if enabled]
+        if unsafe_locks:
+            raise ValueError(f"Security locks must remain false: {', '.join(unsafe_locks)}")
         if self.app_env == "production":
             if self.dev_auth_enabled:
                 raise ValueError("DEV_AUTH_ENABLED must be false when APP_ENV=production")

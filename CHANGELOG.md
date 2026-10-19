@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-10-19 — Perbaikan startup API dari `.env` Windows
+
+- Memperbaiki BUG-022: API gagal start ketika `.env` berisi lima nilai pengaman `true`/`false`
+  yang benar karena tipe literal boolean tidak menerima teks environment pada Pydantic 2.13.
+- Pengaman kini diparsing sebagai boolean, lalu model validator tetap mewajibkan private mode
+  aktif serta public indexing, AI egress, agent eksternal, dan telemetry egress nonaktif.
+- Menambahkan regresi untuk `.env` aman serta lima variasi konfigurasi yang mencoba melonggarkan
+  pengaman. Perubahan tidak mengaktifkan koneksi eksternal atau data asli.
+- Validasi aktual: `.env.example` berhasil membentuk konfigurasi startup; lint, TypeScript, mypy
+  strict (64 source files), 33 tes frontend, 290 tes backend lulus dengan 40 tes PostgreSQL
+  dilewati, build produksi bersih, dan SQL Alembic ter-render.
+
 ## 2026-10-19 — Skenario dan pemeriksaan perjalanan demo bulan pertama
 
 - Menambahkan naskah demo 8 sampai 10 menit untuk halaman utama, login, dashboard, Monitoring

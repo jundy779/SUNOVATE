@@ -20,6 +20,7 @@ Kumpulan masalah umum pada pengembangan lokal SUNOVATE beserta penyebab dan lang
 | `pnpm db:up` gagal di Windows | Docker belum terpasang | 6 |
 | `pnpm install` menolak paket | Aturan `minimumReleaseAge` pnpm | 7 |
 | `pnpm api:setup` gagal | Versi Python tidak didukung | 8 |
+| API menolak nilai keamanan `true`/`false` dari `.env` | Versi lama konfigurasi memakai literal boolean | 9 |
 
 ## 1. Port Sudah Dipakai
 
@@ -74,6 +75,18 @@ Kumpulan masalah umum pada pengembangan lokal SUNOVATE beserta penyebab dan lang
 - Gejala: `pnpm api:setup` gagal atau uv memilih interpreter yang tidak didukung.
 - Penyebab: Python di luar rentang 3.12–3.14.
 - Penanganan: pasang Python dalam rentang yang didukung, atau biarkan uv menyediakan interpreter yang sesuai, lalu jalankan ulang `pnpm api:setup`. Periksa versi dengan `uv run python --version` dari folder `apps/api`.
+
+## 9. Nilai Keamanan `.env` Ditolak
+
+- Gejala: `pnpm api:dev` berhenti dengan lima `literal_error` untuk
+  `PRIVATE_DATA_MODE`, `PUBLIC_INDEXING_ENABLED`, dan pengaman akses keluar lainnya walaupun
+  `.env` memakai nilai `true`/`false` yang benar.
+- Penyebab: BUG-022 pada versi sebelum perbaikan 2026-10-19 memakai tipe literal boolean yang
+  tidak menerima representasi teks dari `.env` pada Pydantic 2.13.
+- Penanganan: tarik commit perbaikan terbaru. Konfigurasi sekarang membaca teks boolean lalu
+  tetap menolak nilai yang melonggarkan pengaman. Sebagai pemulihan sementara pada mode
+  simulasi, ubah nama `.env`, jalankan API dengan nilai bawaan aman, lalu kembalikan nama file
+  setelah repository diperbarui.
 
 ## Melaporkan Masalah Baru
 
