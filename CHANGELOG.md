@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-10-19 — Dashboard editorial dan penjelasan SAVI AI
+
+- Menata ulang dashboard menjadi pusat kerja institusional dengan hierarki editorial: ringkasan,
+  konteks akses, prioritas tenggat, fokus kerja, status tugas, pengetahuan terbaru, akses SAVI,
+  serta kesiapan sumber indikator SUN.
+- Memperbaiki BUG-023 dengan menghapus grafik aktivitas dan persentase kualitas yang sebelumnya
+  memakai angka statis. Semua jumlah operasional yang tampil kini berasal dari
+  `GET /api/v1/dashboard/summary` sesuai tim, klasifikasi, dan kewenangan pengguna.
+- Menambahkan fokus tugas terlambat, jatuh tempo dekat, persetujuan menunggu, tindak lanjut
+  terbuka, daftar pengetahuan terbaru, serta tindakan cepat ke Monitoring Kerja dan SAVI AI.
+- Memperjelas batas SAVI AI dengan bahasa awam: hanya memakai pengetahuan terbit yang dapat
+  diakses, tetap pada lingkup SUN, menyertakan sumber, dan tidak menggantikan keputusan manusia.
+- Status teknis tetap jujur: runtime pengembangan masih ekstraktif tanpa model AI eksternal;
+  LLM produksi, embedding, dan lokasi pemrosesan menunggu OQ-11.
+- Validasi aktual: Ruff, ESLint, mypy strict (64 source files), TypeScript, 33 tes frontend,
+  290 tes backend lulus dengan 40 tes PostgreSQL dilewati, build produksi, render SQL Alembic,
+  serta render HTTP terautentikasi lulus. Screenshot desktop/mobile belum dijalankan karena
+  browser Playwright tidak tersedia dan unduhan binari diblokir oleh jaringan lingkungan eksekusi.
+
 ## 2026-10-19 — Perbaikan startup API dari `.env` Windows
 
 - Memperbaiki BUG-022: API gagal start ketika `.env` berisi lima nilai pengaman `true`/`false`

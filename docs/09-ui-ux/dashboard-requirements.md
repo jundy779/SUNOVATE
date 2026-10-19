@@ -1,7 +1,7 @@
 # Dashboard Requirements
 
 **Status:** PROPOSED | NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-06
+**Last Updated:** 2026-10-19
 
 ## Purpose
 
@@ -15,6 +15,11 @@ Menetapkan persyaratan dashboard SUNOVATE: isi per role, bagian "Perlu perhatian
 - **CONFIRMED (knowledge owner, deck v1_ slide 24):** Indikator yang diminta adalah "yield" dan "kepemilikan SBN" (DEC-20261002-08). Ini hanya indikator yang diminta, tanpa angka, definisi, sumber data, atau format laporan. Pengakuan mentor masih tertunda (OQ-24).
 - **OPEN QUESTION:** Sumber data otoritatif dan definisi kedua indikator serta siapa yang boleh melihatnya (OQ-21). Indikator diblokir sampai ada jawaban.
 - **CONFIRMED:** Dashboard memakai `GET /api/v1/dashboard/summary` dan data SIMULATED_DATA (sumber: fact sheet bagian 9).
+- **IMPLEMENTED:** Tampilan editorial v2 memuat ringkasan pekerjaan, prioritas tenggat, fokus kerja,
+  sebaran status tugas, pengetahuan terbaru, akses SAVI AI, dan kesiapan sumber indikator.
+  Seluruh jumlah operasional berasal dari respons API sesuai scope pengguna.
+- **IMPLEMENTED:** Grafik aktivitas dan persentase kualitas statis telah dihapus. Antarmuka tidak
+  lagi menampilkan angka contoh yang dapat terbaca sebagai hasil pengukuran aktual (BUG-023).
 
 ## Aturan umum
 
@@ -26,6 +31,9 @@ Menetapkan persyaratan dashboard SUNOVATE: isi per role, bagian "Perlu perhatian
 6. **PROPOSED:** Tabel didahulukan untuk data operasional. Ringkasan angka berupa satu baris metrik, bukan grid kartu besar.
 7. **CONFIRMED:** Dashboard tidak menampilkan data pasar, yield, hasil lelang, atau angka pembiayaan (sumber: fact sheet bagian 0; [Market Data Proposal](../08-integrations/market-data-proposal.md)). Aturan ini tetap berlaku: permintaan indikator "yield" dan "kepemilikan SBN" dari knowledge owner tidak membuka tampilan angka. Tabel bisnis SUN tetap OUT OF SCOPE untuk saat ini (ADR-013). Mengubah aturan ini memerlukan sumber data otoritatif, keputusan cakupan sesuai [change-management](../12-governance/change-management.md), dan klasifikasi akses (OQ-21).
 8. **PROPOSED:** Setiap angka dapat ditelusuri ke daftar record yang membentuknya (misalnya tautan ke `/work-monitoring` dengan filter).
+9. **IMPLEMENTED:** Status SAVI AI ditulis dengan bahasa pengguna: sumber terkendali, lingkup SUN,
+   sitasi, penolakan permintaan di luar lingkup, dan pemeriksaan manusia. Nama internal Hermes
+   tidak ditampilkan sebagai merek pada antarmuka.
 
 ## Ringkasan metrik (kandidat)
 
@@ -102,6 +110,10 @@ flowchart LR
 - **PROPOSED:** Test membuktikan record di atas clearance pengguna tidak ikut dihitung.
 - **PROPOSED:** Halaman dashboard tidak memuat angka statis di kode frontend.
 - **PROPOSED:** Label SIMULATED_DATA terlihat pada viewport 320px tanpa scroll horizontal.
+- **IMPLEMENTED:** Halaman server berhasil dirender dengan akun koordinator simulasi dan memuat
+  bagian Ringkasan kerja, Perlu ditindaklanjuti, Fokus saat ini, Sebaran status tugas,
+  Pengetahuan terbaru, dan SAVI AI. Pemeriksaan screenshot desktop/mobile masih menunggu browser
+  pengujian yang tersedia pada lingkungan eksekusi.
 
 ## Related Documents
 

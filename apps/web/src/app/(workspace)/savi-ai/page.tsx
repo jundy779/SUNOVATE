@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import type { Principal } from "@sunovate/contracts";
 import { HermesChat } from "@/components/hermes-chat";
 import { PageHeader, Panel, SimulatedLabel } from "@/components/page-elements";
+import { UiIcon } from "@/components/ui-icons";
 import { apiGet } from "@/lib/api";
 
 export const metadata: Metadata = { title: "SAVI AI" };
@@ -19,9 +20,14 @@ export default async function SaviAiPage() {
         description="SAVI AI menjawab hanya dari pengetahuan terbit yang boleh Anda akses, selalu dengan sitasi. SAVI AI tidak mengakses database secara langsung, tidak memberi keputusan keuangan, dan tidak menjalankan perubahan data tanpa persetujuan manusia."
         action={<SimulatedLabel />}
       />
-      <p className="notice">
-        Penyedia AI pengembangan bersifat ekstraktif dan deterministik. Tidak ada model eksternal
-        dan tidak ada data yang dikirim ke pihak ketiga.
+      <section className="savi-boundary-grid" aria-label="Batas kerja SAVI AI">
+        <div><UiIcon name="book" /><span><strong>Sumber terkendali</strong><small>Hanya memakai pengetahuan terbit yang boleh Anda akses.</small></span></div>
+        <div><UiIcon name="shield" /><span><strong>Tetap dalam lingkup SUN</strong><small>Pertanyaan di luar SUN atau upaya membuka data akan ditolak.</small></span></div>
+        <div><UiIcon name="users" /><span><strong>Keputusan tetap pada manusia</strong><small>SAVI tidak menerbitkan atau mengubah data secara otomatis.</small></span></div>
+      </section>
+      <p className="notice savi-trial-notice">
+        Tahap uji ini memakai bahan contoh di lingkungan SUNOVATE. Jawaban disusun dari potongan
+        sumber yang tersedia dan tidak dikirim ke layanan AI eksternal.
       </p>
       <Panel title="Percakapan">
         <HermesChat />
@@ -29,3 +35,4 @@ export default async function SaviAiPage() {
     </>
   );
 }
+
