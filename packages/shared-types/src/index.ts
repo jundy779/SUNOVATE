@@ -8,7 +8,15 @@ export const DATA_LABEL = "SIMULATED_DATA" as const;
 export const CLASSIFICATIONS = ["PUBLIC", "INTERNAL", "RESTRICTED", "CONFIDENTIAL"] as const;
 export type ClassificationCode = (typeof CLASSIFICATIONS)[number];
 
-export const TEAM_CODES = ["PPSUN", "AKPSUN", "PSUN", "PPPSUN", "DHTV", "SUN_TEMATIK"] as const;
+export const TEAM_CODES = [
+  "PPSUN",
+  "AKPSUN",
+  "PSUN",
+  "PPPSUN",
+  "DHTV",
+  "SUN_TEMATIK",
+  "MONEV",
+] as const;
 export type TeamCode = (typeof TEAM_CODES)[number];
 
 export const KNOWLEDGE_STATUSES = [

@@ -3,13 +3,16 @@ from sunovate_api.testing import login, make_client
 API = "/api/v1"
 
 
-def test_teams_are_the_six_confirmed_codes() -> None:
+def test_teams_are_the_seven_pilot_codes() -> None:
     client = make_client()
     teams = client.get(f"{API}/teams", headers=login(client, "sim.staff.pppsun")).json()["data"]
-    assert [t["code"] for t in teams] == ["AKPSUN", "DHTV", "PPPSUN", "PPSUN", "PSUN",
+    assert [t["code"] for t in teams] == ["AKPSUN", "DHTV", "MONEV", "PPPSUN", "PPSUN", "PSUN",
                                          "SUN_TEMATIK"]
     tematik = next(t for t in teams if t["code"] == "SUN_TEMATIK")
     assert tematik["validationStatus"] == "OPEN_QUESTION"
+    monev = next(t for t in teams if t["code"] == "MONEV")
+    assert monev["name"] == "Monitoring dan Evaluasi"
+    assert monev["validationStatus"] == "NEEDS_MENTOR_VALIDATION"
     assert all(t["dataOrigin"] == "SIMULATED_DATA" for t in teams)
 
 

@@ -1,7 +1,7 @@
 # Decision Log
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-19
+**Last Updated:** 2026-10-20
 
 ## Purpose
 
@@ -212,6 +212,18 @@ Entri berikut mencatat jawaban knowledge owner atas delapan pertanyaan slide 24 
 - **Dampak:** [open-questions](../00-project/open-questions.md), [assumptions](../00-project/assumptions.md) (A-18), [risk-register](risk-register.md) (R-16)
 - **ADR/BR terkait:** R-16
 - **Tindak lanjut:** Minta pengakuan pada sesi mentor berikutnya ([mentor-session-01-agenda](../00-project/mentor-session-01-agenda.md)).
+### DEC-20261020-01
+
+- **Open question:** OQ-02 Scope tim pilot dan nama resmi
+- **Tanggal jawaban:** 2026-10-20
+- **Sumber:** konfirmasi project lead; Proposal v2.5 slide 10
+- **Jawaban:** MONEV (Monitoring dan Evaluasi) adalah tim pilot ketujuh, ditambahkan setelah rapat 6 Oktober 2026. Nama resmi AKPSUN: TK Analisis Keuangan dan Pasar SUN.
+- **Keputusan:** Scope pilot tujuh tim: PPSUN, AKPSUN, PSUN, PPPSUN, DHTV, SUN Tematik, MONEV. Deskripsi MONEV tetap NEEDS MENTOR VALIDATION; tidak ada record simulasi MONEV yang dikarang.
+- **Status:** CONFIRMED (project lead). OQ-02 RESOLVED.
+- **Dampak:** [team-work-scope](../02-business/team-work-scope.md), `packages/shared-types`, seed `SIMULATED_DATA`
+- **ADR/BR terkait:** -
+- **Tindak lanjut:** Klasifikasi akses dokumen MONEV (catatan kepatuhan pihak ketiga) dibahas bersama matriks akses (OQ-05, OQ-25).
+
 ## Related Documents
 
 - [architecture-decisions](../03-architecture/architecture-decisions.md)

@@ -3,8 +3,9 @@
 Every record is fictional and labelled `SIMULATED_DATA`. No real SUN figures,
 official documents, personal data, job titles, or approval chains are included.
 Team codes and names follow the session brief; team descriptions follow the
-proposal deck v2.4 slide 10 and remain NEEDS_MENTOR_VALIDATION. SUN Tematik has
-no invented function and no seeded records (OQ-01).
+proposal deck v2.4/v2.5 slide 10 and remain NEEDS_MENTOR_VALIDATION. MONEV was added
+as the seventh pilot team after the 6 Oct 2026 meeting (project lead, OQ-02). SUN Tematik
+and MONEV have no seeded records; SUN Tematik has no invented function (OQ-01).
 """
 
 from __future__ import annotations
@@ -115,6 +116,12 @@ _TEAMS = [
         "SUN Tematik",
         "Fungsi, produk pengetahuan, dan proses menunggu konfirmasi mentor.",
         "OPEN_QUESTION",
+    ),
+    (
+        "MONEV",
+        "Monitoring dan Evaluasi",
+        "Kepatuhan dan kewajiban pihak ketiga terkait Surat Utang Negara.",
+        "NEEDS_MENTOR_VALIDATION",
     ),
 ]
 

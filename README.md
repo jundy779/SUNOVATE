@@ -1,15 +1,22 @@
 # SUNOVATE
 
-**SUN Integrated Management and Knowledge Platform** untuk Direktorat Surat Utang Negara, DJPPR,
-Kementerian Keuangan. Repository ini adalah **fondasi pengembangan** (modular monolith) untuk
+**SUN Organizational Values and Transformation through Experience** untuk Direktorat Surat Utang Negara, DJPPR,
+Kementerian Keuangan.
+
+*Menjaga pengetahuan, belajar dari pengalaman, berinovasi untuk meningkatkan kinerja.*
+
+Repository ini adalah **fondasi pengembangan** (modular monolith) untuk
 program MagangHub periode 21 September 2026 sampai 20 Maret 2027. **Bukan sistem siap produksi.**
 
 ## Batas penting
 - Seluruh data adalah `SIMULATED_DATA` fiktif. Tidak ada data internal, keuangan, atau pribadi.
 - Integrasi produksi (SSO, SharePoint, Power BI, Telegram, WhatsApp, Kemenkeu Satu, Bank Indonesia, data pasar) **tidak tersedia** dan dinonaktifkan.
-- Hermes tidak mengakses database secara langsung, tidak memberi keputusan keuangan, dan tidak menjalankan aksi tulis tanpa persetujuan manusia.
+- Asisten AI tampil ke pengguna sebagai **SAVI AI**. Nama Hermes hanya dipakai pada identifier kode internal (mesin yang direncanakan: Hermes Agent, Nous Research). SAVI saat ini berjalan pada mode `development_extractive`, embedding nonaktif, dan bukan RAG produksi.
+- SAVI tidak mengakses database secara langsung, tidak memberi keputusan keuangan, dan tidak menjalankan aksi tulis tanpa persetujuan manusia.
+- File berklasifikasi `RAHASIA` (file tertentu saja) hanya boleh dibaca lewat Secure Viewer tanpa download, edit, hapus, copy, atau cetak, dan dienkripsi dengan kunci berbasis TPM (HSM menyusul). Status: rencana (blueprint v0.5), belum terimplementasi.
 - SUNOVATE bukan SUN Job Monitor dan tidak menggantikan sistem transaksi SUN resmi.
-- Fungsi SUN Tematik adalah **OPEN QUESTION**.
+- Scope pilot: tujuh tim kerja (PPSUN, AKPSUN, PSUN, PPPSUN, DHTV, SUN Tematik, MONEV). MONEV ditambahkan setelah rapat 6 Oktober 2026. Fungsi SUN Tematik masih **OPEN QUESTION**.
+- Target MVP (P1 repository + P2 asisten AI) sekitar 3 bulan, kira-kira akhir Desember 2026.
 
 ## Isi repository
 

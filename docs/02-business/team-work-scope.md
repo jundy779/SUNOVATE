@@ -1,7 +1,7 @@
 # Cakupan Tim Kerja
 
 **Status:** NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-20
 
 ## Purpose
 
@@ -10,6 +10,7 @@ Dokumen ini mencatat tim kerja Dit. SUN yang masuk cakupan awal SUNOVATE, peran 
 ## Confirmed Information
 
 - **CONFIRMED**: Cakupan awal terdiri atas enam tim kerja: PPSUN, AKPSUN, PSUN, PPPSUN, DHTV, dan SUN Tematik (sumber: brief sesi 2026-10-01).
+- **CONFIRMED (project lead, 2026-10-20)**: Cakupan pilot menjadi tujuh tim dengan penambahan MONEV (Monitoring dan Evaluasi) sebagai pembaruan setelah rapat 6 Oktober 2026 (DEC-20261020-01; OQ-02 RESOLVED). Nama resmi AKPSUN adalah TK Analisis Keuangan dan Pasar SUN.
 - **CONFIRMED**: Fungsi SUN Tematik adalah OPEN QUESTION dan tidak boleh diasumsikan (sumber: brief sesi 2026-10-01; AGENTS.md).
 - **CONFIRMED**: Setiap tim berperan sebagai knowledge owner, process owner, repository user, document reviewer, dashboard data source, dan Hermes authorization context (sumber: brief sesi 2026-10-01).
 - **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Pilot pertama adalah "6 tim" (OQ-03). Deck tidak menyebut nama tim dan tidak menjawab bagian "proses". Kesamaan "6 tim" dengan enam tim di bawah adalah **PROPOSED**. Pengakuan mentor masih tertunda (OQ-24).
@@ -27,6 +28,7 @@ Deskripsi singkat berasal dari Proposal v2.4 slide 10. Deck menyatakan enam tim 
 | PPPSUN | Pengembangan dan Pendalaman Pasar SUN | Kelembagaan pasar, basis investor, strategi pemasaran, layanan publik, edukasi | NEEDS MENTOR VALIDATION (sumber: Proposal v2.4, slide 10) |
 | DHTV | Dokumen Hukum Transaksi Valas | Dokumen hukum transaksi valas dan engagement letter | NEEDS MENTOR VALIDATION (sumber: Proposal v2.4, slide 10) |
 | SUN Tematik | SUN Tematik | Knowledge product dan proses rinci menunggu konfirmasi (mentor atau knowledge owner) | OPEN QUESTION (OQ-01) |
+| MONEV | Monitoring dan Evaluasi | Kepatuhan dan kewajiban pihak ketiga terkait Surat Utang Negara | NEEDS MENTOR VALIDATION (sumber: Proposal v2.5, slide 10; project lead 2026-10-20) |
 
 Nama tim di atas mengikuti brief sesi. Nama resmi dapat berbeda (lihat catatan OQ-02).
 

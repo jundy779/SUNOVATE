@@ -184,6 +184,8 @@ def test_extracts_legacy_xls_values() -> None:
         ("SIMULASI.xls", "application/vnd.ms-excel", b"bukan xls", "format XLS"),
         ("SIMULASI.txt", "text/plain", b"a" * (MAX_FILE_BYTES + 1), "maksimal 2 MB"),
     ],
+    # Short ids keep PYTEST_CURRENT_TEST under the Windows 32767-char env var limit.
+    ids=["missing-prefix", "exe", "binary-txt", "invalid-pdf", "invalid-xls", "oversized"],
 )
 def test_rejects_unsafe_or_mislabelled_files(
     filename: str, content_type: str, payload: bytes, message: str
