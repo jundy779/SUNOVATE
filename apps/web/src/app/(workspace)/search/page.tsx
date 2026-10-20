@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { SearchHit } from "@sunovate/contracts";
 import { ClassificationTag, EmptyState, PageHeader, SimulatedLabel } from "@/components/page-elements";
 import { apiGet } from "@/lib/api";
+import { knowledgeTypeLabel } from "@/lib/ui-labels";
 
 export const metadata: Metadata = { title: "Pencarian" };
 
@@ -21,7 +22,7 @@ export default async function SearchPage({
       <PageHeader
         eyebrow="Pencarian"
         title="Cari pengetahuan yang telah diterbitkan"
-        description="Pencarian leksikal atas judul, ringkasan, dan teks bagian. Hanya entri terbit dalam cakupan Anda yang ditampilkan. Pencarian semantik masih berupa usulan."
+        description="Cari kecocokan kata pada judul, ringkasan, dan isi bagian. Hanya pengetahuan terbit yang boleh Anda akses yang ditampilkan. Pencarian berdasarkan kemiripan makna belum tersedia."
         action={<SimulatedLabel />}
       />
       <form className="search-form" role="search" action="/search">
@@ -47,7 +48,7 @@ export default async function SearchPage({
                 {hit.title}
               </Link>
               <p className="muted">
-                {hit.knowledgeType} - {hit.ownerTeamCode} - <ClassificationTag code={hit.classificationCode} />
+                {knowledgeTypeLabel(hit.knowledgeType)} - {hit.ownerTeamCode} - <ClassificationTag code={hit.classificationCode} />
                 {hit.sectionLabel ? ` - ${hit.sectionLabel}` : ""}
               </p>
               <p>{hit.snippet}</p>

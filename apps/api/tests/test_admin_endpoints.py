@@ -16,8 +16,17 @@ def test_teams_are_the_six_confirmed_codes() -> None:
 def test_roles_and_permissions_require_role_read() -> None:
     client = make_client()
     assert client.get(f"{API}/roles", headers=login(client, "sim.staff.pppsun")).status_code == 403
-    roles = client.get(f"{API}/roles", headers=login(client, "sim.admin")).json()["data"]
+    admin = login(client, "sim.admin")
+    roles = client.get(f"{API}/roles", headers=admin).json()["data"]
     assert len(roles) == 8
+    permissions = client.get(f"{API}/permissions", headers=admin).json()["data"]
+    descriptions = {item["code"]: item["description"] for item in permissions}
+    assert descriptions["hermes:query"] == "Bertanya kepada SAVI AI"
+    assert descriptions["hermes:feedback"] == ("Memberikan penilaian terhadap jawaban SAVI AI")
+    visible_text = " ".join(descriptions.values()).lower()
+    assert "hermes" not in visible_text
+    assert "permission" not in visible_text
+    assert "pending matter" not in visible_text
 
 
 def test_audit_log_requires_permission_and_records_denials() -> None:

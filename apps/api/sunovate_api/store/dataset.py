@@ -76,7 +76,7 @@ _CLASSIFICATIONS = [
     ("PUBLIC", 0, "Publik", "Boleh dibuka publik, misalnya regulasi yang telah diundangkan."),
     ("INTERNAL", 1, "Internal", "Internal Direktorat SUN/DJPPR."),
     ("RESTRICTED", 2, "Terbatas", "Terbatas pada tim pemilik atau penerima yang ditunjuk."),
-    ("CONFIDENTIAL", 3, "Sangat terbatas", "Tidak diproses Hermes pada pengembangan."),
+    ("CONFIDENTIAL", 3, "Sangat terbatas", "Tidak diproses SAVI AI pada pengembangan."),
 ]
 
 _TEAMS = [
@@ -113,7 +113,7 @@ _TEAMS = [
     (
         "SUN_TEMATIK",
         "SUN Tematik",
-        "Fungsi, knowledge product, dan proses menunggu konfirmasi mentor.",
+        "Fungsi, produk pengetahuan, dan proses menunggu konfirmasi mentor.",
         "OPEN_QUESTION",
     ),
 ]
@@ -123,17 +123,23 @@ _USERS = [
     ("sim.admin", "Admin Simulasi", "system_admin", None, "INTERNAL"),
     (
         "sim.coordinator",
-        "Koordinator Knowledge Simulasi",
+        "Koordinator Pengetahuan Simulasi",
         "knowledge_coordinator",
         None,
         "RESTRICTED",
     ),
-    ("sim.lead.psun", "Team Lead Simulasi PSUN", "team_lead", "PSUN", "RESTRICTED"),
-    ("sim.owner.ppsun", "Knowledge Owner Simulasi PPSUN", "knowledge_owner", "PPSUN", "INTERNAL"),
-    ("sim.reviewer.akpsun", "Reviewer Simulasi AKPSUN", "reviewer", "AKPSUN", "INTERNAL"),
+    ("sim.lead.psun", "Ketua Tim Simulasi PSUN", "team_lead", "PSUN", "RESTRICTED"),
+    (
+        "sim.owner.ppsun",
+        "Pemilik Pengetahuan Simulasi PPSUN",
+        "knowledge_owner",
+        "PPSUN",
+        "INTERNAL",
+    ),
+    ("sim.reviewer.akpsun", "Pemeriksa Simulasi AKPSUN", "reviewer", "AKPSUN", "INTERNAL"),
     ("sim.staff.pppsun", "Staf Simulasi PPPSUN", "staff", "PPPSUN", "INTERNAL"),
     ("sim.auditor", "Auditor Simulasi", "auditor", None, "RESTRICTED"),
-    ("sim.readonly.dhtv", "Read Only Simulasi DHTV", "read_only", "DHTV", "INTERNAL"),
+    ("sim.readonly.dhtv", "Pembaca Simulasi DHTV", "read_only", "DHTV", "INTERNAL"),
 ]
 
 # key, team, type, classification, sharing, status, title, summary, chunks[(section, text)]
@@ -145,25 +151,25 @@ _KNOWLEDGE: list[tuple[str, str, str, str, str, str, str, str, list[tuple[str, s
         "INTERNAL",
         "DIRECTORATE",
         "PUBLISHED",
-        "SIMULASI - SOP Registrasi Metadata Dokumen Knowledge",
-        "Contoh prosedur pendaftaran metadata dokumen ke Knowledge Hub.",
+        "SIMULASI - SOP Registrasi Metadata Dokumen Pengetahuan",
+        "Contoh prosedur pendaftaran metadata dokumen ke Basis Pengetahuan.",
         [
             (
                 "Langkah 1",
-                "Setiap dokumen yang didaftarkan ke Knowledge Hub wajib memiliki "
+                "Setiap dokumen yang didaftarkan ke Basis Pengetahuan wajib memiliki "
                 "metadata tim pemilik, klasifikasi data, label versi, dan lokasi dokumen pada "
-                "document provider. File resmi tidak diunggah ke database SUNOVATE.",
+                "penyimpanan yang ditetapkan. Berkas resmi tidak diunggah ke basis data SUNOVATE.",
             ),
             (
                 "Langkah 2",
-                "Pengelola knowledge memeriksa kelengkapan metadata sebelum entri "
+                "Pengelola pengetahuan memeriksa kelengkapan metadata sebelum entri "
                 "diajukan untuk review. Entri tanpa klasifikasi atau tanpa pemilik dikembalikan "
                 "ke status draf.",
             ),
             (
                 "Langkah 3",
-                "Checksum SHA-256 dicatat untuk setiap versi dokumen agar duplikasi "
-                "ingestion dapat dicegah.",
+                "Sidik berkas SHA-256 dicatat untuk setiap versi dokumen agar pemasukan "
+                "berkas yang sama dapat dicegah.",
             ),
         ],
     ),
@@ -220,7 +226,7 @@ _KNOWLEDGE: list[tuple[str, str, str, str, str, str, str, str, list[tuple[str, s
                 "Kerangka",
                 "Kerangka kajian analisis pasar memuat latar belakang, metodologi, "
                 "sumber data, dan kesimpulan. Draf ini belum ditinjau dan tidak boleh dipakai "
-                "Hermes.",
+                "SAVI AI.",
             ),
         ],
     ),
@@ -256,12 +262,12 @@ _KNOWLEDGE: list[tuple[str, str, str, str, str, str, str, str, list[tuple[str, s
         "TEAM",
         "PUBLISHED",
         "SIMULASI - Catatan Keputusan Terbatas",
-        "Contoh record CONFIDENTIAL untuk menguji plafon klasifikasi.",
+        "Contoh catatan sangat terbatas untuk menguji batas klasifikasi.",
         [
             (
                 "Catatan",
-                "Catatan keputusan terbatas ini berklasifikasi CONFIDENTIAL untuk "
-                "menguji plafon klasifikasi. Tidak ada pengguna simulasi dengan clearance setara.",
+                "Catatan keputusan ini memiliki klasifikasi sangat terbatas untuk "
+                "menguji batas akses. Tidak ada pengguna simulasi dengan batas akses setara.",
             ),
         ],
     ),
@@ -626,7 +632,7 @@ def build_dataset() -> Dataset:  # noqa: PLR0915 - linear dataset definition
             PendingMatter(
                 id=sid(f"pm:{key}"),
                 title=title,
-                description="SIMULATED_DATA - pending matter contoh.",
+                description="Data contoh - hal yang perlu ditindaklanjuti.",
                 status=status,
                 due_date=due,
                 owner_team_id=teams[team],

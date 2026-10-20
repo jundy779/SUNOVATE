@@ -102,6 +102,31 @@ const OUTCOME_LABELS: Record<string, string> = {
   FAILED: "Gagal",
 };
 
+const PROVIDER_LABELS: Record<string, string> = {
+  AIProvider: "Penyusunan jawaban SAVI AI",
+  EmbeddingProvider: "Pencarian berdasarkan kemiripan makna",
+  DocumentProvider: "Penyimpanan dokumen",
+  IdentityProvider: "Pengelolaan akun dan akses",
+  NotificationProvider: "Pemberitahuan",
+  HermesClient: "Percakapan SAVI AI",
+  MarketDataProvider: "Sumber data pasar resmi",
+};
+
+const PROVIDER_DESCRIPTIONS: Record<string, string> = {
+  AIProvider: "Menyusun jawaban hanya dari bahan yang telah lolos pemeriksaan.",
+  EmbeddingProvider: "Membantu menemukan bahan dengan makna yang serupa.",
+  DocumentProvider: "Menunjuk lokasi berkas tanpa menyimpan berkas di basis data.",
+  IdentityProvider: "Memastikan pengguna masuk dengan akun yang berwenang.",
+  NotificationProvider: "Menyampaikan pemberitahuan melalui kanal yang disetujui.",
+  HermesClient: "Mengatur percakapan SAVI AI dengan sumber yang boleh diakses.",
+  MarketDataProvider: "Mengambil data pasar dari sumber resmi yang disetujui.",
+};
+
+const PROVIDER_MODE_LABELS: Record<string, string> = {
+  DISABLED: "Belum diaktifkan",
+  DEVELOPMENT: "Simulasi pengembangan",
+};
+
 export const classificationLabel = (code: string) => CLASSIFICATION_LABELS[code] ?? "Belum ditetapkan";
 export const knowledgeStatusLabel = (code: string) => KNOWLEDGE_STATUS_LABELS[code] ?? "Belum diketahui";
 export const knowledgeTypeLabel = (code: string) => KNOWLEDGE_TYPE_LABELS[code] ?? "Pengetahuan lainnya";
@@ -110,4 +135,9 @@ export const permissionLabel = (code: string) => PERMISSION_LABELS[code] ?? "Kew
 export const auditActionLabel = (code: string) => AUDIT_ACTION_LABELS[code] ?? "Aktivitas sistem";
 export const auditEntityLabel = (code: string) => AUDIT_ENTITY_LABELS[code] ?? "Data SUNOVATE";
 export const outcomeLabel = (code: string) => OUTCOME_LABELS[code] ?? "Belum diketahui";
+export const providerLabel = (code: string) => PROVIDER_LABELS[code] ?? "Layanan pendukung lainnya";
+export const providerDescription = (code: string) =>
+  PROVIDER_DESCRIPTIONS[code] ?? "Status layanan ini belum memiliki keterangan tambahan.";
+export const providerModeLabel = (code: string) =>
+  PROVIDER_MODE_LABELS[code] ?? "Status belum diketahui";
 

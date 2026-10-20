@@ -59,9 +59,9 @@ def _check_target(ctx: Ctx, principal: Principal, team_id: UUID, classification:
     if ctx.store.team(team_id) is None:
         raise ApiError(422, "VALIDATION_ERROR", "Tim pemilik tidak dikenal")
     if not ctx.authz.team_in_scope(principal, team_id):
-        raise permission_denied("Anda hanya dapat membuat pending matter untuk tim Anda")
+        raise permission_denied("Anda hanya dapat membuat tindak lanjut untuk tim Anda")
     if not ctx.authz.classification_allowed(principal.clearance_code, classification):
-        raise permission_denied("Klasifikasi melebihi clearance Anda")
+        raise permission_denied("Klasifikasi melebihi batas akses informasi Anda")
 
 
 @router.get("/pending-matters")
@@ -174,7 +174,7 @@ def create_follow_up(
             raise ApiError(
                 422,
                 "VALIDATION_ERROR",
-                "Tindak lanjut dan pending matter harus berada pada tim yang sama",
+                "Tindak lanjut dan hal terkait harus berada pada tim yang sama",
             )
     item = FollowUp(
         pending_matter_id=body.pending_matter_id,

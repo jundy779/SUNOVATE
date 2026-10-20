@@ -101,7 +101,7 @@ def decide(
                 403, "SEPARATION_OF_DUTIES", "Pengaju tidak dapat memutuskan permintaannya sendiri"
             )
         if request.status != "PENDING":
-            raise invalid_state("Approval sudah diputuskan atau tidak aktif")
+            raise invalid_state("Permintaan persetujuan sudah diputuskan atau tidak aktif")
         approve = body.decision == "APPROVE"
         entry: KnowledgeEntry | None = None
         if request.request_type == "KNOWLEDGE_PUBLICATION":
@@ -113,9 +113,9 @@ def decide(
                 else None
             )
             if entry is None or entry.lifecycle_status != "IN_REVIEW":
-                raise invalid_state("Knowledge target tidak dalam status IN_REVIEW")
+                raise invalid_state("Pengetahuan yang dituju tidak sedang diperiksa")
             if not ctx.authz.can_write(principal, entry):
-                raise permission_denied("Knowledge target di luar cakupan Anda")
+                raise permission_denied("Pengetahuan yang dituju berada di luar cakupan akses Anda")
         # (1) The decision itself, guarded by the client's approval revision.
         decided = ctx.store.update_revisioned(
             ApprovalRequest,
@@ -148,7 +148,7 @@ def decide(
                 if exc.code != "REVISION_CONFLICT":
                     raise
                 # Never leak the knowledge revision as if it were the approval revision.
-                raise invalid_state("Knowledge target tidak dalam status IN_REVIEW") from exc
+                raise invalid_state("Pengetahuan yang dituju tidak sedang diperiksa") from exc
         ctx.store.audit(
             actor_user_id=principal.user_id,
             action="APPROVE" if approve else "REJECT",

@@ -8,7 +8,7 @@ export class ApiRequestError extends Error {
     readonly status: number,
     readonly body: ApiErrorBody | null,
   ) {
-    super(body?.message ?? `API request failed with status ${status}`);
+    super(body?.message ?? `Layanan SUNOVATE tidak berhasil merespons (status ${status})`);
   }
 }
 

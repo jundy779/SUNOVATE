@@ -146,7 +146,7 @@ def test_full_publication_flow_with_separation_of_duties() -> None:
     )
     assert queue.status_code == 200, queue.text
     queued = next(item for item in queue.json()["data"] if item["id"] == approval_id)
-    assert queued["requestedByName"] == "Knowledge Owner Simulasi PPSUN"
+    assert queued["requestedByName"] == "Pemilik Pengetahuan Simulasi PPSUN"
     assert queued["targetTitle"] == entry["title"]
     assert queued["targetLifecycleStatus"] == "IN_REVIEW"
 
