@@ -1,15 +1,19 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { useForm } from "react-hook-form";
 import { devLoginSchema, SIMULATED_USERS, type DevLoginInput } from "@sunovate/contracts";
 import { zodResolver } from "@/lib/zod-resolver";
 import { loginAction } from "./actions";
 
+const subscribeNoop = () => () => {};
+
 export function LoginForm() {
   const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
+  // The form only works once hydrated; before that a native submit would put the email in the URL.
+  const ready = useSyncExternalStore(subscribeNoop, () => true, () => false);
   const {
     register,
     handleSubmit,
@@ -23,7 +27,7 @@ export function LoginForm() {
     setServerError(null);
     const result = await loginAction(values);
     if (!result.ok) {
-      setServerError(result.message ?? "Login gagal");
+      setServerError(result.message ?? "Akun tidak dikenali. Pilih salah satu akun dari daftar.");
       return;
     }
     router.replace("/dashboard");
@@ -31,8 +35,8 @@ export function LoginForm() {
   });
 
   return (
-    <form className="auth-form" onSubmit={onSubmit} noValidate>
-      <label htmlFor="email">Akun pengguna simulasi</label>
+    <form className="login-form" method="post" onSubmit={onSubmit} noValidate>
+      <label htmlFor="email">Email pengguna simulasi</label>
       <input
         id="email"
         type="email"
@@ -49,7 +53,7 @@ export function LoginForm() {
           </option>
         ))}
       </datalist>
-      <small id="email-hint">Pilih akun pengembangan yang tersedia. Prototipe ini belum terhubung ke SSO organisasi.</small>
+      <small id="email-hint">Daftar akun muncul saat kolom dipilih. Login organisasi belum tersedia pada tahap ini.</small>
       {errors.email ? (
         <p className="field-error" id="email-error" role="alert">
           {errors.email.message}
@@ -60,8 +64,8 @@ export function LoginForm() {
           {serverError}
         </p>
       ) : null}
-      <button className="button" type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Memproses..." : "Masuk"}
+      <button className="button" type="submit" disabled={!ready || isSubmitting}>
+        {isSubmitting ? "Memeriksa akun..." : "Masuk dengan akses pengembangan"}
       </button>
     </form>
   );

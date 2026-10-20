@@ -1,7 +1,7 @@
 # Design System
 
 **Status:** CONFIRMED (token terkunci) | PROPOSED (aturan komponen)
-**Last Updated:** 2026-10-01
+**Last Updated:** 2026-10-21
 
 ## Purpose
 
@@ -85,6 +85,13 @@ Lokasi: `apps/web/src/components/page-elements.tsx`.
 | Status lain | `neutral` |
 
 Label teks status ditampilkan dalam Bahasa Indonesia; pemetaan istilah ada di [Glossary](../00-project/glossary.md).
+
+## Lapisan editorial (landing, masuk, dashboard)
+
+- **PROPOSED (2026-10-21):** Arah visual memadukan struktur institusional situs Bank Indonesia (bar pemerintah navy, header institusional, sidebar navy, baris akses cepat dengan garis pemisah) dengan disiplin editorial The Economist (hierarki dipimpin judul, garis rambut, sumber pada setiap grafik). Gaya diterapkan di `apps/web/src/app/editorial.css`.
+- **PROPOSED:** Tab emas `32 x 5 px` di atas judul bagian dan grafik (`.ed-head`) menjadi penanda khas, pengganti tab merah The Economist. Hanya token terkunci yang dipakai; tidak ada font serif tambahan.
+- **PROPOSED:** Satu momen gerak per halaman: grafik siklus pengetahuan di landing, garis emas tagline di halaman masuk, dan batang grafik status tugas di dashboard. Semuanya dimatikan bila `prefers-reduced-motion: reduce`.
+- **PROPOSED:** Label tanpa huruf kapital penuh, tanpa panah karakter pada tautan, dan angka ringkasan disajikan sebagai satu baris ledger bergaris, bukan kartu terpisah.
 
 ## Keputusan terbuka
 

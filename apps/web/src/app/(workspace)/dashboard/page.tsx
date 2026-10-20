@@ -3,99 +3,83 @@ import Link from "next/link";
 import type { DashboardSummary } from "@sunovate/contracts";
 import { DeadlineTag, EmptyState } from "@/components/page-elements";
 import { TaskStatusChart } from "@/components/task-status-chart";
-import { UiIcon, type IconName } from "@/components/ui-icons";
+import { UiIcon } from "@/components/ui-icons";
 import { apiGet } from "@/lib/api";
 import { formatDate, formatDateTime } from "@/lib/format";
 import { classificationLabel, knowledgeTypeLabel } from "@/lib/ui-labels";
 
 export const metadata: Metadata = { title: "Dashboard" };
 
-interface MetricItem {
-  label: string;
-  value: number;
-  detail: string;
-  icon: IconName;
-  tone: "navy" | "gold" | "success";
-}
+type Tone = "plain" | "attention" | "done";
 
 export default async function DashboardPage() {
   const { data } = await apiGet<DashboardSummary>("/dashboard/summary");
-  const scope = data.scope.allTeams ? "Direktorat Surat Utang Negara" : data.scope.teamCodes.join(", ");
-  const metrics: MetricItem[] = [
-    { label: "Tugas aktif", value: data.metrics.totalActiveTasks, detail: "Belum berstatus selesai", icon: "document", tone: "navy" },
-    { label: "Perlu perhatian", value: data.metrics.attentionCount, detail: "Tenggat perlu ditindaklanjuti", icon: "clock", tone: "gold" },
-    { label: "Dalam proses", value: data.metrics.inProgressTasks, detail: "Sedang dikerjakan", icon: "users", tone: "navy" },
-    { label: "Selesai minggu ini", value: data.metrics.completedThisWeek, detail: "Berdasarkan waktu pembaruan", icon: "check", tone: "success" },
+  const scope = data.scope.allTeams ? "Seluruh tim Direktorat SUN" : data.scope.teamCodes.join(", ");
+  const ledger: { label: string; value: number; detail: string; tone: Tone }[] = [
+    { label: "Tugas aktif", value: data.metrics.totalActiveTasks, detail: "Belum berstatus selesai", tone: "plain" },
+    { label: "Perlu perhatian", value: data.metrics.attentionCount, detail: "Tenggat terlambat, hari ini, atau dekat", tone: "attention" },
+    { label: "Dalam proses", value: data.metrics.inProgressTasks, detail: "Sedang dikerjakan", tone: "plain" },
+    { label: "Selesai minggu ini", value: data.metrics.completedThisWeek, detail: "Berdasarkan waktu pembaruan", tone: "done" },
   ];
-  const focusItems = [
-    { label: "Tugas terlambat", value: data.metrics.tasksOverdue, href: "/work-monitoring", tone: "risk" },
-    { label: "Jatuh tempo dekat", value: data.metrics.tasksDueSoon, href: "/work-monitoring", tone: "warning" },
-    { label: "Persetujuan menunggu", value: data.metrics.pendingApprovals, href: "/approvals", tone: "neutral" },
-    { label: "Tindak lanjut terbuka", value: data.metrics.openFollowUps, href: "/work-monitoring", tone: "neutral" },
-  ] as const;
+  const focus = [
+    { label: "Tugas terlambat", value: data.metrics.tasksOverdue, href: "/work-monitoring", risk: true },
+    { label: "Jatuh tempo dekat", value: data.metrics.tasksDueSoon, href: "/work-monitoring", risk: false },
+    { label: "Persetujuan menunggu", value: data.metrics.pendingApprovals, href: "/approvals", risk: false },
+    { label: "Tindak lanjut terbuka", value: data.metrics.openFollowUps, href: "/work-monitoring", risk: false },
+  ];
 
   return (
-    <div className="dashboard-page">
-      <header className="dashboard-heading">
+    <div className="db">
+      <header className="db-masthead">
         <div>
-          <p className="eyebrow">Ruang kerja SUNOVATE</p>
+          <p className="kicker">Ruang kerja</p>
           <h1>Ringkasan kerja</h1>
-          <p>Fokus pada pekerjaan prioritas, pengetahuan terbaru, dan tindak lanjut sesuai kewenangan Anda.</p>
+          <p className="db-standfirst">Pekerjaan yang perlu ditindaklanjuti, pengetahuan terbaru, dan akses ke SAVI AI sesuai kewenangan Anda.</p>
         </div>
-        <div className="dashboard-heading-side">
+        <div className="db-masthead-side">
           <time dateTime={data.referenceDate}>{formatDate(data.referenceDate)}</time>
-          <div className="dashboard-actions">
+          <div className="db-actions">
             <Link className="button secondary" href="/work-monitoring">Buka monitoring</Link>
             <Link className="button" href="/savi-ai">Tanya SAVI AI</Link>
           </div>
         </div>
       </header>
 
-      <section className="dashboard-governance" aria-label="Konteks akses dashboard">
-        <div>
-          <UiIcon name="users" />
-          <span><small>Cakupan akses</small><strong>{scope || "Belum ada tim"}</strong></span>
-        </div>
-        <div>
-          <UiIcon name="shield" />
-          <span><small>Klasifikasi tertinggi</small><strong>{classificationLabel(data.scope.clearanceCode)}</strong></span>
-        </div>
-        <div>
-          <UiIcon name="book" />
-          <span><small>Sumber ringkasan</small><strong>Data contoh sesuai hak akses</strong></span>
-        </div>
-      </section>
+      <dl className="db-context" aria-label="Cakupan ringkasan">
+        <div><dt>Cakupan</dt><dd>{scope || "Belum ada tim"}</dd></div>
+        <div><dt>Kerahasiaan tertinggi</dt><dd>{classificationLabel(data.scope.clearanceCode)}</dd></div>
+        <div><dt>Sumber angka</dt><dd>Data contoh sesuai hak akses</dd></div>
+      </dl>
 
-      <section className="dashboard-metrics" aria-label="Ringkasan pekerjaan">
-        {metrics.map((metric) => (
-          <article className={`dashboard-metric dashboard-metric-${metric.tone}`} key={metric.label}>
-            <span className="metric-icon"><UiIcon name={metric.icon} /></span>
-            <div>
-              <p>{metric.label}</p>
-              <strong>{metric.value}</strong>
-              <small>{metric.detail}</small>
-            </div>
-          </article>
+      <section className="db-ledger" aria-label="Ringkasan pekerjaan">
+        {ledger.map((item) => (
+          <div className={`db-ledger-item db-tone-${item.tone}`} key={item.label}>
+            <p>{item.label}</p>
+            <strong>{item.value}</strong>
+            <small>{item.detail}</small>
+          </div>
         ))}
       </section>
 
-      <div className="dashboard-command-grid">
-        <section className="dashboard-section dashboard-priority" aria-labelledby="priority-heading">
-          <header className="dashboard-section-heading">
+      <div className="db-grid">
+        <section className="db-block db-block-wide" aria-labelledby="priority-heading">
+          <header className="ed-head ed-head-split">
             <div>
-              <p className="eyebrow">Prioritas</p>
               <h2 id="priority-heading">Perlu ditindaklanjuti</h2>
+              <p>Diurutkan dari tenggat paling dekat</p>
             </div>
-            <Link href="/work-monitoring">Lihat semua</Link>
+            <Link className="text-link" href="/work-monitoring">Lihat semua</Link>
           </header>
           {data.attention.length ? (
-            <div className="table-wrap dashboard-task-table">
+            <div className="table-wrap db-table">
               <table>
-                <thead><tr><th>Uraian</th><th>Penanggung jawab</th><th>Batas waktu</th><th>Status tenggat</th><th><span className="sr-only">Tindakan</span></th></tr></thead>
+                <thead>
+                  <tr><th>Uraian</th><th>Penanggung jawab</th><th>Batas waktu</th><th>Status tenggat</th><th><span className="sr-only">Tindakan</span></th></tr>
+                </thead>
                 <tbody>
                   {data.attention.slice(0, 6).map((item) => (
                     <tr key={`${item.type}-${item.id}`}>
-                      <td><strong>{item.title}</strong><small>{item.category} · {item.ownerTeamCode ?? "Tim belum ditetapkan"}</small></td>
+                      <td><strong>{item.title}</strong><small>{item.category}, {item.ownerTeamCode ?? "tim belum ditetapkan"}</small></td>
                       <td>{item.assigneeName ?? "Belum ditetapkan"}</td>
                       <td>{formatDate(item.dueDate)}</td>
                       <td><DeadlineTag state={item.deadlineState} /></td>
@@ -106,110 +90,92 @@ export default async function DashboardPage() {
               </table>
             </div>
           ) : (
-            <EmptyState title="Tidak ada item yang perlu perhatian" description="Tidak ada tenggat terlambat, hari ini, atau dalam waktu dekat pada lingkup akses Anda." />
+            <EmptyState title="Tidak ada pekerjaan yang mendesak" description="Tidak ada tenggat terlambat, hari ini, atau dalam waktu dekat pada cakupan Anda." />
           )}
         </section>
 
-        <aside className="dashboard-section dashboard-focus" aria-labelledby="focus-heading">
-          <header className="dashboard-section-heading">
-            <div>
-              <p className="eyebrow">Kendali kerja</p>
-              <h2 id="focus-heading">Fokus saat ini</h2>
-            </div>
+        <aside className="db-block" aria-labelledby="focus-heading">
+          <header className="ed-head">
+            <h2 id="focus-heading">Fokus saat ini</h2>
+            <p>Hanya mencakup catatan yang boleh Anda lihat</p>
           </header>
-          <div className="dashboard-focus-list">
-            {focusItems.map((item) => (
-              <Link href={item.href} key={item.label}>
-                <span className={`focus-value focus-${item.tone}`}>{item.value}</span>
-                <span><strong>{item.label}</strong><small>Buka rincian dan tindak lanjuti</small></span>
-                <UiIcon name="chevron" />
-              </Link>
+          <ul className="db-focus">
+            {focus.map((item) => (
+              <li key={item.label}>
+                <Link href={item.href}>
+                  <strong className={item.risk && item.value > 0 ? "db-focus-risk" : undefined}>{item.value}</strong>
+                  <span>{item.label}</span>
+                  <UiIcon name="chevron" />
+                </Link>
+              </li>
             ))}
-          </div>
-          <p className="dashboard-focus-note">Angka hanya mencakup catatan yang boleh Anda lihat.</p>
+          </ul>
         </aside>
-      </div>
 
-      <div className="dashboard-insight-grid">
-        <section className="dashboard-section" aria-labelledby="status-heading">
-          <header className="dashboard-section-heading">
-            <div>
-              <p className="eyebrow">Perkembangan</p>
-              <h2 id="status-heading">Sebaran status tugas</h2>
-            </div>
-            <Link href="/work-monitoring">Buka monitoring</Link>
+        <section className="db-block" aria-labelledby="status-heading">
+          <header className="ed-head">
+            <h2 id="status-heading">Sebaran status tugas</h2>
+            <p>Jumlah tugas per status pada cakupan Anda</p>
           </header>
           <TaskStatusChart data={data.tasksByStatus} />
+          <p className="ed-source">Sumber: data contoh SUNOVATE</p>
         </section>
 
-        <section className="dashboard-section" aria-labelledby="knowledge-heading">
-          <header className="dashboard-section-heading">
+        <section className="db-block" aria-labelledby="knowledge-heading">
+          <header className="ed-head ed-head-split">
             <div>
-              <p className="eyebrow">Basis pengetahuan</p>
               <h2 id="knowledge-heading">Pengetahuan terbaru</h2>
+              <p>Bahan yang sudah diterbitkan dan boleh Anda baca</p>
             </div>
-            <Link href="/knowledge">Lihat semua</Link>
+            <Link className="text-link" href="/knowledge">Lihat semua</Link>
           </header>
           {data.recentKnowledge.length ? (
-            <ol className="dashboard-knowledge-list">
-              {data.recentKnowledge.map((item, index) => (
+            <ul className="db-headlines">
+              {data.recentKnowledge.map((item) => (
                 <li key={item.id}>
-                  <span>{String(index + 1).padStart(2, "0")}</span>
-                  <div>
-                    <Link href={`/knowledge/${item.id}`}>{item.title}</Link>
-                    <small>{knowledgeTypeLabel(item.knowledgeType)} · {item.ownerTeamCode ?? "Direktorat"} · {formatDateTime(item.updatedAt)}</small>
-                  </div>
+                  <span className="db-headline-type">{knowledgeTypeLabel(item.knowledgeType)}</span>
+                  <Link href={`/knowledge/${item.id}`}>{item.title}</Link>
+                  <small>{item.ownerTeamCode ?? "Direktorat"}, diperbarui {formatDateTime(item.updatedAt)}</small>
                 </li>
               ))}
-            </ol>
+            </ul>
           ) : (
             <EmptyState title="Belum ada pengetahuan terbaru" description="Bahan yang telah diterbitkan dan boleh Anda akses akan tampil di sini." />
           )}
         </section>
       </div>
 
-      <section className="dashboard-savi" aria-labelledby="savi-heading">
-        <div className="dashboard-savi-intro">
-          <span className="dashboard-savi-mark"><UiIcon name="chat" /></span>
-          <div>
-            <p className="eyebrow">Asisten pengetahuan</p>
-            <h2 id="savi-heading">SAVI AI</h2>
-            <p>Membantu menemukan jawaban dari pengetahuan SUN yang sudah diterbitkan dan boleh Anda akses.</p>
-          </div>
+      <section className="db-savi" aria-labelledby="savi-heading">
+        <div className="db-savi-text">
+          <h2 id="savi-heading">Tanya SAVI AI</h2>
+          <p>Jawaban disusun dari pengetahuan SUN yang sudah diterbitkan, selalu dengan rujukan. Bila sumber tidak cukup, SAVI AI akan mengatakannya.</p>
         </div>
-        <div className="dashboard-savi-capabilities" aria-label="Pengaman SAVI AI">
-          <span><UiIcon name="check" /> Menyertakan sumber</span>
-          <span><UiIcon name="check" /> Menolak pertanyaan di luar SUN</span>
-          <span><UiIcon name="check" /> Meminta pemeriksaan manusia bila perlu</span>
-        </div>
-        <div className="dashboard-savi-entry">
-          <div className="assistant-prompts" aria-label="Contoh pertanyaan">
-            <Link href="/savi-ai">Cari panduan kerja terkait SUN</Link>
+        <div className="db-savi-entry">
+          <Link className="db-savi-input" href="/savi-ai">
+            <span>Tulis pertanyaan tentang SUN</span>
+            <UiIcon name="send" />
+          </Link>
+          <div className="db-savi-prompts" aria-label="Contoh pertanyaan">
+            <Link href="/savi-ai">Cari panduan kerja terkait lelang</Link>
             <Link href="/savi-ai">Jelaskan ketentuan dari sumber</Link>
             <Link href="/savi-ai">Ringkas bahan yang diterbitkan</Link>
           </div>
-          <Link className="assistant-input" href="/savi-ai">
-            <span>Tulis pertanyaan kepada SAVI AI</span><span className="assistant-send"><UiIcon name="send" /></span>
-          </Link>
         </div>
-        <p className="dashboard-savi-policy"><UiIcon name="shield" /> Tahap uji memakai bahan contoh di server internal. Tidak ada data yang dikirim ke layanan AI eksternal.</p>
+        <p className="db-savi-policy">Tahap uji memakai bahan contoh di server internal. Tidak ada data yang dikirim ke layanan AI di luar lingkungan ini.</p>
       </section>
 
-      <section className="dashboard-source-status" aria-labelledby="source-status-title">
-        <div className="dashboard-source-heading">
-          <UiIcon name="chart" />
-          <div>
-            <h2 id="source-status-title">Kesiapan sumber indikator SUN</h2>
-            <p>Nilai belum ditampilkan sampai sumber, definisi, dan kewenangan akses disetujui.</p>
-          </div>
-        </div>
+      <section className="db-indicators" aria-labelledby="indicator-heading">
+        <header className="ed-head">
+          <h2 id="indicator-heading">Indikator SUN</h2>
+          <p>Nilai baru ditampilkan setelah sumber, definisi, dan kewenangan aksesnya disetujui</p>
+        </header>
         <dl>
           <div><dt>Yield SUN</dt><dd>Sumber data belum tersedia</dd></div>
           <div><dt>Kepemilikan SBN</dt><dd>Sumber data belum tersedia</dd></div>
         </dl>
       </section>
 
-      <p className="dashboard-data-note">Data contoh · Indikator bisnis SUN belum ditampilkan tanpa sumber yang disetujui.</p>
+      <p className="db-note">Data contoh. Angka di halaman ini belum mewakili data Direktorat SUN.</p>
     </div>
   );
 }

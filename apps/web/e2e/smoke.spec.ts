@@ -5,17 +5,18 @@ import { expect, test } from "@playwright/test";
  */
 test("staff logs in, sees scoped dashboard, and asks SAVI AI", async ({ page }) => {
   await page.goto("/login");
+  await expect(page.getByRole("button", { name: "Masuk dengan akses pengembangan" })).toBeEnabled();
   await page.getByLabel("Email pengguna simulasi").fill("sim.staff.pppsun@sunovate.local");
   await page.getByRole("button", { name: "Masuk dengan akses pengembangan" }).click();
 
   await expect(page.getByRole("heading", { name: "Ringkasan kerja", exact: true })).toBeVisible();
-  await expect(page.getByText("SIMULATED_DATA").first()).toBeVisible();
+  await expect(page.getByText("Data contoh", { exact: false }).first()).toBeVisible();
   await expect(page.getByText("Yield SUN", { exact: true })).toBeVisible();
   await expect(page.getByText("Kepemilikan SBN", { exact: true })).toBeVisible();
   await expect(page.getByText("Sumber data belum tersedia")).toHaveCount(2);
   await expect(page.getByRole("link", { name: "Administrasi" })).toHaveCount(0);
 
-  await page.getByRole("link", { name: "SAVI AI" }).click();
+  await page.getByRole("navigation", { name: "Navigasi utama" }).getByRole("link", { name: "SAVI AI" }).click();
   await page
     .getByRole("button", { name: "Apa metadata wajib saat mendaftarkan dokumen?" })
     .click();
@@ -44,6 +45,7 @@ test("unauthenticated visitors are redirected to login", async ({ page }) => {
 
 test("staff cannot open administration", async ({ page }) => {
   await page.goto("/login");
+  await expect(page.getByRole("button", { name: "Masuk dengan akses pengembangan" })).toBeEnabled();
   await page.getByLabel("Email pengguna simulasi").fill("sim.staff.pppsun@sunovate.local");
   await page.getByRole("button", { name: "Masuk dengan akses pengembangan" }).click();
   await page.waitForURL(/\/dashboard$/);
@@ -53,6 +55,7 @@ test("staff cannot open administration", async ({ page }) => {
 
 test("staff creates and updates scoped work data", async ({ page }) => {
   await page.goto("/login");
+  await expect(page.getByRole("button", { name: "Masuk dengan akses pengembangan" })).toBeEnabled();
   await page.getByLabel("Email pengguna simulasi").fill("sim.staff.pppsun@sunovate.local");
   await page.getByRole("button", { name: "Masuk dengan akses pengembangan" }).click();
   await page.getByRole("link", { name: "Monitoring Kerja" }).click();

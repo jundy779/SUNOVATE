@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-10-21 — Penyempurnaan visual landing, halaman masuk, dan dashboard
+
+- Landing, halaman masuk, dan dashboard ditata ulang dengan gabungan struktur institusional Bank Indonesia (bar pemerintah, header, sidebar navy, baris akses cepat) dan disiplin editorial The Economist (hierarki judul, garis rambut, tab emas di atas judul dan grafik, sumber pada grafik). Gaya baru ada di `apps/web/src/app/editorial.css`; hanya token warna terkunci dan font Aptos yang dipakai (font Georgia dihapus).
+- Satu momen gerak per halaman: grafik siklus pengetahuan (enam tahap) di landing, garis emas tagline di halaman masuk, dan batang grafik status tugas di dashboard. Semua dimatikan pada `prefers-reduced-motion: reduce`.
+- Angka ringkasan dashboard menjadi satu baris ledger; tabel prioritas, fokus, pengetahuan terbaru, panel SAVI AI, dan indikator SUN memakai pola judul editorial yang sama.
+- Formulir masuk baru aktif setelah halaman siap sehingga tidak ada pengiriman native yang memasukkan email ke URL; kirim memakai `method="post"`.
+- Perbaikan tata letak mobile: kolom shell kini `minmax(0, 1fr)` sehingga navigasi sidebar tidak melebarkan halaman, dan `.table-wrap` diberi `position: relative` agar sel `sr-only` tidak keluar dari area gulir. Sekitar 350 aturan CSS yang tidak lagi dipakai dihapus.
+- Tes e2e diselaraskan dengan teks antarmuka saat ini (tanpa `SIMULATED_DATA` di layar, menunggu tombol masuk aktif, tautan SAVI AI dicari di navigasi utama). Preview visual di `docs/09-ui-ux/previews` diperbarui; tangkapan layar memakai font cadangan karena Aptos tidak tersedia di lingkungan QA.
+- Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 35 test frontend, 292 test backend (40 PostgreSQL dilewati), build produksi, render SQL Alembic, dan 5/5 skenario Playwright e2e terhadap server pengembangan lulus. QA visual Chromium pada 1440 px dan 390 px. Pemeriksaan visual dengan font Aptos asli dan di Windows belum dijalankan.
+
 ## 2026-10-20 — MONEV sebagai tim pilot ketujuh dan nama resmi
 
 - Menambahkan MONEV (Monitoring dan Evaluasi) ke `TEAM_CODES` dan seed `SIMULATED_DATA` dengan status `NEEDS_MENTOR_VALIDATION`. Tidak ada record simulasi MONEV yang dikarang.

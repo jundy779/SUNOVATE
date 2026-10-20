@@ -1,53 +1,125 @@
 import Link from "next/link";
+import { KnowledgeCycle } from "@/components/knowledge-cycle";
 import { PublicSiteHeader } from "@/components/public-site-header";
 import { UiIcon, type IconName } from "@/components/ui-icons";
 
-const primaryAccess: { label: string; detail: string; icon: IconName; href: string }[] = [
-  { label: "Monitoring Kerja", detail: "Output, tugas, dan tindak lanjut", icon: "chart", href: "/work-monitoring" },
-  { label: "Basis Pengetahuan", detail: "Pengetahuan terstruktur dan terlacak", icon: "book", href: "/knowledge" },
-  { label: "SAVI AI", detail: "Jawaban berbasis sumber", icon: "chat", href: "/savi-ai" },
-  { label: "Pencarian", detail: "Temukan informasi lintas sumber", icon: "search", href: "/search" },
+const services: { label: string; detail: string; icon: IconName; href: string }[] = [
+  { label: "Basis pengetahuan", detail: "Regulasi, panduan kerja, dan catatan pembelajaran yang sudah diperiksa", icon: "book", href: "/knowledge" },
+  { label: "SAVI AI", detail: "Pertanyaan tentang SUN dijawab dari sumber yang boleh Anda akses", icon: "chat", href: "/savi-ai" },
+  { label: "Monitoring kerja", detail: "Output, tenggat, dan tindak lanjut tim dalam satu tempat", icon: "chart", href: "/work-monitoring" },
+  { label: "Pencarian", detail: "Telusuri dokumen dan pengetahuan lintas tim sesuai kewenangan", icon: "search", href: "/search" },
 ];
 
-const knowledgeAreas = [
-  ["Regulasi dan kebijakan", "Rujukan yang terkelola dengan metadata, status, serta riwayat versi."],
-  ["SOP dan panduan kerja", "Langkah kerja yang dapat dipelajari kembali dan disempurnakan bersama."],
-  ["Catatan pembelajaran", "Pengalaman pelaksanaan yang disimpan sebagai memori organisasi."],
-  ["Bahan rapat dan arsip", "Dokumen pendukung yang dapat ditelusuri sesuai hak akses pengguna."],
+const answerRules = [
+  ["Hanya dari sumber yang diterbitkan", "Draf dan dokumen yang belum disetujui tidak dipakai untuk menjawab."],
+  ["Selalu menyebut rujukan", "Setiap jawaban menunjukkan dokumen asalnya agar dapat diperiksa kembali."],
+  ["Berhenti ketika bukti kurang", "SAVI AI menyatakan keterbatasannya dan mengarahkan Anda ke pemilik pengetahuan."],
+] as const;
+
+const governance = [
+  ["Akses sesuai kewenangan", "Isi yang tampil mengikuti tim, peran, dan tingkat kerahasiaan dokumen."],
+  ["Jejak yang tercatat", "Perubahan penting dan persetujuan tersimpan untuk kebutuhan pemeriksaan."],
+  ["Keputusan tetap pada manusia", "SUNOVATE membantu menemukan dan menyusun, bukan menetapkan kebijakan."],
 ] as const;
 
 export default function Home() {
   return (
-    <main className="landing" id="main-content">
+    <main className="site" id="main-content">
       <PublicSiteHeader />
-      <section className="landing-hero" aria-labelledby="hero-title">
-        <div className="hero-copy">
-          <h1 id="hero-title">Pengetahuan yang terjaga, kinerja yang berkelanjutan.</h1>
-          <p className="hero-lede">SUN Organizational Values and Transformation through Experience menghubungkan pengetahuan, pengalaman, dan koordinasi kerja Direktorat Surat Utang Negara dalam satu ruang yang tertata.</p>
-          <div className="hero-actions"><Link className="button button-gold" href="/login">Masuk ke SUNOVATE</Link><a className="button button-outline-light" href="#pengetahuan">Jelajahi Basis Pengetahuan</a></div>
+
+      <section className="hero" aria-labelledby="hero-title">
+        <div className="hero-text">
+          <p className="kicker">Memori institusional Direktorat Surat Utang Negara</p>
+          <h1 id="hero-title">Pengetahuan organisasi yang tetap utuh ketika orangnya berganti.</h1>
+          <p className="hero-standfirst">
+            SUNOVATE menyimpan pengalaman kerja, keputusan, dan rujukan SUN dalam satu tempat yang tertata,
+            sehingga konteks sebuah kebijakan masih dapat ditelusuri bertahun-tahun kemudian.
+          </p>
+          <div className="hero-actions">
+            <Link className="button" href="/login">Akses SUNOVATE</Link>
+            <a className="text-link" href="#siklus">Lihat cara kerjanya</a>
+          </div>
         </div>
-        <div className="hero-image" role="img" aria-label="Ilustrasi arsitektur institusi pelayanan publik" />
-      </section>
-      <section className="access-rail" id="akses" aria-labelledby="access-title">
-        <h2 id="access-title">Akses utama</h2>
-        <div className="access-links">
-          {primaryAccess.map((item) => <Link href={item.href} key={item.label}><UiIcon name={item.icon} /><span><strong>{item.label}</strong><small>{item.detail}</small></span><span aria-hidden="true">→</span></Link>)}
+        <div className="hero-figure" id="siklus">
+          <KnowledgeCycle />
         </div>
       </section>
-      <section className="institutional-content" id="tentang">
-        <article className="about-sunovate" aria-labelledby="about-title">
-          <p className="section-label">Tentang SUNOVATE</p><h2 id="about-title">Memori organisasi yang dapat dipakai kembali.</h2>
-          <p>SUNOVATE membantu Direktorat Surat Utang Negara menjaga kesinambungan pengetahuan, mendokumentasikan pengalaman kerja, dan menemukan informasi berbasis sumber sesuai kewenangan pengguna.</p>
-          <blockquote>“Menjaga pengetahuan, belajar dari pengalaman, berinovasi untuk meningkatkan kinerja.”</blockquote>
-          <div className="governance-note"><UiIcon name="shield" /><span><strong>Dirancang dengan tata kelola</strong>Kontrol akses, klasifikasi informasi, sitasi sumber, dan jejak audit menjadi bagian dari fondasi sistem.</span></div>
-        </article>
-        <article className="knowledge-directory" id="pengetahuan" aria-labelledby="knowledge-title">
-          <div className="content-heading"><div><p className="section-label">Basis Pengetahuan</p><h2 id="knowledge-title">Ruang pengetahuan</h2></div><Link className="text-link" href="/knowledge">Lihat seluruh pengetahuan</Link></div>
-          <div className="knowledge-list">{knowledgeAreas.map(([title, detail], index) => <div key={title}><span>{String(index + 1).padStart(2, "0")}</span><div><h3>{title}</h3><p>{detail}</p></div></div>)}</div>
-        </article>
+
+      <section className="service-rail" id="akses" aria-labelledby="services-title">
+        <h2 id="services-title">Layanan SUNOVATE</h2>
+        <ul>
+          {services.map((service) => (
+            <li key={service.label}>
+              <Link href={service.href}>
+                <UiIcon name={service.icon} />
+                <span>
+                  <strong>{service.label}</strong>
+                  <small>{service.detail}</small>
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </section>
-      <section className="prototype-notice" aria-label="Status lingkungan"><div><strong>Lingkungan pengembangan</strong><span>Seluruh informasi yang tampil merupakan data contoh.</span></div><span>Belum terhubung ke layanan operasional</span></section>
-      <footer className="public-footer"><div><strong>SUNOVATE</strong><span>Direktorat Surat Utang Negara</span></div><span>SUN Organizational Values and Transformation through Experience</span><span>Prototipe pengembangan · bukan sistem transaksi atau pengambilan keputusan keuangan</span></footer>
+
+      <section className="briefing" aria-label="Tentang SUNOVATE">
+        <article className="briefing-lead" id="tentang" aria-labelledby="about-title">
+          <p className="kicker">Tentang</p>
+          <h2 id="about-title">Konteks keputusan sering hilang lebih cepat daripada dokumennya.</h2>
+          <p>
+            Bahan rapat, catatan lelang, dan kajian tersebar di banyak tempat. Yang paling cepat hilang justru alasan
+            di balik sebuah keputusan, terutama ketika pegawai yang memahaminya berpindah tugas.
+          </p>
+          <p>
+            SUNOVATE membantu menangkap, memvalidasi, dan menghubungkan pengetahuan itu, lalu menyajikannya kembali
+            kepada pimpinan, ketua tim, dan pegawai baru sesuai kewenangan masing-masing.
+          </p>
+          <blockquote>
+            Menjaga pengetahuan, belajar dari pengalaman, berinovasi untuk meningkatkan kinerja.
+          </blockquote>
+        </article>
+
+        <div className="briefing-side">
+          <section aria-labelledby="savi-title">
+            <header className="ed-head">
+              <h2 id="savi-title">Cara SAVI AI menjawab</h2>
+              <p>Asisten pengetahuan untuk pertanyaan seputar Surat Utang Negara</p>
+            </header>
+            <dl className="rule-list">
+              {answerRules.map(([term, detail]) => (
+                <div key={term}><dt>{term}</dt><dd>{detail}</dd></div>
+              ))}
+            </dl>
+          </section>
+          <section id="tata-kelola" aria-labelledby="governance-title">
+            <header className="ed-head">
+              <h2 id="governance-title">Tata kelola</h2>
+              <p>Pengaman yang berlaku sejak dokumen pertama diunggah</p>
+            </header>
+            <dl className="rule-list">
+              {governance.map(([term, detail]) => (
+                <div key={term}><dt>{term}</dt><dd>{detail}</dd></div>
+              ))}
+            </dl>
+          </section>
+        </div>
+      </section>
+
+      <p className="env-notice">
+        <UiIcon name="shield" />
+        <span>
+          <strong>Lingkungan pengembangan.</strong> Seluruh isi memakai data contoh dan belum terhubung ke layanan operasional.
+        </span>
+      </p>
+
+      <footer className="site-footer">
+        <div>
+          <strong>SUNOVATE</strong>
+          <span>SUN Organizational Values and Transformation through Experience</span>
+        </div>
+        <span>Direktorat Surat Utang Negara, DJPPR, Kementerian Keuangan</span>
+        <span>Bukan sistem transaksi atau pengambilan keputusan keuangan</span>
+      </footer>
     </main>
   );
 }
