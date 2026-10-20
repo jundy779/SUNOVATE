@@ -1,7 +1,7 @@
 # Retrieval Strategy
 
 **Status:** IN PROGRESS
-**Last Updated:** 2026-10-14
+**Last Updated:** 2026-10-20
 
 ## Purpose
 
@@ -104,6 +104,10 @@ Pesan kepada pengguna tidak boleh mengisyaratkan adanya dokumen yang tidak boleh
 ### Tindak lanjut bukti tidak cukup (IMPLEMENTED 2026-10-14)
 
 - `low_coverage`: SAVI meminta pengguna memperjelas periode, dokumen, proses, atau unit terkait.
+- **IMPLEMENTED 2026-10-20:** jika tidak ada kandidat yang lolos otorisasi, pengguna menerima
+  penjelasan bahwa bahan terbit belum ditemukan dalam cakupan aksesnya. Jika kandidat ditemukan
+  tetapi evidence gate menolaknya, pengguna menerima penjelasan bahwa bahan belum cukup kuat
+  mendukung jawaban. Kedua keadaan tetap tidak mengungkap keberadaan dokumen di luar akses.
 - Sitasi tidak valid atau tidak mendukung jawaban: SAVI meminta pemeriksaan pegawai yang berwenang.
 - Tindak lanjut hanya berupa panduan pada layar. SAVI tidak otomatis menunjuk PIC, membuat tiket, mengirim notifikasi, mengubah data, atau memasukkan materi baru ke basis pengetahuan.
 - Nama PIC, batas waktu layanan, kanal notifikasi, dan kewenangan publikasi tetap menunggu keputusan OQ-36.

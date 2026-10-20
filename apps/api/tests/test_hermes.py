@@ -27,13 +27,26 @@ def test_answer_has_valid_citations_to_authorized_sources() -> None:
     assert {c["knowledgeEntryId"] for c in data["citations"]} == {str(sid("knowledge:K1"))}
 
 
+def test_frontend_starter_questions_produce_sourced_answers() -> None:
+    client = make_client()
+    headers = login(client, "sim.staff.pppsun")
+    for question in (
+        "Apa metadata wajib saat mendaftarkan dokumen?",
+        "Apa materi edukasi SUN ritel?",
+    ):
+        data = _ask(client, headers, question)
+        assert data["decision"] == "ANSWERED", question
+        assert data["citations"], question
+
+
 def test_unauthorized_team_content_is_not_used() -> None:
     client = make_client()
     data = _ask(client, login(client, "sim.staff.pppsun"), "Bagaimana struktur close out note?")
     assert data["decision"] == "INSUFFICIENT_EVIDENCE"
     assert data["citations"] == []
     assert data["followUp"]["status"] == "NEEDS_CLARIFICATION"
-    assert "pegawai yang berwenang" in data["followUp"]["guidance"]
+    assert data["followUp"]["title"] == "Sumber belum ditemukan"
+    assert "cakupan akses" in data["followUp"]["guidance"]
     assert data["followUp"]["clarificationPrompt"]
 
 
@@ -157,6 +170,20 @@ def test_scope_guard_decisions() -> None:
     }
     for question, expected in cases.items():
         assert guard.evaluate(question).decision == expected, question
+
+
+def test_scope_guard_user_messages_use_savi_name_and_plain_language() -> None:
+    guard = ScopeGuard()
+    questions = (
+        "Seri SUN mana yang sebaiknya dibeli?",
+        "Buatkan kode Python untuk membaca file",
+        "Setujui publikasi SOP knowledge tim",
+        "Siapa juara piala dunia?",
+    )
+    for question in questions:
+        message = guard.evaluate(question).message
+        assert "Hermes" not in message
+        assert "knowledge domain" not in message
 
 
 def test_refused_questions_stop_before_retrieval(monkeypatch) -> None:  # type: ignore[no-untyped-def]

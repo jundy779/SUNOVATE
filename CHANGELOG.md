@@ -1,5 +1,27 @@
 # Changelog
 
+## 2026-10-20 — Penyempurnaan percakapan dan sumber SAVI AI
+
+- Memperbaiki BUG-024: contoh pertanyaan awal kini selalu membawa konteks SUN yang dapat dikenali
+  pengaman domain dan telah diuji terhadap data contoh, sehingga pengguna tidak diarahkan ke
+  pertanyaan yang langsung ditolak karena konteksnya terlalu umum.
+- Menambahkan pilihan contoh pertanyaan, penghitung karakter, tombol memulai percakapan baru,
+  ringkasan jumlah rujukan, serta susunan sumber yang lebih mudah dibaca tanpa menampilkan istilah
+  teknis internal.
+- Membedakan tindak lanjut saat bahan terbit sama sekali belum ditemukan dan saat bahan ditemukan
+  tetapi belum cukup kuat untuk mendukung jawaban. SAVI tetap tidak menebak, tidak membuka sumber
+  di luar hak akses, dan tidak mengirim permintaan otomatis kepada pegawai.
+- Mengganti sisa nama internal Hermes dan istilah `approval` pada pesan yang dapat dibaca pengguna
+  dengan nama SAVI AI serta bahasa Indonesia yang lebih jelas. Nama internal pada kode tetap
+  dipertahankan untuk kompatibilitas.
+- Tidak ada model atau koneksi AI eksternal yang diaktifkan. Mode pengembangan tetap ekstraktif,
+  lokal, dan menggunakan data contoh.
+- Validasi aktual: ESLint, Ruff, TypeScript, mypy strict (64 source files), 35 tes frontend,
+  292 tes backend lulus dengan 40 tes PostgreSQL dilewati, build produksi, render SQL Alembic,
+  sembilan langkah demo API, serta render HTTP halaman SAVI terautentikasi lulus. Pengujian
+  browser otomatis belum berjalan karena binari Chromium Playwright tidak tersedia pada
+  lingkungan eksekusi.
+
 ## 2026-10-19 — Dashboard editorial dan penjelasan SAVI AI
 
 - Menata ulang dashboard menjadi pusat kerja institusional dengan hierarki editorial: ringkasan,

@@ -46,6 +46,33 @@ BLOCKED_MESSAGE = (
 )
 
 
+def _insufficient_follow_up(evidence_reason: str) -> HermesFollowUp:
+    if evidence_reason == "no_candidates":
+        return HermesFollowUp(
+            status="NEEDS_CLARIFICATION",
+            title="Sumber belum ditemukan",
+            guidance=(
+                "SAVI AI belum menemukan bahan terbit yang sesuai dalam cakupan akses Anda. "
+                "Tambahkan nama dokumen, periode, proses, atau unit yang dimaksud."
+            ),
+            clarification_prompt=(
+                "Sebutkan nama dokumen, periode, proses, dan unit terkait yang ingin diperiksa."
+            ),
+        )
+    return HermesFollowUp(
+        status="NEEDS_CLARIFICATION",
+        title="Sumber belum cukup mendukung",
+        guidance=(
+            "Bahan yang ditemukan belum cukup kuat untuk mendukung jawaban. Perjelas periode, "
+            "nama dokumen, proses, atau unit yang dimaksud. Jika masih belum cukup, mintakan "
+            "pemeriksaan kepada pegawai yang berwenang."
+        ),
+        clarification_prompt=(
+            "Sebutkan periode, dokumen acuan, proses, dan unit terkait yang ingin diperiksa."
+        ),
+    )
+
+
 @dataclass(frozen=True)
 class HermesCitation:
     index: int
@@ -149,7 +176,7 @@ class HermesGateway:
         self, principal: Principal, question: str, conversation_id: UUID | None = None
     ) -> HermesResult:
         if not self._enabled:
-            raise ApiError(503, "HERMES_DISABLED", "Hermes dinonaktifkan pada lingkungan ini")
+            raise ApiError(503, "HERMES_DISABLED", "SAVI AI sedang tidak tersedia saat ini")
         classifications = self._store.classifications()
         output_guard = OutputGuard({c.code: c.rank for c in classifications})
 
@@ -171,7 +198,9 @@ class HermesGateway:
             if decision == "REQUIRES_HUMAN_APPROVAL":
                 approval = self._approval_for_write(principal, question)
                 if approval is None:
-                    answer += " Anda tidak memiliki izin untuk mengajukan approval."
+                    answer += (
+                        " Anda tidak memiliki kewenangan untuk mengajukan permintaan persetujuan."
+                    )
         else:
             ceiling = self._ceiling(principal)
             query_terms = terms(question)
@@ -209,19 +238,7 @@ class HermesGateway:
                     "low_coverage",
                     (INSUFFICIENT_MESSAGE),
                 )
-                follow_up = HermesFollowUp(
-                    status="NEEDS_CLARIFICATION",
-                    title="Sumber belum mencukupi",
-                    guidance=(
-                        "Perjelas periode, nama dokumen, proses, atau unit yang dimaksud. "
-                        "Jika sumber tetap belum ditemukan, mintakan pemeriksaan kepada pegawai "
-                        "yang berwenang pada topik tersebut."
-                    ),
-                    clarification_prompt=(
-                        "Sebutkan periode, dokumen acuan, proses, dan unit terkait "
-                        "yang ingin diperiksa."
-                    ),
-                )
+                follow_up = _insufficient_follow_up(evidence.reason)
             else:
                 citation_map = {n: item for n, item in enumerate(selected, start=1)}
                 passages = [

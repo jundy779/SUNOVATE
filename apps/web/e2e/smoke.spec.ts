@@ -16,11 +16,17 @@ test("staff logs in, sees scoped dashboard, and asks SAVI AI", async ({ page }) 
   await expect(page.getByRole("link", { name: "Administrasi" })).toHaveCount(0);
 
   await page.getByRole("link", { name: "SAVI AI" }).click();
-  await page.getByLabel("Pertanyaan untuk SAVI AI").fill(
-    "Apa saja metadata wajib saat mendaftarkan dokumen knowledge?",
-  );
+  await page
+    .getByRole("button", { name: "Apa metadata wajib saat mendaftarkan dokumen?" })
+    .click();
   await page.getByRole("button", { name: "Kirim pertanyaan" }).click();
   await expect(page.getByText("Dijawab dengan sumber")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Sumber yang digunakan" })).toBeVisible();
+  await expect(page.getByText("1 rujukan digunakan")).toBeVisible();
+
+  await page.getByRole("button", { name: "Mulai percakapan baru" }).click();
+  await expect(page.getByRole("heading", { name: "Mulai dari pertanyaan tentang SUN" })).toBeVisible();
+  await expect(page.getByText("Dijawab dengan sumber")).toHaveCount(0);
 });
 
 test("public landing page explains scope without loading authenticated data", async ({ page }) => {

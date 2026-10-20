@@ -52,6 +52,8 @@ describe("HermesChat", () => {
     fireEvent.click(screen.getByRole("button", { name: "Kirim pertanyaan" }));
 
     expect(await screen.findByText("Dijawab dengan sumber")).toBeInTheDocument();
+    expect(screen.getByText("1 rujukan digunakan")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Sumber yang digunakan" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: answer.data.citations[0]!.title })).toHaveAttribute(
       "href",
       `/knowledge/${answer.data.citations[0]!.knowledgeEntryId}`,
@@ -66,6 +68,21 @@ describe("HermesChat", () => {
     fireEvent.click(screen.getByRole("button", { name: "Kirim pertanyaan" }));
     expect(await screen.findByRole("alert")).toHaveTextContent("Pertanyaan minimal 3 karakter");
     await waitFor(() => expect(fetchMock).not.toHaveBeenCalled());
+  });
+
+  it("fills a tested starter question without sending it automatically", () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    renderChat();
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Apa metadata wajib saat mendaftarkan dokumen?" }),
+    );
+
+    expect(screen.getByLabelText("Pertanyaan untuk SAVI AI")).toHaveValue(
+      "Apa metadata wajib saat mendaftarkan dokumen?",
+    );
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it("shows API errors without technical details", async () => {
@@ -117,5 +134,23 @@ describe("HermesChat", () => {
     );
     expect(screen.getByText(/tidak mengirim permintaan kepada pegawai/i)).toBeInTheDocument();
     expect(screen.getByText(/pencarian lanjutan satu kali/i)).toBeInTheDocument();
+  });
+
+  it("starts a separate conversation and clears the previous answer", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(new Response(JSON.stringify(answer), { status: 200 })),
+    );
+    renderChat();
+    fireEvent.change(screen.getByLabelText("Pertanyaan untuk SAVI AI"), {
+      target: { value: "Apa metadata wajib saat mendaftarkan dokumen?" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Kirim pertanyaan" }));
+
+    expect(await screen.findByText("Dijawab dengan sumber")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Mulai percakapan baru" }));
+
+    expect(screen.queryByText("Dijawab dengan sumber")).not.toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Mulai dari pertanyaan tentang SUN" })).toBeInTheDocument();
   });
 });

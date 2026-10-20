@@ -1,7 +1,7 @@
 # AI Agent Handoff
 
 **Status:** ACTIVE
-**Last Updated:** 2026-10-19
+**Last Updated:** 2026-10-20
 
 ## Baca Sebelum Bertindak
 
@@ -48,6 +48,11 @@ Urutan wajib: root `AGENTS.md`, [task-tracker.md](task-tracker.md), [developer-h
 - Antrean `/approvals` merangkum permintaan publikasi yang boleh dilihat pengguna, dengan filter status dan tim. API memperkaya respons dengan nama pengaju serta judul/status bahan hanya setelah otorisasi. Keputusan tetap dilakukan di detail knowledge; jangan memindahkan keputusan ke tabel tanpa memastikan konteks bahan tetap wajib dibaca.
 - `docs/00-project/implementation-master-plan.md` adalah urutan implementasi utama. Ide atau teknologi baru harus dimasukkan ke fase dan gate dokumen tersebut sebelum kode dibuat; jangan mengubah roadmap hanya berdasarkan referensi visual.
 - `EvidenceGate` adalah baseline abstention SAVI: passage hanya diteruskan bila coverage, dukungan istilah, skor rerank, dan ambang relatif terpenuhi. Jangan menggantinya dengan model reranker eksternal atau menurunkan ambang tanpa OQ-11 dan evaluasi golden set.
+- Antarmuka percakapan SAVI menyediakan dua contoh pertanyaan yang sudah diuji, daftar sumber
+  terstruktur, jumlah rujukan, penghitung karakter, serta tombol percakapan baru. Tindak lanjut
+  membedakan sumber yang tidak ditemukan dari sumber yang belum cukup mendukung. Pesan pengguna
+  wajib memakai nama SAVI AI; `Hermes` tetap hanya nama internal kode. Perubahan ini tidak
+  mengaktifkan model atau koneksi AI eksternal.
 - OQ-37 dijawab sebagian oleh mentor pada 2026-10-14. `SUN = Surat Utang Negara`, sumber glosarium berupa peraturan SUN/playbook transaksi, review setiap tiga bulan, dan singkatan tanpa sumber resmi dilarang. Kata `admin` belum menjadi role runtime; tujuh kandidat domain tetap BLOCKED sampai pemetaan dan validator final disahkan.
 - Delapan pertanyaan operasional dari arahan mentor 2026-10-13 berada di `apps/api/sunovate_api/resources/sme_question_intake.json`, bukan golden set aktif. Halaman read-only `/savi-validation` tersedia bagi role simulasi dengan `knowledge:review` dan `scope:all_teams`, dilengkapi ringkasan status, pencarian, filter, format cetak, serta lembar persiapan keputusan mentor yang hanya hidup pada state browser. Pertanyaan tetap diblokir dari retrieval dan jawaban SAVI (OQ-36). Jangan menyimpan keputusan, menambahkan aksi approval, atau mempromosikan kasus sebelum keputusan mentor diterima melalui mekanisme resmi.
 - Draft Workspace untuk file hasil pekerjaan adalah proposal tertunda (FR-56/TASK-019), bukan fitur aktif. DRAFT boleh diubah/dihapus lunak oleh pemilik berizin; versi PUBLISHED harus immutable; koreksi menjadi versi baru; penarikan mempertahankan audit. Jangan implementasikan atau menganggap akun utama sebagai super-admin konten sebelum OQ-35 diputuskan.

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import {
   hermesQuerySchema,
   type ApiErrorBody,
@@ -20,6 +20,11 @@ interface Turn {
   question: string;
   answer: HermesAnswer;
 }
+
+const STARTER_QUESTIONS = [
+  "Apa metadata wajib saat mendaftarkan dokumen?",
+  "Apa materi edukasi SUN ritel?",
+] as const;
 
 async function askHermes(input: HermesQueryInput): Promise<HermesAnswer> {
   const response = await fetch("/api/hermes", {
@@ -57,8 +62,11 @@ export function HermesChat() {
     register,
     handleSubmit,
     reset,
+    setValue,
+    control,
     formState: { errors },
   } = useForm<HermesQueryInput>({ resolver: zodResolver(hermesQuerySchema) });
+  const question = useWatch({ control, name: "question" }) ?? "";
 
   const ask = useMutation({
     mutationFn: askHermes,
@@ -77,14 +85,39 @@ export function HermesChat() {
     ask.mutate(conversationId ? { ...values, conversationId } : values),
   );
 
+  const startNewConversation = () => {
+    setTurns([]);
+    setRated({});
+    reset({ question: "" });
+    ask.reset();
+    feedback.reset();
+  };
+
   return (
     <div className="chat">
       <div className="chat-log" aria-live="polite" aria-busy={ask.isPending}>
         {turns.length === 0 ? (
-          <p className="muted">
-            Ajukan pertanyaan tentang pengetahuan SUN yang boleh Anda akses. Contoh: Informasi apa
-            saja yang wajib dicatat saat mendaftarkan dokumen?
-          </p>
+          <section className="savi-welcome" aria-labelledby="savi-welcome-title">
+            <div>
+              <h3 id="savi-welcome-title">Mulai dari pertanyaan tentang SUN</h3>
+              <p>
+                SAVI AI akan memeriksa bahan terbit dalam cakupan akses Anda. Pilih contoh atau
+                tulis pertanyaan sendiri.
+              </p>
+            </div>
+            <div className="savi-starter-questions" aria-label="Contoh pertanyaan">
+              {STARTER_QUESTIONS.map((starter) => (
+                <button
+                  type="button"
+                  key={starter}
+                  disabled={ask.isPending}
+                  onClick={() => setValue("question", starter, { shouldValidate: true })}
+                >
+                  {starter}
+                </button>
+              ))}
+            </div>
+          </section>
         ) : null}
         {turns.map(({ question, answer }) => (
           <article className="chat-turn" key={answer.messageId}>
@@ -93,9 +126,16 @@ export function HermesChat() {
               {question}
             </p>
             <div className="chat-answer">
-              <StatusTag tone={decisionTone(answer.decision)}>
-                {HERMES_DECISION_LABELS[answer.decision]}
-              </StatusTag>
+              <header className="savi-answer-header">
+                <StatusTag tone={decisionTone(answer.decision)}>
+                  {HERMES_DECISION_LABELS[answer.decision]}
+                </StatusTag>
+                <span>
+                  {answer.citations.length
+                    ? `${answer.citations.length} rujukan digunakan`
+                    : "Tanpa rujukan karena jawaban tidak diteruskan"}
+                </span>
+              </header>
               <p className="answer-text">{answer.answer}</p>
               {answer.followUp ? (
                 <section className="savi-follow-up" aria-label="Langkah berikutnya">
@@ -117,19 +157,23 @@ export function HermesChat() {
                 </section>
               ) : null}
               {answer.citations.length ? (
-                <ol className="citations" aria-label="Sumber">
-                  {answer.citations.map((citation) => (
-                    <li key={citation.index}>
-                      <span className="cite-index">[{citation.index}]</span>{" "}
-                      <Link href={`/knowledge/${citation.knowledgeEntryId}`}>{citation.title}</Link>
-                      <span>
-                        {" "}
-                        - {citation.sectionLabel} - {citation.versionLabel} -{" "}
-                        {classificationLabel(citation.classificationCode)}
-                      </span>
-                    </li>
-                  ))}
-                </ol>
+                <section className="savi-sources" aria-labelledby={`sources-${answer.messageId}`}>
+                  <h3 id={`sources-${answer.messageId}`}>Sumber yang digunakan</h3>
+                  <ol className="citations">
+                    {answer.citations.map((citation) => (
+                      <li key={citation.index}>
+                        <span className="cite-index">[{citation.index}]</span>
+                        <span>
+                          <Link href={`/knowledge/${citation.knowledgeEntryId}`}>{citation.title}</Link>
+                          <small>
+                            {citation.sectionLabel} · {citation.versionLabel} ·{" "}
+                            {classificationLabel(citation.classificationCode)}
+                          </small>
+                        </span>
+                      </li>
+                    ))}
+                  </ol>
+                </section>
               ) : null}
               {answer.approvalRequestId ? (
                 <p className="muted">
@@ -167,20 +211,37 @@ export function HermesChat() {
                   </>
                 )}
               </div>
+              {feedback.isError ? (
+                <p className="field-error" role="alert">
+                  {feedback.error.message}
+                </p>
+              ) : null}
             </div>
           </article>
         ))}
       </div>
 
       <form className="chat-form" onSubmit={onSubmit} noValidate>
-        <label htmlFor="question">Pertanyaan untuk SAVI AI</label>
+        <div className="savi-form-heading">
+          <label htmlFor="question">Pertanyaan untuk SAVI AI</label>
+          {turns.length ? (
+            <button className="text-button" type="button" onClick={startNewConversation}>
+              Mulai percakapan baru
+            </button>
+          ) : null}
+        </div>
         <textarea
           id="question"
           rows={3}
+          maxLength={2000}
+          placeholder="Tulis pertanyaan yang jelas, misalnya nama dokumen, periode, proses, atau unit terkait."
           aria-invalid={errors.question ? "true" : "false"}
-          aria-describedby={errors.question ? "question-error" : undefined}
+          aria-describedby={errors.question ? "question-error question-count" : "question-count"}
           {...register("question")}
         />
+        <p className="savi-question-count" id="question-count">
+          {question.length}/2000 karakter
+        </p>
         {errors.question ? (
           <p className="field-error" id="question-error" role="alert">
             {errors.question.message}

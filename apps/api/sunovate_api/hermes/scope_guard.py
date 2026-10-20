@@ -199,26 +199,27 @@ class ScopeGuard:
             return ScopeDecision(
                 "REFUSED_POLICY",
                 "financial_decision",
-                "Hermes tidak memberikan rekomendasi atau keputusan keuangan. Silakan merujuk "
+                "SAVI AI tidak memberikan rekomendasi atau keputusan keuangan. Silakan merujuk "
                 "pada proses dan pejabat yang berwenang.",
             )
         if _is_general_coding(text):
             return ScopeDecision(
                 "REFUSED_GENERAL_CODING",
                 "general_coding",
-                "Hermes hanya melayani pertanyaan knowledge domain SUN, bukan bantuan pemrograman.",
+                "SAVI AI hanya melayani pertanyaan tentang pengetahuan SUN, bukan bantuan "
+                "pemrograman.",
             )
         if _matches(WRITE_PATTERNS, text):
             return ScopeDecision(
                 "REQUIRES_HUMAN_APPROVAL",
                 "write_intent",
-                "Hermes tidak menjalankan perubahan data. Permintaan dicatat sebagai usulan yang "
+                "SAVI AI tidak menjalankan perubahan data. Permintaan dicatat sebagai usulan yang "
                 "memerlukan persetujuan manusia yang berwenang.",
             )
         if not _has_domain_context(text):
             return ScopeDecision(
                 "REFUSED_OUT_OF_SCOPE",
                 "out_of_domain",
-                "Pertanyaan berada di luar domain SUN dan knowledge Direktorat SUN.",
+                "Pertanyaan berada di luar lingkup pengetahuan SUN.",
             )
         return IN_SCOPE
