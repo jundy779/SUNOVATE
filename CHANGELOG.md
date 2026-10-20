@@ -6,7 +6,7 @@
 - Menutup OQ-02 melalui DEC-20261020-01: tujuh tim pilot dan nama resmi AKPSUN "TK Analisis Keuangan dan Pasar SUN". Dokumen cakupan tim dan task tracker (TASK-025) diperbarui.
 - README memakai nama resmi "SUN Organizational Values and Transformation through Experience", tagline mentor, nama publik SAVI AI, tujuh tim, target MVP sekitar 3 bulan, serta status rencana klasifikasi RAHASIA.
 - Memberi id pendek pada parameter `test_rejects_unsafe_or_mislabelled_files` agar `PYTEST_CURRENT_TEST` tidak melampaui batas 32767 karakter variabel lingkungan Windows (sebelumnya 2 error teardown di Windows).
-- Validasi aktual (`pnpm validate`, Windows): ESLint, Ruff, TypeScript, mypy strict (64 source files), 35 test frontend, 291 test backend lulus (41 dilewati), dan build produksi lulus. Render SQL Alembic, `search:eval`, `extraction:eval`, `demo:smoke`, QA visual, dan PostgreSQL aktual belum dijalankan untuk perubahan ini.
+- Validasi aktual (`pnpm validate`, Windows): ESLint, Ruff, TypeScript, mypy strict (64 source files), 35 test frontend, 291 test backend lulus (41 dilewati), dan build produksi lulus. Setelahnya, di Windows yang sama: `db:sql` (render SQL Alembic hingga `0002_ordering_columns`), `search:eval` (10 kasus, hit@5 1,00, MRR 1,00, kebocoran 0), `extraction:eval` (7 kasus, tingkat keberhasilan 1,00), dan `demo:smoke` (PASSED, tanpa koneksi eksternal dan tanpa penulisan persisten) lulus. Di lingkungan Linux penulis patch tercatat 292 test backend lulus (40 dilewati). QA visual dan PostgreSQL aktual belum dijalankan.
 
 ## 2026-10-20 — Konsistensi bahasa antarmuka dan status layanan
 
