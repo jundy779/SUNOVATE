@@ -53,6 +53,11 @@ Urutan wajib: root `AGENTS.md`, [task-tracker.md](task-tracker.md), [developer-h
   membedakan sumber yang tidak ditemukan dari sumber yang belum cukup mendukung. Pesan pengguna
   wajib memakai nama SAVI AI; `Hermes` tetap hanya nama internal kode. Perubahan ini tidak
   mengaktifkan model atau koneksi AI eksternal.
+- Audit bahasa antarmuka 2026-10-20 menutup BUG-025. Hasil pencarian menerjemahkan jenis
+  pengetahuan, halaman administrasi membedakan tujuh layanan dengan nama dan penjelasan awam,
+  katalog kewenangan memakai SAVI AI, serta pesan layanan tidak lagi menampilkan `knowledge`,
+  `clearance`, `approval`, atau nama Hermes kepada pengguna. Kode permission, route, dan nama
+  kelas internal tidak diubah.
 - OQ-37 dijawab sebagian oleh mentor pada 2026-10-14. `SUN = Surat Utang Negara`, sumber glosarium berupa peraturan SUN/playbook transaksi, review setiap tiga bulan, dan singkatan tanpa sumber resmi dilarang. Kata `admin` belum menjadi role runtime; tujuh kandidat domain tetap BLOCKED sampai pemetaan dan validator final disahkan.
 - Delapan pertanyaan operasional dari arahan mentor 2026-10-13 berada di `apps/api/sunovate_api/resources/sme_question_intake.json`, bukan golden set aktif. Halaman read-only `/savi-validation` tersedia bagi role simulasi dengan `knowledge:review` dan `scope:all_teams`, dilengkapi ringkasan status, pencarian, filter, format cetak, serta lembar persiapan keputusan mentor yang hanya hidup pada state browser. Pertanyaan tetap diblokir dari retrieval dan jawaban SAVI (OQ-36). Jangan menyimpan keputusan, menambahkan aksi approval, atau mempromosikan kasus sebelum keputusan mentor diterima melalui mekanisme resmi.
 - Draft Workspace untuk file hasil pekerjaan adalah proposal tertunda (FR-56/TASK-019), bukan fitur aktif. DRAFT boleh diubah/dihapus lunak oleh pemilik berizin; versi PUBLISHED harus immutable; koreksi menjadi versi baru; penarikan mempertahankan audit. Jangan implementasikan atau menganggap akun utama sebagai super-admin konten sebelum OQ-35 diputuskan.

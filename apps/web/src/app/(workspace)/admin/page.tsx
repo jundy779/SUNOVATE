@@ -10,6 +10,9 @@ import {
   classificationLabel,
   outcomeLabel,
   permissionLabel,
+  providerDescription,
+  providerLabel,
+  providerModeLabel,
   roleLabel,
 } from "@/lib/ui-labels";
 
@@ -120,10 +123,10 @@ export default async function AdminPage() {
           <ul className="list">
             {providers.data.map((p) => (
               <li key={p.kind}>
-                <strong>Layanan {p.kind === "DOCUMENT" ? "penyimpanan dokumen" : p.kind === "AI" ? "SAVI AI" : "pendukung"}</strong>
+                <strong>{providerLabel(p.kind)}</strong>
                 <span>
-                  <StatusTag tone={p.mode === "DISABLED" ? "risk" : "warning"}>{p.mode === "DISABLED" ? "Belum diaktifkan" : "Pengembangan"}</StatusTag>{" "}
-                  Menunggu persetujuan dan penyiapan layanan resmi.
+                  <StatusTag tone={p.mode === "DISABLED" ? "risk" : "warning"}>{providerModeLabel(p.mode)}</StatusTag>{" "}
+                  {providerDescription(p.kind)}
                 </span>
               </li>
             ))}

@@ -50,7 +50,7 @@ export function GlossaryRegister({ entries }: { entries: GlossaryEntry[] }) {
         </div>
         <div>
           <strong>{entries.length - active.length}</strong>
-          <span>Masih diblokir</span>
+          <span>Belum dapat digunakan</span>
         </div>
       </div>
 

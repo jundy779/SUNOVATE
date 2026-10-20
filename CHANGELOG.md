@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-10-20 — Konsistensi bahasa antarmuka dan status layanan
+
+- Memperbaiki BUG-025: hasil pencarian tidak lagi menampilkan kode jenis pengetahuan mentah,
+  sedangkan halaman administrasi kini membedakan tujuh layanan pendukung dengan nama serta
+  penjelasan yang mudah dipahami.
+- Mengganti sisa nama Hermes dan istilah pengembang pada keterangan kewenangan, nama pengguna
+  simulasi, isi pengetahuan contoh, serta pesan kegagalan dengan nama SAVI AI dan bahasa kerja
+  yang jelas. Kode kewenangan, alamat layanan, dan nama kelas internal tidak diubah.
+- Menambahkan pengujian pemetaan nama layanan, status layanan, label aman untuk kode yang tidak
+  dikenal, dan katalog kewenangan yang tidak membocorkan nama internal ke pengguna.
+- Perubahan hanya menyentuh bahasa dan penyajian data contoh. Aturan akses, batas data privat,
+  alur persetujuan, serta status integrasi eksternal tetap sama.
+- Validasi aktual: ESLint, Ruff, TypeScript, mypy strict (64 source files), 35 tes frontend,
+  292 tes backend lulus dengan 40 tes PostgreSQL dilewati, build produksi, render SQL Alembic,
+  sembilan langkah demo API, serta render HTTP terautentikasi untuk halaman administrasi dan
+  pencarian lulus. Tidak ada koneksi AI eksternal atau data asli yang digunakan.
+
 ## 2026-10-20 — Penyempurnaan percakapan dan sumber SAVI AI
 
 - Memperbaiki BUG-024: contoh pertanyaan awal kini selalu membawa konteks SUN yang dapat dikenali

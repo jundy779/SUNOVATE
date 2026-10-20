@@ -95,7 +95,7 @@ def _check_target(
     if not ctx.authz.team_in_scope(principal, team_id):
         raise permission_denied("Anda hanya dapat membuat data kerja untuk tim Anda")
     if not ctx.authz.classification_allowed(principal.clearance_code, classification):
-        raise permission_denied("Klasifikasi melebihi clearance Anda")
+        raise permission_denied("Klasifikasi melebihi batas akses informasi Anda")
 
 
 def _writeable[G: Governed](

@@ -167,9 +167,9 @@ def _check_target(
     if ctx.store.team(team_id) is None:
         raise ApiError(422, "VALIDATION_ERROR", "Tim pemilik tidak dikenal")
     if not ctx.authz.team_in_scope(principal, team_id):
-        raise permission_denied("Anda hanya dapat membuat knowledge untuk tim Anda")
+        raise permission_denied("Anda hanya dapat membuat pengetahuan untuk tim Anda")
     if not ctx.authz.classification_allowed(principal.clearance_code, classification):
-        raise permission_denied("Klasifikasi melebihi clearance Anda")
+        raise permission_denied("Klasifikasi melebihi batas akses informasi Anda")
 
 
 @router.get("")
@@ -572,7 +572,7 @@ def update_knowledge(
         if not ctx.authz.can_write(principal, entry):
             ctx.authz.deny_write(principal, entry, "knowledge_entry")
         if entry.lifecycle_status != "DRAFT":
-            raise invalid_state("Hanya knowledge berstatus DRAFT yang dapat diubah")
+            raise invalid_state("Hanya pengetahuan berstatus draf yang dapat diubah")
         if body.classification_code:
             _check_target(ctx, principal, entry.owner_team_id, body.classification_code)
         # Explicit null means "unchanged" (ADR-015).
@@ -610,7 +610,7 @@ def submit_knowledge(
         if not ctx.authz.can_write(principal, entry):
             ctx.authz.deny_write(principal, entry, "knowledge_entry")
         if entry.lifecycle_status != "DRAFT":
-            raise invalid_state("Hanya knowledge berstatus DRAFT yang dapat diajukan")
+            raise invalid_state("Hanya pengetahuan berstatus draf yang dapat diajukan")
         updated = ctx.store.update_revisioned(
             KnowledgeEntry,
             entry.id,

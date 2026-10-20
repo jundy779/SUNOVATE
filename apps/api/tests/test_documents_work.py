@@ -105,7 +105,7 @@ def test_dashboard_summary_uses_authorized_scope() -> None:
     assert data["metrics"]["tasksOverdue"] == 1
     assert {a["ownerTeamCode"] for a in data["attention"]} == {"PSUN"}
     assert data["attention"][0]["category"] == "Tugas"
-    assert data["attention"][0]["assigneeName"] == "Team Lead Simulasi PSUN"
+    assert data["attention"][0]["assigneeName"] == "Ketua Tim Simulasi PSUN"
     assert data["attention"][0]["workStatus"] == "IN_PROGRESS"
     coordinator = client.get(f"{API}/dashboard/summary",
                              headers=login(client, "sim.coordinator")).json()["data"]
