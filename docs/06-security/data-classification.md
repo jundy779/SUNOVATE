@@ -1,7 +1,7 @@
 # Data Classification
 
 **Status:** NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-21
 
 ## Purpose
 
@@ -73,6 +73,19 @@ Catatan:
 - Rekaman tanpa klasifikasi yang dikenal tidak dapat dibaca siapa pun.
 - Hermes tidak pernah menerima chunk di atas `HERMES_MAX_CLASSIFICATION`.
 - Uji otorisasi mencakup kombinasi clearance INTERNAL dan RESTRICTED terhadap rekaman tiap tingkat.
+
+## Pemetaan istilah rancangan dan kode (2026-10-21)
+
+Dokumen rancangan di luar repository (blueprint SUNOVATE v0.5, deck v2.5) memakai istilah usulan yang belum menjadi kode. Pemetaan berikut berlaku sampai mentor memutuskan; kode tidak diganti nama berdasarkan usulan tersebut.
+
+| Istilah rancangan (PROPOSED) | Padanan di kode | Status |
+|---|---|---|
+| INTERNAL | `INTERNAL` | sama |
+| TEAM | `sharing_scope = TEAM` (bukan tingkat klasifikasi) | sudah ada |
+| RESTRICTED | `RESTRICTED` | sama |
+| RAHASIA | perlakuan penampil hanya-baca di vault terpisah (ADR-020), dengan klasifikasi biasa pada dokumen | simulasi |
+| METADATA_ONLY | belum ada | belum diimplementasikan |
+| (tidak dipakai rancangan) | `PUBLIC`, `CONFIDENTIAL` | sudah ada |
 
 ## Related Documents
 

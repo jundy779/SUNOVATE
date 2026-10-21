@@ -12,6 +12,7 @@ export const SECURE_PAGE_HEADERS: Record<string, string> = {
   "Content-Disposition": "inline",
   "X-Content-Type-Options": "nosniff",
   "Cross-Origin-Resource-Policy": "same-origin",
+  "Content-Security-Policy": "default-src 'none'; frame-ancestors 'none'; sandbox",
 };
 
 /** Keyboard shortcuts that would save, print, copy, or open developer tools. */

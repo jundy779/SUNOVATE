@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-21 — Kepatuhan dokumentasi, pengerasan, dan uji PostgreSQL penuh
+
+- `pnpm db:test` dijalankan penuh pada PostgreSQL sementara: 347 test lulus, termasuk penampil RAHASIA dan audit pada backend postgres. Dua uji yang gagal saat pertama dijalankan diperbaiki: uji paritas umum tidak lagi membandingkan label mesin pencarian (`postgres_fts` vs `lexical`, sudah dicakup uji pencarian khusus), dan uji keluaran demo journey menetapkan backend simulasi (BUG-032).
+- Gambar halaman RAHASIA kini menerima CSP `default-src 'none'; frame-ancestors 'none'; sandbox` lewat aturan khusus setelah aturan situs di `next.config.ts` (BUG-031). Detail dokumen yang hilang atau tidak diberikan memanggil `notFound()`; statusnya tetap 200 karena streaming area kerja (soft 404 dengan `noindex`, KL-25).
+- `source-map-js` diperbarui ke 1.2.2 (BUG-033). `braces` dan `vite` masih dilaporkan `pnpm audit` karena rilis perbaikan belum tersedia atau terlalu baru untuk kebijakan usia rilis; keduanya hanya alat pengembangan (KL-26).
+- Dokumentasi: bug register BUG-026 sampai BUG-033, keputusan terbaru di `ai-agent-handoff.md`, `cryptography` dan Pillow di technology stack, dokumen baru `docs/06-security/secure-document-viewer.md`, serta pemetaan peran dan klasifikasi rancangan ke kode di `authorization-rbac.md` dan `data-classification.md`.
+- Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 39 test frontend, 307 test backend mode simulated (40 PostgreSQL dilewati), 347 test mode PostgreSQL, build produksi, render SQL Alembic, dan QA header proxy lulus.
+
 ## 2026-10-21 — Validasi Windows untuk penyempurnaan visual dan dokumen RAHASIA
 
 - Patch 0001 sampai 0003 (penyempurnaan visual, fondasi dokumen RAHASIA, penampil web) sudah ada di `main` sebagai `72a2ba9`, `d89abbc`, dan `cbf3a7b`. Penerapan ketiga patch pada `5b4d46d` di index sementara menghasilkan tree yang identik dengan HEAD (`aec61d3`), sehingga `git am` tidak dijalankan ulang.

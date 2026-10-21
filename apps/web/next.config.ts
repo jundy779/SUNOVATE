@@ -33,6 +33,18 @@ const nextConfig: NextConfig = {
           { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
         ],
       },
+      {
+        // RAHASIA page images (ADR-020): the image itself needs no scripts, styles, or fetches.
+        // Declared after the site-wide rule so this stricter policy wins (last match overrides).
+        source: "/api/secure-documents/:id/pages/:page",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: "default-src 'none'; frame-ancestors 'none'; sandbox",
+          },
+          { key: "Content-Disposition", value: "inline" },
+        ],
+      },
     ];
   },
 };

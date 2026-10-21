@@ -51,8 +51,12 @@ def test_demo_journey_cli_blocks_postgres_before_connecting(
 
 
 def test_demo_journey_cli_does_not_print_business_content(
+    monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
+    # The journey is simulated-only by design; pin the backend so the suite also passes
+    # when it runs with SUNOVATE_TEST_BACKEND=postgres (pnpm db:test).
+    monkeypatch.setenv("SUNOVATE_TEST_BACKEND", "simulated")
     assert main() == 0
     output = capsys.readouterr().out
     payload = json.loads(output)

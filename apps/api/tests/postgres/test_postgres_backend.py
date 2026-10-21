@@ -542,7 +542,8 @@ _PARITY_PATHS = [
     "/roles",
     "/approvals?pageSize=100",
     "/dashboard/summary",
-    "/search?q=metadata",
+    # /search is compared in test_search_matches_simulated_backend_per_persona, which allows
+    # the engine label in meta.mode to differ (postgres_fts vs lexical) while results must match.
     "/audit-logs?pageSize=100",
 ]
 

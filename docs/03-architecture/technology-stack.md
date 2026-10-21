@@ -35,6 +35,8 @@ Mencatat teknologi dan versi yang benar-benar terpasang dan dipakai pada scaffol
 | Alembic | 1.20.0 |
 | asyncpg | 0.31 |
 | pgvector (Python) | 0.5.0 |
+| cryptography | 46.0.7 | AES-256-GCM envelope untuk dokumen RAHASIA (ADR-020) |
+| Pillow | 12.3.0 | render halaman PNG bertanda air untuk penampil RAHASIA (ADR-020) |
 | uvicorn | 0.54 |
 | pytest / pytest-asyncio / httpx | 8.4.2 / 1.4 / 0.28.1 |
 | Ruff / mypy | 0.16.9 / 1.20.2 (strict) |

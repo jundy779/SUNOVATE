@@ -109,6 +109,20 @@ Catatan: penyaringan daftar menerapkan langkah yang sama per rekaman; rekaman ya
 - Pengguna dengan clearance INTERNAL tidak dapat membaca rekaman RESTRICTED, termasuk melalui pencarian dan Hermes.
 - Setiap penolakan tercatat sebagai `ACCESS_DENIED`.
 
+## Pemetaan peran rancangan dan kode (2026-10-21)
+
+Peran di blueprint v0.5 adalah usulan. Katalog di `sunovate_api/authz/catalog.py` tetap berlaku sampai matriks peran sebenarnya divalidasi mentor (OQ peran dan akun). Penampil RAHASIA tidak bergantung pada peran: aksesnya diberikan per dokumen.
+
+| Peran rancangan (PROPOSED) | Peran terdekat di kode | Catatan |
+|---|---|---|
+| PIMPINAN | belum ada padanan | perlu ditetapkan bersama matriks peran |
+| KASUBDIT_PMP, KASI_MP | `knowledge_coordinator` | koordinasi pengetahuan lintas tim |
+| KETUA_TIM | `team_lead` | |
+| KNOWLEDGE_PIC | `knowledge_owner` | |
+| STAFF | `staff` | |
+| PIC_AUDIT_EKSTERNAL | `auditor` | baca jejak audit |
+| ADMIN | `system_admin` | tidak mengubah substansi tanpa alur |
+
 ## Related Documents
 
 - [permission-matrix](permission-matrix.md)

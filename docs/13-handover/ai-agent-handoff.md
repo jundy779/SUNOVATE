@@ -64,6 +64,16 @@ Urutan wajib: root `AGENTS.md`, [task-tracker.md](task-tracker.md), [developer-h
 - Specification-ready package Draft Workspace ada di `docs/02-business/work-file-draft-workspace.md`, termasuk model dan endpoint kandidat serta AC-26 sampai AC-31. Jangan membuat migration atau route dari rancangan ini sebelum OQ-35, provider file, dan approval chain dikonfirmasi.
 - Ketua tim proyek mengarahkan implementasi; mentor mengawasi dan memvalidasi kebutuhan. Keputusan jaringan, domain, identitas, data, keamanan, dan produksi tetap memerlukan pihak instansi yang berwenang.
 
+## Keputusan Terbaru (21 Oktober 2026)
+
+- Nama resmi: SUNOVATE, SUN Organizational Values and Transformation through Experience; tagline mentor: "Menjaga pengetahuan, belajar dari pengalaman, berinovasi untuk meningkatkan kinerja."
+- Tujuh tim pilot: PPSUN, AKPSUN, PSUN, PPPSUN, DHTV, SUN Tematik, dan MONEV (ditambahkan setelah rapat 6 Oktober 2026, DEC-20261020-01).
+- Target MVP sekitar 3 bulan menurut revisi notulen 6 Oktober 2026.
+- Tampilan landing, halaman masuk, dan dashboard memakai lapisan editorial (gabungan pola Bank Indonesia dan The Economist) di `apps/web/src/app/editorial.css`.
+- Dokumen RAHASIA tertentu hanya dibaca lewat penampil hanya-baca dengan tanda air, pernyataan kerahasiaan, audit, dan enkripsi envelope (ADR-020, [secure-document-viewer.md](../06-security/secure-document-viewer.md)). Isi tersegel di vault adalah pengecualian terdokumentasi terhadap larangan menyimpan file; hanya `SIMULATED_DATA`, dan dokumen asli dilarang sampai OQ-40 sampai OQ-42 terjawab.
+- Peran dan klasifikasi di blueprint v0.5 adalah usulan; pemetaan ke kode ada di [authorization-rbac.md](../06-security/authorization-rbac.md) dan [data-classification.md](../06-security/data-classification.md). Jangan mengganti nama peran atau klasifikasi di kode tanpa keputusan mentor.
+- Delapan skenario mentor tetap diblokir dari retrieval sampai rujukan PMK dikonfirmasi (OQ-38).
+
 ## Batas yang Tidak Boleh Dilanggar
 
 - Jangan mengarang fungsi SUN Tematik, proses kerja Dit. SUN, angka yield/kepemilikan SBN, struktur persetujuan, atau format dokumen resmi.
