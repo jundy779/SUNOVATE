@@ -10,6 +10,7 @@ const icons: Record<string, IconName> = {
   "/knowledge": "book",
   "/approvals": "check",
   "/search": "search",
+  "/dokumen-rahasia": "document",
   "/work-monitoring": "chart",
   "/savi-ai": "chat",
   "/savi-validation": "shield",

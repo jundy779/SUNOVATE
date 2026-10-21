@@ -11,7 +11,7 @@ from sunovate_api.secure.crypto import (
     seal,
     shred,
 )
-from sunovate_api.secure.vault import PageRateLimiter
+from sunovate_api.secure.vault import NoticeRegistry, PageRateLimiter
 from sunovate_api.testing import login, make_client
 
 API = "/api/v1/secure-documents"
@@ -62,9 +62,12 @@ def test_crypto_shredding_makes_content_unrecoverable() -> None:
 # Viewer access ---------------------------------------------------------------
 
 
-def _doc_id(client, headers):  # type: ignore[no-untyped-def]
+def _doc_id(client, headers, *, accept: bool = True):  # type: ignore[no-untyped-def]
     rows = client.get(API, headers=headers).json()["data"]
     assert len(rows) == 1
+    if accept:
+        response = client.post(f"{API}/{rows[0]['id']}/acknowledgements", headers=headers)
+        assert response.status_code == 201, response.text
     return rows[0]["id"]
 
 
@@ -138,13 +141,13 @@ def test_no_route_exposes_file_text_or_download() -> None:
         response = client.get(f"{API}/{doc_id}/{suffix}", headers=coordinator)
         assert response.status_code in {404, 405, 422}, suffix
     paths = client.app.openapi()["paths"]
-    secure_routes = sorted(path for path in paths if path.startswith(API))
-    assert all(set(paths[path]) == {"get"} for path in secure_routes)
-    assert secure_routes == [
-        API,
-        f"{API}/{{document_id}}",
-        f"{API}/{{document_id}}/pages/{{page_number}}",
-    ]
+    methods = {path: set(paths[path]) for path in paths if path.startswith(API)}
+    assert methods == {
+        API: {"get"},
+        f"{API}/{{document_id}}": {"get"},
+        f"{API}/{{document_id}}/acknowledgements": {"post"},
+        f"{API}/{{document_id}}/pages/{{page_number}}": {"get"},
+    }
 
 
 def test_bulk_page_requests_are_rate_limited() -> None:
@@ -171,3 +174,40 @@ def test_rahasia_content_never_reaches_search_or_savi() -> None:
     )
     assert answer.status_code == 200
     assert MARKER not in answer.text.replace(f"Apa isi dokumen {MARKER}?", "")
+
+
+def test_pages_stay_locked_until_notice_is_accepted() -> None:
+    client = make_client()
+    coordinator = login(client, "sim.coordinator")
+    doc_id = _doc_id(client, coordinator, accept=False)
+    locked = client.get(f"{API}/{doc_id}/pages/1", headers=coordinator)
+    assert locked.status_code == 428
+    assert locked.json()["code"] == "SECURE_NOTICE_REQUIRED"
+
+    assert client.post(f"{API}/{doc_id}/acknowledgements", headers=coordinator).status_code == 201
+    assert client.get(f"{API}/{doc_id}/pages/1", headers=coordinator).status_code == 200
+    logs = client.get(
+        "/api/v1/audit-logs?action=SECURE_NOTICE_ACCEPTED", headers=login(client, "sim.admin")
+    ).json()["data"]
+    assert any(log["entityId"] == doc_id for log in logs)
+
+
+def test_notice_acceptance_expires_and_is_per_reader() -> None:
+    clock = [0.0]
+    client = make_client()
+    client.app.state.runtime.vault.notices = NoticeRegistry(ttl_seconds=60, clock=lambda: clock[0])
+    coordinator = login(client, "sim.coordinator")
+    lead = login(client, "sim.lead.psun")
+    doc_id = _doc_id(client, coordinator)
+
+    assert client.get(f"{API}/{doc_id}/pages/1", headers=coordinator).status_code == 200
+    assert client.get(f"{API}/{doc_id}/pages/1", headers=lead).status_code == 428
+    clock[0] = 61.0
+    assert client.get(f"{API}/{doc_id}/pages/1", headers=coordinator).status_code == 428
+
+
+def test_ungranted_reader_cannot_accept_notice() -> None:
+    client = make_client()
+    doc_id = _doc_id(client, login(client, "sim.coordinator"))
+    staff = login(client, "sim.staff.pppsun")
+    assert client.post(f"{API}/{doc_id}/acknowledgements", headers=staff).status_code == 404

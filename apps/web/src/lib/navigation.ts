@@ -10,6 +10,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: "Basis Pengetahuan", href: "/knowledge", anyOf: ["knowledge:read"] },
   { label: "Antrean Pemeriksaan", href: "/approvals", anyOf: ["approval:request", "approval:decide"] },
   { label: "Pencarian", href: "/search", anyOf: ["search:query"] },
+  { label: "Dokumen Rahasia", href: "/dokumen-rahasia", anyOf: ["document:read"] },
   { label: "Monitoring Kerja", href: "/work-monitoring", anyOf: ["work:read"] },
   { label: "SAVI AI", href: "/savi-ai", anyOf: ["hermes:query"] },
   { label: "Pemeriksaan SAVI", href: "/savi-validation", anyOf: ["knowledge:publish"] },

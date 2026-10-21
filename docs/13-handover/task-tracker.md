@@ -48,6 +48,7 @@ Menjadi sumber status pekerjaan lintas sesi dan lintas AI agent. Setiap perubaha
 | TASK-025 | Tambah MONEV sebagai tim pilot ketujuh pada shared types, seed `SIMULATED_DATA`, tes, dan dokumentasi; perbarui nama resmi di README | MVP | DONE | DEC-20261020-01; tanpa record simulasi MONEV; tes `test_teams_are_the_seven_pilot_codes`; validasi pada CHANGELOG 2026-10-20. |
 | TASK-026 | Penyempurnaan visual landing, halaman masuk, dan dashboard (gabungan gaya Bank Indonesia dan The Economist, palet terkunci, satu animasi per halaman, aman untuk reduced motion) | MVP | DONE | QA visual Chromium desktop 1440 px dan mobile 390 px; perbaikan overflow mobile pada shell dan tabel; validasi pada CHANGELOG 2026-10-21. |
 | TASK-027 | Fondasi dokumen RAHASIA: penampil hanya-baca (halaman PNG bertanda air dari server, tanpa route unduh/teks), pembaca eksplisit per dokumen, audit, batas laju, dan enkripsi envelope AES-256-GCM dengan antarmuka `KeyProvider` | MVP | DONE (simulasi) | ADR-020; 12 tes keamanan; penyedia TPM, persistensi, dan UI penampil menunggu OQ-40 sampai OQ-42. |
+| TASK-028 | Penampil dokumen RAHASIA di web: daftar dokumen yang diberikan, pernyataan kerahasiaan wajib (dicatat dan berlaku 30 menit), pembaca per halaman lewat proxy same-origin, serta penghalang salin/simpan/cetak di browser | MVP | DONE (simulasi) | ADR-020; 3 test API, 3 test unit web, 2 skenario e2e baru; penampil desktop dan kebijakan browser terkelola menunggu OQ-41. |
 
 ## Urutan Eksekusi Terdekat
 

@@ -18,6 +18,10 @@ describe("visibleNavItems", () => {
     expect(visibleNavItems(["audit:read"]).map((i) => i.href)).toEqual(["/admin"]);
   });
 
+  it("shows the confidential document list to document readers", () => {
+    expect(visibleNavItems(["document:read"]).map((i) => i.href)).toEqual(["/dokumen-rahasia"]);
+  });
+
   it("shows SAVI validation only to the publication role", () => {
     expect(visibleNavItems(["knowledge:review"]).map((i) => i.href)).toEqual([]);
     expect(visibleNavItems(["knowledge:publish"]).map((i) => i.href)).toEqual([

@@ -68,11 +68,37 @@ def _associated_data(document_id: UUID, page_index: int) -> bytes:
     return f"{document_id}:{page_index}".encode()
 
 
+@dataclass
+class NoticeRegistry:
+    """Records that a reader accepted the confidentiality notice; acceptance expires."""
+
+    ttl_seconds: int = 30 * 60
+    clock: Callable[[], float] = time.monotonic
+    _accepted: dict[tuple[UUID, UUID], float] = field(default_factory=dict)
+    _lock: threading.Lock = field(default_factory=threading.Lock)
+
+    def accept(self, principal_id: UUID, document_id: UUID) -> None:
+        with self._lock:
+            self._accepted[(principal_id, document_id)] = self.clock()
+
+    def is_valid(self, principal_id: UUID, document_id: UUID) -> bool:
+        with self._lock:
+            accepted_at = self._accepted.get((principal_id, document_id))
+        return accepted_at is not None and self.clock() - accepted_at < self.ttl_seconds
+
+
 class SecureVault:
-    def __init__(self, provider: KeyProvider, *, limiter: PageRateLimiter | None = None) -> None:
+    def __init__(
+        self,
+        provider: KeyProvider,
+        *,
+        limiter: PageRateLimiter | None = None,
+        notices: NoticeRegistry | None = None,
+    ) -> None:
         self._provider = provider
         self._documents: dict[UUID, SecureDocument] = {}
         self.limiter = limiter or PageRateLimiter()
+        self.notices = notices or NoticeRegistry()
 
     @property
     def key_id(self) -> str:

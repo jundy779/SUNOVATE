@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-21 — Penampil dokumen RAHASIA di web
+
+- Halaman baru `/dokumen-rahasia` (menu "Dokumen Rahasia") menampilkan hanya dokumen yang diberikan kepada pengguna. Pengguna tanpa akses melihat keterangan bahwa belum ada dokumen untuknya.
+- Pernyataan kerahasiaan wajib disetujui setiap kali dokumen dibuka. API mengunci halaman (428 `SECURE_NOTICE_REQUIRED`) sampai persetujuan tercatat; persetujuan diaudit, berlaku 30 menit, dan per pembaca per dokumen.
+- Pembaca per halaman memakai proxy same-origin sehingga token tetap di server; gambar tidak di-cache dan tidak ditawarkan sebagai unduhan. Menu konteks, seret gambar, pintasan simpan/cetak/salin/DevTools, dan cetak halaman dicegah, serta tampilan dikaburkan saat jendela tidak aktif. Langkah ini penghalang, bukan batas keamanan (ADR-020).
+- Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 39 test frontend, 307 test backend (40 PostgreSQL dilewati), build produksi, dan 7/7 skenario Playwright e2e terhadap server pengembangan lulus. QA visual Chromium pada 1440 px dan 390 px.
+
 ## 2026-10-21 — Fondasi dokumen RAHASIA (penampil hanya-baca dan enkripsi)
 
 - Modul API baru `/api/v1/secure-documents` (ADR-020, PROPOSED): daftar, metadata, dan satu halaman sebagai PNG. Tidak ada route berkas, teks, atau unduhan. Halaman dirender di server dengan tanda air nama, email, waktu WIB, dan rujukan sesi; teks tidak pernah dikirim ke browser.

@@ -225,3 +225,13 @@ export const SIMULATED_USERS = [
   { email: "sim.auditor@sunovate.local", role: "auditor" },
   { email: "sim.readonly.dhtv@sunovate.local", role: "read_only" },
 ] as const;
+
+/** RAHASIA documents are only ever shown as watermarked page images (ADR-020). */
+export interface SecureDocumentSummary {
+  id: string;
+  title: string;
+  classificationCode: string;
+  ownerTeamCode: string;
+  pageCount: number;
+  handling: "VIEW_ONLY";
+}

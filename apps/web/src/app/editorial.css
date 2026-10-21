@@ -197,6 +197,28 @@
 .db-indicators dd { margin: .3rem 0 0; color: var(--muted); font-size: .84rem; }
 .db-note { margin: 0; color: var(--muted); font-size: .76rem; }
 
+/* Secure viewer for RAHASIA documents (ADR-020) */
+.sv { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.75rem; max-width: 1100px; }
+.sv-head h1 { margin: 0; color: var(--navy); font: 600 clamp(1.6rem, 2.4vw, 2.2rem)/1.2 var(--font-heading); letter-spacing: -.015em; }
+.sv-list { margin: 0; padding: 0; list-style: none; }
+.sv-list li { display: grid; gap: .3rem; padding: 1rem 0; border-top: 1px solid var(--line); }
+.sv-list li:last-child { border-bottom: 1px solid var(--line); }
+.sv-list a { color: var(--navy); font: 600 1.05rem/1.35 var(--font-heading); }
+.sv-list small { color: var(--muted); font-size: .78rem; }
+.sv-notice { max-width: 720px; padding: 1.5rem 1.75rem; border: 1px solid var(--line); border-top: 2px solid var(--navy); background: var(--white); }
+.sv-notice ul { display: grid; gap: .6rem; margin: 0 0 1.4rem; padding-left: 1.1rem; list-style: disc; color: var(--navy); font-size: .92rem; line-height: 1.55; }
+.sv-agree { display: flex; align-items: flex-start; gap: .65rem; margin-bottom: 1.1rem; color: var(--navy); font-weight: 600; }
+.sv-agree input { width: 18px; height: 18px; margin-top: .15rem; accent-color: var(--navy); }
+.sv-reader { display: grid; gap: 1rem; }
+.sv-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; padding-bottom: .9rem; border-bottom: 1px solid var(--line); color: var(--navy); font-weight: 600; }
+.sv-message { display: flex; align-items: center; gap: .6rem; margin: 0; padding: .7rem .9rem; border-left: 4px solid var(--gold); background: var(--paper); color: var(--navy); font-size: .86rem; }
+.sv-message svg { width: 18px; flex: 0 0 auto; }
+.sv-page { position: relative; justify-self: center; width: min(100%, 820px); border: 1px solid var(--line); background: var(--white); user-select: none; -webkit-user-select: none; }
+.sv-page img { display: block; width: 100%; height: auto; -webkit-user-drag: none; user-select: none; transition: filter 120ms ease; }
+.sv-page-hidden img { filter: blur(22px); }
+.sv-cover { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; padding: 2rem; background: rgb(255 255 255 / 70%); color: var(--navy); font-weight: 700; text-align: center; cursor: pointer; }
+@media print { .sv-reader, .sv-notice { display: none !important; } }
+
 /* Responsive */
 @media (max-width: 1100px) {
   .site-nav { display: none; }

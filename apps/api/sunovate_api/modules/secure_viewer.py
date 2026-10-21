@@ -1,7 +1,8 @@
 """View-only access to RAHASIA documents (ADR-020, PROPOSED).
 
 There is deliberately no route that returns a file, its text, or a download link. The only
-content route returns one watermarked raster page at a time to an explicitly granted reader.
+content route returns one watermarked raster page at a time to an explicitly granted reader who
+has accepted the confidentiality notice within the last 30 minutes.
 Unauthorized readers get the same 404 as a missing document, and the attempt is audited.
 """
 
@@ -84,6 +85,21 @@ def get_secure_document(ctx: Ctx, principal: Reader, document_id: UUID) -> dict[
     return envelope(_view(_get_readable(ctx, principal, document_id, "SECURE_DOCUMENT_READ")))
 
 
+@router.post("/{document_id}/acknowledgements", status_code=201)
+def accept_notice(ctx: Ctx, principal: Reader, document_id: UUID) -> dict[str, Any]:
+    """The reader confirms the confidentiality notice; pages stay locked until then."""
+    document = _get_readable(ctx, principal, document_id, "SECURE_NOTICE_ACCEPTED")
+    ctx.vault.notices.accept(principal.user_id, document.id)
+    with ctx.store.transaction():
+        ctx.store.audit(
+            actor_user_id=principal.user_id,
+            action="SECURE_NOTICE_ACCEPTED",
+            entity_type=ENTITY,
+            entity_id=document.id,
+        )
+    return envelope({"accepted": True, "validMinutes": ctx.vault.notices.ttl_seconds // 60})
+
+
 @router.get("/{document_id}/pages/{page_number}", response_class=Response)
 def render_secure_page(
     ctx: Ctx,
@@ -95,6 +111,12 @@ def render_secure_page(
     document = _get_readable(ctx, principal, document_id, "SECURE_PAGE_VIEW")
     if page_number > document.page_count:
         raise not_found("Halaman")
+    if not ctx.vault.notices.is_valid(principal.user_id, document.id):
+        raise ApiError(
+            428,
+            "SECURE_NOTICE_REQUIRED",
+            "Setujui pernyataan kerahasiaan sebelum membuka halaman dokumen.",
+        )
 
     access = ctx.vault.limiter.check(principal.user_id)
     if not access.allowed:

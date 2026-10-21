@@ -69,3 +69,32 @@ test("staff creates and updates scoped work data", async ({ page }) => {
   await expect(page.getByText("Output simulasi dari UI")).toBeVisible();
   await expect(page.getByText("Output kerja berhasil ditambahkan.")).toBeVisible();
 });
+
+test("granted reader opens a confidential document only after accepting the notice", async ({ page }) => {
+  await page.goto("/login");
+  await expect(page.getByRole("button", { name: "Masuk dengan akses pengembangan" })).toBeEnabled();
+  await page.getByLabel("Email pengguna simulasi").fill("sim.coordinator@sunovate.local");
+  await page.getByRole("button", { name: "Masuk dengan akses pengembangan" }).click();
+  await page.waitForURL(/\/dashboard$/);
+
+  await page.goto("/dokumen-rahasia");
+  await page.getByRole("link", { name: /Pedoman Penilaian Internal/ }).click();
+  await expect(page.getByRole("heading", { name: "Pernyataan kerahasiaan" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Buka dokumen" })).toBeDisabled();
+  await expect(page.locator(".sv-page img")).toHaveCount(0);
+
+  await page.getByLabel("Saya memahami dan menyetujui pernyataan di atas.").check();
+  await page.getByRole("button", { name: "Buka dokumen" }).click();
+  await expect(page.getByRole("img", { name: /Halaman 1 dari 2/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: /unduh/i })).toHaveCount(0);
+});
+
+test("readers without a grant see no confidential documents", async ({ page }) => {
+  await page.goto("/login");
+  await expect(page.getByRole("button", { name: "Masuk dengan akses pengembangan" })).toBeEnabled();
+  await page.getByLabel("Email pengguna simulasi").fill("sim.staff.pppsun@sunovate.local");
+  await page.getByRole("button", { name: "Masuk dengan akses pengembangan" }).click();
+  await page.waitForURL(/\/dashboard$/);
+  await page.goto("/dokumen-rahasia");
+  await expect(page.getByText("Belum ada dokumen rahasia untuk Anda")).toBeVisible();
+});
