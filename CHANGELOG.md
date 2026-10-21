@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-10-21 — Validasi Windows untuk kepatuhan dokumentasi, CSP gambar, dan uji PostgreSQL
+
+- Patch 0004 diterapkan dengan `git am` sebagai `8fcb96e`. Perubahan `pnpm-lock.yaml` diperiksa sebelum instalasi: hanya kenaikan versi kecil (`rolldown`, `postcss`, `nanoid`, `@oxc-project/types`, `@babel/runtime`, `source-map-js` 1.2.2) tanpa registry lain.
+- Validasi aktual (Windows 11, Git Bash, Python 3.12 via uv):
+  - `pnpm install` lulus; lockfile tidak berubah.
+  - `pnpm validate` lulus: ESLint, Ruff, TypeScript, mypy strict (69 berkas), 39 test frontend (11 berkas), 306 test backend lulus (41 dilewati), dan build produksi (25 halaman statis).
+  - `pnpm db:check` lulus pada PostgreSQL sementara (pgserver).
+  - `pnpm db:test` lulus: 346 test lulus dan 1 dilewati dalam 10 menit 4 detik. Linux mencatat 347 lulus. Alasan skip tidak direkam pada run ini; kandidat yang sudah diketahui adalah `test_demo_preflight.py:141` (bit izin POSIX tidak tersedia di Windows).
+- `pnpm e2e` dengan API `pnpm api:dev` (`DATA_BACKEND=simulated`), hasil apa adanya:
+  - Run pertama: 6/7 lulus. "granted reader opens a confidential document only after accepting the notice" gagal; detail errornya tidak tersimpan karena `test-results` ditimpa run berikutnya. Skenario yang sama lulus saat dijalankan sendiri.
+  - Dua run berikutnya pada proses API yang sama: run kedua 7/7, run ketiga 6/7. "staff creates and updates scoped work data" gagal karena strict mode: `getByText('Output simulasi dari UI')` menemukan 2 elemen, sebab store simulasi di memori menyimpan output dari run sebelumnya. Skenario ini tidak idempoten bila API tidak di-restart.
+  - Setelah API di-restart: 7/7 lulus.
+- Belum diperiksa di Windows: header CSP gambar halaman di browser (dicakup aturan `next.config.ts` dan QA header di Linux) dan runtime aplikasi pada backend PostgreSQL.
+
 ## 2026-10-21 — Kepatuhan dokumentasi, pengerasan, dan uji PostgreSQL penuh
 
 - `pnpm db:test` dijalankan penuh pada PostgreSQL sementara: 347 test lulus, termasuk penampil RAHASIA dan audit pada backend postgres. Dua uji yang gagal saat pertama dijalankan diperbaiki: uji paritas umum tidak lagi membandingkan label mesin pencarian (`postgres_fts` vs `lexical`, sudah dicakup uji pencarian khusus), dan uji keluaran demo journey menetapkan backend simulasi (BUG-032).
