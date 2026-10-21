@@ -60,13 +60,15 @@ test("staff creates and updates scoped work data", async ({ page }) => {
   await page.getByRole("button", { name: "Masuk dengan akses pengembangan" }).click();
   await page.getByRole("link", { name: "Monitoring Kerja" }).click();
 
+  // A unique title keeps the scenario repeatable against an API that still holds earlier runs.
+  const title = `Output simulasi dari UI ${Date.now()}`;
   await page.getByRole("button", { name: "Tambah output" }).click();
-  await page.getByLabel("Judul").fill("Output simulasi dari UI");
+  await page.getByLabel("Judul").fill(title);
   await page.getByLabel("Deskripsi").fill("Data simulasi untuk memverifikasi alur monitoring kerja.");
   await page.getByLabel("Tim").selectOption({ index: 1 });
   await page.getByRole("button", { name: "Simpan" }).click();
 
-  await expect(page.getByText("Output simulasi dari UI")).toBeVisible();
+  await expect(page.getByText(title)).toBeVisible();
   await expect(page.getByText("Output kerja berhasil ditambahkan.")).toBeVisible();
 });
 
@@ -77,15 +79,16 @@ test("granted reader opens a confidential document only after accepting the noti
   await page.getByRole("button", { name: "Masuk dengan akses pengembangan" }).click();
   await page.waitForURL(/\/dashboard$/);
 
+  // First visits compile these routes in development mode, which can exceed the default 5 s.
   await page.goto("/dokumen-rahasia");
   await page.getByRole("link", { name: /Pedoman Penilaian Internal/ }).click();
-  await expect(page.getByRole("heading", { name: "Pernyataan kerahasiaan" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Pernyataan kerahasiaan" })).toBeVisible({ timeout: 30_000 });
   await expect(page.getByRole("button", { name: "Buka dokumen" })).toBeDisabled();
   await expect(page.locator(".sv-page img")).toHaveCount(0);
 
   await page.getByLabel("Saya memahami dan menyetujui pernyataan di atas.").check();
   await page.getByRole("button", { name: "Buka dokumen" }).click();
-  await expect(page.getByRole("img", { name: /Halaman 1 dari 2/ })).toBeVisible();
+  await expect(page.getByRole("img", { name: /Halaman 1 dari 2/ })).toBeVisible({ timeout: 30_000 });
   await expect(page.getByRole("link", { name: /unduh/i })).toHaveCount(0);
 });
 

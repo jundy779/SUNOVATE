@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-21 — Skenario e2e dapat diulang
+
+- Skenario monitoring kerja memakai judul output unik per run sehingga lulus walaupun API masih menyimpan data run sebelumnya; langkah pertama penampil dokumen rahasia diberi batas 30 detik untuk kompilasi rute pertama di mode pengembangan (BUG-034). Penyebab kegagalan pertama skenario dokumen rahasia di Windows tidak tercatat; trace Playwright tetap `retain-on-failure` untuk run berikutnya.
+- Validasi aktual (Linux): `pnpm e2e` 7/7 lulus dua kali berturut-turut tanpa restart API.
+
 ## 2026-10-21 — Validasi Windows untuk kepatuhan dokumentasi, CSP gambar, dan uji PostgreSQL
 
 - Patch 0004 diterapkan dengan `git am` sebagai `8fcb96e`. Perubahan `pnpm-lock.yaml` diperiksa sebelum instalasi: hanya kenaikan versi kecil (`rolldown`, `postcss`, `nanoid`, `@oxc-project/types`, `@babel/runtime`, `source-map-js` 1.2.2) tanpa registry lain.
