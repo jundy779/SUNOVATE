@@ -4,6 +4,7 @@
 
 - Skenario monitoring kerja memakai judul output unik per run sehingga lulus walaupun API masih menyimpan data run sebelumnya; langkah pertama penampil dokumen rahasia diberi batas 30 detik untuk kompilasi rute pertama di mode pengembangan (BUG-034). Penyebab kegagalan pertama skenario dokumen rahasia di Windows tidak tercatat; trace Playwright tetap `retain-on-failure` untuk run berikutnya.
 - Validasi aktual (Linux): `pnpm e2e` 7/7 lulus dua kali berturut-turut tanpa restart API.
+- Validasi aktual (Windows 11, Git Bash): patch 0005 diterapkan dengan `git am` sebagai `a1f66b4`. `pnpm e2e` dijalankan dua kali berturut-turut terhadap satu proses `pnpm api:dev` (`DATA_BACKEND=simulated`, satu kali "Application startup complete" di log, tanpa restart): run pertama 7/7 lulus (43,7 detik), run kedua 7/7 lulus (41,4 detik). Skenario dokumen rahasia selesai dalam 10,5 dan 11,2 detik; kegagalan run pertama yang tercatat pada validasi patch 0004 tidak muncul lagi. `pnpm validate`, `db:check`, dan `db:test` tidak dijalankan ulang karena patch hanya mengubah test e2e dan dokumentasi.
 
 ## 2026-10-21 — Validasi Windows untuk kepatuhan dokumentasi, CSP gambar, dan uji PostgreSQL
 
