@@ -6,6 +6,11 @@
 - ScopeGuard diperluas (BUG-035): normalisasi leetspeak, pola bermain peran sebagai admin/pengembang, muatan terenkode yang diminta dijalankan, penolakan permintaan nilai rahasia (`secret_request`), pertanyaan waktu beli/jual SUN, dan permintaan query SQL. Aturan khusus pertanyaan tidak dipakai untuk passage sehingga SOP tentang kata sandi tidak dibuang.
 - Corpus ekstraksi diperluas menjadi 13 kasus ditambah 4 kasus penolakan dengan metrik baru `rejection_accuracy`.
 - Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict (70 berkas), 39 test frontend, 331 test backend mode simulated (40 PostgreSQL dilewati), 371 test mode PostgreSQL (`pnpm db:test`), serta `savi:eval`, `extraction:eval`, `search:eval`, dan `demo:smoke` lulus. Frontend dan skema basis data tidak berubah sehingga build dan render SQL tidak dijalankan ulang.
+- Validasi aktual (Windows 11, Git Bash, Python 3.12 via uv): patch 0006 diterapkan dengan `git am` sebagai `cd4d570`. Perubahan ScopeGuard diperiksa sebelum diterapkan; isinya hanya menambah pola penolakan.
+  - `pnpm validate` lulus: ESLint, Ruff, TypeScript, mypy strict (70 berkas), 39 test frontend (11 berkas), 330 test backend lulus (41 dilewati), dan build produksi (25 halaman statis). Selisih satu test dengan Linux sama dengan validasi sebelumnya (skip izin POSIX di Windows).
+  - `pnpm savi:eval` lulus: 43 kasus di 10 kategori, `decision_accuracy` 1,0 untuk setiap kategori, `unauthorized_leakage` 0, `citation_validity` 1,0, `adversarial_answered` 0, `abstained_when_evidence_missing` 1,0, tanpa kasus gagal.
+  - `pnpm extraction:eval` lulus: 13 kasus dengan `extraction_success_rate`, `fragment_recall`, `structure_pass_rate`, dan `instruction_classification_accuracy` 1,0, `forbidden_hits` 0, serta 4 kasus penolakan dengan `rejection_accuracy` 1,0.
+  - `pnpm db:test` lulus pada PostgreSQL sementara (pgserver): 370 test lulus dan 1 dilewati (9 menit 0 detik untuk pytest, sekitar 10 menit total). Linux mencatat 371; alasan skip tidak ditampilkan oleh output `-q`.
 
 ## 2026-10-21 — Skenario e2e dapat diulang
 
