@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-10-21 — Validasi Windows untuk penyempurnaan visual dan dokumen RAHASIA
+
+- Patch 0001 sampai 0003 (penyempurnaan visual, fondasi dokumen RAHASIA, penampil web) sudah ada di `main` sebagai `72a2ba9`, `d89abbc`, dan `cbf3a7b`. Penerapan ketiga patch pada `5b4d46d` di index sementara menghasilkan tree yang identik dengan HEAD (`aec61d3`), sehingga `git am` tidak dijalankan ulang.
+- Validasi aktual (Windows 11, Git Bash, Python 3.12 via uv): `pnpm api:setup` lulus. `pnpm validate` lulus: ESLint, Ruff, TypeScript, mypy strict (69 berkas), 39 test frontend (11 berkas), 306 test backend lulus (41 dilewati), dan build produksi (25 halaman statis). Skip tambahan dibanding Linux adalah `test_demo_preflight.py:141` karena bit izin POSIX tidak tersedia di Windows; 37 skip lain karena backend PostgreSQL tidak dipilih dan 3 karena `SUNOVATE_TEST_DATABASE_URL` tidak diisi.
+- `pnpm e2e` dengan API `pnpm api:dev` (`DATA_BACKEND=simulated`): 7/7 skenario Playwright lulus.
+- Pemeriksaan manual di browser (Chromium bawaan, server pengembangan):
+  - `sim.coordinator` melihat satu dokumen simulasi di menu Dokumen Rahasia. Tombol "Buka dokumen" nonaktif sampai pernyataan disetujui. Setelah disetujui, halaman 1 dari 2 tampil sebagai gambar PNG bertanda air nama, email, waktu WIB, dan rujukan sesi. Penanda uji isi dokumen tidak ada di teks DOM. Gambar halaman memakai `no-store`, `inline`, dan `nosniff`.
+  - `sim.staff.pppsun` melihat "Belum ada dokumen rahasia untuk Anda". Akses langsung ke gambar halaman menghasilkan 404, dan URL detail menampilkan halaman tidak ditemukan tanpa judul dokumen.
+- Catatan, tidak diperbaiki:
+  - CSP yang sampai ke browser untuk gambar halaman adalah CSP situs Next, bukan `default-src 'none'` dari API, karena proxy same-origin menggantinya.
+  - URL detail yang ditolak tetap berstatus HTTP 200 (halaman tidak ditemukan dirender saat streaming).
+  - Indikator "1 Issue" di mode dev berasal dari CSP yang memblokir `eval()` milik React dev, bukan error aplikasi.
+- `pnpm db:sql` lulus (render hingga `0002_ordering_columns`). `pnpm db:check` lulus pada PostgreSQL sementara (pgserver): migrasi, seed, trigger append-only menolak UPDATE, dan downgrade ke base.
+- Tidak dijalankan: `pnpm db:test`, runtime aplikasi pada backend PostgreSQL, dan pemeriksaan dengan font Aptos asli.
+
 ## 2026-10-21 — Penampil dokumen RAHASIA di web
 
 - Halaman baru `/dokumen-rahasia` (menu "Dokumen Rahasia") menampilkan hanya dokumen yang diberikan kepada pengguna. Pengguna tanpa akses melihat keterangan bahwa belum ada dokumen untuknya.
