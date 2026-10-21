@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-21 — Evaluasi jawaban SAVI berkategori dan corpus ekstraksi diperluas
+
+- Golden set SAVI diberi kategori dan diperluas dari 24 menjadi 43 kasus, termasuk 10 percobaan prompt injection (leetspeak, bermain peran, muatan base64, header SYSTEM palsu), permintaan rahasia, nasihat investasi, query SQL, isolasi dokumen RAHASIA, dan pertanyaan tanpa sumber. Evaluator baru `pnpm savi:eval` melaporkan metrik per kategori tanpa menampilkan pertanyaan atau jawaban.
+- ScopeGuard diperluas (BUG-035): normalisasi leetspeak, pola bermain peran sebagai admin/pengembang, muatan terenkode yang diminta dijalankan, penolakan permintaan nilai rahasia (`secret_request`), pertanyaan waktu beli/jual SUN, dan permintaan query SQL. Aturan khusus pertanyaan tidak dipakai untuk passage sehingga SOP tentang kata sandi tidak dibuang.
+- Corpus ekstraksi diperluas menjadi 13 kasus ditambah 4 kasus penolakan dengan metrik baru `rejection_accuracy`.
+- Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict (70 berkas), 39 test frontend, 331 test backend mode simulated (40 PostgreSQL dilewati), 371 test mode PostgreSQL (`pnpm db:test`), serta `savi:eval`, `extraction:eval`, `search:eval`, dan `demo:smoke` lulus. Frontend dan skema basis data tidak berubah sehingga build dan render SQL tidak dijalankan ulang.
+
 ## 2026-10-21 — Skenario e2e dapat diulang
 
 - Skenario monitoring kerja memakai judul output unik per run sehingga lulus walaupun API masih menyimpan data run sebelumnya; langkah pertama penampil dokumen rahasia diberi batas 30 detik untuk kompilasi rute pertama di mode pengembangan (BUG-034). Penyebab kegagalan pertama skenario dokumen rahasia di Windows tidak tercatat; trace Playwright tetap `retain-on-failure` untuk run berikutnya.

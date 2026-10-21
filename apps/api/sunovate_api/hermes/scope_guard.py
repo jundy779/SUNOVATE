@@ -1,7 +1,8 @@
 """Rule-based ScopeGuard (development). Known to have false positives/negatives.
 
-Evaluation order: policy override -> financial decision -> general coding ->
-write intent -> SUN domain. See docs/05-ai-rag/scope-guard.md.
+Evaluation order: policy override (including leetspeak, role-play, and encoded payloads)
+-> secret request -> financial decision -> general coding -> write intent -> SUN domain.
+See docs/05-ai-rag/scope-guard.md.
 """
 
 from __future__ import annotations
@@ -16,6 +17,8 @@ POLICY_PATTERNS = tuple(
         r"\babaikan\s+(semua\s+|seluruh\s+)?(instruksi|aturan|kebijakan|perintah)",
         r"\bignore\s+(all\s+|any\s+|previous\s+|prior\s+|the\s+)*(instructions|rules|policies)",
         r"\bsystem\s*prompt\b",
+        r"\bprompt\s+(sistem|sistemnya|internal)\b",
+        r"\bignore\s+(semua\s+|seluruh\s+)?(instruksi|aturan|perintah)\b",
         r"\bjailbreak\b",
         r"\bdeveloper\s+mode\b",
         r"\btanpa\s+(batasan|filter|pemeriksaan\s+izin|otorisasi)\b",
@@ -51,6 +54,32 @@ POLICY_PATTERNS = tuple(
     )
 )
 
+# Checked on user questions only (not on retrieved passages), so ordinary SOP wording about
+# passwords or administrators cannot cause legitimate sources to be discarded.
+QUESTION_POLICY_PATTERNS = tuple(
+    re.compile(p, re.IGNORECASE)
+    for p in (
+        r"\b(anggap|bayangkan|jadilah|bertindak(lah)?)\s+(kamu|dirimu|anda\s+)?\s*(sebagai\s+)?"
+        r"(admin|administrator|root|superuser|pengembang|developer)\b",
+        r"(?=.*\b(decode|dekode|uraikan|jalankan|eksekusi|execute|run)\b)"
+        r"(?=.*[A-Za-z0-9+/]{20,}={0,2})",
+    )
+)
+
+SECRET_PATTERNS = tuple(
+    re.compile(p, re.IGNORECASE)
+    for p in (
+        # Asking for the value itself, not about a password policy or SOP.
+        r"\b(berapa|tampilkan|berikan|beri|sebutkan|bocorkan|kirim(kan)?|minta|show|give|tell)\b"
+        r".{0,20}\b(password|kata\s+sandi|kredensial|credential|secret|api[_ -]?key)\b",
+        r"(?:^|\s)\.env\b|\b(file|berkas)\s+env\b|\bconnection\s+string\b",
+    )
+)
+
+_LEET = str.maketrans(
+    {"0": "o", "1": "i", "3": "e", "4": "a", "5": "s", "7": "t", "@": "a", "$": "s"}
+)
+
 FINANCIAL_PATTERNS = tuple(
     re.compile(p, re.IGNORECASE)
     for p in (
@@ -62,6 +91,10 @@ FINANCIAL_PATTERNS = tuple(
         r"\b(pilihkan|tentukan)\s+(seri\s+)?(sun|sbn|obligasi)\s+.*\b(untung|menguntungkan|beli)",
         r"\b(sun|sbn|obligasi)\s+mana\s+.*\b(paling\s+)?(untung|menguntungkan)\b",
         r"\bstrategi\s+(trading|jual\s+beli)\s+(sun|sbn|obligasi)\b",
+        r"\b(kapan|waktu\s+terbaik|saat\s+terbaik|saat\s+yang\s+tepat)\b.{0,40}"
+        r"\b(beli|membeli|jual|menjual|lepas|melepas)\b.{0,40}\b(sun|sbn|ori|sbr|obligasi|seri)\b",
+        r"\b(beli|membeli|jual|menjual)\b.{0,40}\b(sun|sbn|ori|sbr|obligasi)\b.{0,40}"
+        r"\b(untung|cuan|profit|menguntungkan)\b",
     )
 )
 
@@ -71,6 +104,8 @@ CODING_ACTION_PATTERNS = tuple(
         r"\bbuat(kan)?\s+(kode|program|fungsi|script|skrip|aplikasi|query\s+sql)\b",
         r"\b(write|generate|fix|debug)\s+(the\s+|a\s+|some\s+|my\s+)?(code|script|function)\b",
         r"\b(coding|ngoding|debugging)\b",
+        r"\b(tulis(kan)?|buat(kan)?|susun(kan)?)\s+(query|kueri|perintah)\s*(sql)?\b",
+        r"\bquery\s+sql\b",
     )
 )
 
@@ -189,11 +224,22 @@ def is_instruction_like(text: str) -> bool:
 class ScopeGuard:
     def evaluate(self, question: str) -> ScopeDecision:
         text = _normalize(question)
-        if is_instruction_like(text):
+        deobfuscated = text.translate(_LEET)
+        if (
+            is_instruction_like(text)
+            or is_instruction_like(deobfuscated)
+            or _matches(QUESTION_POLICY_PATTERNS, text)
+        ):
             return ScopeDecision(
                 "REFUSED_POLICY",
                 "policy_override",
                 "Permintaan ditolak karena mencoba mengubah atau melewati kebijakan sistem.",
+            )
+        if _matches(SECRET_PATTERNS, text):
+            return ScopeDecision(
+                "REFUSED_POLICY",
+                "secret_request",
+                "SAVI AI tidak menampilkan kata sandi, kunci, token, atau konfigurasi sistem.",
             )
         if _matches(FINANCIAL_PATTERNS, text):
             return ScopeDecision(

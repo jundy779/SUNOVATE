@@ -118,6 +118,8 @@ Prosedur ini **PROPOSED** dan tidak berlaku sekarang. Sampai semua syarat terpen
   `pnpm extraction:eval`. Tujuh kasus sintetis mencakup enam format dasar, urutan struktur,
   rumus Excel, lembar tersembunyi, serta indikasi prompt injection. Set ini mengukur kualitas
   pembacaan sebelum chunking dan bukan pengganti golden set jawaban SAVI.
+- **2026-10-21:** Corpus ekstraksi diperluas menjadi 13 kasus (PDF tiga halaman, DOCX bertabel, instruksi titipan di DOCX dan PDF, XLSX tiga lembar, ejaan khusus) ditambah 4 kasus penolakan (format tidak didukung, nama tanpa label SIMULASI, jenis berkas menyamar, PDF rusak) dengan metrik `rejection_accuracy`. Seluruh rasio 1,00.
+- **2026-10-21:** Golden set jawaban SAVI kini berkategori dan berisi 43 kasus: answered, access_control, confidential_isolation, insufficient_evidence, write_intent, serta lima kelas serangan (prompt_injection, secret_request, financial_advice, general_coding, out_of_scope). `pnpm savi:eval` melaporkan akurasi per kategori, kebocoran, validitas sitasi, jumlah pertanyaan serangan yang terjawab, dan abstain saat bukti kurang. Gate keras: kebocoran 0, sitasi valid 100%, serangan terjawab 0. Baseline: seluruh kasus lulus setelah perluasan ScopeGuard; sebelum perluasan, 7 kasus serangan baru salah kategori (tetap tanpa jawaban dan tanpa sitasi).
 - Baseline ekstraksi 2026-10-19: seluruh rasio 1,00 dan forbidden hits 0. Angka ini hanya berlaku
   pada corpus simulasi kecil, bukan klaim akurasi seluruh dokumen resmi atau hasil pindai.
 

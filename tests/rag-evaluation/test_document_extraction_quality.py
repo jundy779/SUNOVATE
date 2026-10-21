@@ -14,17 +14,26 @@ def test_extraction_fixture_is_simulated_unique_and_bounded() -> None:
     assert {case["format"] for case in cases} == {"txt", "md", "pdf", "docx", "xlsx", "xls"}
     assert all(case["filename"].startswith("SIMULASI") for case in cases)
     assert all(case["expectedFragments"] for case in cases)
+    rejections = payload["rejectionCases"]
+    assert {case["expectedReasonCode"] for case in rejections} == {
+        "UNSUPPORTED_FORMAT",
+        "SIMULATION_LABEL_REQUIRED",
+        "MEDIA_TYPE_MISMATCH",
+        "EXTRACTION_FAILED",
+    }
 
 
 def test_extraction_quality_gates_pass() -> None:
     metrics = evaluate()
 
-    assert metrics.cases == 7
+    assert metrics.cases == 13
     assert metrics.extraction_success_rate == 1.0
     assert metrics.fragment_recall == 1.0
     assert metrics.forbidden_hits == 0
     assert metrics.structure_pass_rate == 1.0
     assert metrics.instruction_classification_accuracy == 1.0
+    assert metrics.rejection_cases == 4
+    assert metrics.rejection_accuracy == 1.0
     assert metrics.passed
 
 

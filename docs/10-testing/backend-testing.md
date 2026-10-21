@@ -26,6 +26,7 @@ Menjelaskan cara menguji API `apps/api` (FastAPI), termasuk pengujian negatif ot
 | Typecheck (mypy strict) | `pnpm api:typecheck` |
 | Unit dan API test (pytest) | `pnpm api:test` |
 | Evaluasi kualitas ekstraksi simulasi | `pnpm extraction:eval` |
+| Evaluasi kualitas jawaban SAVI per kategori | `pnpm savi:eval` |
 | Seluruh gate frontend dan backend | `pnpm validate` |
 
 ## Pola Pengujian API
@@ -80,7 +81,7 @@ atau berkas sumber yang disimpan di repository.
 Lembar tersembunyi tidak dianggap sebagai batas keamanan. Isinya tetap masuk pemeriksaan agar
 instruksi yang disisipkan tidak lolos hanya karena tidak terlihat pada tampilan awal Excel.
 
-Evaluator `pnpm extraction:eval` memakai tujuh kasus berlabel `SIMULATED_DATA`. Gate awalnya
+Evaluator `pnpm extraction:eval` memakai tiga belas kasus ekstraksi dan empat kasus penolakan berlabel `SIMULATED_DATA` (diperluas 2026-10-21). Gate awalnya
 menetapkan keberhasilan ekstraksi, ketercakupan fragmen, ketepatan struktur, dan akurasi
 klasifikasi instruksi masing-masing 1,00, dengan kemunculan fragmen terlarang wajib 0. Output
 hanya menampilkan metrik agregat dan ID kasus, tanpa nama berkas, checksum, atau isi dokumen.

@@ -33,6 +33,7 @@
     "search:eval": "uv run --directory apps/api --extra dev python -m sunovate_api.evaluation.search_recall",
     "search:eval:postgres": "uv run --directory apps/api --extra dev python -m sunovate_api.evaluation.search_recall_postgres",
     "extraction:eval": "uv run --directory apps/api --extra dev python -m sunovate_api.evaluation.document_extraction",
+    "savi:eval": "uv run --directory apps/api --extra dev python -m sunovate_api.evaluation.savi_answers",
     "demo:preflight": "uv run --directory apps/api --extra dev python ../../scripts/validation/demo_preflight.py",
     "demo:smoke": "uv run --directory apps/api --extra dev python -m sunovate_api.evaluation.demo_journey",
     "demo:load": "uv run --directory apps/api --extra dev python ../../scripts/validation/demo_load_test.py",

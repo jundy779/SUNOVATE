@@ -43,6 +43,14 @@ class CaseResult:
 
 
 @dataclass(frozen=True)
+class RejectionResult:
+    case_id: str
+    expected_reason_code: str
+    actual_reason_code: str | None
+    passed: bool
+
+
+@dataclass(frozen=True)
 class ExtractionMetrics:
     cases: int
     extraction_success_rate: float
@@ -50,8 +58,11 @@ class ExtractionMetrics:
     forbidden_hits: int
     structure_pass_rate: float
     instruction_classification_accuracy: float
+    rejection_cases: int
+    rejection_accuracy: float
     passed: bool
     case_results: tuple[CaseResult, ...]
+    rejection_results: tuple[RejectionResult, ...]
 
 
 def load_evaluation_set() -> dict[str, Any]:
@@ -243,6 +254,31 @@ def evaluate() -> ExtractionMetrics:
             )
         )
 
+    rejection_results: list[RejectionResult] = []
+    for case in payload.get("rejectionCases", []):
+        actual: str | None = None
+        try:
+            extract_simulated_document(
+                filename=case["filename"],
+                content_type=case["contentType"],
+                payload=build_payload(case),
+            )
+        except ExtractionRejected as exc:
+            actual = exc.reason_code
+        rejection_results.append(
+            RejectionResult(
+                case_id=case["id"],
+                expected_reason_code=case["expectedReasonCode"],
+                actual_reason_code=actual,
+                passed=actual == case["expectedReasonCode"],
+            )
+        )
+    rejection_accuracy = (
+        sum(result.passed for result in rejection_results) / len(rejection_results)
+        if rejection_results
+        else 1.0
+    )
+
     cases = len(results)
     extraction_rate = sum(result.extracted for result in results) / cases
     recall = fragment_hits / total_fragments if total_fragments else 0.0
@@ -257,6 +293,7 @@ def evaluate() -> ExtractionMetrics:
         and forbidden_hits == thresholds["forbiddenHits"]
         and structure_rate >= thresholds["structurePassRate"]
         and instruction_accuracy >= thresholds["instructionClassificationAccuracy"]
+        and rejection_accuracy >= thresholds.get("rejectionAccuracy", 1.0)
     )
     return ExtractionMetrics(
         cases=cases,
@@ -265,8 +302,11 @@ def evaluate() -> ExtractionMetrics:
         forbidden_hits=forbidden_hits,
         structure_pass_rate=round(structure_rate, 4),
         instruction_classification_accuracy=round(instruction_accuracy, 4),
+        rejection_cases=len(rejection_results),
+        rejection_accuracy=round(rejection_accuracy, 4),
         passed=passed,
         case_results=tuple(results),
+        rejection_results=tuple(rejection_results),
     )
 
 

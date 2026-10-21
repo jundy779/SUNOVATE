@@ -34,6 +34,8 @@ Permintaan keputusan atau rekomendasi keuangan diperlakukan sebagai di luar caku
 - Domain generik memerlukan pasangan konteks yang relevan; frasa seperti "review dokumen CV" tidak dianggap domain SUN hanya karena mengandung kata review dan dokumen.
 - Daftar pola berada di modul Hermes pada `apps/api`; dokumen ini tidak menyalin daftar tersebut agar tidak terjadi perbedaan antara dokumen dan kode.
 - Setiap keputusan dicatat di audit log bersama decision Hermes.
+- **2026-10-21:** Pertanyaan pengguna juga diperiksa dalam bentuk leetspeak yang dinormalisasi (mis. `1gn0r3`), permintaan bermain peran sebagai admin/pengembang, dan muatan terenkode yang diminta untuk di-decode lalu dijalankan. Permintaan nilai rahasia (kata sandi, kredensial, kunci API, isi `.env`, connection string) ditolak dengan alasan `secret_request`. Pola keputusan keuangan mencakup pertanyaan waktu terbaik membeli atau menjual SUN/SBN/ORI/SBR, dan permintaan menulis query SQL diperlakukan sebagai coding umum.
+- Aturan khusus pertanyaan tersebut tidak diterapkan pada passage hasil retrieval, sehingga teks SOP biasa tentang kata sandi atau administrator tidak dianggap instruksi dan tidak membuang sumber yang sah. Pertanyaan tentang kebijakan kata sandi tetap diproses sebagai pertanyaan domain.
 
 ## Urutan evaluasi (PROPOSED)
 
