@@ -47,6 +47,7 @@ Menjadi sumber status pekerjaan lintas sesi dan lintas AI agent. Setiap perubaha
 | TASK-024 | Skenario dan pemeriksaan perjalanan demo bulan pertama | Demo | IN PROGRESS | Naskah 8-10 menit dan `pnpm demo:smoke` tersedia. Sembilan langkah API simulasi memeriksa health, login, dashboard, monitoring, Knowledge Hub, pencarian, jawaban SAVI bersumber, serta dua penolakan aman tanpa mencetak konten. Review mentor, pengujian browser, PostgreSQL, Nginx, jaringan, dan host aktual masih diperlukan. |
 | TASK-025 | Tambah MONEV sebagai tim pilot ketujuh pada shared types, seed `SIMULATED_DATA`, tes, dan dokumentasi; perbarui nama resmi di README | MVP | DONE | DEC-20261020-01; tanpa record simulasi MONEV; tes `test_teams_are_the_seven_pilot_codes`; validasi pada CHANGELOG 2026-10-20. |
 | TASK-026 | Penyempurnaan visual landing, halaman masuk, dan dashboard (gabungan gaya Bank Indonesia dan The Economist, palet terkunci, satu animasi per halaman, aman untuk reduced motion) | MVP | DONE | QA visual Chromium desktop 1440 px dan mobile 390 px; perbaikan overflow mobile pada shell dan tabel; validasi pada CHANGELOG 2026-10-21. |
+| TASK-027 | Fondasi dokumen RAHASIA: penampil hanya-baca (halaman PNG bertanda air dari server, tanpa route unduh/teks), pembaca eksplisit per dokumen, audit, batas laju, dan enkripsi envelope AES-256-GCM dengan antarmuka `KeyProvider` | MVP | DONE (simulasi) | ADR-020; 12 tes keamanan; penyedia TPM, persistensi, dan UI penampil menunggu OQ-40 sampai OQ-42. |
 
 ## Urutan Eksekusi Terdekat
 

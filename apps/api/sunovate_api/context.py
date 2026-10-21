@@ -12,6 +12,8 @@ from .core.security import DevTokenSigner
 from .hermes.gateway import HermesGateway
 from .providers.development import DevelopmentIdentityProvider
 from .providers.registry import Providers, build_providers
+from .secure.crypto import LocalDevelopmentKeyProvider
+from .secure.vault import SecureVault, seed_simulated_vault
 from .store.records import User
 from .store.repository import DataBackend, Repository
 from .store.simulated import SimulatedBackend, SimulatedStore
@@ -27,6 +29,7 @@ class AppContext:
     providers: Providers
     hermes: HermesGateway
     clock: Callable[[], date]
+    vault: SecureVault
 
 
 @dataclass
@@ -38,6 +41,7 @@ class AppRuntime:
     signer: DevTokenSigner  # created once: the ephemeral dev secret must not change per request
     providers: Providers  # identity is rebound to the request repository in request_context()
     clock: Callable[[], date]
+    vault: SecureVault  # RAHASIA documents, SIMULATED_DATA only (ADR-020)
 
     def request_context(self, repo: Repository) -> AppContext:
         authz = AuthorizationService(repo)
@@ -62,6 +66,7 @@ class AppRuntime:
             providers=providers,
             hermes=hermes,
             clock=self.clock,
+            vault=self.vault,
         )
 
 
@@ -84,10 +89,15 @@ def build_runtime(
             backend = PostgresBackend(settings.database_url)
         else:
             backend = SimulatedBackend(SimulatedStore())
+    # Only the ephemeral development key provider exists; a TPM provider is required before any
+    # real RAHASIA document is stored (ADR-020, OQ-42).
+    vault = SecureVault(LocalDevelopmentKeyProvider())
+    seed_simulated_vault(vault)
     return AppRuntime(
         settings=settings,
         backend=backend,
         signer=DevTokenSigner(settings.dev_auth_secret, settings.dev_auth_token_ttl_minutes),
         providers=build_providers(settings, _no_user),
         clock=clock,
+        vault=vault,
     )

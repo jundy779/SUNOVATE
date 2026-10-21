@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-10-21 — Fondasi dokumen RAHASIA (penampil hanya-baca dan enkripsi)
+
+- Modul API baru `/api/v1/secure-documents` (ADR-020, PROPOSED): daftar, metadata, dan satu halaman sebagai PNG. Tidak ada route berkas, teks, atau unduhan. Halaman dirender di server dengan tanda air nama, email, waktu WIB, dan rujukan sesi; teks tidak pernah dikirim ke browser.
+- Akses hanya untuk pembaca yang diberikan per dokumen dengan clearance yang mencukupi; pihak lain menerima 404 dan percobaannya diaudit (`SECURE_PAGE_VIEW` / `SECURE_DOCUMENT_READ`, outcome `DENIED`). Batas 40 halaman per menit per pengguna (429 + `Retry-After`). Respons memakai `no-store`, `inline`, `nosniff`, dan CSP `default-src 'none'`.
+- Enkripsi envelope AES-256-GCM per halaman yang terikat ke id dokumen dan nomor halaman, dengan antarmuka `KeyProvider`. Saat ini hanya penyedia kunci pengembangan sementara; TPM menyusul (OQ-42). Crypto-shredding tersedia.
+- Vault berada di memori dan hanya berisi satu dokumen simulasi. Dokumen RAHASIA tidak masuk pencarian maupun SAVI AI.
+- Dependency baru beralasan: `cryptography` dan `pillow` (ADR-020). OQ-38 dan OQ-40 sampai OQ-42 ditambahkan; TASK-027 dicatat.
+- Validasi aktual (Linux): Ruff, mypy strict (69 berkas), ESLint, TypeScript, 35 test frontend, 304 test backend (40 PostgreSQL dilewati), termasuk 12 test keamanan baru untuk penampil dan enkripsi. UI penampil, penyedia TPM, dan penyimpanan persisten belum dibuat.
+
 ## 2026-10-21 — Penyempurnaan visual landing, halaman masuk, dan dashboard
 
 - Landing, halaman masuk, dan dashboard ditata ulang dengan gabungan struktur institusional Bank Indonesia (bar pemerintah, header, sidebar navy, baris akses cepat) dan disiplin editorial The Economist (hierarki judul, garis rambut, tab emas di atas judul dan grafik, sumber pada grafik). Gaya baru ada di `apps/web/src/app/editorial.css`; hanya token warna terkunci dan font Aptos yang dipakai (font Georgia dihapus).

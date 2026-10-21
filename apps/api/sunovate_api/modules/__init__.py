@@ -14,6 +14,7 @@ from . import (
     knowledge,
     pending,
     search,
+    secure_viewer,
     system,
     work,
 )
@@ -34,6 +35,7 @@ def build_api_router() -> APIRouter:
         audit,
         approvals,
         hermes,
+        secure_viewer,
         system,
     ):
         router.include_router(module.router)

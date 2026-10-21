@@ -131,6 +131,17 @@ Rincian konteks, keputusan, alternatif, dan konsekuensi. Ringkasan dan status ad
 - **Alternatif ditolak:** Redis atau API gateway terpisah sebelum ada kebutuhan multi-instance; kepercayaan langsung pada forwarded header; timeout global yang dapat meninggalkan operasi tulis berjalan setelah klien menerima kegagalan.
 - **Konsekuensi:** Baseline satu host lebih tahan request berlebih dan payload besar. Probe lokal 25 pengguna virtual tersedia, tetapi pengujian Docker/host aktual, observability resmi, dan review TIK/keamanan tetap menjadi gate deployment.
 
+### ADR-020 Dokumen RAHASIA: penampil hanya-baca dan enkripsi envelope
+
+- **Status:** PROPOSED, IMPLEMENTED untuk `SIMULATED_DATA` saja; dokumen asli dilarang sampai OQ-40, OQ-41, dan OQ-42 terjawab serta penyedia kunci TPM terpasang.
+- **Konteks:** Arahan project lead setelah rapat 6 Oktober 2026: file SUN rahasia tertentu (bukan seluruh repository, terpisah dari aturan cover/metadata Juknis) hanya boleh dibaca sebagai pratinjau. Pegawai tidak boleh mengunduh, mengubah, menghapus, menyalin, atau menangkap isi, dan isi wajib terenkripsi kuat bila penyimpanan bocor. Keputusan kunci: TPM dulu, HSM menyusul.
+- **Keputusan:** Modul `secure_viewer` menyediakan tiga route GET saja: daftar, metadata, dan satu halaman sebagai PNG. Tidak ada route berkas, teks, atau unduhan. Halaman dirender di server dengan tanda air nama, email, waktu WIB, dan rujukan sesi (hash token) sehingga teks tidak pernah sampai ke browser. Pembaca diberikan per dokumen secara eksplisit dan klasifikasi harus tercakup clearance; pihak lain menerima 404 yang sama dengan dokumen tidak ada, dan percobaannya diaudit. Batas 40 halaman per menit per pengguna menghentikan pengambilan massal (429 + `Retry-After`). Respons memakai `no-store`, `Content-Disposition: inline`, `nosniff`, dan CSP `default-src 'none'`.
+- **Enkripsi:** Setiap halaman disegel AES-256-GCM dengan kunci data acak per dokumen, terikat ke id dokumen dan nomor halaman melalui associated data. Kunci data dibungkus `KeyProvider`; saat ini hanya `LocalDevelopmentKeyProvider` (kunci sementara per proses). Pindah ke TPM/HSM cukup membungkus ulang kunci data. Penghapusan kunci data yang terbungkus memusnahkan isi secara permanen (crypto-shredding).
+- **Pengecualian BR-08:** Untuk dokumen RAHASIA, isi disimpan dalam bentuk tersegel karena penampil hanya-baca tidak dapat bekerja hanya dengan referensi. Saat ini vault berada di memori dan hanya berisi dokumen simulasi; penyimpanan persisten memerlukan keputusan lanjutan.
+- **Dependency:** `cryptography` (AES-GCM tidak tersedia di pustaka standar Python) dan `pillow` (render raster dan tanda air).
+- **Batas:** Aplikasi web tidak dapat mencegah foto layar dengan kamera atau perangkat yang disusupi pada level sistem operasi; tanda air dan audit menjadi kontrol penelusuran. Pemblokiran DevTools/extension memerlukan perangkat terkelola atau penampil desktop (P3). Batas laju berada di memori satu proses.
+- **Alternatif ditolak:** menyajikan PDF/teks lalu menyembunyikan tombol unduh di frontend; SVG berisi teks (mudah dibaca dari jaringan); enkripsi dengan kunci disimpan di `.env` atau repository.
+
 ## Related Documents
 - [decision-log.md](../12-governance/decision-log.md)
 - [change-management.md](../12-governance/change-management.md)
