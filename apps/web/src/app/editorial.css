@@ -217,6 +217,16 @@
 .sv-page img { display: block; width: 100%; height: auto; -webkit-user-drag: none; user-select: none; transition: filter 120ms ease; }
 .sv-page-hidden img { filter: blur(22px); }
 .sv-cover { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; padding: 2rem; background: rgb(255 255 255 / 70%); color: var(--navy); font-weight: 700; text-align: center; cursor: pointer; }
+.sv-manage { padding: 1.4rem 1.5rem; border: 1px solid var(--line); background: var(--white); }
+.sv-readers ul { margin: 0 0 1.2rem; padding: 0; list-style: none; }
+.sv-readers li { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .7rem 0; border-top: 1px solid var(--line); color: var(--navy); font-size: .9rem; }
+.sv-readers li:last-child { border-bottom: 1px solid var(--line); }
+.sv-readers-empty { margin: 0 0 1.2rem; color: var(--muted); font-size: .88rem; }
+.sv-grant { display: grid; gap: .4rem; }
+.sv-grant label { color: var(--navy); font-weight: 700; font-size: .86rem; }
+.sv-grant div { display: flex; flex-wrap: wrap; gap: .6rem; }
+.sv-grant input { flex: 1 1 260px; min-height: 42px; }
+.sv-feedback { margin: .8rem 0 0; color: var(--success); font-size: .86rem; font-weight: 600; }
 @media print { .sv-reader, .sv-notice { display: none !important; } }
 
 /* Responsive */

@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-21 — Pengelolaan akses dokumen RAHASIA sesuai keputusan mentor
+
+- Jawaban mentor dicatat sebagai DEC-20261021-01: penetapan dan akses dokumen RAHASIA oleh Kasubdit PMP dan Ketua Tim, jenis dokumen dikurasi ketua tim, dibuka dari komputer kantor, dan alat penyimpan kunci belum tersedia. OQ-40 dan OQ-41 menjadi PARTIAL; OQ-42 diperbarui.
+- API baru: `GET /secure-documents/manageable`, `GET/POST /secure-documents/{id}/readers`, dan `DELETE /secure-documents/{id}/readers/{email}`. Hanya `knowledge_coordinator` (seluruh tim) dan `team_lead` (tim sendiri) yang dapat mengelola; pihak lain menerima 404 yang diaudit. Penerima wajib pengguna aktif dengan clearance yang cukup. Pencabutan langsung menutup penampil dan menghapus persetujuan pernyataan.
+- Halaman baru `/dokumen-rahasia/kelola` untuk memberi dan mencabut akses baca tanpa menampilkan isi dokumen. Vault simulasi kini berisi dua dokumen (PPSUN dan PSUN) untuk menguji kewenangan per tim.
+- Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 39 test frontend, 337 test backend mode simulated (40 PostgreSQL dilewati), 377 test mode PostgreSQL, `savi:eval`, `demo:smoke`, build produksi, dan 8/8 skenario Playwright e2e lulus. QA visual halaman Kelola akses baca pada 1440 px (Kasubdit PMP, dua dokumen) dan 390 px (ketua tim PSUN, satu dokumen).
+
 ## 2026-10-21 — Evaluasi jawaban SAVI berkategori dan corpus ekstraksi diperluas
 
 - Golden set SAVI diberi kategori dan diperluas dari 24 menjadi 43 kasus, termasuk 10 percobaan prompt injection (leetspeak, bermain peran, muatan base64, header SYSTEM palsu), permintaan rahasia, nasihat investasi, query SQL, isolasi dokumen RAHASIA, dan pertanyaan tanpa sumber. Evaluator baru `pnpm savi:eval` melaporkan metrik per kategori tanpa menampilkan pertanyaan atau jawaban.

@@ -8,7 +8,10 @@ import { classificationLabel } from "@/lib/ui-labels";
 export const metadata: Metadata = { title: "Dokumen Rahasia" };
 
 export default async function SecureDocumentsPage() {
-  const { data: documents } = await apiGet<SecureDocumentSummary[]>("/secure-documents");
+  const [{ data: documents }, { data: manageable }] = await Promise.all([
+    apiGet<SecureDocumentSummary[]>("/secure-documents"),
+    apiGet<SecureDocumentSummary[]>("/secure-documents/manageable"),
+  ]);
   return (
     <div className="sv">
       <header className="db-masthead">
@@ -20,6 +23,9 @@ export default async function SecureDocumentsPage() {
             yang dibuka tercatat atas nama Anda.
           </p>
         </div>
+        {manageable.length ? (
+          <Link className="button secondary" href="/dokumen-rahasia/kelola">Kelola akses baca</Link>
+        ) : null}
       </header>
 
       {documents.length ? (

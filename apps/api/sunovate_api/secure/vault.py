@@ -28,7 +28,6 @@ class SecureDocument:
     title: str
     classification_code: str
     owner_team_code: str
-    reader_emails: frozenset[str]
     pages: tuple[SealedContent, ...]
 
     @property
@@ -81,6 +80,10 @@ class NoticeRegistry:
         with self._lock:
             self._accepted[(principal_id, document_id)] = self.clock()
 
+    def clear(self, principal_id: UUID, document_id: UUID) -> None:
+        with self._lock:
+            self._accepted.pop((principal_id, document_id), None)
+
     def is_valid(self, principal_id: UUID, document_id: UUID) -> bool:
         with self._lock:
             accepted_at = self._accepted.get((principal_id, document_id))
@@ -97,6 +100,8 @@ class SecureVault:
     ) -> None:
         self._provider = provider
         self._documents: dict[UUID, SecureDocument] = {}
+        self._readers: dict[UUID, set[str]] = {}
+        self._readers_lock = threading.Lock()
         self.limiter = limiter or PageRateLimiter()
         self.notices = notices or NoticeRegistry()
 
@@ -126,11 +131,33 @@ class SecureVault:
             title=title,
             classification_code=classification_code,
             owner_team_code=owner_team_code,
-            reader_emails=frozenset(email.lower() for email in reader_emails),
             pages=sealed,
         )
         self._documents[document_id] = document
+        self._readers[document_id] = {email.lower() for email in reader_emails}
         return document
+
+    def readers(self, document_id: UUID) -> frozenset[str]:
+        with self._readers_lock:
+            return frozenset(self._readers.get(document_id, set()))
+
+    def grant(self, document_id: UUID, email: str) -> bool:
+        """Returns False when the reader already had access."""
+        with self._readers_lock:
+            readers = self._readers.setdefault(document_id, set())
+            if email.lower() in readers:
+                return False
+            readers.add(email.lower())
+            return True
+
+    def revoke(self, document_id: UUID, email: str) -> bool:
+        """Returns False when the reader had no access."""
+        with self._readers_lock:
+            readers = self._readers.get(document_id, set())
+            if email.lower() not in readers:
+                return False
+            readers.discard(email.lower())
+            return True
 
     def documents(self) -> list[SecureDocument]:
         return sorted(self._documents.values(), key=lambda doc: doc.title)
@@ -163,5 +190,15 @@ def seed_simulated_vault(vault: SecureVault) -> None:
             "Penanda uji: KODE-UJI-RAHASIA-7781.",
             "Halaman kedua berisi uraian contoh tahapan pemeriksaan internal.\n"
             "Setiap halaman hanya dapat dilihat sebagai gambar dengan tanda air pembaca.",
+        ],
+    )
+    vault.add(
+        slug="simulasi-rahasia-catatan-regulasi",
+        title="SIMULASI - Catatan Penyusunan Regulasi (Rahasia)",
+        classification_code="RESTRICTED",
+        owner_team_code="PSUN",
+        reader_emails=frozenset({"sim.lead.psun@sunovate.local"}),
+        pages=[
+            "Contoh fiktif catatan penyusunan regulasi untuk menguji pengelolaan akses per tim."
         ],
     )

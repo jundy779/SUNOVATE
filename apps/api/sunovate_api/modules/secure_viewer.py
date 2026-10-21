@@ -14,6 +14,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, Header, Path
 from fastapi.responses import Response
+from pydantic import BaseModel, Field
 
 from ..authz.dependencies import Ctx, require
 from ..authz.principal import Principal
@@ -39,10 +40,49 @@ _PAGE_HEADERS = {
 Reader = Annotated[Principal, Depends(require("document:read", resource=ENTITY))]
 
 
+# Mentor decision 2026-10-21 (DEC-20261021-01): Kasubdit PMP and Ketua Tim decide RAHASIA
+# status and reader access. Mapped to the current catalog until real roles are confirmed:
+# Kasubdit PMP -> knowledge_coordinator (all teams), Ketua Tim -> team_lead (own team only).
+_ALL_TEAM_MANAGERS = frozenset({"knowledge_coordinator"})
+_OWN_TEAM_MANAGERS = frozenset({"team_lead"})
+
+
 def _readable(ctx: AppContext, principal: Principal, document: SecureDocument) -> bool:
-    return principal.email.lower() in document.reader_emails and ctx.authz.classification_allowed(
-        principal.clearance_code, document.classification_code
-    )
+    return principal.email.lower() in ctx.vault.readers(
+        document.id
+    ) and ctx.authz.classification_allowed(principal.clearance_code, document.classification_code)
+
+
+def _can_manage(ctx: AppContext, principal: Principal, document: SecureDocument) -> bool:
+    if principal.role_codes & _ALL_TEAM_MANAGERS:
+        return True
+    if principal.role_codes & _OWN_TEAM_MANAGERS:
+        team = next((t for t in ctx.store.teams() if t.code == document.owner_team_code), None)
+        return team is not None and team.id in principal.team_ids
+    return False
+
+
+def _deny(
+    ctx: AppContext, principal: Principal, document_id: UUID, action: str, reason: str
+) -> None:
+    with ctx.store.transaction():
+        ctx.store.audit_denial(
+            actor_user_id=principal.user_id,
+            action=action,
+            entity_type=ENTITY,
+            entity_id=document_id,
+            detail={"reason": reason},
+        )
+
+
+def _get_manageable(
+    ctx: AppContext, principal: Principal, document_id: UUID, action: str
+) -> SecureDocument:
+    document = ctx.vault.get(document_id)
+    if document is None or not _can_manage(ctx, principal, document):
+        _deny(ctx, principal, document_id, action, "NOT_FOUND_OR_NOT_MANAGER")
+        raise not_found("Dokumen")
+    return document
 
 
 def _get_readable(
@@ -50,14 +90,7 @@ def _get_readable(
 ) -> SecureDocument:
     document = ctx.vault.get(document_id)
     if document is None or not _readable(ctx, principal, document):
-        with ctx.store.transaction():
-            ctx.store.audit_denial(
-                actor_user_id=principal.user_id,
-                action=action,
-                entity_type=ENTITY,
-                entity_id=document_id,
-                detail={"reason": "NOT_FOUND_OR_NOT_GRANTED"},
-            )
+        _deny(ctx, principal, document_id, action, "NOT_FOUND_OR_NOT_GRANTED")
         raise not_found("Dokumen")
     return document
 
@@ -80,9 +113,80 @@ def list_secure_documents(ctx: Ctx, principal: Reader) -> dict[str, Any]:
     return envelope(rows, total=len(rows))
 
 
+@router.get("/manageable")
+def list_manageable_documents(ctx: Ctx, principal: Reader) -> dict[str, Any]:
+    """Documents whose reader access the caller may manage; content is never included."""
+    rows = [
+        {**_view(doc), "readerCount": len(ctx.vault.readers(doc.id))}
+        for doc in ctx.vault.documents()
+        if _can_manage(ctx, principal, doc)
+    ]
+    return envelope(rows, total=len(rows))
+
+
 @router.get("/{document_id}")
 def get_secure_document(ctx: Ctx, principal: Reader, document_id: UUID) -> dict[str, Any]:
     return envelope(_view(_get_readable(ctx, principal, document_id, "SECURE_DOCUMENT_READ")))
+
+
+class ReaderGrant(BaseModel):
+    email: str = Field(min_length=3, max_length=254)
+
+
+@router.get("/{document_id}/readers")
+def list_readers(ctx: Ctx, principal: Reader, document_id: UUID) -> dict[str, Any]:
+    document = _get_manageable(ctx, principal, document_id, "SECURE_ACCESS_LIST")
+    rows = [{"email": email} for email in sorted(ctx.vault.readers(document.id))]
+    return envelope(rows, total=len(rows))
+
+
+@router.post("/{document_id}/readers", status_code=201)
+def grant_reader(
+    ctx: Ctx, principal: Reader, document_id: UUID, body: ReaderGrant
+) -> dict[str, Any]:
+    document = _get_manageable(ctx, principal, document_id, "SECURE_ACCESS_GRANTED")
+    email = body.email.strip().lower()
+    user = ctx.store.user_by_email(email)
+    if user is None or user.status != "ACTIVE":
+        raise ApiError(
+            422, "READER_NOT_FOUND", "Pengguna aktif dengan email tersebut tidak ditemukan."
+        )
+    if not ctx.authz.classification_allowed(user.clearance_code, document.classification_code):
+        raise ApiError(
+            422,
+            "READER_CLEARANCE_TOO_LOW",
+            "Tingkat kerahasiaan pengguna tidak mencukupi untuk dokumen ini.",
+        )
+    added = ctx.vault.grant(document.id, email)
+    with ctx.store.transaction():
+        ctx.store.audit(
+            actor_user_id=principal.user_id,
+            action="SECURE_ACCESS_GRANTED",
+            entity_type=ENTITY,
+            entity_id=document.id,
+            detail={"readerUserId": str(user.id), "alreadyGranted": not added},
+        )
+    return envelope({"email": email, "granted": True})
+
+
+@router.delete("/{document_id}/readers/{email}")
+def revoke_reader(ctx: Ctx, principal: Reader, document_id: UUID, email: str) -> dict[str, Any]:
+    document = _get_manageable(ctx, principal, document_id, "SECURE_ACCESS_REVOKED")
+    normalized = email.strip().lower()
+    if not ctx.vault.revoke(document.id, normalized):
+        raise not_found("Pembaca")
+    user = ctx.store.user_by_email(normalized)
+    if user is not None:
+        ctx.vault.notices.clear(user.id, document.id)
+    with ctx.store.transaction():
+        ctx.store.audit(
+            actor_user_id=principal.user_id,
+            action="SECURE_ACCESS_REVOKED",
+            entity_type=ENTITY,
+            entity_id=document.id,
+            detail={"readerUserId": str(user.id) if user else None},
+        )
+    return envelope({"email": normalized, "revoked": True})
 
 
 @router.post("/{document_id}/acknowledgements", status_code=201)

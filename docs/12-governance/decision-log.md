@@ -224,6 +224,18 @@ Entri berikut mencatat jawaban knowledge owner atas delapan pertanyaan slide 24 
 - **ADR/BR terkait:** -
 - **Tindak lanjut:** Klasifikasi akses dokumen MONEV (catatan kepatuhan pihak ketiga) dibahas bersama matriks akses (OQ-05, OQ-25).
 
+### DEC-20261021-01
+
+- **Open question:** OQ-40 (kewenangan dan jenis dokumen RAHASIA), OQ-41 (perangkat), OQ-42 (TPM/HSM)
+- **Tanggal jawaban:** 2026-10-21
+- **Sumber:** jawaban mentor (Pak Azen) melalui pesan, 21 Oktober 2026
+- **Jawaban:** (1) Penetapan dokumen RAHASIA dan pemberian akses oleh Kasubdit PMP dan Ketua Tim. (2) Jenis dokumen akan dikurasi oleh ketua tim. (3) Dokumen dibuka memakai komputer kantor. (4) Komputer belum memiliki alat (penyimpan kunci) yang diperlukan.
+- **Keputusan:** Pengelolaan akses baca RAHASIA hanya oleh `knowledge_coordinator` (padanan Kasubdit PMP, seluruh tim) dan `team_lead` (padanan Ketua Tim, dokumen timnya sendiri). Tidak ada daftar jenis dokumen yang dikunci di kode; keputusan per dokumen ada pada ketua tim. Dokumen asli tetap dilarang sampai penyimpan kunci tersedia.
+- **Status:** CONFIRMED untuk butir 1 dan 3; butir 2 menunggu kurasi; butir 4 menunggu klarifikasi apakah yang belum ada adalah komputer server atau alat penyimpan kunci (TPM bisa sudah tertanam di prosesor).
+- **Dampak:** ADR-020, [secure-document-viewer](../06-security/secure-document-viewer.md), modul `secure_viewer`
+- **ADR/BR terkait:** ADR-020
+- **Tindak lanjut:** Konfirmasi ke TIK apakah kebijakan browser dapat dipasang di komputer kantor; cek `Get-Tpm` pada komputer yang akan dipakai.
+
 ## Related Documents
 
 - [architecture-decisions](../03-architecture/architecture-decisions.md)
