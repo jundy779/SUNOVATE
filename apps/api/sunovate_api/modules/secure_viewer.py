@@ -40,26 +40,27 @@ _PAGE_HEADERS = {
 Reader = Annotated[Principal, Depends(require("document:read", resource=ENTITY))]
 
 
-# Mentor decision 2026-10-21 (DEC-20261021-01): Kasubdit PMP and Ketua Tim decide RAHASIA
-# status and reader access. Mapped to the current catalog until real roles are confirmed:
-# Kasubdit PMP -> knowledge_coordinator (all teams), Ketua Tim -> team_lead (own team only).
-_ALL_TEAM_MANAGERS = frozenset({"knowledge_coordinator"})
-_OWN_TEAM_MANAGERS = frozenset({"team_lead"})
+# DEC-20261021-02: RAHASIA documents are managed by the owning team's Ketua Tim and by Kasubdit
+# PMP, who decide who may read them (readers may come from any team). Authority comes from the
+# catalog permissions below (held today by `team_lead` and `knowledge_coordinator`), so a later
+# role decision only changes the catalog.
+MANAGE_TEAM = "secure_document:manage_team"
+MANAGE_ALL = "secure_document:manage_all"
 
 
 def _readable(ctx: AppContext, principal: Principal, document: SecureDocument) -> bool:
-    return principal.email.lower() in ctx.vault.readers(
+    return principal.user_id in ctx.store.secure_reader_ids(
         document.id
     ) and ctx.authz.classification_allowed(principal.clearance_code, document.classification_code)
 
 
 def _can_manage(ctx: AppContext, principal: Principal, document: SecureDocument) -> bool:
-    if principal.role_codes & _ALL_TEAM_MANAGERS:
+    if MANAGE_ALL in principal.permissions:
         return True
-    if principal.role_codes & _OWN_TEAM_MANAGERS:
-        team = next((t for t in ctx.store.teams() if t.code == document.owner_team_code), None)
-        return team is not None and team.id in principal.team_ids
-    return False
+    if MANAGE_TEAM not in principal.permissions:
+        return False
+    team = next((t for t in ctx.store.teams() if t.code == document.owner_team_code), None)
+    return team is not None and team.id in principal.team_ids
 
 
 def _deny(
@@ -117,7 +118,7 @@ def list_secure_documents(ctx: Ctx, principal: Reader) -> dict[str, Any]:
 def list_manageable_documents(ctx: Ctx, principal: Reader) -> dict[str, Any]:
     """Documents whose reader access the caller may manage; content is never included."""
     rows = [
-        {**_view(doc), "readerCount": len(ctx.vault.readers(doc.id))}
+        {**_view(doc), "readerCount": len(ctx.store.secure_reader_ids(doc.id))}
         for doc in ctx.vault.documents()
         if _can_manage(ctx, principal, doc)
     ]
@@ -136,7 +137,8 @@ class ReaderGrant(BaseModel):
 @router.get("/{document_id}/readers")
 def list_readers(ctx: Ctx, principal: Reader, document_id: UUID) -> dict[str, Any]:
     document = _get_manageable(ctx, principal, document_id, "SECURE_ACCESS_LIST")
-    rows = [{"email": email} for email in sorted(ctx.vault.readers(document.id))]
+    users = (ctx.store.user(user_id) for user_id in ctx.store.secure_reader_ids(document.id))
+    rows = sorted(({"email": user.email} for user in users if user), key=lambda r: r["email"])
     return envelope(rows, total=len(rows))
 
 
@@ -157,8 +159,8 @@ def grant_reader(
             "READER_CLEARANCE_TOO_LOW",
             "Tingkat kerahasiaan pengguna tidak mencukupi untuk dokumen ini.",
         )
-    added = ctx.vault.grant(document.id, email)
     with ctx.store.transaction():
+        added = ctx.store.add_secure_reader(document.id, user.id, principal.user_id)
         ctx.store.audit(
             actor_user_id=principal.user_id,
             action="SECURE_ACCESS_GRANTED",
@@ -173,19 +175,20 @@ def grant_reader(
 def revoke_reader(ctx: Ctx, principal: Reader, document_id: UUID, email: str) -> dict[str, Any]:
     document = _get_manageable(ctx, principal, document_id, "SECURE_ACCESS_REVOKED")
     normalized = email.strip().lower()
-    if not ctx.vault.revoke(document.id, normalized):
-        raise not_found("Pembaca")
     user = ctx.store.user_by_email(normalized)
-    if user is not None:
-        ctx.vault.notices.clear(user.id, document.id)
+    if user is None:
+        raise not_found("Pembaca")
     with ctx.store.transaction():
+        if not ctx.store.remove_secure_reader(document.id, user.id):
+            raise not_found("Pembaca")
         ctx.store.audit(
             actor_user_id=principal.user_id,
             action="SECURE_ACCESS_REVOKED",
             entity_type=ENTITY,
             entity_id=document.id,
-            detail={"readerUserId": str(user.id) if user else None},
+            detail={"readerUserId": str(user.id)},
         )
+    ctx.vault.notices.clear(user.id, document.id)
     return envelope({"email": normalized, "revoked": True})
 
 

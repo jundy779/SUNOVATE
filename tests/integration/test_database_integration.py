@@ -28,11 +28,11 @@ async def _scalar(sql: str) -> object:
         await engine.dispose()
 
 
-def test_schema_has_thirty_tables() -> None:
+def test_schema_has_thirty_one_tables() -> None:
     count = asyncio.run(_scalar(
         "select count(*) from information_schema.tables where table_schema='public' "
         "and table_name <> 'alembic_version'"))
-    assert count == 30
+    assert count == 31  # 30 initial tables + secure_document_readers (0003)
 
 
 def test_seed_is_simulated_only() -> None:

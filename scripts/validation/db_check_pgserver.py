@@ -73,7 +73,7 @@ async def main():
             await c.rollback()
             print("append-only: OK (update rejected:", type(exc).__name__ + ")")
     await engine.dispose()
-    assert tables == 30, tables
+    assert tables == 31, tables  # 30 initial tables + secure_document_readers (0003)
     assert hits >= 1
     assert labels == 0
     assert seq is not None

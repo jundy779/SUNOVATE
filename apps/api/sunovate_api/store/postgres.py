@@ -72,6 +72,7 @@ from .records import (
     Permission,
     Record,
     Role,
+    SecureDocumentReader,
     Task,
     Team,
     User,
@@ -112,6 +113,7 @@ _TABLES: Final[dict[type[Record], Table]] = {
     AiMessage: _table(m.AiMessage),
     AiCitation: _table(m.AiCitation),
     AiFeedback: _table(m.AiFeedback),
+    SecureDocumentReader: _table(m.SecureDocumentReader),
 }
 
 # Record types accepted by insert() (design 5.1); anything else -> TypeError.
@@ -326,6 +328,32 @@ class PostgresRepository:
         table, statement = self._select(User)
         rows = self._rows(statement.where(table.c.email == email.strip().lower()))
         return _from_row(User, rows[0]) if rows else None
+
+    def secure_reader_ids(self, document_id: UUID) -> frozenset[UUID]:
+        table = _TABLES[SecureDocumentReader]
+        rows = self._rows(select(table.c.user_id).where(table.c.document_id == document_id))
+        return frozenset(row["user_id"] for row in rows)
+
+    def add_secure_reader(self, document_id: UUID, user_id: UUID, granted_by: UUID | None) -> bool:
+        self._require_transaction()
+        table = _TABLES[SecureDocumentReader]
+        statement = (
+            pg_insert(table)
+            .values(document_id=document_id, user_id=user_id, granted_by=granted_by)
+            .on_conflict_do_nothing(constraint="uq_secure_document_readers_document_user")
+            .returning(table.c.id)
+        )
+        return self._execute(statement).first() is not None
+
+    def remove_secure_reader(self, document_id: UUID, user_id: UUID) -> bool:
+        self._require_transaction()
+        table = _TABLES[SecureDocumentReader]
+        statement = (
+            delete(table)
+            .where(table.c.document_id == document_id, table.c.user_id == user_id)
+            .returning(table.c.id)
+        )
+        return self._execute(statement).first() is not None
 
     def principal_facts(self, user_id: UUID) -> PrincipalFacts | None:
         user = self.user(user_id)

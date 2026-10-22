@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-10-21 — Akses RAHASIA oleh Ketua Tim dan Kasubdit PMP, daftar pembaca permanen
+
+- Arahan baru dicatat sebagai DEC-20261021-02 (CONFIRMED): Ketua Tim pemilik dokumen menentukan siapa yang boleh membaca, termasuk pegawai tim lain, dan Kasubdit PMP juga dapat mengelola akses untuk seluruh tim.
+- Kewenangan kini berasal dari permission katalog `secure_document:manage_team` (dipegang `team_lead`) dan `secure_document:manage_all` (dipegang `knowledge_coordinator`), bukan nama peran di kode, sehingga keputusan peran berikutnya cukup mengubah katalog.
+- Daftar pembaca disimpan permanen di tabel baru `secure_document_readers` (migrasi `0003_secure_document_readers`), di backend simulated maupun PostgreSQL; isi tersegel tetap di vault. Pemeriksa skema `db:check` diperbarui menjadi 31 tabel.
+- Reset database uji memakai batas waktu 120 detik agar tidak gagal saat mesin sibuk (BUG-036); batas 15 detik aplikasi tidak berubah.
+- Halaman Kelola akses baca dan skenario e2e disesuaikan dengan Ketua Tim sebagai pengelola.
+- Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 39 test frontend, 338 test backend mode simulated (40 PostgreSQL dilewati), 378 test mode PostgreSQL, `db:check` (31 tabel, upgrade dan downgrade migrasi), render SQL Alembic, build produksi, dan 8/8 skenario Playwright e2e lulus. Run `db:test` pertama gagal satu test karena hitungan tabel tetap 30 di `test_database_integration.py`; hitungan diperbarui menjadi 31 lalu run ulang lulus.
+
 ## 2026-10-21 — Pengelolaan akses dokumen RAHASIA sesuai keputusan mentor
 
 - Jawaban mentor dicatat sebagai DEC-20261021-01: penetapan dan akses dokumen RAHASIA oleh Kasubdit PMP dan Ketua Tim, jenis dokumen dikurasi ketua tim, dibuka dari komputer kantor, dan alat penyimpan kunci belum tersedia. OQ-40 dan OQ-41 menjadi PARTIAL; OQ-42 diperbarui.

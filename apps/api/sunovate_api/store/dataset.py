@@ -17,6 +17,7 @@ from typing import Any
 from uuid import UUID, uuid5
 
 from ..authz.catalog import PERMISSIONS, ROLE_PERMISSIONS, ROLES
+from ..secure.vault import SIMULATED_SECURE_DOCUMENTS, secure_document_id
 from .records import (
     ApprovalRequest,
     AuditLog,
@@ -31,6 +32,7 @@ from .records import (
     PendingMatter,
     Permission,
     Role,
+    SecureDocumentReader,
     Task,
     Team,
     TeamMembership,
@@ -71,6 +73,7 @@ class Dataset:
     approvals: list[ApprovalRequest] = field(default_factory=list)
     data_quality_issues: list[DataQualityIssue] = field(default_factory=list)
     audit_logs: list[AuditLog] = field(default_factory=list)
+    secure_readers: list[SecureDocumentReader] = field(default_factory=list)
 
 
 _CLASSIFICATIONS = [
@@ -705,4 +708,18 @@ def build_dataset() -> Dataset:  # noqa: PLR0915 - linear dataset definition
             **stamp,
         )
     )
+    # Initial RAHASIA reader grants (ADR-020); the sealed content stays in the vault.
+    for spec in SIMULATED_SECURE_DOCUMENTS:
+        document_id = secure_document_id(spec.slug)
+        for local in spec.reader_locals:
+            ds.secure_readers.append(
+                SecureDocumentReader(
+                    id=sid(f"secure-reader:{spec.slug}:{local}"),
+                    document_id=document_id,
+                    user_id=users[local],
+                    granted_by=None,
+                    **stamp,
+                )
+            )
+
     return ds

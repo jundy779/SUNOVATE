@@ -67,6 +67,7 @@ def plan(ds: Dataset) -> list[tuple[type[m.Base], list[dict[str, Any]]]]:
         (m.Permission, _rows(m.Permission, ds.permissions)),
         (m.RolePermission, role_permissions),
         (m.UserRole, _rows(m.UserRole, ds.user_roles)),
+        (m.SecureDocumentReader, _rows(m.SecureDocumentReader, ds.secure_readers)),
         (m.KnowledgeEntry, _rows(m.KnowledgeEntry, ds.knowledge)),
         (m.DocumentReference, _rows(m.DocumentReference, ds.documents)),
         (m.DocumentVersion, _rows(m.DocumentVersion, ds.versions)),

@@ -23,6 +23,8 @@ PERMISSIONS: dict[str, str] = {
     "document:create": "Mendaftarkan referensi dokumen",
     "document:update": "Mengubah informasi dokumen",
     "document:version": "Mendaftarkan versi dokumen",
+    "secure_document:manage_all": "Menentukan pembaca dokumen rahasia seluruh tim",
+    "secure_document:manage_team": "Menentukan pembaca dokumen rahasia milik tim sendiri",
     "search:query": "Melakukan pencarian",
     "work:read": "Melihat hasil kerja, tugas, dan tahapan penting",
     "work:create": "Membuat hasil kerja dan tugas",
@@ -91,6 +93,7 @@ ROLE_PERMISSIONS: dict[str, frozenset[str]] = {
         _READ_BASE
         | _AUTHOR
         | {
+            "secure_document:manage_all",
             "user:read",
             "knowledge:review",
             "knowledge:publish",
@@ -108,6 +111,7 @@ ROLE_PERMISSIONS: dict[str, frozenset[str]] = {
         | _AUTHOR
         | {
             "user:read",
+            "secure_document:manage_team",
             "knowledge:review",
             "document:update",
             "document:version",

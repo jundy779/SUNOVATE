@@ -1,8 +1,8 @@
-"""In-memory vault of RAHASIA documents for the view-only viewer (ADR-020, PROPOSED).
+"""In-memory vault of sealed RAHASIA documents for the view-only viewer (ADR-020, PROPOSED).
 
-Holds SIMULATED_DATA only. Content is sealed per page with envelope encryption, readers are
-granted explicitly per document (never by team membership alone), and clearance must cover the
-document classification. A sliding-window limit stops bulk page scraping.
+Holds SIMULATED_DATA only. Content is sealed per page with envelope encryption. Reader grants
+are persisted by the store (`secure_document_readers`), not here. A sliding-window limit stops
+bulk page scraping, and confidentiality-notice acceptance expires.
 """
 
 from __future__ import annotations
@@ -100,8 +100,6 @@ class SecureVault:
     ) -> None:
         self._provider = provider
         self._documents: dict[UUID, SecureDocument] = {}
-        self._readers: dict[UUID, set[str]] = {}
-        self._readers_lock = threading.Lock()
         self.limiter = limiter or PageRateLimiter()
         self.notices = notices or NoticeRegistry()
 
@@ -116,10 +114,9 @@ class SecureVault:
         title: str,
         classification_code: str,
         owner_team_code: str,
-        reader_emails: frozenset[str],
         pages: list[str],
     ) -> SecureDocument:
-        document_id = uuid5(_NAMESPACE, slug)
+        document_id = secure_document_id(slug)
         sealed = tuple(
             seal(
                 text.encode(), self._provider, associated_data=_associated_data(document_id, index)
@@ -134,30 +131,7 @@ class SecureVault:
             pages=sealed,
         )
         self._documents[document_id] = document
-        self._readers[document_id] = {email.lower() for email in reader_emails}
         return document
-
-    def readers(self, document_id: UUID) -> frozenset[str]:
-        with self._readers_lock:
-            return frozenset(self._readers.get(document_id, set()))
-
-    def grant(self, document_id: UUID, email: str) -> bool:
-        """Returns False when the reader already had access."""
-        with self._readers_lock:
-            readers = self._readers.setdefault(document_id, set())
-            if email.lower() in readers:
-                return False
-            readers.add(email.lower())
-            return True
-
-    def revoke(self, document_id: UUID, email: str) -> bool:
-        """Returns False when the reader had no access."""
-        with self._readers_lock:
-            readers = self._readers.get(document_id, set())
-            if email.lower() not in readers:
-                return False
-            readers.discard(email.lower())
-            return True
 
     def documents(self) -> list[SecureDocument]:
         return sorted(self._documents.values(), key=lambda doc: doc.title)
@@ -176,29 +150,55 @@ def jakarta_now() -> datetime:
     return datetime.now(_JAKARTA)
 
 
-def seed_simulated_vault(vault: SecureVault) -> None:
-    """SIMULATED_DATA only: invented content, no real SUN information."""
-    vault.add(
+@dataclass(frozen=True)
+class SimulatedSecureDocument:
+    slug: str
+    title: str
+    classification_code: str
+    owner_team_code: str
+    reader_locals: tuple[str, ...]  # initial reader grants, seeded into the store
+    pages: tuple[str, ...]
+
+
+# SIMULATED_DATA only: invented content, no real SUN information.
+SIMULATED_SECURE_DOCUMENTS: tuple[SimulatedSecureDocument, ...] = (
+    SimulatedSecureDocument(
         slug="simulasi-rahasia-pedoman-penilaian",
         title="SIMULASI - Pedoman Penilaian Internal (Rahasia)",
         classification_code="RESTRICTED",
         owner_team_code="PPSUN",
-        reader_emails=frozenset({"sim.coordinator@sunovate.local", "sim.lead.psun@sunovate.local"}),
-        pages=[
+        reader_locals=("sim.coordinator", "sim.lead.psun"),
+        pages=(
             "Dokumen ini adalah contoh fiktif untuk menguji penampil dokumen rahasia.\n"
             "Isi tidak mewakili kebijakan, angka, atau proses Direktorat Surat Utang Negara.\n"
             "Penanda uji: KODE-UJI-RAHASIA-7781.",
             "Halaman kedua berisi uraian contoh tahapan pemeriksaan internal.\n"
             "Setiap halaman hanya dapat dilihat sebagai gambar dengan tanda air pembaca.",
-        ],
-    )
-    vault.add(
+        ),
+    ),
+    SimulatedSecureDocument(
         slug="simulasi-rahasia-catatan-regulasi",
         title="SIMULASI - Catatan Penyusunan Regulasi (Rahasia)",
         classification_code="RESTRICTED",
         owner_team_code="PSUN",
-        reader_emails=frozenset({"sim.lead.psun@sunovate.local"}),
-        pages=[
-            "Contoh fiktif catatan penyusunan regulasi untuk menguji pengelolaan akses per tim."
-        ],
-    )
+        reader_locals=("sim.lead.psun",),
+        pages=(
+            "Contoh fiktif catatan penyusunan regulasi untuk menguji pengelolaan akses per tim.",
+        ),
+    ),
+)
+
+
+def secure_document_id(slug: str) -> UUID:
+    return uuid5(_NAMESPACE, slug)
+
+
+def seed_simulated_vault(vault: SecureVault) -> None:
+    for spec in SIMULATED_SECURE_DOCUMENTS:
+        vault.add(
+            slug=spec.slug,
+            title=spec.title,
+            classification_code=spec.classification_code,
+            owner_team_code=spec.owner_team_code,
+            pages=list(spec.pages),
+        )

@@ -236,6 +236,18 @@ Entri berikut mencatat jawaban knowledge owner atas delapan pertanyaan slide 24 
 - **ADR/BR terkait:** ADR-020
 - **Tindak lanjut:** Konfirmasi ke TIK apakah kebijakan browser dapat dipasang di komputer kantor; cek `Get-Tpm` pada komputer yang akan dipakai.
 
+### DEC-20261021-02
+
+- **Open question:** OQ-40 (kewenangan RAHASIA), lanjutan DEC-20261021-01; pertanyaan akses lintas tim
+- **Tanggal jawaban:** 2026-10-21
+- **Sumber:** arahan yang diteruskan project lead, 21 Oktober 2026: "Klo Rahasia khusus Ketua Tim dan nanti dia punya otoritas utk tentukan siapa yg boleh baca"
+- **Jawaban:** Dokumen RAHASIA khusus dikelola Ketua Tim, yang berwenang menentukan siapa yang boleh membaca.
+- **Keputusan:** Ketua Tim pemilik dokumen (permission `secure_document:manage_team`, saat ini dipegang `team_lead`) dan Kasubdit PMP untuk seluruh tim (permission `secure_document:manage_all`, saat ini dipegang `knowledge_coordinator`) dapat memberi dan mencabut akses baca. Pembaca boleh dari tim mana pun, tetap wajib pengguna aktif dengan clearance yang cukup dan seluruhnya diaudit.
+- **Status:** CONFIRMED. Project lead mengonfirmasi pada 21 Oktober 2026 bahwa Kasubdit PMP juga perlu dapat mengelola akses ("iya perlu juga").
+- **Dampak:** ADR-020, [secure-document-viewer](../06-security/secure-document-viewer.md), `secure_viewer`, `authz/catalog.py`, tabel `secure_document_readers`
+- **ADR/BR terkait:** ADR-020
+- **Tindak lanjut:** Tidak ada; jenis dokumen RAHASIA tetap menunggu kurasi ketua tim (OQ-40).
+
 ## Related Documents
 
 - [architecture-decisions](../03-architecture/architecture-decisions.md)

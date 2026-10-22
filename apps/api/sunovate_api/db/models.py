@@ -124,6 +124,19 @@ class TeamMembership(Base, TimestampMixin):
     team_id: Mapped[uuid.UUID] = _fk("teams.id", nullable=False, ondelete="CASCADE")
 
 
+class SecureDocumentReader(Base, TimestampMixin):
+    """Reader grant for a RAHASIA document (ADR-020). The document itself lives in the vault,
+    so document_id has no foreign key; grant history is kept in audit_logs."""
+
+    __tablename__ = "secure_document_readers"
+    __table_args__ = (
+        UniqueConstraint("document_id", "user_id", name="uq_secure_document_readers_document_user"),
+    )
+    document_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), nullable=False, index=True)
+    user_id: Mapped[uuid.UUID] = _fk("users.id", nullable=False, ondelete="CASCADE")
+    granted_by: Mapped[uuid.UUID | None] = _fk("users.id", ondelete="SET NULL")
+
+
 class Role(Base, TimestampMixin):
     __tablename__ = "roles"
     code: Mapped[str] = mapped_column(String(64), unique=True)

@@ -102,17 +102,18 @@ test("readers without a grant see no confidential documents", async ({ page }) =
   await expect(page.getByText("Belum ada dokumen rahasia untuk Anda")).toBeVisible();
 });
 
-test("Kasubdit PMP grants and revokes read access without seeing document content", async ({ page }) => {
+test("team lead grants and revokes read access without seeing document content", async ({ page }) => {
   await page.goto("/login");
   await expect(page.getByRole("button", { name: "Masuk dengan akses pengembangan" })).toBeEnabled();
-  await page.getByLabel("Email pengguna simulasi").fill("sim.coordinator@sunovate.local");
+  await page.getByLabel("Email pengguna simulasi").fill("sim.lead.psun@sunovate.local");
   await page.getByRole("button", { name: "Masuk dengan akses pengembangan" }).click();
   await page.waitForURL(/\/dashboard$/);
 
   await page.goto("/dokumen-rahasia");
   await page.getByRole("link", { name: "Kelola akses baca" }).click();
   await expect(page.getByRole("heading", { name: "Kelola akses baca" })).toBeVisible({ timeout: 30_000 });
-  const section = page.locator("section.sv-manage").filter({ hasText: "Pedoman Penilaian Internal" });
+  await expect(page.locator("section.sv-manage")).toHaveCount(1);
+  const section = page.locator("section.sv-manage").filter({ hasText: "Catatan Penyusunan Regulasi" });
   await section.getByLabel("Email pegawai").fill("sim.auditor@sunovate.local");
   await section.getByRole("button", { name: "Beri akses baca" }).click();
   await expect(section.getByText("Akses baca diberikan kepada sim.auditor@sunovate.local.")).toBeVisible();

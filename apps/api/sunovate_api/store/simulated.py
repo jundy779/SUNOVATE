@@ -36,6 +36,7 @@ from .records import (
     Permission,
     Record,
     Role,
+    SecureDocumentReader,
     Task,
     Team,
     TeamMembership,
@@ -98,6 +99,9 @@ class SimulatedStore:
         self._approvals: dict[UUID, ApprovalRequest] = _index(ds.approvals)
         self._data_quality_issues: dict[UUID, DataQualityIssue] = _index(ds.data_quality_issues)
         self._audit_logs: list[AuditLog] = list(ds.audit_logs)
+        self._secure_readers: dict[tuple[UUID, UUID], SecureDocumentReader] = {
+            (r.document_id, r.user_id): r for r in ds.secure_readers
+        }
         self._conversations: dict[UUID, AiConversation] = {}
         self._messages: dict[UUID, AiMessage] = {}
         self._citations: list[AiCitation] = []
@@ -162,6 +166,24 @@ class SimulatedStore:
     def user_by_email(self, email: str) -> User | None:
         wanted = email.strip().lower()
         return next((u for u in self.users() if u.email == wanted), None)
+
+    def secure_reader_ids(self, document_id: UUID) -> frozenset[UUID]:
+        with self.lock:
+            return frozenset(uid for doc, uid in self._secure_readers if doc == document_id)
+
+    def add_secure_reader(self, document_id: UUID, user_id: UUID, granted_by: UUID | None) -> bool:
+        self._require_transaction()
+        key = (document_id, user_id)
+        if key in self._secure_readers:
+            return False
+        self._secure_readers[key] = SecureDocumentReader(
+            document_id=document_id, user_id=user_id, granted_by=granted_by
+        )
+        return True
+
+    def remove_secure_reader(self, document_id: UUID, user_id: UUID) -> bool:
+        self._require_transaction()
+        return self._secure_readers.pop((document_id, user_id), None) is not None
 
     def principal_facts(self, user_id: UUID) -> PrincipalFacts | None:
         with self.lock:

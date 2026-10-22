@@ -48,6 +48,8 @@ const PERMISSION_LABELS: Record<string, string> = {
   "knowledge:publish": "Menyetujui penerbitan pengetahuan",
   "knowledge:archive": "Mengarsipkan pengetahuan",
   "document:read": "Melihat informasi dokumen",
+  "secure_document:manage_all": "Menentukan pembaca dokumen rahasia seluruh tim",
+  "secure_document:manage_team": "Menentukan pembaca dokumen rahasia milik tim sendiri",
   "document:create": "Mendaftarkan dokumen",
   "document:update": "Mengubah informasi dokumen",
   "document:version": "Mendaftarkan versi dokumen",

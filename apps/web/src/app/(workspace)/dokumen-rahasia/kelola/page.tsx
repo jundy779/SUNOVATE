@@ -23,8 +23,8 @@ export default async function ManageSecureAccessPage() {
           <p className="kicker">Dokumen rahasia</p>
           <h1>Kelola akses baca</h1>
           <p className="db-standfirst">
-            Akses baca dokumen rahasia diberikan dan dicabut oleh Kasubdit PMP untuk seluruh tim, dan oleh ketua tim untuk
-            dokumen timnya. Setiap perubahan tercatat. Halaman ini tidak menampilkan isi dokumen.
+            Pembaca dokumen rahasia ditentukan oleh ketua tim pemilik dokumen dan oleh Kasubdit PMP untuk seluruh tim.
+            Pembaca boleh dari tim lain, dan setiap perubahan tercatat. Halaman ini tidak menampilkan isi dokumen.
           </p>
         </div>
       </header>

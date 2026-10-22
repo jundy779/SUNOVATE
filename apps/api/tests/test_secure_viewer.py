@@ -4,6 +4,8 @@ from uuid import uuid4
 
 import pytest
 
+from sunovate_api.authz.catalog import ROLE_PERMISSIONS
+from sunovate_api.modules.secure_viewer import MANAGE_ALL, MANAGE_TEAM
 from sunovate_api.secure.crypto import (
     DecryptionError,
     LocalDevelopmentKeyProvider,
@@ -11,7 +13,7 @@ from sunovate_api.secure.crypto import (
     seal,
     shred,
 )
-from sunovate_api.secure.vault import NoticeRegistry, PageRateLimiter
+from sunovate_api.secure.vault import NoticeRegistry, PageRateLimiter, secure_document_id
 from sunovate_api.testing import login, make_client
 
 API = "/api/v1/secure-documents"
@@ -216,7 +218,10 @@ def test_ungranted_reader_cannot_accept_notice() -> None:
     assert client.post(f"{API}/{doc_id}/acknowledgements", headers=staff).status_code == 404
 
 
-# Access management (mentor decision 2026-10-21: Kasubdit PMP and Ketua Tim) ------------
+# Access management (DEC-20261021-02: Kasubdit PMP for all teams, Ketua Tim for own team) -
+
+PPSUN_DOC = str(secure_document_id("simulasi-rahasia-pedoman-penilaian"))
+PSUN_DOC = str(secure_document_id("simulasi-rahasia-catatan-regulasi"))
 
 
 def _manageable(client, user):  # type: ignore[no-untyped-def]
@@ -224,63 +229,68 @@ def _manageable(client, user):  # type: ignore[no-untyped-def]
     return {row["ownerTeamCode"]: row["id"] for row in rows}
 
 
-def test_only_coordinator_and_own_team_lead_can_manage_access() -> None:
+def test_only_kasubdit_pmp_and_owning_team_lead_can_manage_access() -> None:
     client = make_client()
-    assert set(_manageable(client, "sim.coordinator")) == {"PPSUN", "PSUN"}
-    assert set(_manageable(client, "sim.lead.psun")) == {"PSUN"}
+    assert _manageable(client, "sim.coordinator") == {"PPSUN": PPSUN_DOC, "PSUN": PSUN_DOC}
+    assert _manageable(client, "sim.lead.psun") == {"PSUN": PSUN_DOC}
     for user in ("sim.staff.pppsun", "sim.owner.ppsun", "sim.auditor", "sim.admin"):
-        assert _manageable(client, user) == {}
+        assert _manageable(client, user) == {}, user
+
+
+def test_authority_comes_from_the_permission_catalog() -> None:
+    def holders(permission: str) -> set[str]:
+        return {role for role, perms in ROLE_PERMISSIONS.items() if permission in perms}
+
+    assert holders(MANAGE_TEAM) == {"team_lead"}
+    assert holders(MANAGE_ALL) == {"knowledge_coordinator"}
 
 
 def test_team_lead_cannot_manage_another_teams_document() -> None:
     client = make_client()
-    ppsun_doc = _manageable(client, "sim.coordinator")["PPSUN"]
     lead = login(client, "sim.lead.psun")
-    assert client.get(f"{API}/{ppsun_doc}/readers", headers=lead).status_code == 404
+    assert client.get(f"{API}/{PPSUN_DOC}/readers", headers=lead).status_code == 404
     denied = client.post(
-        f"{API}/{ppsun_doc}/readers", json={"email": "sim.auditor@sunovate.local"}, headers=lead
+        f"{API}/{PPSUN_DOC}/readers", json={"email": "sim.auditor@sunovate.local"}, headers=lead
     )
     assert denied.status_code == 404
     logs = client.get(
         "/api/v1/audit-logs?action=SECURE_ACCESS_GRANTED", headers=login(client, "sim.admin")
     ).json()["data"]
-    assert any(log["outcome"] == "DENIED" and log["entityId"] == ppsun_doc for log in logs)
+    assert any(log["outcome"] == "DENIED" and log["entityId"] == PPSUN_DOC for log in logs)
 
 
-def test_manager_grants_reader_with_sufficient_clearance() -> None:
+def test_team_lead_grants_reader_from_another_team() -> None:
     client = make_client()
-    coordinator = login(client, "sim.coordinator")
-    doc_id = _manageable(client, "sim.coordinator")["PPSUN"]
+    lead = login(client, "sim.lead.psun")
     auditor = login(client, "sim.auditor")
     assert client.get(API, headers=auditor).json()["data"] == []
 
     granted = client.post(
-        f"{API}/{doc_id}/readers", json={"email": "SIM.Auditor@sunovate.local"}, headers=coordinator
+        f"{API}/{PSUN_DOC}/readers", json={"email": "SIM.Auditor@sunovate.local"}, headers=lead
     )
     assert granted.status_code == 201
-    readers = client.get(f"{API}/{doc_id}/readers", headers=coordinator).json()["data"]
+    readers = client.get(f"{API}/{PSUN_DOC}/readers", headers=lead).json()["data"]
     assert {"email": "sim.auditor@sunovate.local"} in readers
-    assert [row["id"] for row in client.get(API, headers=auditor).json()["data"]] == [doc_id]
+    assert [row["id"] for row in client.get(API, headers=auditor).json()["data"]] == [PSUN_DOC]
 
     logs = client.get(
         "/api/v1/audit-logs?action=SECURE_ACCESS_GRANTED", headers=login(client, "sim.admin")
     ).json()["data"]
-    assert any(log["outcome"] == "SUCCESS" and log["entityId"] == doc_id for log in logs)
+    assert any(log["outcome"] == "SUCCESS" and log["entityId"] == PSUN_DOC for log in logs)
 
 
 def test_grant_rejects_unknown_users_and_low_clearance() -> None:
     client = make_client()
-    coordinator = login(client, "sim.coordinator")
-    doc_id = _manageable(client, "sim.coordinator")["PPSUN"]
+    lead = login(client, "sim.lead.psun")
     unknown = client.post(
-        f"{API}/{doc_id}/readers", json={"email": "orang.luar@contoh.local"}, headers=coordinator
+        f"{API}/{PSUN_DOC}/readers", json={"email": "orang.luar@contoh.local"}, headers=lead
     )
     assert unknown.status_code == 422
     assert unknown.json()["code"] == "READER_NOT_FOUND"
     low = client.post(
-        f"{API}/{doc_id}/readers",
+        f"{API}/{PSUN_DOC}/readers",
         json={"email": "sim.staff.pppsun@sunovate.local"},
-        headers=coordinator,
+        headers=lead,
     )
     assert low.status_code == 422
     assert low.json()["code"] == "READER_CLEARANCE_TOO_LOW"
@@ -288,32 +298,29 @@ def test_grant_rejects_unknown_users_and_low_clearance() -> None:
 
 def test_revoking_access_closes_the_viewer_immediately() -> None:
     client = make_client()
+    lead = login(client, "sim.lead.psun")
     coordinator = login(client, "sim.coordinator")
-    lead = login(client, "sim.lead.psun")
-    doc_id = _manageable(client, "sim.coordinator")["PPSUN"]
-    assert client.post(f"{API}/{doc_id}/acknowledgements", headers=lead).status_code == 201
-    assert client.get(f"{API}/{doc_id}/pages/1", headers=lead).status_code == 200
+    grant = {"email": "sim.coordinator@sunovate.local"}
+    assert client.post(f"{API}/{PSUN_DOC}/readers", json=grant, headers=lead).status_code == 201
+    assert client.post(f"{API}/{PSUN_DOC}/acknowledgements", headers=coordinator).status_code == 201
+    assert client.get(f"{API}/{PSUN_DOC}/pages/1", headers=coordinator).status_code == 200
 
-    lead_reader = f"{API}/{doc_id}/readers/sim.lead.psun@sunovate.local"
-    assert client.delete(lead_reader, headers=coordinator).status_code == 200
-    assert client.get(f"{API}/{doc_id}/pages/1", headers=lead).status_code == 404
-    assert client.delete(lead_reader, headers=coordinator).status_code == 404
+    reader_url = f"{API}/{PSUN_DOC}/readers/sim.coordinator@sunovate.local"
+    assert client.delete(reader_url, headers=lead).status_code == 200
+    assert client.get(f"{API}/{PSUN_DOC}/pages/1", headers=coordinator).status_code == 404
+    assert client.delete(reader_url, headers=lead).status_code == 404
 
-    client.post(
-        f"{API}/{doc_id}/readers",
-        json={"email": "sim.lead.psun@sunovate.local"},
-        headers=coordinator,
-    )
-    assert client.get(f"{API}/{doc_id}/pages/1", headers=lead).status_code == 428
+    assert client.post(f"{API}/{PSUN_DOC}/readers", json=grant, headers=lead).status_code == 201
+    assert client.get(f"{API}/{PSUN_DOC}/pages/1", headers=coordinator).status_code == 428
 
 
-def test_team_lead_manages_own_team_document() -> None:
+def test_kasubdit_pmp_manages_any_teams_document() -> None:
     client = make_client()
-    lead = login(client, "sim.lead.psun")
-    psun_doc = _manageable(client, "sim.lead.psun")["PSUN"]
-    granted = client.post(
-        f"{API}/{psun_doc}/readers", json={"email": "sim.coordinator@sunovate.local"}, headers=lead
-    )
+    coordinator = login(client, "sim.coordinator")
+    grant = {"email": "sim.auditor@sunovate.local"}
+    granted = client.post(f"{API}/{PSUN_DOC}/readers", json=grant, headers=coordinator)
     assert granted.status_code == 201
-    coordinator_docs = client.get(API, headers=login(client, "sim.coordinator")).json()["data"]
-    assert psun_doc in {row["id"] for row in coordinator_docs}
+    readers = client.get(f"{API}/{PSUN_DOC}/readers", headers=login(client, "sim.lead.psun"))
+    assert {"email": "sim.auditor@sunovate.local"} in readers.json()["data"]
+    reader_url = f"{API}/{PPSUN_DOC}/readers/sim.lead.psun@sunovate.local"
+    assert client.delete(reader_url, headers=coordinator).status_code == 200

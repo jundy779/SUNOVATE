@@ -91,6 +91,13 @@ class TeamMembership(Record):
 
 
 @dataclass(kw_only=True)
+class SecureDocumentReader(Record):
+    document_id: UUID
+    user_id: UUID
+    granted_by: UUID | None = None
+
+
+@dataclass(kw_only=True)
 class UserRole(Record):
     user_id: UUID
     role_id: UUID
