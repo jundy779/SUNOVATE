@@ -179,3 +179,23 @@ test("new users find the quick guide and can dismiss the welcome note", async ({
   await expect(page.getByRole("heading", { name: "Bertanya kepada SAVI AI" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Menentukan pembaca dokumen rahasia" })).toHaveCount(0);
 });
+
+test("each account on a shared browser gets its own welcome note", async ({ page }) => {
+  const signIn = async (email: string) => {
+    await page.goto("/login");
+    await expect(page.getByRole("button", { name: "Masuk dengan akses pengembangan" })).toBeEnabled();
+    await page.getByLabel("Email pengguna simulasi").fill(email);
+    await page.getByRole("button", { name: "Masuk dengan akses pengembangan" }).click();
+    await page.waitForURL(/\/dashboard$/);
+  };
+  const welcome = () => page.getByRole("complementary", { name: "Baru menggunakan SUNOVATE?" });
+
+  await signIn("sim.staff.pppsun@sunovate.local");
+  await welcome().getByRole("button", { name: "Tutup" }).click();
+  await expect(welcome()).toHaveCount(0);
+
+  await page.locator("summary.topbar-account").click();
+  await page.getByRole("button", { name: "Keluar" }).click();
+  await signIn("sim.lead.psun@sunovate.local");
+  await expect(welcome()).toBeVisible();
+});

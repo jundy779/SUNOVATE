@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-22 — Catatan sambutan per akun
+
+- Status "sudah ditutup" untuk catatan "Baru menggunakan SUNOVATE?" kini disimpan per akun, bukan per browser, sehingga setiap pegawai di komputer kantor yang dipakai bergantian tetap melihat catatan sambutan pertamanya (BUG-037). Halaman Ringkasan kini juga memuat identitas pengguna untuk keperluan ini.
+- Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 45 test frontend, 349 test backend mode simulated (40 PostgreSQL dilewati), build produksi, dan 12/12 skenario Playwright e2e lulus, termasuk skenario dua akun bergantian di browser yang sama.
+
 ## 2026-10-22 — Panduan singkat di dalam aplikasi
 
 - Halaman baru `/panduan` ("Cara memakai SUNOVATE") berisi panduan langkah demi langkah untuk mencari dokumen dan pengetahuan, bertanya kepada SAVI AI, memantau dan memperbarui pekerjaan, membaca dokumen rahasia, serta menentukan pembaca dokumen rahasia. Panduan hanya tampil bila pengguna memiliki kewenangan terkait, dan label di panduan sama dengan label di layar.

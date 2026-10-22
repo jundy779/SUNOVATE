@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { GuideWelcome } from "@/components/guide-welcome";
-import type { DashboardSummary } from "@sunovate/contracts";
+import type { DashboardSummary, Principal } from "@sunovate/contracts";
 import { DeadlineTag, EmptyState } from "@/components/page-elements";
 import { TaskStatusChart } from "@/components/task-status-chart";
 import { UiIcon } from "@/components/ui-icons";
@@ -14,7 +14,10 @@ export const metadata: Metadata = { title: "Dashboard" };
 type Tone = "plain" | "attention" | "done";
 
 export default async function DashboardPage() {
-  const { data } = await apiGet<DashboardSummary>("/dashboard/summary");
+  const [{ data }, { data: principal }] = await Promise.all([
+    apiGet<DashboardSummary>("/dashboard/summary"),
+    apiGet<Principal>("/auth/me"),
+  ]);
   const scope = data.scope.allTeams ? "Seluruh tim Direktorat SUN" : data.scope.teamCodes.join(", ");
   const ledger: { label: string; value: number; detail: string; tone: Tone }[] = [
     { label: "Tugas aktif", value: data.metrics.totalActiveTasks, detail: "Belum berstatus selesai", tone: "plain" },
@@ -46,7 +49,7 @@ export default async function DashboardPage() {
         </div>
       </header>
 
-      <GuideWelcome />
+      <GuideWelcome userId={principal.id} />
 
       <dl className="db-context" aria-label="Cakupan ringkasan">
         <div><dt>Cakupan</dt><dd>{scope || "Belum ada tim"}</dd></div>

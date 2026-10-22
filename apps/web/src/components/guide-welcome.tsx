@@ -3,12 +3,17 @@
 import Link from "next/link";
 import { useCallback, useSyncExternalStore } from "react";
 
-const STORAGE_KEY = "sunovate.guide-welcome.dismissed.v1";
+const STORAGE_PREFIX = "sunovate.guide-welcome.dismissed.v1:";
 const listeners = new Set<() => void>();
 
-function readDismissed(): boolean {
+/** Per account, so a shared office computer still greets each new user (BUG-037). */
+export function welcomeStorageKey(userId: string): string {
+  return `${STORAGE_PREFIX}${userId}`;
+}
+
+function readDismissed(key: string): boolean {
   try {
-    return window.localStorage.getItem(STORAGE_KEY) === "1";
+    return window.localStorage.getItem(key) === "1";
   } catch {
     return false; // storage unavailable: keep showing the note
   }
@@ -20,17 +25,19 @@ function subscribe(listener: () => void) {
 }
 
 /** First-visit note on the dashboard pointing to the quick guide; hidden once dismissed. */
-export function GuideWelcome() {
+export function GuideWelcome({ userId }: { userId: string }) {
+  const key = welcomeStorageKey(userId);
+  const read = useCallback(() => readDismissed(key), [key]);
   // Server render and first client render treat the note as dismissed, so it never flashes.
-  const dismissed = useSyncExternalStore(subscribe, readDismissed, () => true);
+  const dismissed = useSyncExternalStore(subscribe, read, () => true);
   const dismiss = useCallback(() => {
     try {
-      window.localStorage.setItem(STORAGE_KEY, "1");
+      window.localStorage.setItem(key, "1");
     } catch {
       // ignore: the note simply returns on the next visit
     }
     listeners.forEach((listener) => listener());
-  }, []);
+  }, [key]);
 
   if (dismissed) return null;
   return (
