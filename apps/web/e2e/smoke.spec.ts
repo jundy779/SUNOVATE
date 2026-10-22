@@ -158,3 +158,24 @@ test("dashboard downloads the full list of urgent work as Excel", async ({ page 
   const [download] = await Promise.all([page.waitForEvent("download"), section.getByRole("link", { name: "Unduh Excel" }).click()]);
   expect(download.suggestedFilename()).toMatch(/^SUNOVATE-perlu-ditindaklanjuti-\d{8}\.xlsx$/);
 });
+
+test("new users find the quick guide and can dismiss the welcome note", async ({ page }) => {
+  await page.goto("/login");
+  await expect(page.getByRole("button", { name: "Masuk dengan akses pengembangan" })).toBeEnabled();
+  await page.getByLabel("Email pengguna simulasi").fill("sim.staff.pppsun@sunovate.local");
+  await page.getByRole("button", { name: "Masuk dengan akses pengembangan" }).click();
+  await page.waitForURL(/\/dashboard$/);
+
+  const welcome = page.getByRole("complementary", { name: "Baru menggunakan SUNOVATE?" });
+  await expect(welcome).toBeVisible();
+  await welcome.getByRole("button", { name: "Tutup" }).click();
+  await expect(welcome).toHaveCount(0);
+  await page.reload();
+  await expect(page.getByRole("heading", { name: "Ringkasan kerja" })).toBeVisible();
+  await expect(page.getByRole("complementary", { name: "Baru menggunakan SUNOVATE?" })).toHaveCount(0);
+
+  await page.getByRole("link", { name: "Panduan singkat" }).first().click();
+  await expect(page.getByRole("heading", { name: "Cara memakai SUNOVATE" })).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByRole("heading", { name: "Bertanya kepada SAVI AI" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Menentukan pembaca dokumen rahasia" })).toHaveCount(0);
+});

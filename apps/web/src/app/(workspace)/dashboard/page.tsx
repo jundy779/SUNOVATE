@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { GuideWelcome } from "@/components/guide-welcome";
 import type { DashboardSummary } from "@sunovate/contracts";
 import { DeadlineTag, EmptyState } from "@/components/page-elements";
 import { TaskStatusChart } from "@/components/task-status-chart";
@@ -44,6 +45,8 @@ export default async function DashboardPage() {
           </div>
         </div>
       </header>
+
+      <GuideWelcome />
 
       <dl className="db-context" aria-label="Cakupan ringkasan">
         <div><dt>Cakupan</dt><dd>{scope || "Belum ada tim"}</dd></div>

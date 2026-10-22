@@ -35,6 +35,9 @@ export function AppShell({ principal, children }: { principal: Principal; childr
             <input id="global-search" name="q" type="search" minLength={2} maxLength={200}
               placeholder="Cari dokumen, informasi, atau topik" />
           </form>
+          <Link className="help-button" href="/panduan" aria-label="Panduan singkat" title="Panduan singkat">
+            <UiIcon name="help" />
+          </Link>
           <button className="notification-button" type="button" aria-label="Notifikasi pengembangan">
             <UiIcon name="bell" />
             <span aria-hidden="true" />
@@ -50,6 +53,7 @@ export function AppShell({ principal, children }: { principal: Principal; childr
             </summary>
             <div className="account-popover">
               <span>Akun simulasi</span>
+              <Link className="text-button" href="/panduan">Panduan singkat</Link>
               <form action={logoutAction}>
                 <button className="text-button" type="submit">Keluar</button>
               </form>

@@ -199,6 +199,28 @@
 
 .db-head-actions { display: flex; flex-wrap: wrap; gap: 1.1rem; align-items: baseline; }
 
+/* Quick guide (TASK-035) */
+.help-button { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 6px; color: var(--navy); }
+.help-button:hover, .help-button:focus-visible { background: var(--paper); }
+.help-button svg { width: 22px; height: 22px; }
+.account-popover .text-button { justify-self: start; }
+.guide { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.6rem; max-width: 960px; }
+.guide-index ol { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; margin: 0; padding: 1rem 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); list-style: none; counter-reset: guide; }
+.guide-index li { counter-increment: guide; }
+.guide-index li::before { content: counter(guide) ". "; color: var(--gold); font-weight: 700; }
+.guide-index a { color: var(--navy); font-weight: 600; font-size: .9rem; }
+.guide-section { padding: 1.4rem 1.5rem; border: 1px solid var(--line); background: var(--white); scroll-margin-top: 1rem; }
+.guide-steps { display: grid; gap: .9rem; margin: 0; padding: 0; list-style: none; counter-reset: step; }
+.guide-steps li { position: relative; display: grid; gap: .25rem; padding-left: 2.6rem; counter-increment: step; }
+.guide-steps li::before { content: counter(step); position: absolute; left: 0; top: 0; display: grid; place-items: center; width: 1.8rem; height: 1.8rem; border-radius: 50%; background: var(--navy); color: var(--white); font-weight: 700; font-size: .85rem; }
+.guide-steps strong { color: var(--navy); font-size: .95rem; }
+.guide-steps span { color: #374151; font-size: .9rem; line-height: 1.55; }
+.guide-note { margin: 1.1rem 0 0; padding: .7rem .9rem; border-left: 4px solid var(--gold); background: var(--paper); color: var(--navy); font-size: .86rem; }
+.guide-welcome { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem 1.5rem; padding: 1.1rem 1.4rem; border: 1px solid var(--line); border-left: 4px solid var(--gold); background: var(--white); }
+.guide-welcome h2 { margin: 0 0 .25rem; color: var(--navy); font: 700 1.05rem/1.3 var(--font-heading); }
+.guide-welcome p { margin: 0; color: var(--muted); font-size: .88rem; }
+.guide-welcome-actions { display: flex; align-items: center; gap: 1rem; }
+
 /* Work monitoring: Excel-like filtering, sorting, and download (TASK-033) */
 .work-toolbar { display: grid; grid-template-columns: minmax(200px, 2fr) repeat(2, minmax(140px, 1fr)) auto; align-items: end; gap: .75rem; margin: .9rem 0 .6rem; padding: 0 .9rem; }
 .work-toolbar label { display: grid; gap: .3rem; color: var(--navy); font-size: .78rem; font-weight: 700; }

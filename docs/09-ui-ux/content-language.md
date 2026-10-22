@@ -48,6 +48,12 @@ Aturan ini berlaku untuk halaman publik, halaman masuk, ruang kerja, pesan kesal
 - Jangan menampilkan detail yang dapat membantu pemetaan infrastruktur atau membingungkan pengguna.
 - Jangan menerjemahkan istilah hukum secara bebas apabila perubahan istilah dapat mengubah makna.
 
+## Panduan Singkat
+
+- Isi panduan di `apps/web/src/lib/guides.ts` memakai label yang sama persis dengan tombol dan judul di layar (misalnya "Kirim pertanyaan", "Unduh Excel", "Beri akses baca"). Bila label layar berubah, panduan wajib ikut diperbarui.
+- Setiap panduan berisi tiga sampai empat langkah, kalimat pendek, dan tanpa istilah teknis; test `guides.test.ts` menolak istilah seperti API, endpoint, database, token, Hermes, RAG, upload, dan dashboard.
+- Panduan hanya ditampilkan bila pengguna memiliki kewenangan terkait, sehingga tidak ada pengguna yang diarahkan ke halaman yang tidak dapat dibukanya.
+
 ## Pemeriksaan Sebelum Rilis
 
 1. Telusuri seluruh teks yang dapat terlihat pengguna.

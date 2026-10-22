@@ -1,6 +1,6 @@
 import type { ReactNode, SVGProps } from "react";
 
-export type IconName = "home" | "book" | "search" | "chart" | "chat" | "settings" | "document" | "clock" | "users" | "check" | "bell" | "chevron" | "tag" | "shield" | "send";
+export type IconName = "home" | "book" | "search" | "chart" | "chat" | "settings" | "document" | "clock" | "users" | "check" | "bell" | "chevron" | "tag" | "shield" | "send" | "help";
 
 const paths: Record<IconName, ReactNode> = {
   home: <><path d="M3 10.75 12 3l9 7.75" /><path d="M5.5 9.5V21h13V9.5M9.25 21v-6.75h5.5V21" /></>,
@@ -18,6 +18,7 @@ const paths: Record<IconName, ReactNode> = {
   tag: <><path d="M3.5 11.5V4h7.5L21 14l-7 7z" /><circle cx="7.75" cy="8.25" r="1" /></>,
   shield: <><path d="M12 2.75 20 6v5.5c0 5-3.4 8.25-8 10-4.6-1.75-8-5-8-10V6z" /><path d="m8.5 12 2.25 2.25L15.5 9.5" /></>,
   send: <><path d="m3 4 18 8-18 8 3-8z" /><path d="M6 12h15" /></>,
+  help: <><circle cx="12" cy="12" r="9" /><path d="M9.6 9.4a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1.1.9-1.1 1.6v.4" /><path d="M12 17h.01" /></>,
 };
 
 export function UiIcon({ name, ...props }: { name: IconName } & SVGProps<SVGSVGElement>) {

@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-22 — Panduan singkat di dalam aplikasi
+
+- Halaman baru `/panduan` ("Cara memakai SUNOVATE") berisi panduan langkah demi langkah untuk mencari dokumen dan pengetahuan, bertanya kepada SAVI AI, memantau dan memperbarui pekerjaan, membaca dokumen rahasia, serta menentukan pembaca dokumen rahasia. Panduan hanya tampil bila pengguna memiliki kewenangan terkait, dan label di panduan sama dengan label di layar.
+- Tombol bantuan (ikon tanda tanya) di bilah atas dan tautan "Panduan singkat" di menu akun membuka halaman tersebut dari mana saja, termasuk di ponsel.
+- Halaman Ringkasan menampilkan catatan "Baru menggunakan SUNOVATE?" yang dapat ditutup; status tutup disimpan di browser pengguna dan tidak berkedip saat halaman dimuat.
+- Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 45 test frontend, 349 test backend mode simulated (40 PostgreSQL dilewati), build produksi, dan 11/11 skenario Playwright e2e lulus. QA visual pada 1440 px (ketua tim, lima panduan) dan 390 px (staf, empat panduan) tanpa scroll halaman ke samping. Backend tidak berubah sehingga `db:test` tidak dijalankan ulang.
+
 ## 2026-10-22 — Unduh Excel dari Ringkasan
 
 - Bagian "Perlu ditindaklanjuti" di halaman Ringkasan kini memiliki tautan "Unduh Excel". Berkas berisi seluruh tugas dan tindak lanjut yang terlambat, jatuh tempo hari ini, atau segera jatuh tempo dalam cakupan pengguna (layar hanya menampilkan enam teratas), dengan kolom penanggung jawab, batas waktu, status tenggat, dan status pekerjaan.
