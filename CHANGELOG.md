@@ -8,6 +8,15 @@
 - Reset database uji memakai batas waktu 120 detik agar tidak gagal saat mesin sibuk (BUG-036); batas 15 detik aplikasi tidak berubah.
 - Halaman Kelola akses baca dan skenario e2e disesuaikan dengan Ketua Tim sebagai pengelola.
 - Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 39 test frontend, 338 test backend mode simulated (40 PostgreSQL dilewati), 378 test mode PostgreSQL, `db:check` (31 tabel, upgrade dan downgrade migrasi), render SQL Alembic, build produksi, dan 8/8 skenario Playwright e2e lulus. Run `db:test` pertama gagal satu test karena hitungan tabel tetap 30 di `test_database_integration.py`; hitungan diperbarui menjadi 31 lalu run ulang lulus.
+- Validasi aktual (Windows 11, Git Bash, Python 3.12 via uv): patch 0008 versi "Ketua Tim dan Kasubdit PMP" diterapkan dengan `git am` sebagai `ee525e3`. Versi sebelumnya ("hanya Ketua Tim", sempat diterapkan secara lokal sebagai `50746e8` dan lulus `validate`, `db:check`, `db:test` 376/1, serta e2e 8/8) dibatalkan sebelum di-push karena tidak sesuai arahan terbaru.
+  - `pnpm api:setup` lulus. `pnpm validate` lulus: ESLint, Ruff, TypeScript, mypy strict (70 berkas), 39 test frontend (11 berkas), 337 test backend lulus (41 dilewati), dan build produksi (26 halaman statis).
+  - `pnpm db:check` lulus pada PostgreSQL sementara (pgserver): 31 tabel, trigger append-only menolak UPDATE, downgrade `0003_secure_document_readers` lalu ke base berhasil.
+  - `pnpm db:test` tanpa beban lain lulus: 377 test lulus dan 1 dilewati (10 menit 22 detik untuk pytest). Linux mencatat 378. Setelah test selesai, pgserver gagal berhenti normal (`pg_ctl: server does not shut down`) lalu dihentikan paksa oleh skrip; exit code tetap 0 dan tidak ada proses `postgres` yang tertinggal.
+  - `pnpm db:migrate` dan `pnpm db:seed` tidak dijalankan: mesin ini memakai `DATA_BACKEND=simulated` dan tidak ada PostgreSQL lokal pada port 5432.
+  - Dev server dinyalakan ulang setelah `db:test`. `pnpm e2e` dengan `pnpm api:dev`: 8/8 skenario lulus, termasuk "team lead grants and revokes read access without seeing document content".
+- Pemeriksaan manual `/dokumen-rahasia/kelola` di browser (server pengembangan, data simulasi):
+  - `sim.coordinator` (padanan Kasubdit PMP) melihat tombol "Kelola akses baca" di daftar dokumen rahasia dan dua dokumen di halaman kelola (PSUN dan PPSUN) beserta daftar pembaca sesuai seed, tanpa isi dokumen.
+  - `sim.lead.psun` hanya melihat satu dokumen PSUN tanpa isi dokumen. Pemberian akses pada dokumen PPSUN lewat proxy web ditolak API dengan 404 `NOT_FOUND`.
 
 ## 2026-10-21 — Pengelolaan akses dokumen RAHASIA sesuai keputusan mentor
 
