@@ -68,7 +68,12 @@ export default async function DashboardPage() {
               <h2 id="priority-heading">Perlu ditindaklanjuti</h2>
               <p>Diurutkan dari tenggat paling dekat</p>
             </div>
-            <Link className="text-link" href="/work-monitoring">Lihat semua</Link>
+            <div className="db-head-actions">
+              {data.attention.length ? (
+                <a className="text-link" href="/api/exports/attention" download title="Unduh seluruh pekerjaan mendesak dalam cakupan Anda">Unduh Excel</a>
+              ) : null}
+              <Link className="text-link" href="/work-monitoring">Lihat semua</Link>
+            </div>
           </header>
           {data.attention.length ? (
             <div className="table-wrap db-table">

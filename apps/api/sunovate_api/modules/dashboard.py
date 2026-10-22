@@ -13,6 +13,7 @@ from fastapi import APIRouter, Depends
 
 from ..authz.dependencies import Ctx, require
 from ..authz.principal import Principal
+from ..context import AppContext
 from ..domain import CLOSED_STATUSES, TASK_STATUSES
 from ..store.records import (
     ApprovalRequest,
@@ -27,6 +28,58 @@ from .work import task_view, with_deadline
 router = APIRouter(tags=["dashboard"])
 
 ATTENTION_STATES = ("OVERDUE", "DUE_TODAY", "DUE_SOON")
+
+
+def _attention(
+    ctx: AppContext,
+    task_records: list[Task],
+    tasks: list[dict[str, Any]],
+    follow_up_records: list[FollowUp],
+    follow_ups: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    store = ctx.store
+    attention: list[dict[str, Any]] = []
+    for kind, records, views in (
+        ("TASK", task_records, tasks),
+        ("FOLLOW_UP", follow_up_records, follow_ups),
+    ):
+        for record, view in zip(records, views, strict=True):
+            if view["deadlineState"] not in ATTENTION_STATES:
+                continue
+            assignee_id = (
+                record.assignee_user_id if isinstance(record, Task) else record.owner_user_id
+            )
+            assignee = store.user(assignee_id) if assignee_id else None
+            attention.append(
+                {
+                    "type": kind,
+                    "id": view["id"],
+                    "title": view["title"],
+                    "category": "Tugas" if kind == "TASK" else "Tindak lanjut",
+                    "workStatus": view["status"],
+                    "assigneeName": assignee.display_name if assignee else None,
+                    "ownerTeamCode": view["ownerTeamCode"],
+                    "dueDate": view["dueDate"],
+                    "deadlineState": view["deadlineState"],
+                }
+            )
+    attention.sort(key=lambda a: (ATTENTION_STATES.index(a["deadlineState"]), a["dueDate"]))
+    return attention
+
+
+def attention_items(ctx: AppContext, principal: Principal) -> list[dict[str, Any]]:
+    """Every overdue or nearly due task and follow-up in the caller's scope, most urgent first."""
+    task_records = ctx.authz.list_readable(principal, Task)
+    follow_up_records = (
+        ctx.authz.list_readable(principal, FollowUp) if principal.has("pending:read") else []
+    )
+    return _attention(
+        ctx,
+        task_records,
+        [task_view(ctx, task) for task in task_records],
+        follow_up_records,
+        [with_deadline(ctx, f, f.due_date, f.status) for f in follow_up_records],
+    )
 
 
 @router.get("/dashboard/summary")
@@ -54,32 +107,7 @@ def dashboard_summary(
         else []
     )
 
-    attention = []
-    for kind, records, views in (
-        ("TASK", task_records, tasks),
-        ("FOLLOW_UP", follow_up_records, follow_ups),
-    ):
-        for record, view in zip(records, views, strict=True):
-            if view["deadlineState"] not in ATTENTION_STATES:
-                continue
-            assignee_id = (
-                record.assignee_user_id if isinstance(record, Task) else record.owner_user_id
-            )
-            assignee = store.user(assignee_id) if assignee_id else None
-            attention.append(
-                {
-                    "type": kind,
-                    "id": view["id"],
-                    "title": view["title"],
-                    "category": "Tugas" if kind == "TASK" else "Tindak lanjut",
-                    "workStatus": view["status"],
-                    "assigneeName": assignee.display_name if assignee else None,
-                    "ownerTeamCode": view["ownerTeamCode"],
-                    "dueDate": view["dueDate"],
-                    "deadlineState": view["deadlineState"],
-                }
-            )
-    attention.sort(key=lambda a: (ATTENTION_STATES.index(a["deadlineState"]), a["dueDate"]))
+    attention = _attention(ctx, task_records, tasks, follow_up_records, follow_ups)
     counts = Counter(t["status"] for t in tasks)
     states = Counter(t["deadlineState"] for t in tasks)
     reference_date = ctx.clock()

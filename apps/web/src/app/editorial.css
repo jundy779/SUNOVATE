@@ -197,6 +197,8 @@
 .db-indicators dd { margin: .3rem 0 0; color: var(--muted); font-size: .84rem; }
 .db-note { margin: 0; color: var(--muted); font-size: .76rem; }
 
+.db-head-actions { display: flex; flex-wrap: wrap; gap: 1.1rem; align-items: baseline; }
+
 /* Work monitoring: Excel-like filtering, sorting, and download (TASK-033) */
 .work-toolbar { display: grid; grid-template-columns: minmax(200px, 2fr) repeat(2, minmax(140px, 1fr)) auto; align-items: end; gap: .75rem; margin: .9rem 0 .6rem; padding: 0 .9rem; }
 .work-toolbar label { display: grid; gap: .3rem; color: var(--navy); font-size: .78rem; font-weight: 700; }

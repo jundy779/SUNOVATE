@@ -24,6 +24,7 @@ from ..context import AppContext
 from ..domain import deadline_state
 from ..secure.vault import jakarta_now
 from ..store.records import FollowUp, Governed, Milestone, PendingMatter, Task, WorkOutput
+from .dashboard import attention_items
 
 router = APIRouter(prefix="/exports", tags=["exports"])
 
@@ -99,6 +100,10 @@ def _row(ctx: AppContext, record: Governed, labels: dict[str, str]) -> list[Any]
     ]
 
 
+def _as_date(value: Any) -> date | None:
+    return date.fromisoformat(value) if isinstance(value, str) else value
+
+
 def _as_text(cell: Cell) -> None:
     """Never let user-entered text become an Excel formula (formula/CSV injection)."""
     if isinstance(cell.value, str) and cell.value.startswith(_FORMULA_PREFIXES):
@@ -106,7 +111,13 @@ def _as_text(cell: Cell) -> None:
 
 
 def build_workbook(
-    *, title: str, rows: list[list[Any]], exported_by: str, exported_at: datetime
+    *,
+    title: str,
+    rows: list[list[Any]],
+    exported_by: str,
+    exported_at: datetime,
+    headers: tuple[str, ...] = _HEADERS,
+    widths: tuple[int, ...] = (48, 10, 20, 12, 12, 20, 20, 14),
 ) -> bytes:
     workbook = Workbook()
     sheet = workbook.active
@@ -123,7 +134,7 @@ def build_workbook(
         cell.font = Font(italic=True, color="6B7280")
 
     header_row = 5
-    for column, header in enumerate(_HEADERS, start=1):
+    for column, header in enumerate(headers, start=1):
         cell = sheet.cell(row=header_row, column=column, value=header)
         cell.font = Font(bold=True, color="FFFFFF")
         cell.fill = PatternFill("solid", fgColor=_NAVY)
@@ -136,9 +147,9 @@ def build_workbook(
                 cell.number_format = "DD-MM-YYYY"
 
     last_row = header_row + max(len(rows), 1)
-    sheet.auto_filter.ref = f"A{header_row}:{get_column_letter(len(_HEADERS))}{last_row}"
+    sheet.auto_filter.ref = f"A{header_row}:{get_column_letter(len(headers))}{last_row}"
     sheet.freeze_panes = f"A{header_row + 1}"
-    for column, width in enumerate((48, 10, 20, 12, 12, 20, 20, 14), start=1):
+    for column, width in enumerate(widths, start=1):
         sheet.column_dimensions[get_column_letter(column)].width = width
 
     buffer = io.BytesIO()
@@ -163,14 +174,20 @@ def export_work(
     content = build_workbook(
         title=title, rows=rows, exported_by=principal.display_name, exported_at=now
     )
+    filename = f"SUNOVATE-{slug}-{now:%Y%m%d}.xlsx"
+    return _download(ctx, principal, kind, len(rows), content, filename)
+
+
+def _download(
+    ctx: AppContext, principal: Principal, kind: str, rows: int, content: bytes, filename: str
+) -> Response:
     with ctx.store.transaction():
         ctx.store.audit(
             actor_user_id=principal.user_id,
             action="WORK_EXPORT",
             entity_type="work_export",
-            detail={"kind": kind, "rows": len(rows)},
+            detail={"kind": kind, "rows": rows},
         )
-    filename = f"SUNOVATE-{slug}-{now:%Y%m%d}.xlsx"
     return Response(
         content=content,
         media_type=XLSX,
@@ -180,3 +197,46 @@ def export_work(
             "X-Content-Type-Options": "nosniff",
         },
     )
+
+
+_ATTENTION_HEADERS: Final = (
+    "Uraian",
+    "Jenis",
+    "Tim",
+    "Penanggung jawab",
+    "Batas waktu",
+    "Status tenggat",
+    "Status pekerjaan",
+)
+
+
+@router.get("/attention", response_class=Response)
+def export_attention(
+    ctx: Ctx,
+    principal: Annotated[Principal, Depends(require("work:read", resource="work_export"))],
+) -> Response:
+    """The dashboard's "Perlu ditindaklanjuti" list in full (the screen shows the first six)."""
+    items = attention_items(ctx, principal)[:MAX_ROWS]
+    rows = [
+        [
+            item["title"],
+            item["category"],
+            item["ownerTeamCode"] or "-",
+            item["assigneeName"] or "Belum ditetapkan",
+            _as_date(item["dueDate"]),
+            _DEADLINE.get(item["deadlineState"], "-"),
+            _STATUS.get(item["workStatus"], str(item["workStatus"]).replace("_", " ").capitalize()),
+        ]
+        for item in items
+    ]
+    now = jakarta_now()
+    content = build_workbook(
+        title="Perlu ditindaklanjuti",
+        rows=rows,
+        exported_by=principal.display_name,
+        exported_at=now,
+        headers=_ATTENTION_HEADERS,
+        widths=(48, 14, 10, 28, 14, 20, 20),
+    )
+    filename = f"SUNOVATE-perlu-ditindaklanjuti-{now:%Y%m%d}.xlsx"
+    return _download(ctx, principal, "attention", len(rows), content, filename)

@@ -89,6 +89,7 @@ Dokumen rancangan di luar repository (blueprint SUNOVATE v0.5, deck v2.5) memaka
 
 ## Unduhan Excel monitoring kerja (2026-10-21)
 
+- `GET /api/v1/exports/attention` mengunduh seluruh daftar "Perlu ditindaklanjuti" dari Ringkasan dengan perhitungan yang sama seperti ringkasan.
 - `GET /api/v1/exports/work?kind=outputs|tasks|milestones|pending|followUps` memakai filter otorisasi dan klasifikasi yang sama dengan endpoint daftar, sehingga isi berkas sama dengan yang dapat dilihat pengguna di layar. Maksimal 5.000 baris per berkas.
 - Setiap unduhan dicatat di audit (`WORK_EXPORT`) dengan jenis data dan jumlah baris saja, tanpa isi baris.
 - Teks dari pengguna yang diawali `=`, `+`, `-`, `@`, tab, atau carriage return disimpan sebagai teks sehingga tidak dieksekusi sebagai formula saat berkas dibuka (perlindungan formula injection).

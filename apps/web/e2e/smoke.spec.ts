@@ -146,3 +146,15 @@ test("coordinator filters, sorts, and downloads work data as Excel", async ({ pa
   const [download] = await Promise.all([page.waitForEvent("download"), page.getByRole("link", { name: "Unduh Excel" }).click()]);
   expect(download.suggestedFilename()).toMatch(/^SUNOVATE-tugas-\d{8}\.xlsx$/);
 });
+
+test("dashboard downloads the full list of urgent work as Excel", async ({ page }) => {
+  await page.goto("/login");
+  await expect(page.getByRole("button", { name: "Masuk dengan akses pengembangan" })).toBeEnabled();
+  await page.getByLabel("Email pengguna simulasi").fill("sim.coordinator@sunovate.local");
+  await page.getByRole("button", { name: "Masuk dengan akses pengembangan" }).click();
+  await page.waitForURL(/\/dashboard$/);
+
+  const section = page.locator("section[aria-labelledby='priority-heading']");
+  const [download] = await Promise.all([page.waitForEvent("download"), section.getByRole("link", { name: "Unduh Excel" }).click()]);
+  expect(download.suggestedFilename()).toMatch(/^SUNOVATE-perlu-ditindaklanjuti-\d{8}\.xlsx$/);
+});

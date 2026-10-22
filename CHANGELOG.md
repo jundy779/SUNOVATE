@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-22 — Unduh Excel dari Ringkasan
+
+- Bagian "Perlu ditindaklanjuti" di halaman Ringkasan kini memiliki tautan "Unduh Excel". Berkas berisi seluruh tugas dan tindak lanjut yang terlambat, jatuh tempo hari ini, atau segera jatuh tempo dalam cakupan pengguna (layar hanya menampilkan enam teratas), dengan kolom penanggung jawab, batas waktu, status tenggat, dan status pekerjaan.
+- Endpoint baru `GET /api/v1/exports/attention` memakai perhitungan yang sama dengan ringkasan (`attention_items` di modul dashboard) dan audit `WORK_EXPORT`. Proxy unduhan web dipindahkan ke `lib/export-proxy.ts` dan dipakai bersama oleh kedua unduhan.
+- Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 42 test frontend, 349 test backend mode simulated (40 PostgreSQL dilewati), 389 test mode PostgreSQL, build produksi, dan 10/10 skenario Playwright e2e lulus. Berkas unduhan diperiksa berisi 7 baris (layar menampilkan 6) dengan filter otomatis A5:G12.
+
 ## 2026-10-22 — Fitur ala Excel di Monitoring Kerja
 
 - Tabel Monitoring Kerja kini dapat dicari berdasarkan judul, disaring per status dan tim, serta diurutkan dengan mengklik judul kolom (Judul, Tim, Status, Tanggal, Tenggat). Jumlah baris yang tampil ditunjukkan saat saringan aktif.

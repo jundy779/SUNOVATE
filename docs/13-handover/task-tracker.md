@@ -54,6 +54,7 @@ Menjadi sumber status pekerjaan lintas sesi dan lintas AI agent. Setiap perubaha
 | TASK-031 | Pengelolaan akses baca dokumen RAHASIA sesuai jawaban mentor: hanya Kasubdit PMP dan Ketua Tim, API daftar/beri/cabut pembaca dengan validasi clearance dan audit, serta halaman Kelola akses baca | MVP | DONE (simulasi) | DEC-20261021-01; 6 test API dan 1 skenario e2e baru; jenis dokumen menunggu kurasi ketua tim. |
 | TASK-032 | Pengelolaan akses RAHASIA oleh Ketua Tim dan Kasubdit PMP (DEC-20261021-02): kewenangan lewat permission katalog `secure_document:manage_team` dan `secure_document:manage_all`, daftar pembaca permanen di PostgreSQL (migrasi 0003), dan batas waktu reset database uji | MVP | DONE | `db:check` (31 tabel, upgrade/downgrade) dan `db:test` lulus. |
 | TASK-033 | Fitur ala Excel di Monitoring Kerja: cari judul, saring status dan tim, urutkan per kolom, dan Unduh Excel (`GET /exports/work`) berisi hanya data yang boleh dilihat pengguna, dengan filter otomatis, header beku, perlindungan formula, dan audit `WORK_EXPORT` | MVP | DONE | 9 test API, 3 test unit web, 1 skenario e2e; tabel Ringkasan belum memiliki unduhan. |
+| TASK-034 | Unduh Excel daftar "Perlu ditindaklanjuti" di Ringkasan (`GET /exports/attention`): seluruh tugas dan tindak lanjut yang terlambat atau segera jatuh tempo dalam cakupan pengguna, bukan hanya enam baris di layar | MVP | DONE | 2 test API dan 1 skenario e2e; perhitungan daftar dipakai bersama dengan ringkasan. |
 
 ## Urutan Eksekusi Terdekat
 

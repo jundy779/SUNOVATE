@@ -79,3 +79,22 @@ def test_user_text_never_becomes_a_formula() -> None:
         if isinstance(cell.value, str) and cell.value[:1] in "=+-@":
             assert cell.data_type == "s", cell.value
 
+
+
+def test_attention_export_contains_every_urgent_item_in_scope() -> None:
+    client = make_client()
+    for user in ("sim.staff.pppsun", "sim.coordinator"):
+        headers = login(client, user)
+        summary = client.get("/api/v1/dashboard/summary", headers=headers).json()["data"]
+        response = client.get("/api/v1/exports/attention", headers=headers)
+        assert response.status_code == 200
+        assert "SUNOVATE-perlu-ditindaklanjuti-" in response.headers["content-disposition"]
+        sheet = _sheet(response.content)
+        assert [cell.value for cell in sheet[5]][:2] == ["Uraian", "Jenis"]
+        titles = _titles(sheet)
+        assert len(titles) == summary["metrics"]["attentionCount"], user
+        assert {item["title"] for item in summary["attention"]} <= set(titles)
+
+
+def test_attention_export_requires_authentication() -> None:
+    assert make_client().get("/api/v1/exports/attention").status_code == 401
