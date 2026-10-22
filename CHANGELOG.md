@@ -6,6 +6,12 @@
 - Tombol bantuan (ikon tanda tanya) di bilah atas dan tautan "Panduan singkat" di menu akun membuka halaman tersebut dari mana saja, termasuk di ponsel.
 - Halaman Ringkasan menampilkan catatan "Baru menggunakan SUNOVATE?" yang dapat ditutup; status tutup disimpan di browser pengguna dan tidak berkedip saat halaman dimuat.
 - Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 45 test frontend, 349 test backend mode simulated (40 PostgreSQL dilewati), build produksi, dan 11/11 skenario Playwright e2e lulus. QA visual pada 1440 px (ketua tim, lima panduan) dan 390 px (staf, empat panduan) tanpa scroll halaman ke samping. Backend tidak berubah sehingga `db:test` tidak dijalankan ulang.
+- Validasi aktual (Windows 11, Git Bash, Python 3.12 via uv): patch 0011 diterapkan dengan `git am` sebagai `0f3fd70`.
+  - `pnpm validate` lulus: ESLint, Ruff, TypeScript, mypy strict (71 berkas), 45 test frontend (13 berkas), 348 test backend lulus (41 dilewati), dan build produksi (29 halaman statis). Run pertama perintah gabungan berhenti dengan exit code 4 sebelum `validate` selesai (penyebab tidak tercatat); `pnpm validate` dijalankan ulang tersendiri dan lulus.
+  - `pnpm e2e` dengan `pnpm api:dev` (`DATA_BACKEND=simulated`): 11/11 skenario lulus, termasuk "new users find the quick guide and can dismiss the welcome note".
+- Pemeriksaan manual di browser (server pengembangan, data simulasi). Status tutup catatan disimpan di `localStorage` browser (`sunovate.guide-welcome.dismissed.v1`) dan berlaku untuk semua akun di browser yang sama, sehingga kunci dihapus sebelum tiap akun diuji:
+  - `sim.staff.pppsun`: catatan "Baru menggunakan SUNOVATE?" tampil di Ringkasan; setelah "Tutup" catatan hilang dan tidak muncul lagi setelah halaman dimuat ulang. Ikon tanda tanya di bilah atas membuka `/panduan` dengan 4 panduan (mencari, SAVI AI, pekerjaan, membaca dokumen rahasia).
+  - `sim.lead.psun`: perilaku catatan sama; `/panduan` menampilkan 5 panduan, tambahan "Menentukan pembaca dokumen rahasia".
 
 ## 2026-10-22 — Unduh Excel dari Ringkasan
 
