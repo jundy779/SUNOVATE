@@ -63,9 +63,10 @@ test("staff creates and updates scoped work data", async ({ page }) => {
   // A unique title keeps the scenario repeatable against an API that still holds earlier runs.
   const title = `Output simulasi dari UI ${Date.now()}`;
   await page.getByRole("button", { name: "Tambah output" }).click();
-  await page.getByLabel("Judul").fill(title);
-  await page.getByLabel("Deskripsi").fill("Data simulasi untuk memverifikasi alur monitoring kerja.");
-  await page.getByLabel("Tim").selectOption({ index: 1 });
+  const form = page.locator("form.work-form");
+  await form.getByLabel("Judul").fill(title);
+  await form.getByLabel("Deskripsi").fill("Data simulasi untuk memverifikasi alur monitoring kerja.");
+  await form.getByLabel("Tim").selectOption({ index: 1 });
   await page.getByRole("button", { name: "Simpan" }).click();
 
   await expect(page.getByText(title)).toBeVisible();
@@ -120,4 +121,28 @@ test("team lead grants and revokes read access without seeing document content",
   await section.locator("li").filter({ hasText: "sim.auditor@sunovate.local" }).getByRole("button", { name: "Cabut akses" }).click();
   await expect(section.getByText(/Akses baca sim.auditor@sunovate.local dicabut/)).toBeVisible();
   await expect(page.getByText("KODE-UJI-RAHASIA-7781")).toHaveCount(0);
+});
+
+test("coordinator filters, sorts, and downloads work data as Excel", async ({ page }) => {
+  await page.goto("/login");
+  await expect(page.getByRole("button", { name: "Masuk dengan akses pengembangan" })).toBeEnabled();
+  await page.getByLabel("Email pengguna simulasi").fill("sim.coordinator@sunovate.local");
+  await page.getByRole("button", { name: "Masuk dengan akses pengembangan" }).click();
+  await page.waitForURL(/\/dashboard$/);
+
+  await page.goto("/work-monitoring");
+  await page.getByRole("button", { name: /^Tugas/ }).click();
+  const rows = page.locator(".work-table tbody tr");
+  const total = await rows.count();
+  expect(total).toBeGreaterThan(1);
+
+  await page.getByRole("button", { name: "Judul" }).click();
+  await expect(page.locator("th[aria-sort='ascending']")).toHaveText("Judul");
+  const firstTitle = (await rows.first().locator("strong").innerText()).trim();
+  await page.getByLabel("Cari judul").fill(firstTitle);
+  await expect(page.getByText(/Menampilkan \d+ dari \d+ baris/)).toBeVisible();
+  expect(await rows.count()).toBeLessThanOrEqual(total);
+
+  const [download] = await Promise.all([page.waitForEvent("download"), page.getByRole("link", { name: "Unduh Excel" }).click()]);
+  expect(download.suggestedFilename()).toMatch(/^SUNOVATE-tugas-\d{8}\.xlsx$/);
 });

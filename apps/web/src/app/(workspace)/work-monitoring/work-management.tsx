@@ -7,6 +7,7 @@ import { TASK_STATUS_LABELS, type TaskStatus } from "@sunovate/shared-types";
 import { DeadlineTag, EmptyState, Panel, StatusTag } from "@/components/page-elements";
 import { formatDate } from "@/lib/format";
 import { classificationLabel } from "@/lib/ui-labels";
+import { filterItems, sortItems, type SortDirection, type SortKey } from "@/lib/work-table";
 
 type Entity = "outputs" | "tasks" | "milestones" | "pending" | "followUps";
 type InitialData = Record<Entity, WorkItem[]>;
@@ -65,6 +66,8 @@ export function WorkManagement({ initial, principal, teams }: {
   const [editing, setEditing] = useState<WorkItem | null>(null);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [filters, setFilters] = useState({ query: "", status: "", team: "" });
+  const [sort, setSort] = useState<{ key: SortKey; direction: SortDirection }>({ key: "date", direction: "asc" });
   const config = CONFIG[active];
   const canCreate = principal.permissions.includes(config.permission);
   const canUpdate = principal.permissions.includes(active === "pending" || active === "followUps" ? "pending:manage" : "work:update");
@@ -113,13 +116,34 @@ export function WorkManagement({ initial, principal, teams }: {
     finally { setBusy(false); }
   }
 
-  const items = initial[active];
+  const allItems = initial[active];
+  const items = sortItems(filterItems(allItems, filters), sort.key, sort.direction);
+  const statusOptions = [...new Set(allItems.map((item) => item.status))];
+  const teamOptions = [...new Set(allItems.map((item) => item.ownerTeamCode).filter((code): code is string => Boolean(code)))].sort();
+  const filtered = items.length !== allItems.length;
+
+  function toggleSort(key: SortKey) {
+    setSort((current) => ({ key, direction: current.key === key && current.direction === "asc" ? "desc" : "asc" }));
+  }
+
+  function header(key: SortKey, label: string) {
+    const activeSort = sort.key === key;
+    return (
+      <th aria-sort={activeSort ? (sort.direction === "asc" ? "ascending" : "descending") : "none"}>
+        <button type="button" className="sort-button" onClick={() => toggleSort(key)}>
+          {label}
+          <span className={activeSort ? `sort-indicator is-${sort.direction}` : "sort-indicator"} aria-hidden="true" />
+        </button>
+      </th>
+    );
+  }
+
   return (
     <div className="work-manager">
       <nav className="work-tabs" aria-label="Jenis data monitoring">
         {(Object.keys(CONFIG) as Entity[]).map((key) => (
           <button key={key} type="button" className={active === key ? "is-active" : ""}
-            onClick={() => { setActive(key); setCreating(false); setEditing(null); setMessage(null); }}>
+            onClick={() => { setActive(key); setCreating(false); setEditing(null); setMessage(null); setFilters({ query: "", status: "", team: "" }); }}>
             {CONFIG[key].label}<span>{initial[key].length}</span>
           </button>
         ))}
@@ -140,8 +164,18 @@ export function WorkManagement({ initial, principal, teams }: {
           </form>
         ) : null}
 
-        {!items.length ? <EmptyState title={`Belum ada ${config.label.toLowerCase()}`} /> : (
-          <div className="table-wrap work-table"><table><thead><tr><th>Judul</th><th>Tim</th><th>Status</th><th>Progres</th><th>Tanggal</th><th>Tenggat</th>{canUpdate ? <th>Aksi</th> : null}</tr></thead>
+        {allItems.length ? (
+          <div className="work-toolbar" role="search" aria-label={`Saring ${config.label.toLowerCase()}`}>
+            <label>Cari judul<input type="search" value={filters.query} placeholder="Ketik sebagian judul" onChange={(event) => setFilters((current) => ({ ...current, query: event.target.value }))} /></label>
+            <label>Saring status<select value={filters.status} onChange={(event) => setFilters((current) => ({ ...current, status: event.target.value }))}><option value="">Semua status</option>{statusOptions.map((status) => <option key={status} value={status}>{labelStatus(status)}</option>)}</select></label>
+            <label>Saring tim<select value={filters.team} onChange={(event) => setFilters((current) => ({ ...current, team: event.target.value }))}><option value="">Semua tim</option>{teamOptions.map((code) => <option key={code} value={code}>{code}</option>)}</select></label>
+            <a className="button secondary work-download" href={`/api/exports/work?kind=${active}`} download title="Unduh semua data yang dapat Anda lihat, tanpa saringan di layar">Unduh Excel</a>
+          </div>
+        ) : null}
+        {allItems.length ? <p className="work-count" aria-live="polite">{filtered ? `Menampilkan ${items.length} dari ${allItems.length} baris` : `${allItems.length} baris`}</p> : null}
+
+        {!allItems.length ? <EmptyState title={`Belum ada ${config.label.toLowerCase()}`} /> : !items.length ? <EmptyState title="Tidak ada data yang cocok dengan saringan" description="Ubah kata kunci, status, atau tim untuk melihat data lainnya." /> : (
+          <div className="table-wrap work-table"><table><thead><tr>{header("title", "Judul")}{header("team", "Tim")}{header("status", "Status")}<th>Progres</th>{header("date", "Tanggal")}{header("deadline", "Tenggat")}{canUpdate ? <th>Aksi</th> : null}</tr></thead>
             <tbody>{items.map((item) => <tr key={item.id}><td><strong>{item.title}</strong>{item.priority && item.priority !== "NORMAL" ? <small>Prioritas {priorityLabel(item.priority)}</small> : null}</td><td>{item.ownerTeamCode ?? "-"}</td><td>{editing?.id === item.id ? <select aria-label={`Status ${item.title}`} defaultValue={item.status} disabled={busy} onChange={(event) => void updateStatus(item, event.target.value)}>{statuses(active).map((status) => <option key={status} value={status}>{labelStatus(status)}</option>)}</select> : <StatusTag>{labelStatus(item.status)}</StatusTag>}</td><td>{item.progress === undefined ? "-" : `${item.progress}%`}</td><td>{formatDate(active === "outputs" ? item.targetDate : item.dueDate)}</td><td><DeadlineTag state={item.deadlineState} /></td>{canUpdate ? <td><div className="row-actions"><button type="button" onClick={() => setEditing(editing?.id === item.id ? null : item)}>Ubah</button><button type="button" className="danger-link" disabled={busy} onClick={() => void remove(item)}>Arsipkan</button></div></td> : null}</tr>)}</tbody>
           </table></div>
         )}

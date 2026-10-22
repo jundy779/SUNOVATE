@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-22 — Fitur ala Excel di Monitoring Kerja
+
+- Tabel Monitoring Kerja kini dapat dicari berdasarkan judul, disaring per status dan tim, serta diurutkan dengan mengklik judul kolom (Judul, Tim, Status, Tanggal, Tenggat). Jumlah baris yang tampil ditunjukkan saat saringan aktif.
+- Tombol "Unduh Excel" mengunduh berkas `.xlsx` berisi seluruh data jenis tersebut yang boleh dilihat pengguna, lengkap dengan filter otomatis Excel, baris judul beku, label status dalam bahasa Indonesia, dan catatan data contoh. Endpoint baru `GET /api/v1/exports/work` memakai otorisasi yang sama dengan daftar, mencatat audit `WORK_EXPORT`, dan melindungi teks dari formula injection.
+- Uji e2e monitoring kerja kini mencari kolom formulir di dalam formulir tambah, karena label penyaring baru juga memuat kata "judul" dan "tim".
+- Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 42 test frontend, 347 test backend mode simulated (40 PostgreSQL dilewati), 387 test mode PostgreSQL, build produksi, dan 9/9 skenario Playwright e2e lulus. QA visual Chromium pada 1440 px dan 390 px tanpa scroll halaman ke samping; berkas unduhan diperiksa memuat filter otomatis (A5:H12), header beku, dan baris yang sama dengan daftar di layar.
+
 ## 2026-10-21 — Akses RAHASIA oleh Ketua Tim dan Kasubdit PMP, daftar pembaca permanen
 
 - Arahan baru dicatat sebagai DEC-20261021-02 (CONFIRMED): Ketua Tim pemilik dokumen menentukan siapa yang boleh membaca, termasuk pegawai tim lain, dan Kasubdit PMP juga dapat mengelola akses untuk seluruh tim.
