@@ -17,6 +17,10 @@
 - Pemeriksaan manual `/dokumen-rahasia/kelola` di browser (server pengembangan, data simulasi):
   - `sim.coordinator` (padanan Kasubdit PMP) melihat tombol "Kelola akses baca" di daftar dokumen rahasia dan dua dokumen di halaman kelola (PSUN dan PPSUN) beserta daftar pembaca sesuai seed, tanpa isi dokumen.
   - `sim.lead.psun` hanya melihat satu dokumen PSUN tanpa isi dokumen. Pemberian akses pada dokumen PPSUN lewat proxy web ditolak API dengan 404 `NOT_FOUND`.
+- Pemeriksaan lanjutan pada commit yang sama (`ee525e3`), dev server dinyalakan ulang: `pnpm e2e` 8/8 lulus. `api:setup`, `validate`, `db:check`, dan `db:test` tidak diulang karena kode tidak berubah sejak run di atas. `git reset --hard a774b15` tidak dijalankan karena `ee525e3` dan catatan ini sudah di-push; versi "Ketua Tim dan Kasubdit PMP" sudah menjadi isi `main`.
+  - `sim.coordinator`: memberi akses `sim.auditor` pada dokumen PSUN dan PPSUN lewat UI berhasil ("Akses baca diberikan kepada sim.auditor@sunovate.local."), lalu mencabutnya di kedua dokumen juga berhasil; daftar pembaca kembali sesuai seed.
+  - `sim.lead.psun`: pemberian dan pencabutan akses pada dokumen PPSUN keduanya ditolak API dengan 404 `NOT_FOUND` (JSON).
+  - `sim.staff.pppsun`: tombol "Kelola akses baca" tidak ada, halaman kelola menampilkan "Tidak ada dokumen yang dapat Anda kelola", dan pemberian maupun pencabutan akses pada dokumen PSUN dan PPSUN ditolak API dengan 404 `NOT_FOUND`.
 
 ## 2026-10-21 — Pengelolaan akses dokumen RAHASIA sesuai keputusan mentor
 
