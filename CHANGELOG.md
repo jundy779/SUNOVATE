@@ -4,6 +4,12 @@
 
 - Status "sudah ditutup" untuk catatan "Baru menggunakan SUNOVATE?" kini disimpan per akun, bukan per browser, sehingga setiap pegawai di komputer kantor yang dipakai bergantian tetap melihat catatan sambutan pertamanya (BUG-037). Halaman Ringkasan kini juga memuat identitas pengguna untuk keperluan ini.
 - Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 45 test frontend, 349 test backend mode simulated (40 PostgreSQL dilewati), build produksi, dan 12/12 skenario Playwright e2e lulus, termasuk skenario dua akun bergantian di browser yang sama.
+- Validasi aktual (Windows 11, Git Bash, Python 3.12 via uv): patch 0012 diterapkan dengan `git am` sebagai `cb64347`.
+  - `pnpm validate` lulus: ESLint, Ruff, TypeScript, mypy strict (71 berkas), 45 test frontend (13 berkas), 348 test backend lulus (41 dilewati), dan build produksi (29 halaman statis). Karena lulus, `validate.log` tidak dibuat.
+  - `pnpm e2e` dengan `pnpm api:dev` (`DATA_BACKEND=simulated`): 12/12 skenario lulus, termasuk "each account on a shared browser gets its own welcome note".
+- Pemeriksaan manual di satu browser (server pengembangan, data simulasi), dimulai dari `localStorage` tanpa kunci `sunovate.*`:
+  - `sim.staff.pppsun` menutup catatan "Baru menggunakan SUNOVATE?"; tersimpan satu kunci `sunovate.guide-welcome.dismissed.v1:<id pengguna>` dan catatan tidak muncul setelah muat ulang.
+  - Setelah keluar lalu masuk sebagai `sim.lead.psun` di browser yang sama, tanpa menghapus `localStorage`, catatan muncul lagi; kunci milik staf tetap ada dan tidak memengaruhi akun lain.
 
 ## 2026-10-22 — Panduan singkat di dalam aplikasi
 
