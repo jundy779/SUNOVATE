@@ -6,6 +6,10 @@
 - Naskah demo (`demo-scenario-month-one.md`) diperbarui: alur 10 menit kini mencakup panduan singkat, Unduh Excel, dan penampil dokumen rahasia dengan tiga akun simulasi, serta bagian keputusan yang dibutuhkan dari mentor. Status tetap PROPOSED, NEEDS MENTOR VALIDATION.
 - `pnpm demo:smoke` bertambah dari 9 menjadi 12 langkah: unduhan Excel yang aman, penampil dokumen rahasia yang terkunci sebelum pernyataan disetujui lalu menampilkan halaman PNG, dan penolakan dokumen rahasia bagi staf tanpa akses. Output tetap hanya nama langkah tanpa isi.
 - Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 45 test frontend, 349 test backend mode simulated (40 PostgreSQL dilewati), `pnpm demo:smoke` 12/12 PASSED, dan `pnpm demo:preflight` PASSED. `pnpm compose:demo:check` dan `pnpm demo:load` tidak dijalankan karena Docker dan host demo tidak tersedia di lingkungan ini.
+- Validasi aktual (Windows 11, Git Bash, Python 3.12 via uv): patch 0013 diterapkan dengan `git am` sebagai `66702a0`.
+  - `pnpm validate` lulus: ESLint, Ruff, TypeScript, mypy strict (71 berkas), 45 test frontend (13 berkas), 348 test backend lulus (41 dilewati), dan build produksi (29 halaman statis).
+  - `pnpm demo:smoke` lulus: status `PASSED`, 12 dari 12 langkah `PASSED` (system_health, staff_login, scoped_dashboard, work_monitoring, knowledge_hub, authorized_search, savi_grounded_response, savi_out_of_scope_refusal, savi_policy_refusal, work_excel_export, confidential_view_only_reader, confidential_access_denied); `external_connections`, `persistent_writes`, `postgres_validated`, dan `host_validated` bernilai `false`.
+  - `pnpm demo:preflight` lulus: status `PASSED`, 10 pemeriksaan scaffold, `environmentFile: NOT_CHECKED` (dijalankan tanpa `--env-file`), `containersStarted: false`, `tunnelActivated: false`. Ini bukan persetujuan deploy.
 
 ## 2026-10-22 — Catatan sambutan per akun
 
