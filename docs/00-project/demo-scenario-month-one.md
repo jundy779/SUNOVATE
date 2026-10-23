@@ -1,13 +1,13 @@
 # Skenario Demo Bulan Pertama SUNOVATE
 
 **Status:** PROPOSED, NEEDS MENTOR VALIDATION  
-**Last Updated:** 2026-10-19
+**Last Updated:** 2026-10-23
 
 ## Tujuan
 
 Menunjukkan kerangka awal SUNOVATE secara runtut dalam 8 sampai 10 menit. Demo ini membuktikan
 bahwa halaman utama, akses pegawai, ringkasan kerja, Monitoring Kerja, Knowledge Hub, pencarian,
-dan SAVI AI sudah tersambung pada lingkungan simulasi.
+SAVI AI, dan penampil dokumen rahasia sudah tersambung pada lingkungan simulasi.
 
 Demo bukan bukti kesiapan produksi, bukan pengujian server kantor, dan tidak memakai data asli.
 
@@ -34,16 +34,21 @@ Bagian tersebut baru boleh dinyatakan lulus setelah diuji pada lingkungan yang d
 
 ## Alur Presentasi
 
-| Waktu | Layar | Narasi singkat | Bukti yang ditunjukkan |
+Akun yang dipakai: staf PPPSUN (`sim.staff.pppsun@sunovate.local`) untuk langkah 1 sampai 7, lalu
+ketua tim PSUN (`sim.lead.psun@sunovate.local`) dan Kasubdit PMP simulasi
+(`sim.coordinator@sunovate.local`) untuk dokumen rahasia.
+
+| Waktu | Layar | Pesan | Bukti yang ditunjukkan |
 |---|---|---|---|
-| 0:00-1:00 | Halaman utama | SUNOVATE menyatukan pengetahuan organisasi, pengalaman kerja, dan pemantauan tindak lanjut dalam satu ruang privat. | Tujuan, tagline, dan batas bahwa sistem bukan sistem transaksi. |
-| 1:00-2:00 | Masuk | Pegawai masuk menggunakan akun sesuai perannya. | Akun simulasi berhasil masuk dan hanya melihat menu yang diizinkan. |
-| 2:00-3:30 | Ringkasan kerja | Ringkasan membantu pegawai melihat pekerjaan yang memerlukan perhatian tanpa mengarang angka bisnis. | Tugas, perhatian, dan bahan terbaru sesuai ruang akses akun. |
-| 3:30-5:00 | Monitoring Kerja | Hasil kerja, tugas, tenggat, pending matter, dan tindak lanjut dapat dipantau dalam satu alur. | Daftar simulasi milik tim dan penanda tenggat. |
-| 5:00-6:30 | Knowledge Hub | Bahan pengetahuan dikelola bersama metadata, klasifikasi, pemilik, versi, dan pemeriksaan manusia. | Daftar bahan yang boleh dilihat serta pencarian yang terbatasi izin. |
-| 6:30-8:00 | SAVI AI | SAVI menjawab berdasarkan bahan yang diizinkan dan menampilkan sumber. | Satu jawaban dengan sumber dokumen simulasi. |
-| 8:00-9:00 | Batas SAVI | SAVI menolak pertanyaan di luar SUN dan upaya memaksa aturan diabaikan. | Dua penolakan aman tanpa sumber palsu. |
-| 9:00-10:00 | Penutup | Fondasi bulan pertama sudah terhubung, sedangkan data asli, server kantor, dan integrasi masih melalui persetujuan dan pengujian lanjutan. | Batas hasil saat ini dan langkah berikutnya. |
+| 0:00-0:45 | Halaman utama | SUNOVATE menyatukan pengetahuan organisasi, pengalaman kerja, dan pemantauan tindak lanjut dalam satu ruang privat. | Tujuan, tagline, siklus pengetahuan, dan batas bahwa sistem bukan sistem transaksi. |
+| 0:45-1:30 | Masuk dan panduan | Pegawai masuk sesuai perannya dan langsung mendapat panduan singkat. | Menu sesuai izin, catatan "Baru menggunakan SUNOVATE?", dan tombol tanda tanya ke Panduan singkat. |
+| 1:30-2:30 | Ringkasan kerja | Ringkasan menunjukkan pekerjaan yang memerlukan perhatian tanpa mengarang angka bisnis. | Ledger angka, daftar "Perlu ditindaklanjuti", dan Unduh Excel daftar lengkapnya. |
+| 2:30-4:00 | Monitoring Kerja | Output, tugas, tenggat, dan tindak lanjut dipantau dalam satu alur yang terasa seperti Excel. | Cari judul, saring status dan tim, urutkan kolom Tenggat, lalu Unduh Excel. |
+| 4:00-5:00 | Knowledge Hub dan pencarian | Bahan pengetahuan dikelola bersama metadata, klasifikasi, pemilik, versi, dan pemeriksaan manusia. | Daftar bahan yang boleh dilihat dan pencarian yang terbatasi izin. |
+| 5:00-6:15 | SAVI AI | SAVI menjawab berdasarkan bahan yang diizinkan dan menampilkan sumber. | Satu jawaban dengan rujukan [1] ke dokumen simulasi. |
+| 6:15-7:00 | Batas SAVI | SAVI menolak pertanyaan di luar SUN dan upaya memaksa aturan diabaikan. | Dua penolakan aman tanpa sumber palsu. |
+| 7:00-8:45 | Dokumen rahasia | Dokumen rahasia hanya dibaca di layar oleh pegawai yang diberi akses oleh Ketua Tim atau Kasubdit PMP. | Staf tidak melihat dokumen; ketua tim memberi akses; pembaca menyetujui pernyataan dan melihat halaman bertanda air tanpa tombol unduh. |
+| 8:45-10:00 | Penutup | Fondasi sudah terhubung; data asli, server kantor, model AI, dan integrasi menunggu keputusan dan pengujian lanjutan. | Batas hasil saat ini dan daftar keputusan yang dibutuhkan dari mentor. |
 
 ## Pertanyaan Demo yang Aman
 
@@ -64,13 +69,24 @@ ketentuan resmi Dit. SUN.
 
 ## Kriteria Lulus
 
-- Sembilan langkah `pnpm demo:smoke` berstatus `PASSED`.
+- Dua belas langkah `pnpm demo:smoke` berstatus `PASSED`, termasuk unduhan Excel, penampil dokumen rahasia yang terkunci sebelum pernyataan disetujui, dan penolakan dokumen rahasia bagi pengguna tanpa akses.
 - Jawaban SAVI yang diterima mempunyai sedikitnya satu sumber yang diizinkan.
+- Halaman dokumen rahasia hanya tampil sebagai gambar bertanda air; tidak ada tombol unduh, salin, atau cetak.
 - Pertanyaan di luar SUN dan upaya pengabaian aturan ditolak tanpa sitasi.
 - Tidak ada token, isi pertanyaan, jawaban, sitasi, isi dokumen, atau identitas yang dicetak oleh
   pemeriksa otomatis.
 - Penyaji menyebutkan dengan jelas bahwa hasil berasal dari simulasi dan belum membuktikan
   kesiapan produksi.
+
+## Keputusan yang Dibutuhkan dari Mentor
+
+Penutup demo menyebutkan keputusan yang masih ditunggu, sesuai [open-questions.md](open-questions.md)
+dan daftar pertanyaan 21 Oktober 2026:
+
+- Model AI di belakang SAVI dan boleh tidaknya potongan dokumen dikirim ke luar kantor.
+- Rujukan pasal pada delapan skenario mentor (OQ-38).
+- Penyimpan kunci untuk dokumen rahasia (OQ-42) dan kebijakan browser dari TIK (OQ-41).
+- Spesifikasi server, jaringan, backup, dan daftar peran yang sebenarnya.
 
 ## Jika Terjadi Gangguan
 

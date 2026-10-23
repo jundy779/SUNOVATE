@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-23 — Sinkronisasi baseline dan naskah demo sesuai rencana induk
+
+- `implementation-master-plan.md` kini memiliki status per 23 Oktober untuk tujuh butir "Urutan Pekerjaan Terdekat" beserta bukti atau hambatannya, serta pemetaan pekerjaan di luar urutan (dokumen rahasia, visual, fitur ala Excel, panduan) ke tahap dan dasar keputusannya. Butir validasi Nginx/Compose dicatat BLOCKED karena membutuhkan host demo dan Docker.
+- Naskah demo (`demo-scenario-month-one.md`) diperbarui: alur 10 menit kini mencakup panduan singkat, Unduh Excel, dan penampil dokumen rahasia dengan tiga akun simulasi, serta bagian keputusan yang dibutuhkan dari mentor. Status tetap PROPOSED, NEEDS MENTOR VALIDATION.
+- `pnpm demo:smoke` bertambah dari 9 menjadi 12 langkah: unduhan Excel yang aman, penampil dokumen rahasia yang terkunci sebelum pernyataan disetujui lalu menampilkan halaman PNG, dan penolakan dokumen rahasia bagi staf tanpa akses. Output tetap hanya nama langkah tanpa isi.
+- Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 45 test frontend, 349 test backend mode simulated (40 PostgreSQL dilewati), `pnpm demo:smoke` 12/12 PASSED, dan `pnpm demo:preflight` PASSED. `pnpm compose:demo:check` dan `pnpm demo:load` tidak dijalankan karena Docker dan host demo tidak tersedia di lingkungan ini.
+
 ## 2026-10-22 — Catatan sambutan per akun
 
 - Status "sudah ditutup" untuk catatan "Baru menggunakan SUNOVATE?" kini disimpan per akun, bukan per browser, sehingga setiap pegawai di komputer kantor yang dipakai bergantian tetap melihat catatan sambutan pertamanya (BUG-037). Halaman Ringkasan kini juga memuat identitas pengguna untuk keperluan ini.

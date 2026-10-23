@@ -20,6 +20,8 @@ from ..store.dataset import sid
 
 API = "/api/v1"
 STAFF_ACCOUNT = "sim.staff.pppsun@sunovate.local"
+READER_ACCOUNT = "sim.coordinator@sunovate.local"  # granted reader of a simulated RAHASIA document
+XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 
 
 class DemoJourneyError(RuntimeError):
@@ -75,8 +77,8 @@ def _require_simulated_label(response: Response, step: str) -> None:
         raise DemoJourneyError(f"Langkah {step} tidak berlabel data simulasi")
 
 
-def _login(client: TestClient) -> dict[str, str]:
-    response = client.post(f"{API}/auth/dev/login", json={"email": STAFF_ACCOUNT})
+def _login(client: TestClient, email: str = STAFF_ACCOUNT) -> dict[str, str]:
+    response = client.post(f"{API}/auth/dev/login", json={"email": email})
     data = _response_data(response, "login")
     if not isinstance(data, dict) or not isinstance(data.get("accessToken"), str):
         raise DemoJourneyError("Langkah login tidak menghasilkan sesi yang dapat digunakan")
@@ -177,6 +179,44 @@ def run_demo_journey(*, backend: str | None = None) -> DemoJourneyReport:
         ):
             raise DemoJourneyError("Langkah perlindungan SAVI tidak menolak secara aman")
         steps.append(StepResult("savi_policy_refusal"))
+
+        export = client.get(f"{API}/exports/work", params={"kind": "tasks"}, headers=headers)
+        if (
+            export.status_code != 200
+            or export.headers.get("content-type") != XLSX
+            or not export.content.startswith(b"PK")
+            or "no-store" not in export.headers.get("cache-control", "")
+        ):
+            raise DemoJourneyError("Langkah unduhan Excel tidak menghasilkan berkas yang aman")
+        steps.append(StepResult("work_excel_export"))
+
+        reader = _login(client, READER_ACCOUNT)
+        secure_response = client.get(f"{API}/secure-documents", headers=reader)
+        secure_list = _response_data(secure_response, "confidential_view_only_reader")
+        if not isinstance(secure_list, list) or not secure_list:
+            raise DemoJourneyError("Langkah dokumen rahasia tidak menemukan dokumen simulasi")
+        secure_id = str(secure_list[0]["id"])
+        page = f"{API}/secure-documents/{secure_id}/pages/1"
+        if client.get(page, headers=reader).status_code != 428:
+            raise DemoJourneyError("Halaman rahasia terbuka sebelum pernyataan disetujui")
+        accepted = client.post(
+            f"{API}/secure-documents/{secure_id}/acknowledgements", headers=reader
+        )
+        rendered = client.get(page, headers=reader)
+        if (
+            accepted.status_code != 201
+            or rendered.status_code != 200
+            or rendered.headers.get("content-type") != "image/png"
+        ):
+            raise DemoJourneyError("Langkah penampil dokumen rahasia tidak menghasilkan halaman")
+        steps.append(StepResult("confidential_view_only_reader"))
+
+        staff_response = client.get(f"{API}/secure-documents", headers=headers)
+        staff_secure = _response_data(staff_response, "confidential_access_denied")
+        hidden = client.get(f"{API}/secure-documents/{secure_id}", headers=headers)
+        if staff_secure or hidden.status_code != 404:
+            raise DemoJourneyError("Dokumen rahasia terlihat oleh pengguna tanpa akses")
+        steps.append(StepResult("confidential_access_denied"))
 
     return DemoJourneyReport(
         status="PASSED",

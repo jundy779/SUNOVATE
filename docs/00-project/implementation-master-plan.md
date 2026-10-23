@@ -1,7 +1,7 @@
 # Rencana Induk Implementasi SUNOVATE
 
 **Status:** ACTIVE, NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-19
+**Last Updated:** 2026-10-23
 
 ## Tujuan
 
@@ -38,7 +38,7 @@ Roadmap enam bulan tetap mengikuti [product-roadmap.md](../01-product/product-ro
 |---|---|---|
 | Menyatukan roadmap, task tracker, arsitektur, dan changelog | IN PROGRESS | Tidak ada fitur yang memiliki status saling bertentangan |
 | Menjaga daftar pertanyaan mentor dan keputusan terbuka | IN PROGRESS | Pertanyaan prioritas memiliki pemilik keputusan dan dampak |
-| Menetapkan skenario demo berbasis `SIMULATED_DATA` | READY FOR MENTOR REVIEW | Alur 8-10 menit terdokumentasi; pemeriksa API di memori memvalidasi login, dashboard, monitoring, Knowledge Hub, pencarian, jawaban bersumber, dan dua penolakan SAVI |
+| Menetapkan skenario demo berbasis `SIMULATED_DATA` | READY FOR MENTOR REVIEW | Alur 8-10 menit terdokumentasi (diperbarui 23 Okt); `pnpm demo:smoke` memvalidasi 12 langkah: login, dashboard, monitoring, Knowledge Hub, pencarian, jawaban bersumber, dua penolakan SAVI, unduhan Excel, penampil dokumen rahasia, dan penolakan pengguna tanpa akses |
 | Membekukan penambahan framework tanpa alasan terukur | ACTIVE RULE | Stack baru hanya masuk melalui keputusan arsitektur |
 | Mengunci batas data privat | IN PROGRESS | Kontrol aplikasi lulus uji; firewall egress, jaringan privat, SSO/MFA, dan persetujuan TIK/pemilik data wajib sebelum data asli |
 
@@ -156,6 +156,28 @@ Urutan ini berlaku sampai ada keputusan mentor yang mengubah prioritas:
    parser-only RAG-Anything secara terisolasi tanpa memublikasikan isi atau hasil dokumen.
 6. Minta keputusan mentor untuk sumber RAG, model AI, login, klasifikasi, server, dan UAT.
 7. Setelah keputusan tersedia, lanjutkan ingestion tersimpan, FTS, dan evaluasi SAVI.
+
+## Status Urutan Terdekat per 23 Oktober 2026
+
+| No | Pekerjaan | Status | Bukti atau hambatan |
+|---|---|---|---|
+| 1 | Baseline requirement dan keputusan terbuka | IN PROGRESS | Dokumen ini, [open-questions.md](open-questions.md) (OQ-38 sampai OQ-42), DEC-20261021-01 dan DEC-20261021-02 di [decision-log.md](../12-governance/decision-log.md), task tracker sampai TASK-036 |
+| 2 | Naskah demo untuk ditinjau mentor | READY FOR MENTOR REVIEW | [demo-scenario-month-one.md](demo-scenario-month-one.md) dan `pnpm demo:smoke` 12 langkah |
+| 3 | Validasi Nginx/Compose, trusted proxy, probe 25 pengguna | BLOCKED | Membutuhkan host demo yang disetujui dan Docker; `pnpm compose:demo:check` dan `pnpm demo:load` belum dijalankan pada host |
+| 4 | Pengujian repository PostgreSQL dan otorisasi | DONE untuk pengembangan | `pnpm db:test` lulus penuh di Linux dan Windows (PostgreSQL sementara), termasuk migrasi 0003; PostgreSQL pada host belum diuji |
+| 5 | Baseline ekstraksi dan corpus | IN PROGRESS | `pnpm extraction:eval` 13 kasus + 4 penolakan; preflight dan benchmark parser-only RAG-Anything belum dijalankan |
+| 6 | Keputusan mentor | IN PROGRESS | Butir 1 sampai 4 dijawab 21 Okt (dokumen rahasia); model AI, rujukan PMK, server, peran, dan UAT masih ditunggu |
+| 7 | Ingestion tersimpan, FTS, evaluasi SAVI | WAITING | Menunggu butir 6; evaluasi SAVI berkategori (`pnpm savi:eval`, 43 kasus) sudah tersedia |
+
+Pekerjaan di luar urutan ini yang telah dikerjakan atas permintaan project lead dan arahan mentor,
+beserta pemetaan fasenya:
+
+| Pekerjaan | Tahap | Dasar |
+|---|---|---|
+| Penampil dokumen RAHASIA, pengelolaan akses, enkripsi envelope (TASK-027, 028, 031, 032) | Tahap 1 (kontrol akses) dengan isi dokumen asli tertahan gate OQ-40 sampai OQ-42 | Arahan setelah rapat 6 Oktober 2026, DEC-20261021-01/02, ADR-020 |
+| Penyempurnaan visual landing, login, dashboard (TASK-026) | Tahap 3 butir 5 (responsif dan bahasa pengguna) | Permintaan project lead |
+| Fitur ala Excel dan unduhan (TASK-033, 034) | Tahap 3 butir 1 (monitoring kerja) | Kebiasaan pengguna Dit. SUN dengan dashboard Excel |
+| Panduan singkat (TASK-035) | Tahap 3 butir 5 (usability) | Permintaan project lead; uji dengan pegawai masih diperlukan |
 
 ## Aturan Memasukkan Ide Baru
 

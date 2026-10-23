@@ -25,6 +25,9 @@ def test_demo_journey_covers_the_private_simulated_flow() -> None:
         "savi_grounded_response",
         "savi_out_of_scope_refusal",
         "savi_policy_refusal",
+        "work_excel_export",
+        "confidential_view_only_reader",
+        "confidential_access_denied",
     ]
     assert all(step.status == "PASSED" for step in report.steps)
     assert report.external_connections is False
