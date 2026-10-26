@@ -11,6 +11,9 @@
   - Fitur yang sudah dibangun dicatat sebagai kebutuhan: FR-58 (dokumen rahasia), FR-59 (Excel), FR-60 (panduan).
 - Catatan historis (arsip, agenda sesi lama, audit 8 Oktober, log keputusan) sengaja tidak diubah.
 - Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 45 test frontend, dan 349 test backend mode simulated (40 PostgreSQL dilewati) lulus; tautan relatif di 29 dokumen yang diubah diperiksa tidak ada yang rusak. Hanya dokumentasi yang berubah.
+- Validasi aktual (Windows 11, Git Bash, Python 3.12 via uv): patch 0014 diterapkan dengan `git am` sebagai `66fe654`; commit hanya mengubah `docs/` dan `CHANGELOG.md`. `pnpm validate` lulus: ESLint, Ruff, TypeScript, mypy strict (71 berkas), 45 test frontend (13 berkas), 348 test backend lulus (41 dilewati), dan build produksi (29 halaman statis).
+- Pemeriksaan sekilas: BR-39 (`docs/02-business/business-rules.md`) dan AC-20 (`docs/01-product/acceptance-criteria.md`) kini menyebut tujuh tim termasuk MONEV; AC-20 mengharapkan tepat tujuh kode AKPSUN, DHTV, MONEV, PPPSUN, PPSUN, PSUN, SUN_TEMATIK.
+- Sisa teks lama yang ditemukan, belum diubah: baris status AC-20 masih merujuk `test_teams_are_the_six_confirmed_codes` (nama test kini `test_teams_are_the_seven_pilot_codes`) dan menyebut nama resmi serta tim tambahan sebagai OPEN QUESTION (OQ-02), padahal OQ-02 RESOLVED 2026-10-20; kolom Label dan Konflik BR-39 masih menulis "6 tim" dan "enam tim seed"; `docs/10-testing/security-testing.md` baris 141 masih memakai nama test lama.
 
 ## 2026-10-23 — Sinkronisasi baseline dan naskah demo sesuai rencana induk
 
