@@ -59,7 +59,7 @@ Urutan ini mendahulukan kategori yang paling berisiko. Urutan aktual di kode (`a
 - **False positive.** Pola deterministik masih dapat salah memahami kalimat kompleks. Regresi 2026-10-11 mengurangi false positive kata "menghapus" pada pertanyaan informasional dan penyebutan Python dalam konteks SUNOVATE.
 - **False negative.** Parafrase, ejaan tidak baku, campuran bahasa, atau instruksi yang dipecah dapat lolos dari pola.
 - **Tanpa konteks percakapan.** Penilaian per pertanyaan; upaya bertahap lintas pesan belum dideteksi.
-- **Domain SUN.** Pola domain bergantung pada kosakata; pertanyaan domain yang memakai istilah tidak umum dapat tertolak sebagai di luar cakupan.
+- **Domain SUN.** Pola domain bergantung pada kosakata; pertanyaan domain yang memakai istilah tidak umum dapat tertolak sebagai di luar cakupan. Sejak 2026-10-26 (BUG-038) kosakata mencakup istilah inti Narasi SUN dan singkatan huruf kapital; kosakata ini hanya menentukan cakupan, bukan pemetaan makna yang tetap diatur OQ-37.
 
 Karena keterbatasan ini, `ScopeGuard` bukan satu-satunya kontrol. Otorisasi di API, filter injeksi, `CitationValidator`, dan `OutputGuard` tetap berlaku (lihat [prompt-injection-defense.md](./prompt-injection-defense.md)).
 
