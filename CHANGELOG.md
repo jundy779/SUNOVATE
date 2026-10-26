@@ -5,6 +5,8 @@
 - Menindaklanjuti temuan pemeriksaan Windows atas patch 0014: kolom Label dan Konflik BR-39 kini mencatat penambahan MONEV (DEC-20261020-01) dan OQ-02 RESOLVED; baris status AC-20 dan `security-testing.md` merujuk nama test yang berlaku (`test_teams_are_the_seven_pilot_codes`) serta OQ-02 RESOLVED. Rujukan historis di bug register (BUG-001, BUG-002) tidak diubah.
 - Pencarian ulang juga merapikan kolom status FR-52 (kini tujuh kode `GET /teams`) dan catatan OQ-02 di peta pemangku kepentingan. Pertanyaan terpisah tentang penanganan record bila daftar tim berubah (document-ownership) tetap terbuka.
 - Pencarian ulang tidak menemukan rujukan lain ke nama test lama (`test_teams_are_the_six_confirmed_codes`, `test_schema_has_thirty_tables`) di luar arsip dan catatan historis. Hanya dokumentasi yang berubah.
+- Validasi aktual (Windows 11, Git Bash, Python 3.12 via uv): patch 0015 diterapkan dengan `git am` sebagai `966f9d4`; commit hanya mengubah `docs/` dan `CHANGELOG.md`. `pnpm validate` lulus: ESLint, Ruff, TypeScript, mypy strict (71 berkas), 45 test frontend (13 berkas), 348 test backend lulus (41 dilewati), dan build produksi (29 halaman statis).
+- Pencarian ulang di `docs/` tanpa `_archive/` dan `bug-register.md`: "six_confirmed" 0 hasil, "thirty_tables" 0 hasil, "OQ-02 PARTIAL" 1 hasil di `docs/12-governance/decision-log.md` baris 115. Hasil tersebut berada pada entri historis DEC-20261002-01 (status per 2026-10-02, sebelum OQ-02 diselesaikan oleh DEC-20261020-01) dan tidak diubah.
 
 ## 2026-10-23 — Konsistensi status antardokumen
 
