@@ -15,7 +15,7 @@ Dokumen ini memberi gambaran singkat tentang SUNOVATE: apa yang dibangun, untuk 
 | Instansi | Direktorat Surat Utang Negara (Dit. SUN), Direktorat Jenderal Pengelolaan Pembiayaan dan Risiko (DJPPR), Kementerian Keuangan RI | **CONFIRMED** (sumber: brief sesi 2026-10-01) |
 | Pengembang | Peserta MagangHub, posisi Artificial Intelligence & Data Engineering, Web Development & UI/UX | **CONFIRMED** (sumber: brief sesi 2026-10-01) |
 | Periode | 21 September 2026 sampai 20 Maret 2027 | **CONFIRMED** (sumber: brief sesi 2026-10-01) |
-| Tim kerja awal | PPSUN, AKPSUN, PSUN, PPPSUN, DHTV, SUN Tematik | **CONFIRMED** sebagai arahan (sumber: brief sesi 2026-10-01); daftar resmi masih OQ-02 |
+| Tim kerja pilot | PPSUN, AKPSUN, PSUN, PPPSUN, DHTV, SUN Tematik, MONEV | **CONFIRMED** sebagai arahan (sumber: brief sesi 2026-10-01); MONEV ditambahkan 2026-10-20 (DEC-20261020-01) |
 
 ## Latar Belakang
 

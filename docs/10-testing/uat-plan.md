@@ -13,7 +13,7 @@ Menyusun kerangka UAT SUNOVATE: skenario per persona, peserta, lingkungan, sign-
 - **PROPOSED**: UAT direncanakan pada Bulan 6 (Implementasi) bersama security test, bug fixing, dokumentasi, dan handover (sumber: Proposal v2.4, slide 21).
 - **OPEN QUESTION**: Peserta UAT dan pengguna uji yang ditunjuk (OQ-20).
 - **OPEN QUESTION**: Lingkungan UAT (OQ-20) dan hosting (OQ-07).
-- **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Pilot mencakup "6 tim" (OQ-03); nama tim dianggap enam tim brief (PROPOSED, OQ-02). **OPEN QUESTION**: proses yang dipilot dan pengakuan mentor (OQ-24).
+- **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Pilot mencakup "6 tim" (OQ-03); nama tim dianggap enam tim brief (PROPOSED, OQ-02), ditambah MONEV sejak 2026-10-20 (DEC-20261020-01). **OPEN QUESTION**: proses yang dipilot dan pengakuan mentor (OQ-24).
 - **CONFIRMED (knowledge owner, deck v1_ slide 24)**: Hosting pilot adalah komputer tersendiri sebagai server (OQ-07); lingkungan UAT dan persyaratan server tetap OPEN QUESTION (OQ-20, OQ-23).
 
 ## Prinsip
@@ -45,7 +45,7 @@ Persona dan role mengikuti role pengembangan usulan. Pengguna simulasi di kolom 
 | UAT-11 | system_admin | Melihat pengguna, tim, role, dan status provider | Data tampil sesuai permission; provider produksi berstatus nonaktif | `sim.admin` |
 | UAT-12 | staff (setelah PD-1) | Mencoba membuat atau mengajukan knowledge | Ditolak dengan pesan jelas; hanya membaca, mencari, bertanya ke Hermes, dan memperbarui tugas. PLANNED, hari ini akan gagal | `sim.staff.pppsun` |
 | UAT-13 | team_lead atau knowledge_owner | Membuat dan mengajukan knowledge tim sendiri; mencoba tim lain | Tim sendiri berhasil; tim lain ditolak. Ketua tim dan PIC menjadi reviewer satu sama lain, bukan atas unggahan sendiri | `sim.lead.psun`, `sim.owner.ppsun` |
-| UAT-14 | Enam tim | Peserta tiap tim membuka daftar, pencarian, dashboard, dan Hermes | Hanya data timnya dan konten direktorat terbit; pengguna SUN_TEMATIK tanpa data tim lain. PLANNED, memerlukan pengguna simulasi tambahan | Pengguna per tim (usulan) |
+| UAT-14 | Tujuh tim | Peserta tiap tim membuka daftar, pencarian, dashboard, dan Hermes | Hanya data timnya dan konten direktorat terbit; pengguna SUN_TEMATIK tanpa data tim lain. PLANNED, memerlukan pengguna simulasi tambahan | Pengguna per tim (usulan) |
 | UAT-15 | Semua | Membuka `/dashboard` | Indikator yield dan kepemilikan SBN tidak berangka; tampil "sumber data belum tersedia". PLANNED, teks belum ada | Semua |
 | UAT-16 | system_admin / administrator server | Latihan backup dan restore serta pemeriksaan paparan di server pilot | Restore berhasil; hanya port web atau proxy terjangkau. PLANNED, server belum ada (OQ-23) | `sim.admin` |
 

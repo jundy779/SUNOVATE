@@ -65,7 +65,7 @@ Contoh berikut diturunkan dari jawaban yang berlabel **CONFIRMED (knowledge owne
 | P1 | Indikator yield atau kepemilikan SBN tampil dengan angka tanpa sumber otoritatif (FR-54, BR-36) | Angka yang menyesatkan dan melampaui batas ADR-013 |
 | P2 | Teks "sumber data belum tersedia" tidak muncul, tetapi tidak ada angka | Fungsi terganggu; data tidak salah |
 | P2 | Backup server pilot tidak pernah diuji restore | Risiko R-13; menjadi P1 bila backup terbukti rusak |
-| P2 | Pilot enam tim: satu tim tidak memiliki pengguna uji sehingga isolasi tim itu tidak teruji | Lubang cakupan uji, bukan cacat produk |
+| P2 | Pilot tujuh tim: satu tim tidak memiliki pengguna uji sehingga isolasi tim itu tidak teruji | Lubang cakupan uji, bukan cacat produk |
 | P3 | Penamaan tim pada tampilan berbeda dari nama resmi (OQ-02) | Minor sampai nama resmi dikonfirmasi |
 
 - **PROPOSED**: Bila ragu antara dua severity, pilih yang lebih tinggi sampai triase.

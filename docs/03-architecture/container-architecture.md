@@ -18,7 +18,7 @@ flowchart TB
     W["apps/web<br/>Next.js 16, server components<br/>cookie httpOnly berisi token dev"]
     A["apps/api<br/>FastAPI modular monolith<br/>/api/v1"]
     ST["Simulated store<br/>in-memory, SIMULATED_DATA"]
-    PG[("PostgreSQL 17 + pgvector<br/>skema 30 tabel")]
+    PG[("PostgreSQL 17 + pgvector<br/>skema 31 tabel")]
     B -->|HTTPS| W
     W -->|"REST + Bearer token, server-side"| A
     A -->|"runtime DATA_BACKEND=simulated (default)"| ST

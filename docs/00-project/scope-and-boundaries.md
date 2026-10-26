@@ -18,7 +18,7 @@ Dokumen ini menetapkan apa yang termasuk dan tidak termasuk dalam SUNOVATE pada 
 | Dashboard | Ringkasan sesuai hak akses. | **CONFIRMED** sebagai tujuan (sumber: brief sesi 2026-10-01) |
 | Document automation | Berbasis template yang disetujui; prioritas P1. | **CONFIRMED** sebagai tujuan; prioritas **PROPOSED** (sumber: Proposal v2.4, slide 11) |
 | RBAC, klasifikasi, audit log | Kontrol akses dan jejak audit di API. | **CONFIRMED** prinsip (sumber: brief sesi 2026-10-01); matriks **PROPOSED** |
-| Enam tim kerja awal | PPSUN, AKPSUN, PSUN, PPPSUN, DHTV, SUN Tematik. | **CONFIRMED** sebagai arahan (sumber: brief sesi 2026-10-01); lihat OQ-02 |
+| Tujuh tim kerja pilot | PPSUN, AKPSUN, PSUN, PPPSUN, DHTV, SUN Tematik, dan MONEV (ditambahkan 2026-10-20, DEC-20261020-01). | **CONFIRMED** sebagai arahan (sumber: brief sesi 2026-10-01); lihat OQ-02 |
 | Fondasi Telegram dan WhatsApp | Abstraksi provider saja, tanpa kanal produksi. | **CONFIRMED** sebagai tujuan fase lanjutan (sumber: brief sesi 2026-10-01) |
 
 ## Di Luar Scope

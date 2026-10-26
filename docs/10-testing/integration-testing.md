@@ -10,7 +10,7 @@ Menjelaskan pengujian yang membutuhkan PostgreSQL nyata: migration upgrade dan d
 
 ## Confirmed Information
 
-- **CONFIRMED**: Skema fisik 30 tabel didefinisikan pada revision Alembic `0001_initial_schema`, ditambah kolom urutan pada `0002_ordering_columns` (sumber: fact sheet bagian 6, `apps/api/alembic/versions/`; status skema PROPOSED).
+- **CONFIRMED**: Skema fisik 30 tabel didefinisikan pada revision Alembic `0001_initial_schema` (31 tabel sejak `0003_secure_document_readers`), ditambah kolom urutan pada `0002_ordering_columns` (sumber: fact sheet bagian 6, `apps/api/alembic/versions/`; status skema PROPOSED).
 - **CONFIRMED**: PostgreSQL adalah satu-satunya store: relasional, full-text search (tsvector, GIN), dan pgvector (sumber: ADR-003).
 - **CONFIRMED**: Suite berlokasi di `tests/integration/` dan hanya berjalan bila `SUNOVATE_TEST_DATABASE_URL` diisi; jika tidak, test dilewati (sumber: implementasi scaffold sesi 2026-10-01).
 - **CONFIRMED**: Docker tidak terpasang di mesin pengembangan saat ini. Migration divalidasi memakai PostgreSQL lokal sementara melalui paket Python `pgserver`, yang hanya alat bantu validasi dan bukan dependensi proyek (sumber: implementasi scaffold sesi 2026-10-01).

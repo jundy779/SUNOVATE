@@ -11,7 +11,7 @@ Menjelaskan cara menjalankan, membuat, meninjau, dan membatalkan migration Alemb
 ## Confirmed Information
 
 - **CONFIRMED**: Migration dikelola dengan Alembic di `apps/api` (sumber: brief sesi 2026-10-01).
-- **CONFIRMED**: Revision awal `0001_initial_schema` mendefinisikan 30 tabel (sumber: fact sheet bagian 6; status skema PROPOSED).
+- **CONFIRMED**: Revision awal `0001_initial_schema` mendefinisikan 30 tabel; `0003_secure_document_readers` (2026-10-21) menambah tabel ke-31 (sumber: fact sheet bagian 6; status skema PROPOSED).
 - **CONFIRMED**: Migration, seed, dan downgrade sudah divalidasi terhadap PostgreSQL sementara melalui `pgserver`; jalur Docker belum divalidasi di mesin pengembangan saat ini (sumber: implementasi scaffold sesi 2026-10-01).
 - **CONFIRMED (implementasi)**: Revision `0002_ordering_columns` menambah `audit_logs.seq` dan `knowledge_tags.position`; `0001_initial_schema` tidak diedit (ADR-015, PROPOSED; lihat [database-schema.md](../04-data/database-schema.md)).
 - **CONFIRMED (implementasi)**: Default runtime tetap `DATA_BACKEND=simulated` (ADR-007). Dengan `DATA_BACKEND=postgres`, runtime API membaca dan menulis database `DATABASE_URL`, sehingga database harus di-migrate ke head dan di-seed lebih dulu (ADR-015, PROPOSED).

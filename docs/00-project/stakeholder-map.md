@@ -41,6 +41,7 @@ Siapa yang berwenang memutuskan publikasi knowledge adalah OQ-12.
 |---|---|---|
 | PPSUN | Pengelolaan Portofolio SUN | Portofolio, transaksi SUN, pelaporan, dokumen transaksi. |
 | AKPSUN | Analisis Keuangan dan Pasar SUN | Analisis keuangan, fiskal, pasar SUN, pricing, dukungan analisis. |
+| MONEV | Monitoring dan Evaluasi | Fungsi rinci NEEDS MENTOR VALIDATION; ditambahkan 2026-10-20 (DEC-20261020-01). |
 | PSUN | Peraturan SUN | Kepatuhan, pemrosesan regulasi, kajian hukum, dukungan penyusunan peraturan. |
 | PPPSUN | Pengembangan dan Pendalaman Pasar SUN | Kelembagaan pasar, basis investor, strategi pemasaran, layanan publik, edukasi. |
 | DHTV | Dokumen Hukum Transaksi Valas | Dokumen hukum transaksi valas dan engagement letter. |

@@ -76,7 +76,7 @@ Metrik diturunkan dari ukuran keberhasilan retrieval, citation, access control, 
 
 ## Rencana Perluasan Golden Set per Tim (PLANNED)
 
-Golden set saat ini berisi 16 kasus (RAG-01 sampai RAG-16) atas delapan knowledge simulasi K1 sampai K8 pada lima tim; SUN_TEMATIK tidak memiliki knowledge (OQ-01). Jawaban knowledge owner: pilot mencakup "6 tim" (OQ-03) dan dokumen yang boleh masuk adalah "semua dokumen yang diusulkan tim kerja" (OQ-04), keduanya **CONFIRMED (knowledge owner, deck v1_ slide 24)**; pengakuan mentor tertunda (OQ-24). Rencana di bawah **PLANNED**, belum ada kasus yang ditambahkan.
+Golden set awal berisi 16 kasus (RAG-01 sampai RAG-16; per 2026-10-21 menjadi 43 kasus berkategori, lihat catatan di bawah) atas delapan knowledge simulasi K1 sampai K8 pada lima tim; SUN_TEMATIK tidak memiliki knowledge (OQ-01). Jawaban knowledge owner: pilot mencakup "6 tim" (OQ-03) dan dokumen yang boleh masuk adalah "semua dokumen yang diusulkan tim kerja" (OQ-04), keduanya **CONFIRMED (knowledge owner, deck v1_ slide 24)**; pengakuan mentor tertunda (OQ-24). Rencana di bawah **PLANNED**, belum ada kasus yang ditambahkan.
 
 | Tim | Kasus yang direncanakan (semua `SIMULATED_DATA`) | Campuran klasifikasi |
 |---|---|---|

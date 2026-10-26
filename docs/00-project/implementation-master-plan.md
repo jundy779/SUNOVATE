@@ -36,7 +36,7 @@ Roadmap enam bulan tetap mengikuti [product-roadmap.md](../01-product/product-ro
 
 | Pekerjaan | Status | Syarat selesai |
 |---|---|---|
-| Menyatukan roadmap, task tracker, arsitektur, dan changelog | IN PROGRESS | Tidak ada fitur yang memiliki status saling bertentangan |
+| Menyatukan roadmap, task tracker, arsitektur, dan changelog | IN PROGRESS | Tidak ada fitur yang memiliki status saling bertentangan. Pemeriksaan 23 Okt menyelaraskan jumlah tim (tujuh), jumlah tabel (31), katalog endpoint, komponen, dan status roadmap (TASK-038) |
 | Menjaga daftar pertanyaan mentor dan keputusan terbuka | IN PROGRESS | Pertanyaan prioritas memiliki pemilik keputusan dan dampak |
 | Menetapkan skenario demo berbasis `SIMULATED_DATA` | READY FOR MENTOR REVIEW | Alur 8-10 menit terdokumentasi (diperbarui 23 Okt); `pnpm demo:smoke` memvalidasi 12 langkah: login, dashboard, monitoring, Knowledge Hub, pencarian, jawaban bersumber, dua penolakan SAVI, unduhan Excel, penampil dokumen rahasia, dan penolakan pengguna tanpa akses |
 | Membekukan penambahan framework tanpa alasan terukur | ACTIVE RULE | Stack baru hanya masuk melalui keputusan arsitektur |
@@ -161,11 +161,11 @@ Urutan ini berlaku sampai ada keputusan mentor yang mengubah prioritas:
 
 | No | Pekerjaan | Status | Bukti atau hambatan |
 |---|---|---|---|
-| 1 | Baseline requirement dan keputusan terbuka | IN PROGRESS | Dokumen ini, [open-questions.md](open-questions.md) (OQ-38 sampai OQ-42), DEC-20261021-01 dan DEC-20261021-02 di [decision-log.md](../12-governance/decision-log.md), task tracker sampai TASK-036 |
+| 1 | Baseline requirement dan keputusan terbuka | IN PROGRESS | Dokumen ini, [open-questions.md](open-questions.md) (OQ-38 sampai OQ-42), DEC-20261021-01 dan DEC-20261021-02 di [decision-log.md](../12-governance/decision-log.md), task tracker sampai TASK-038 |
 | 2 | Naskah demo untuk ditinjau mentor | READY FOR MENTOR REVIEW | [demo-scenario-month-one.md](demo-scenario-month-one.md) dan `pnpm demo:smoke` 12 langkah |
-| 3 | Validasi Nginx/Compose, trusted proxy, probe 25 pengguna | BLOCKED | Membutuhkan host demo yang disetujui dan Docker; `pnpm compose:demo:check` dan `pnpm demo:load` belum dijalankan pada host |
+| 3 | Validasi Nginx/Compose, trusted proxy, probe 25 pengguna | BLOCKED | Membutuhkan host demo yang disetujui dan Docker; per 23 Okt Docker belum terpasang di laptop pengembang (dicek dari Git Bash dan PowerShell), sehingga `pnpm compose:demo:check` dan `pnpm demo:load` belum dijalankan. `pnpm demo:preflight` (statis) lulus |
 | 4 | Pengujian repository PostgreSQL dan otorisasi | DONE untuk pengembangan | `pnpm db:test` lulus penuh di Linux dan Windows (PostgreSQL sementara), termasuk migrasi 0003; PostgreSQL pada host belum diuji |
-| 5 | Baseline ekstraksi dan corpus | IN PROGRESS | `pnpm extraction:eval` 13 kasus + 4 penolakan; preflight dan benchmark parser-only RAG-Anything belum dijalankan |
+| 5 | Baseline ekstraksi dan corpus | IN PROGRESS | `pnpm extraction:eval` 13 kasus + 4 penolakan; preflight tahap P0 RAG-Anything (`scripts/experiments/rag_anything/preflight.py`, tersedia sejak 16 Okt) dijalankan 23 Okt dan berstatus tidak siap sesuai rancangan karena paket belum terpasang; benchmark parser-only P1 menunggu OQ-11 dan review keamanan |
 | 6 | Keputusan mentor | IN PROGRESS | Butir 1 sampai 4 dijawab 21 Okt (dokumen rahasia); model AI, rujukan PMK, server, peran, dan UAT masih ditunggu |
 | 7 | Ingestion tersimpan, FTS, evaluasi SAVI | WAITING | Menunggu butir 6; evaluasi SAVI berkategori (`pnpm savi:eval`, 43 kasus) sudah tersedia |
 

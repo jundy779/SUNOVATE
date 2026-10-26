@@ -56,7 +56,7 @@ Nama kolom lengkap, provider file, retensi, pihak pemberi grant, dan approval ch
 
 ## Usulan Desain dari Jawaban Knowledge Owner (PROPOSED, belum diimplementasikan)
 
-Bagian ini **PROPOSED**. Tidak ada tabel, kolom, migrasi, seed, atau uji yang berubah; skema yang berlaku tetap 30 tabel pada revisi `0002_ordering_columns` ([database-schema.md](database-schema.md)). Dasarnya adalah jawaban **CONFIRMED (knowledge owner, deck v1_ slide 24)**: knowledge owner dan reviewer tiap tim adalah ketua tim dan PIC yang ditunjuk (OQ-09), dan yang dapat mengubah data atau mengunggah adalah ketua tim, kasubdit PMP, Kasi MP, dan PIC yang ditunjuk (OQ-05). Pengakuan mentor tertunda (OQ-24); pemetaan ke role sistem adalah OQ-25.
+Bagian ini **PROPOSED**. Tidak ada tabel, kolom, migrasi, seed, atau uji yang berubah; skema yang berlaku saat bagian ini ditulis adalah 30 tabel (31 tabel sejak `0003_secure_document_readers`) pada revisi `0002_ordering_columns` ([database-schema.md](database-schema.md)). Dasarnya adalah jawaban **CONFIRMED (knowledge owner, deck v1_ slide 24)**: knowledge owner dan reviewer tiap tim adalah ketua tim dan PIC yang ditunjuk (OQ-09), dan yang dapat mengubah data atau mengunggah adalah ketua tim, kasubdit PMP, Kasi MP, dan PIC yang ditunjuk (OQ-05). Pengakuan mentor tertunda (OQ-24); pemetaan ke role sistem adalah OQ-25.
 
 ### Keadaan saat ini (diperiksa pada kode)
 
@@ -101,7 +101,7 @@ Semua fiktif, berdomain `@sunovate.local`, dan hanya memakai sebutan generik (`S
 | `sim.staff.ppsun` | `staff` | PPSUN | Membuktikan staf satu tim dengan `sim.owner.ppsun` ditolak 403 setelah PD-1, sementara PIC timnya diizinkan |
 | `sim.lead.ppsun` | `team_lead` | PPSUN | Ketua tim dan PIC pada tim yang sama (review oleh orang lain, separation of duties) |
 | `sim.owner.psun` | `knowledge_owner` | PSUN | PIC tim lain, untuk uji penunjukan terbatas pada timnya |
-| `sim.owner.pppsun` | `knowledge_owner` | PPPSUN | PIC pada tim yang memiliki `sim.staff.pppsun`, agar isolasi pilot enam tim dapat diuji untuk tiap tim |
+| `sim.owner.pppsun` | `knowledge_owner` | PPPSUN | PIC pada tim yang memiliki `sim.staff.pppsun`, agar isolasi pilot dapat diuji untuk tiap tim |
 | `sim.owner.expired.psun` | `knowledge_owner` | PSUN | Penunjukan kedaluwarsa (hanya bila Opsi B dipilih) |
 | `sim.readonly.suntematik` | `read_only` | SUN_TEMATIK | Isolasi keanggotaan tim keenam tanpa menambah perilaku atau data (OQ-01) |
 
@@ -114,7 +114,7 @@ Semua fiktif, berdomain `@sunovate.local`, dan hanya memakai sebutan generik (`S
 
 ## Usulan Desain Relasi Regulasi (PROPOSED, revisi masa depan)
 
-Bagian ini **PROPOSED**. Tidak ada tabel, kolom, migrasi, seed, atau uji yang berubah; skema yang berlaku tetap 30 tabel pada revisi `0002_ordering_columns`. Pekerjaan masa depan: revisi Alembic baru (`0001` dan `0002` tidak diubah), pembaruan model, dan uji baru. Dasarnya adalah telaah Kompilasi Peraturan SUN (ekstraksi teks tanpa OCR, 83 relasi antarnaskah dan 12 riwayat perubahan pihak ketiga yang dinyatakan teks; tidak dibandingkan dengan sumber resmi). Format sumber: `Kompilasi Peraturan SUN, <regulasi>, Pasal X, hal. N`.
+Bagian ini **PROPOSED**. Tidak ada tabel, kolom, migrasi, seed, atau uji yang berubah; skema yang berlaku saat bagian ini ditulis adalah 30 tabel (31 tabel sejak `0003_secure_document_readers`) pada revisi `0002_ordering_columns`. Pekerjaan masa depan: revisi Alembic baru (`0001` dan `0002` tidak diubah), pembaruan model, dan uji baru. Dasarnya adalah telaah Kompilasi Peraturan SUN (ekstraksi teks tanpa OCR, 83 relasi antarnaskah dan 12 riwayat perubahan pihak ketiga yang dinyatakan teks; tidak dibandingkan dengan sumber resmi). Format sumber: `Kompilasi Peraturan SUN, <regulasi>, Pasal X, hal. N`.
 
 ### Keadaan saat ini (diperiksa pada model)
 

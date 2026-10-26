@@ -198,11 +198,11 @@ Status terhadap kode saat ini: lulus untuk `POST /documents/{id}/versions` (peng
 
 Status terhadap kode saat ini: bagian pertama lulus (`test_cannot_create_for_other_team_or_above_clearance` di `apps/api/tests/test_knowledge_workflow.py`). Bagian kedua belum dapat diuji: tidak ada entitas penunjukan, dan role diterapkan global karena `user_roles.team_id` tidak diperiksa saat resolusi permission (lihat [logical-data-model.md](../04-data/logical-data-model.md)). Terkait: FR-51, US-36.
 
-## AC-20 Visibilitas pilot enam tim
+## AC-20 Visibilitas pilot tujuh tim
 
-- **Given** data pilot `SIMULATED_DATA` untuk enam tim
+- **Given** data pilot `SIMULATED_DATA` untuk tujuh tim (enam tim brief ditambah MONEV, DEC-20261020-01)
 - **When** `sim.staff.pppsun` memanggil `GET /teams`
-- **Then** respons berisi tepat enam kode: AKPSUN, DHTV, PPPSUN, PPSUN, PSUN, SUN_TEMATIK
+- **Then** respons berisi tepat tujuh kode: AKPSUN, DHTV, MONEV, PPPSUN, PPSUN, PSUN, SUN_TEMATIK
 - **And** `GET /knowledge`, `GET /search`, dan `GET /dashboard/summary` miliknya hanya memuat record PPPSUN dan konten `DIRECTORATE` yang `PUBLISHED`
 - **And** tidak ada record kerja atau knowledge untuk SUN_TEMATIK (OQ-01).
 

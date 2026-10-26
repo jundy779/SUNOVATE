@@ -4,12 +4,13 @@
 **Last Updated:** 2026-10-06
 
 ## Purpose
-Katalog fisik 30 tabel pada revisi Alembic `0001_initial_schema` ditambah `0002_ordering_columns` (head) (sumber: `apps/api/sunovate_api/db/models.py`, `apps/api/alembic/versions/`).
+Katalog fisik 31 tabel pada revisi Alembic `0001_initial_schema`, `0002_ordering_columns`, dan `0003_secure_document_readers` (head) (sumber: `apps/api/sunovate_api/db/models.py`, `apps/api/alembic/versions/`).
 
 ## Revisi
 | Revisi | Isi |
 |---|---|
 | `0001_initial_schema` | 30 tabel, ekstensi, trigger, indeks (tidak diubah setelah diterapkan) |
+| `0003_secure_document_readers` | Tabel `secure_document_readers` untuk daftar pembaca dokumen RAHASIA (ADR-020, DEC-20261021-02) |
 | `0002_ordering_columns` | **PROPOSED (ADR-015)** `audit_logs.seq` (`BIGINT GENERATED ALWAYS AS IDENTITY`, `uq_audit_logs_seq`) untuk urutan insert audit; `knowledge_tags.position` (`INTEGER NOT NULL DEFAULT 0`, `ck_knowledge_tags_position`: `position >= 0`) untuk urutan tag. Downgrade menghapus kedua kolom. Trigger append-only tidak diubah |
 
 ## Mode Persistence Runtime
@@ -67,11 +68,12 @@ Diperiksa ulang 2026-10-06: `apps/api/sunovate_api/db/models.py` mendefinisikan 
 | 28 | `notifications` | `recipient_user_id`, `notification_type`, `title`, `body`, `entity_type`, `entity_id`, `channel`, `dedupe_key` (unik), `read_at`, `classification_code` | |
 | 29 | `integration_sync_logs` | `provider_kind`, `provider_name`, `operation`, `status`, `started_at`, `finished_at`, `records_processed`, `error_summary`, `is_production` | |
 | 30 | `data_quality_issues` | `entity_type`, `entity_id`, `issue_type`, `severity`, `description`, `status` | G |
+| 31 | `secure_document_readers` | `document_id` (tanpa FK; dokumen di vault), `user_id` FK, `granted_by` FK nullable; unik `document_id` + `user_id` (0003) | |
 
 Tidak ada kolom yang menyimpan isi file biner.
 
 ## Validasi yang dijalankan (2026-10-01)
-`pnpm db:check` pada PostgreSQL sementara + pgvector 0.6.2: upgrade head, `alembic check` (tidak ada drift model vs migrasi), seed (run kedua menyisipkan 0 baris), 30 tabel, FTS `metadata` menemukan 2 chunk, `data_origin` non-simulasi = 0, UPDATE pada `audit_logs` ditolak, downgrade base berhasil.
+`pnpm db:check` pada PostgreSQL sementara + pgvector 0.6.2: upgrade head, `alembic check` (tidak ada drift model vs migrasi), seed (run kedua menyisipkan 0 baris), 30 tabel (31 tabel sejak `0003_secure_document_readers`, diperiksa ulang 2026-10-21), FTS `metadata` menemukan 2 chunk, `data_origin` non-simulasi = 0, UPDATE pada `audit_logs` ditolak, downgrade base berhasil.
 
 ## Validasi yang dijalankan (2026-10-02)
 `pnpm db:check` setelah revisi `0002_ordering_columns`: upgrade `0001` lalu `0002`, `alembic check` tanpa drift, seed run kedua 0 baris, `knowledge_tags` terisi `position`, `audit_logs.seq` terisi, trigger append-only tetap menolak UPDATE, downgrade `0002` -> `0001` -> base berhasil. Hasil aktual di `CHANGELOG.md`.

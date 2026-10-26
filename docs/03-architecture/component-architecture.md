@@ -14,8 +14,9 @@ Memetakan komponen di dalam backend dan frontend beserta aturan dependensinya. I
 | `store/` | `records` (dataclass), `dataset` (SIMULATED_DATA deterministik, `sid()`), `repository` (Protocol `Repository` dan `DataBackend`, `ReadScope`, `PrincipalFacts`, validasi kunci write bersama; tanpa SQLAlchemy), `simulated` (`SimulatedStore` in-memory + `SimulatedBackend`, audit append-only), `postgres` (`PostgresBackend` dan `PostgresRepository`: SQLAlchemy Core sinkron + psycopg 3, pemetaan baris ke dataclass, penerjemahan error constraint dan koneksi) |
 | `providers/` | `interfaces` (Protocol), `development` (implementasi dev), `registry` (wiring dan status) |
 | `hermes/` | `text`, `scope_guard`, `retrieval` (filter otorisasi lalu skor, reranker, filter injeksi), `guards` (CitationValidator, OutputGuard), `gateway` (HermesGateway) |
-| `modules/` | Router per modul: `health`, `auth`, `identity`, `knowledge`, `documents`, `search`, `dashboard`, `work`, `pending`, `audit`, `approvals`, `hermes`, `system` |
-| `db/` | `models` (30 tabel), `session` (engine async untuk seed), `seed` (`apply_plan` sinkron + CLI), `urls` (satu aturan `DATABASE_URL`: hanya `postgresql+asyncpg`/`postgresql+psycopg`, normalisasi sync/async), `testing_reset` (reset TRUNCATE + seed, hanya `APP_ENV=test` dan `SUNOVATE_DB_RESET_ALLOWED=1`) |
+| `modules/` | Router per modul: `health`, `auth`, `identity`, `knowledge`, `documents`, `search`, `dashboard`, `work`, `pending`, `audit`, `approvals`, `hermes`, `secure_viewer`, `exports`, `system` |
+| `secure/` | `crypto` (envelope AES-256-GCM, `KeyProvider`), `render` (halaman PNG bertanda air), `vault` (dokumen RAHASIA tersegel, batas laju, persetujuan pernyataan) (ADR-020) |
+| `db/` | `models` (31 tabel), `session` (engine async untuk seed), `seed` (`apply_plan` sinkron + CLI), `urls` (satu aturan `DATABASE_URL`: hanya `postgresql+asyncpg`/`postgresql+psycopg`, normalisasi sync/async), `testing_reset` (reset TRUNCATE + seed, hanya `APP_ENV=test` dan `SUNOVATE_DB_RESET_ALLOWED=1`) |
 | `context.py`, `domain.py`, `main.py` | Wiring dependensi (`AppRuntime` per app, `AppContext` per request, `build_runtime` memilih backend dari `DATA_BACKEND`), aturan deadline, app factory |
 
 ```mermaid

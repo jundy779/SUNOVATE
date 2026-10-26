@@ -84,8 +84,8 @@ Pengguna berikut fiktif dan berlabel `SIMULATED_DATA` (sumber: seed pengembangan
 
 - **CONFIRMED**: Deck Pengayaan 6 Mei 2026 menampilkan bagan tim kerja Dit. SUN 2026 yang lebih banyak daripada enam tim dalam cakupan, antara lain Evaluasi Kualitas Kewajiban Panel Agen Penjual & Konsultan Hukum SUN Valas; Monev Transaksi dan Kewajiban Pihak Ketiga; Respon Cepat dan Penugasan Tertentu; Sistem Informasi Pengelolaan Transaksi SUN; DHE; serta Riset Pasar Keuangan & SUN (sumber: Pengayaan 6 Mei 2026).
 - **CONFIRMED**: Beberapa nama sedikit berbeda dengan brief, misalnya "Analis Pasar Keuangan dan Pasar SUN" (sumber: Pengayaan 6 Mei 2026).
-- **OPEN QUESTION (OQ-02, PARTIAL)**: Jawaban pilot "6 tim" konsisten dengan enam tim, tetapi nama resmi dan nasib tim tambahan pada Pengayaan 6 Mei 2026 belum dijawab.
-- **PROPOSED**: Sampai OQ-02 terjawab penuh, seed hanya memuat enam tim pada brief. Tabel `teams` dirancang agar tim tambahan dapat ditambahkan tanpa perubahan skema.
+- **RESOLVED (OQ-02, 2026-10-20)**: Cakupan pilot menjadi tujuh tim dengan MONEV (DEC-20261020-01). Nama resmi dan fungsi rinci tetap NEEDS MENTOR VALIDATION.
+- **IMPLEMENTED (2026-10-20)**: Seed memuat tujuh tim termasuk MONEV, tanpa data kerja atau knowledge simulasi untuk MONEV dan SUN Tematik. Tabel `teams` dirancang agar tim tambahan dapat ditambahkan tanpa perubahan skema.
 
 ## Risks
 
@@ -96,7 +96,7 @@ Lihat [risk-register](../12-governance/risk-register.md).
 
 ## Acceptance Criteria
 
-- Enam tim tersedia di seed dengan kode di atas.
+- Tujuh tim tersedia di seed: enam kode di atas ditambah MONEV (DEC-20261020-01).
 - Tidak ada fungsi SUN Tematik yang diimplementasikan atau dideskripsikan.
 - Setiap endpoint terlindungi menegakkan lingkup tim di API.
 

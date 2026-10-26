@@ -9,7 +9,7 @@ Ringkasan cara SUNOVATE menyimpan, menurunkan, dan melindungi data.
 ## Confirmed Information
 - **CONFIRMED** PostgreSQL + pgvector + full-text search; file tidak disimpan sebagai BLOB (sumber: brief sesi 2026-10-01).
 - **CONFIRMED** Seed wajib berlabel `SIMULATED_DATA` (sumber: brief sesi 2026-10-01).
-- **CONFIRMED (implementasi)** Skema 30 tabel ada di revisi Alembic `0001_initial_schema` dan `0002_ordering_columns`, tervalidasi pada PostgreSQL sementara (upgrade, `alembic check`, seed dua kali, FTS, trigger append-only, downgrade) lewat `pnpm db:check`.
+- **CONFIRMED (implementasi)** Skema 31 tabel ada di revisi Alembic `0001_initial_schema`, `0002_ordering_columns`, dan `0003_secure_document_readers`, tervalidasi pada PostgreSQL sementara (upgrade, `alembic check`, seed dua kali, FTS, trigger append-only, downgrade) lewat `pnpm db:check`.
 
 ## Lapisan data
 

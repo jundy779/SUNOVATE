@@ -1,7 +1,7 @@
 # Endpoint Catalog
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-15
+**Last Updated:** 2026-10-23
 
 ## Purpose
 Daftar seluruh endpoint `/api/v1` yang diimplementasikan (scaffold, data dari backend `DATA_BACKEND`: `simulated` default atau `postgres`; kontrak identik pada keduanya, ADR-015). Sumber: `apps/api/sunovate_api/modules/`. OpenAPI hidup: `http://localhost:8000/docs`.
@@ -17,7 +17,7 @@ Daftar seluruh endpoint `/api/v1` yang diimplementasikan (scaffold, data dari ba
 | POST | `/auth/dev/login` | publik (dev) | body `{email}`; token pengembangan |
 | GET | `/auth/me` | Auth | principal: role, permission, tim, clearance |
 | GET | `/users` | `user:read` | paginasi |
-| GET | `/teams` | `team:read` | enam tim |
+| GET | `/teams` | `team:read` | tujuh tim |
 | GET | `/roles` | `role:read` | role + permission |
 | GET | `/permissions` | `role:read` | katalog permission |
 | GET | `/classifications` | Auth | empat tingkat |
@@ -59,6 +59,15 @@ Daftar seluruh endpoint `/api/v1` yang diimplementasikan (scaffold, data dari ba
 | GET | `/hermes/sme-question-intake` | `knowledge:review` + `scope:all_teams` | register mentor/SME read-only; `MENTOR_PROVIDED_DRAFT`; diblokir dari retrieval/jawaban SAVI |
 | GET | `/providers` | `provider:read` | status provider; semua non-produksi |
 | GET | `/data-quality-issues` | `data_quality:read` | |
+| GET | `/exports/work?kind=` | `work:read` (+ `pending:read` untuk `pending`/`followUps`) | berkas `.xlsx` berisi baris yang boleh dibaca; `kind` = `outputs`, `tasks`, `milestones`, `pending`, `followUps`; audit `WORK_EXPORT` |
+| GET | `/exports/attention` | `work:read` | berkas `.xlsx` seluruh daftar "Perlu ditindaklanjuti"; audit `WORK_EXPORT` |
+| GET | `/secure-documents` | `document:read` | hanya dokumen RAHASIA yang diberikan kepada pemanggil; tanpa isi (ADR-020) |
+| GET | `/secure-documents/manageable` | `secure_document:manage_team` atau `secure_document:manage_all` | dokumen yang pembacanya boleh dikelola pemanggil |
+| GET | `/secure-documents/{id}` | `document:read` + pembaca terdaftar | metadata; 404 bila tidak diberikan |
+| POST | `/secure-documents/{id}/acknowledgements` | `document:read` + pembaca terdaftar | persetujuan pernyataan kerahasiaan, berlaku 30 menit; 201 |
+| GET | `/secure-documents/{id}/pages/{n}` | `document:read` + pembaca terdaftar + persetujuan berlaku | satu halaman PNG bertanda air; 428 tanpa persetujuan, 429 bila melebihi 40 halaman per menit |
+| GET / POST | `/secure-documents/{id}/readers` | pengelola dokumen (ketua tim pemilik atau Kasubdit PMP) | daftar pembaca; beri akses `{email}` dengan validasi clearance |
+| DELETE | `/secure-documents/{id}/readers/{email}` | pengelola dokumen | cabut akses dan tutup penampil yang terbuka |
 
 ## Contoh: `GET /knowledge?pageSize=2`
 

@@ -105,7 +105,7 @@ Skenario SEC-40 sampai SEC-91 di bawah **PLANNED**: belum ada yang diimplementas
 |---|---|---|---|
 | SEC-60 | `GET /dashboard/summary` oleh setiap pengguna simulasi | Tidak ada field atau angka yield atau kepemilikan SBN | PLANNED sebagai uji otomatis; dicek manual 2026-10-06: field respons hanya `attention`, `metrics`, `recentKnowledge`, `referenceDate`, `scope`, `tasksByStatus` |
 | SEC-61 | Halaman `/dashboard` | Menampilkan "sumber data belum tersedia" tanpa angka | PLANNED; teks belum ada di UI |
-| SEC-62 | Skema database | Tidak ada tabel yield, lelang, transaksi, atau setelmen | Ada sebagian: `test_schema_has_thirty_tables` menghitung 30 tabel (dijalankan hanya pada PostgreSQL) |
+| SEC-62 | Skema database | Tidak ada tabel yield, lelang, transaksi, atau setelmen | Ada sebagian: `test_schema_has_thirty_one_tables` menghitung 31 tabel (dijalankan hanya pada PostgreSQL) |
 
 ### Paparan server pilot (NFR-39 sampai NFR-44, BR-37)
 
@@ -128,7 +128,7 @@ Skenario SEC-40 sampai SEC-91 di bawah **PLANNED**: belum ada yang diimplementas
 |---|---|---|---|
 | SEC-80 | `GET /providers` dan route webhook kanal | Integrasi produksi `DISABLED`; `POST /webhooks/telegram` dan sejenisnya 404 | Ada sebagian: `test_providers_report_no_production_integration`; route webhook dicek manual 2026-10-06 (404) |
 | SEC-81 | Bila kanal kelak dibuat: pertanyaan lewat kanal | Otorisasi sama dengan web lewat HermesGateway; konten `RESTRICTED` ke atas tidak dikirim secara default | PLANNED, hanya setelah P2 dimulai (PD-6) |
-| SEC-90 | Untuk setiap pasangan dari enam tim: pengguna tim A membaca, mencari, bertanya ke Hermes, dan membuka dashboard | Tidak ada record TEAM tim B di daftar, pencarian, sitasi, dan agregat; detail 404 | Ada sebagian: PPPSUN terhadap PSUN dan PPSUN diuji (`test_listing_respects_team_scope_and_sharing`, `test_cross_team_detail_returns_404_not_403`, RAG-03); pasangan lain dan SUN_TEMATIK butuh pengguna simulasi tambahan |
+| SEC-90 | Untuk setiap pasangan dari tujuh tim: pengguna tim A membaca, mencari, bertanya ke Hermes, dan membuka dashboard | Tidak ada record TEAM tim B di daftar, pencarian, sitasi, dan agregat; detail 404 | Ada sebagian: PPPSUN terhadap PSUN dan PPSUN diuji (`test_listing_respects_team_scope_and_sharing`, `test_cross_team_detail_returns_404_not_403`, RAG-03); pasangan lain dan SUN_TEMATIK butuh pengguna simulasi tambahan |
 | SEC-91 | Pengguna tim SUN_TEMATIK (tanpa data) | Tidak melihat data tim lain; tidak ada perilaku khusus | PLANNED; pengguna simulasi belum ada (OQ-01) |
 
 ## Uji yang Ada dan Hubungannya dengan PD-1

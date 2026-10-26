@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-10-23 — Konsistensi status antardokumen
+
+- Sesuai Tahap 0 butir 1 rencana induk ("tidak ada fitur dengan status saling bertentangan"), dokumen diselaraskan dengan keadaan kode:
+  - Jumlah tim pilot menjadi tujuh (termasuk MONEV, DEC-20261020-01) di PRD, FR-52, AC-20, BR-39, US-37, UAT-14, SEC-90, ruang lingkup, ringkasan proyek, peta pemangku kepentingan, glosarium, konteks sistem, risiko R-12, dan cakupan tim kerja. Sebelumnya BR-39 dan FR-52 melarang tim di luar enam tim, padahal MONEV sudah ada di seed.
+  - Skema menjadi 31 tabel (dengan `0003_secure_document_readers`) di katalog skema, arsitektur data, komponen, kontainer, panduan migrasi, uji integrasi, dan SEC-62.
+  - Katalog endpoint kini memuat `/exports/*` dan `/secure-documents/*`; arsitektur komponen memuat paket `secure/` serta modul `secure_viewer` dan `exports`.
+  - Roadmap produk mencatat proyek berada di bulan 2 (Foundation) per 23 Oktober.
+  - Rencana induk butir 5 dikoreksi: preflight P0 RAG-Anything sudah tersedia sejak 16 Oktober dan dijalankan 23 Oktober (tidak siap sesuai rancangan karena paket belum terpasang); butir 3 mencatat Docker belum terpasang.
+  - Fitur yang sudah dibangun dicatat sebagai kebutuhan: FR-58 (dokumen rahasia), FR-59 (Excel), FR-60 (panduan).
+- Catatan historis (arsip, agenda sesi lama, audit 8 Oktober, log keputusan) sengaja tidak diubah.
+- Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 45 test frontend, dan 349 test backend mode simulated (40 PostgreSQL dilewati) lulus; tautan relatif di 29 dokumen yang diubah diperiksa tidak ada yang rusak. Hanya dokumentasi yang berubah.
+
 ## 2026-10-23 — Sinkronisasi baseline dan naskah demo sesuai rencana induk
 
 - `implementation-master-plan.md` kini memiliki status per 23 Oktober untuk tujuh butir "Urutan Pekerjaan Terdekat" beserta bukti atau hambatannya, serta pemetaan pekerjaan di luar urutan (dokumen rahasia, visual, fitur ala Excel, panduan) ke tahap dan dasar keputusannya. Butir validasi Nginx/Compose dicatat BLOCKED karena membutuhkan host demo dan Docker.

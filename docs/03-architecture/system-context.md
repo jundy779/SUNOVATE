@@ -16,7 +16,7 @@ Menggambarkan posisi SUNOVATE terhadap pengguna dan sistem lain, serta batas yan
 
 ```mermaid
 flowchart LR
-    U["Pengguna enam tim kerja"]
+    U["Pengguna tujuh tim kerja"]
     M["Mentor / approver berwenang"]
     S["SUNOVATE<br/>web + API"]
     H["Hermes<br/>di dalam API, via HermesGateway"]
@@ -36,7 +36,7 @@ Garis putus-putus berarti usulan; tidak ada koneksi yang diimplementasikan.
 ## Aktor dan peran
 | Aktor | Interaksi | Status |
 |---|---|---|
-| Pengguna PPSUN, AKPSUN, PSUN, PPPSUN, DHTV | Mencari knowledge, bertanya ke Hermes, memantau kerja | CONFIRMED (enam tim), PROPOSED (peran) |
+| Pengguna PPSUN, AKPSUN, PSUN, PPPSUN, DHTV, SUN Tematik, MONEV | Mencari knowledge, bertanya ke SAVI AI, memantau kerja | CONFIRMED (tujuh tim, DEC-20261020-01), PROPOSED (peran) |
 | SUN Tematik | Terdaftar sebagai tim; fungsi belum diketahui | OPEN QUESTION (OQ-01) |
 | Knowledge coordinator, reviewer | Review dan keputusan publikasi | PROPOSED (OQ-09, OQ-12) |
 | Auditor | Membaca audit log | PROPOSED |

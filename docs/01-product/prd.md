@@ -43,7 +43,7 @@ PRD ini merangkum masalah, tujuan, pengguna, scope, fitur per prioritas, non-goa
 
 ## Scope
 
-Ringkasan scope dan batasan ada di [scope-and-boundaries.md](../00-project/scope-and-boundaries.md). Enam tim kerja awal: PPSUN, AKPSUN, PSUN, PPPSUN, DHTV, SUN Tematik (sumber: brief sesi 2026-10-01; fungsi SUN Tematik OQ-01). Pilot mencakup "6 tim" (CONFIRMED, knowledge owner, deck v1_ slide 24, OQ-03; kesamaannya dengan enam tim di atas PROPOSED, OQ-02). Kebutuhan turunan jawaban knowledge owner ada di FR-50 sampai FR-55 ([functional-requirements.md](functional-requirements.md)) dan NFR-39 sampai NFR-44.
+Ringkasan scope dan batasan ada di [scope-and-boundaries.md](../00-project/scope-and-boundaries.md). Tujuh tim kerja pilot: PPSUN, AKPSUN, PSUN, PPPSUN, DHTV, SUN Tematik (sumber: brief sesi 2026-10-01; fungsi SUN Tematik OQ-01), dan MONEV (Monitoring dan Evaluasi) ditambahkan setelah rapat 6 Oktober 2026 (DEC-20261020-01, NEEDS MENTOR VALIDATION). Pilot mencakup "6 tim" (CONFIRMED, knowledge owner, deck v1_ slide 24, OQ-03; kesamaannya dengan enam tim di atas PROPOSED, OQ-02). Kebutuhan turunan jawaban knowledge owner ada di FR-50 sampai FR-55 ([functional-requirements.md](functional-requirements.md)) dan NFR-39 sampai NFR-44.
 
 ## Fitur per Prioritas
 
@@ -92,7 +92,7 @@ SharePoint production sync, SSO organisasi, Power BI, Telegram dan WhatsApp, dat
 
 | Ketergantungan | Dampak | Terkait |
 |---|---|---|
-| Validasi daftar tim dan pilot | Seed data, UAT; pilot mencakup "6 tim" (knowledge owner, OQ-03) | OQ-02, OQ-03 |
+| Validasi daftar tim dan pilot | Seed data, UAT; pilot mencakup "6 tim" (knowledge owner, OQ-03), kini tujuh tim dengan MONEV (DEC-20261020-01) | OQ-02, OQ-03 |
 | Keputusan dokumen yang boleh masuk RAG | Ingestion dan Hermes | OQ-04 |
 | Skema klasifikasi resmi | Kontrol akses | OQ-05 |
 | Pemetaan "ketua tim, kasubdit PMP, Kasi MP, PIC" ke role sistem | Pembatasan hak ubah/unggah (FR-50), penunjukan ketua tim dan PIC per tim (FR-51) | OQ-05, OQ-25, OQ-24 |
