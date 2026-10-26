@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-23 — Sisa teks lama setelah penyelarasan tim
+
+- Menindaklanjuti temuan pemeriksaan Windows atas patch 0014: kolom Label dan Konflik BR-39 kini mencatat penambahan MONEV (DEC-20261020-01) dan OQ-02 RESOLVED; baris status AC-20 dan `security-testing.md` merujuk nama test yang berlaku (`test_teams_are_the_seven_pilot_codes`) serta OQ-02 RESOLVED. Rujukan historis di bug register (BUG-001, BUG-002) tidak diubah.
+- Pencarian ulang juga merapikan kolom status FR-52 (kini tujuh kode `GET /teams`) dan catatan OQ-02 di peta pemangku kepentingan. Pertanyaan terpisah tentang penanganan record bila daftar tim berubah (document-ownership) tetap terbuka.
+- Pencarian ulang tidak menemukan rujukan lain ke nama test lama (`test_teams_are_the_six_confirmed_codes`, `test_schema_has_thirty_tables`) di luar arsip dan catatan historis. Hanya dokumentasi yang berubah.
+
 ## 2026-10-23 — Konsistensi status antardokumen
 
 - Sesuai Tahap 0 butir 1 rencana induk ("tidak ada fitur dengan status saling bertentangan"), dokumen diselaraskan dengan keadaan kode:

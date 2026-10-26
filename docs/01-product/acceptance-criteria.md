@@ -206,7 +206,7 @@ Status terhadap kode saat ini: bagian pertama lulus (`test_cannot_create_for_oth
 - **And** `GET /knowledge`, `GET /search`, dan `GET /dashboard/summary` miliknya hanya memuat record PPPSUN dan konten `DIRECTORATE` yang `PUBLISHED`
 - **And** tidak ada record kerja atau knowledge untuk SUN_TEMATIK (OQ-01).
 
-Status terhadap kode saat ini: lulus untuk daftar tim dan isolasi tim (`test_teams_are_the_six_confirmed_codes`, `test_listing_respects_team_scope_and_sharing`, `test_cross_team_detail_returns_404_not_403`). Belum ada uji khusus bahwa SUN_TEMATIK tidak memiliki record. Nama resmi dan tim tambahan tetap OPEN QUESTION (OQ-02). Terkait: FR-52, US-37, AC-03.
+Status terhadap kode saat ini: lulus untuk daftar tim dan isolasi tim (`test_teams_are_the_seven_pilot_codes`, `test_listing_respects_team_scope_and_sharing`, `test_cross_team_detail_returns_404_not_403`). Belum ada uji khusus bahwa SUN_TEMATIK tidak memiliki record. OQ-02 RESOLVED sejak 2026-10-20 melalui penambahan MONEV (DEC-20261020-01); fungsi rinci tiap tim tetap NEEDS MENTOR VALIDATION. Terkait: FR-52, US-37, AC-03.
 
 ## AC-21 Intake dokumen dibatasi klasifikasi dan persetujuan
 

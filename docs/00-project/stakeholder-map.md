@@ -49,7 +49,7 @@ Siapa yang berwenang memutuskan publikasi knowledge adalah OQ-12.
 
 **CONFIRMED (knowledge owner, deck v1_ slide 24)** Pilot pertama adalah "6 tim" (OQ-03). Deck tidak menyebut nama tim; kesamaannya dengan enam tim di atas adalah **PROPOSED**.
 
-**OPEN QUESTION** Deck Pengayaan 6 Mei 2026 menampilkan lebih banyak tim kerja dan nama yang sedikit berbeda (OQ-02 PARTIAL: nama resmi dan tim tambahan belum dijawab).
+**OPEN QUESTION** Deck Pengayaan 6 Mei 2026 menampilkan lebih banyak tim kerja dan nama yang sedikit berbeda (OQ-02 RESOLVED 2026-10-20 untuk cakupan pilot tujuh tim termasuk MONEV, DEC-20261020-01; nama resmi dan fungsi rinci tim lainnya tetap NEEDS MENTOR VALIDATION).
 
 ### Peran Setiap Tim dalam Platform
 
