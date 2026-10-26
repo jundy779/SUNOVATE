@@ -94,7 +94,7 @@ Format sumber kompilasi: `Kompilasi Peraturan SUN, <regulasi>, Pasal X, hal. N` 
 |---|---|---|
 | PPSUN | Pengelolaan Portofolio SUN | **CONFIRMED** ([Brief]) |
 | AKPSUN | Analisis Keuangan dan Pasar SUN | **CONFIRMED** ([Brief]); variasi nama di [Pengayaan] OQ-02 |
-| MONEV | Monitoring dan Evaluasi, tim pilot ketujuh | **CONFIRMED (project lead, 2026-10-20)**, DEC-20261020-01; fungsi rinci NEEDS MENTOR VALIDATION |
+| MONEV | Monitoring dan Evaluasi, tim pilot ketujuh. Nama lain pada sumber: MEKPK (Monitoring, Evaluasi dan Kewajiban Pihak Ketiga, Narasi SUN) dan "Monev Transaksi dan Kewajiban Pihak Ketiga" (Pengayaan 6 Mei 2026) | **CONFIRMED (project lead, 2026-10-20)**, DEC-20261020-01; fungsi rinci NEEDS MENTOR VALIDATION |
 | PSUN | Peraturan SUN | **CONFIRMED** ([Brief]) |
 | PPPSUN | Pengembangan dan Pendalaman Pasar SUN | **CONFIRMED** ([Brief]) |
 | DHTV | Dokumen Hukum Transaksi Valas | **CONFIRMED** ([Brief]) |
