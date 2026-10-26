@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-26 — ScopeGuard mengenali istilah inti Narasi SUN
+
+- Pertanyaan istilah SUN yang tidak memuat kata "SUN" atau "lelang" sebelumnya ditolak sebagai di luar lingkup. Dari 14 pertanyaan glosarium Narasi SUN, 12 tertolak, misalnya perbedaan benchmark yield dan cut-off yield, SBR, DMFAS, BI-ETP, dan pembayaran kupon (BUG-038).
+- Kosakata domain ditambah istilah inti (yield, imbal hasil, kupon, cut-off, greenshoe, Global/Samurai/Kangaroo/Euro Bond, savings bond, early redemption, pasar perdana/sekunder, mitra distribusi, MONEV, DJPPR). Singkatan dan kode seri (ORI, SBR, SPTMU, DMFAS, STPG, JLM, IPG, FPG, NDR, MEKPK, SIPT, INDON, BI-ETP/SSSS/RTGS, FRxxxx, VRxxxx, ORIxxx, SBRxxx) dicocokkan peka huruf besar agar kata sehari-hari seperti "ori" tetap di luar lingkup.
+- Kosakata hanya meloloskan pertanyaan ke retrieval terotorisasi. Tanpa sumber terbit, SAVI tetap menjawab `INSUFFICIENT_EVIDENCE`. Penjaga keputusan keuangan dan policy override tetap berjalan lebih dulu. Pemetaan makna glosarium tetap diblokir (OQ-37).
+- Test baru: `apps/api/tests/test_scope_guard_sun_vocabulary.py` (24 kasus).
+
 ## 2026-10-26 — Kepanjangan resmi, status Secure Viewer, dan alias MONEV
 
 - Kepanjangan resmi "SUN Organizational Values and Transformation through Experience" (ditetapkan mentor 7 Oktober 2026) kini dipakai di `AGENTS.md`, `docs/README.md`, `project-overview.md` (beserta tagline), dan `developer-handover.md`. Keempatnya sebelumnya masih memakai nama kerja "SUN Integrated Management and Knowledge Platform"; `project-overview.md` bahkan menandainya CONFIRMED.

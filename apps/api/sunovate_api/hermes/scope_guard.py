@@ -161,9 +161,37 @@ STRONG_DOMAIN_TERMS = (
     "valas",
     "hermes",
     "sunovate",
+    # Core SUN vocabulary from Narasi SUN (BUG-038). Scope only: these terms let a question
+    # reach authorized retrieval; they never map meanings or create answers.
+    "yield",
+    "imbal hasil",
+    "kupon",
+    "cut-off",
+    "cut off",
+    "greenshoe",
+    "global bond",
+    "samurai bond",
+    "kangaroo bond",
+    "euro bond",
+    "savings bond",
+    "obligasi negara ritel",
+    "surat perbendaharaan negara",
+    "early redemption",
+    "pasar perdana",
+    "pasar sekunder",
+    "mitra distribusi",
+    "monev",
+    "djppr",
+    "dirjen ppr",
 )
 _STRONG_DOMAIN = re.compile(
     r"\b(" + "|".join(re.escape(t) for t in STRONG_DOMAIN_TERMS) + r")\b", re.IGNORECASE
+)
+# Uppercase acronyms and series codes are matched case-sensitively, so everyday words such as
+# "ori" (original) do not count as SUN context.
+_DOMAIN_ACRONYMS = re.compile(
+    r"\b(ORI|SBR|SPTMU|DMFAS|STPG|JLM|IPG|FPG|NDR|MEKPK|SIPT|INDON|BI-(?:ETP|SSSS|RTGS))\b"
+    r"|\b(?:FR|VR)\d{4}\b|\b(?:ORI|SBR)\d{3}[A-Z0-9]*\b"
 )
 
 CONTEXTUAL_DOMAIN_PAIRS = tuple(
@@ -205,8 +233,10 @@ def _normalize(text: str) -> str:
 
 
 def _has_domain_context(text: str) -> bool:
-    return bool(_STRONG_DOMAIN.search(text)) or any(
-        all(pattern.search(text) for pattern in pair) for pair in CONTEXTUAL_DOMAIN_PAIRS
+    return (
+        bool(_STRONG_DOMAIN.search(text))
+        or bool(_DOMAIN_ACRONYMS.search(text))
+        or any(all(pattern.search(text) for pattern in pair) for pair in CONTEXTUAL_DOMAIN_PAIRS)
     )
 
 
