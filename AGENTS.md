@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Rules for AI coding agents working on SUNOVATE (SUN Integrated Management and Knowledge Platform,
+Rules for AI coding agents working on SUNOVATE (SUN Organizational Values and Transformation through Experience,
 Direktorat SUN, DJPPR). Read this file first.
 
 ## Before changing anything

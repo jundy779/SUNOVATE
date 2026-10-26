@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-26 — Kepanjangan resmi, status Secure Viewer, dan alias MONEV
+
+- Kepanjangan resmi "SUN Organizational Values and Transformation through Experience" (ditetapkan mentor 7 Oktober 2026) kini dipakai di `AGENTS.md`, `docs/README.md`, `project-overview.md` (beserta tagline), dan `developer-handover.md`. Keempatnya sebelumnya masih memakai nama kerja "SUN Integrated Management and Knowledge Platform"; `project-overview.md` bahkan menandainya CONFIRMED.
+- README kini menyatakan Secure Viewer berjalan untuk `SIMULATED_DATA` dengan penyedia kunci TPM yang belum terpasang, bukan "belum terimplementasi".
+- Glosarium mencatat nama lain MONEV pada sumber: MEKPK (Narasi SUN) dan "Monev Transaksi dan Kewajiban Pihak Ketiga" (Pengayaan).
+- `known-limitations.md`: ID ganda KL-25 dan KL-26 dinomori ulang menjadi KL-27 dan KL-28.
+- Hanya dokumentasi yang berubah.
+
 ## 2026-10-23 — Sisa teks lama setelah penyelarasan tim
 
 - Menindaklanjuti temuan pemeriksaan Windows atas patch 0014: kolom Label dan Konflik BR-39 kini mencatat penambahan MONEV (DEC-20261020-01) dan OQ-02 RESOLVED; baris status AC-20 dan `security-testing.md` merujuk nama test yang berlaku (`test_teams_are_the_seven_pilot_codes`) serta OQ-02 RESOLVED. Rujukan historis di bug register (BUG-001, BUG-002) tidak diubah.

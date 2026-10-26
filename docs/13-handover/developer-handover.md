@@ -10,7 +10,7 @@ Titik awal bagi pengembang yang melanjutkan SUNOVATE: peta repository, organisas
 
 ## Konteks Singkat
 
-- **CONFIRMED**: SUNOVATE adalah SUN Integrated Management and Knowledge Platform untuk Direktorat Surat Utang Negara, DJPPR, Kementerian Keuangan RI (sumber: brief sesi 2026-10-01).
+- **CONFIRMED**: SUNOVATE adalah SUN Organizational Values and Transformation through Experience untuk Direktorat Surat Utang Negara, DJPPR, Kementerian Keuangan RI (kepanjangan resmi ditetapkan mentor 7 Oktober 2026; nama kerja sebelumnya "SUN Integrated Management and Knowledge Platform").
 - **CONFIRMED**: Arsitektur modular monolith: Next.js App Router (TypeScript strict, Tailwind) dan FastAPI (Pydantic v2, SQLAlchemy 2, Alembic) dengan PostgreSQL + pgvector + full-text search (sumber: brief sesi 2026-10-01, ADR-001, ADR-002, ADR-003).
 - **CONFIRMED**: SUNOVATE bukan SUN Job Monitor; file tetap berupa referensi eksternal; Hermes tidak pernah mengakses database secara langsung (sumber: AGENTS.md, ADR-004).
 - **CONFIRMED (implementasi)**: Runtime memakai interface `Repository` (`store/repository.py`) dengan dua backend: store simulasi in-memory (`DATA_BACKEND=simulated`, default) dan repository SQLAlchemy sinkron di PostgreSQL (`DATA_BACKEND=postgres`, status keputusan PROPOSED, ADR-015). Sumber: ADR-007, ADR-015, `context.py`. Baca [known-limitations.md](known-limitations.md) sebelum mulai.

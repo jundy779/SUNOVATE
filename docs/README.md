@@ -5,7 +5,7 @@
 
 ## Purpose
 
-Folder `docs/` adalah titik masuk dokumentasi SUNOVATE, SUN Integrated Management and Knowledge Platform, yang dikembangkan untuk Direktorat Surat Utang Negara (Dit. SUN), DJPPR, Kementerian Keuangan RI (sumber: brief sesi 2026-10-01). Dokumen di sini menjelaskan konteks proyek, kebutuhan produk, proses bisnis, arsitektur, data, Hermes, keamanan, API, integrasi, UI/UX, pengujian, operasional, tata kelola, dan serah terima.
+Folder `docs/` adalah titik masuk dokumentasi SUNOVATE, SUN Organizational Values and Transformation through Experience, yang dikembangkan untuk Direktorat Surat Utang Negara (Dit. SUN), DJPPR, Kementerian Keuangan RI (kepanjangan resmi ditetapkan mentor 7 Oktober 2026; nama kerja sebelumnya "SUN Integrated Management and Knowledge Platform" dari brief sesi 2026-10-01). Dokumen di sini menjelaskan konteks proyek, kebutuhan produk, proses bisnis, arsitektur, data, Hermes, keamanan, API, integrasi, UI/UX, pengujian, operasional, tata kelola, dan serah terima.
 
 Seluruh data contoh di dokumentasi dan kode berlabel `SIMULATED_DATA`. Dokumentasi ini tidak memuat data internal, angka keuangan, atau data pribadi yang nyata.
 
