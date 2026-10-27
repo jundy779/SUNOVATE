@@ -119,6 +119,7 @@ export default function Home() {
         </div>
         <span>Direktorat Surat Utang Negara, DJPPR, Kementerian Keuangan</span>
         <span>Bukan sistem transaksi atau pengambilan keputusan keuangan</span>
+        <span>Versi {process.env.NEXT_PUBLIC_APP_VERSION}</span>
       </footer>
     </main>
   );

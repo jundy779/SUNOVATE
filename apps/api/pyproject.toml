@@ -1,6 +1,6 @@
 [project]
 name = "sunovate-api"
-version = "0.1.0"
+version = "0.2.0"
 description = "SUNOVATE modular monolith API scaffold (development only, SIMULATED_DATA)"
 requires-python = ">=3.12,<3.15"
 dependencies = [

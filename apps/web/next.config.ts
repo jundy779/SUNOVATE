@@ -1,10 +1,13 @@
 import type { NextConfig } from "next";
+import packageJson from "./package.json" with { type: "json" };
 
 const nextConfig: NextConfig = {
   output: "standalone",
   // Workspace packages ship TypeScript sources.
   transpilePackages: ["@sunovate/contracts", "@sunovate/shared-types"],
   poweredByHeader: false,
+  // Shown in the public footer so testers can tell which release they are using.
+  env: { NEXT_PUBLIC_APP_VERSION: packageJson.version },
   async headers() {
     return [
       {

@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.0 - 2026-10-27 (pengembangan, belum siap produksi)
+
+Versi naik dari 0.1.0 (fondasi, 1 Oktober) agar perubahan sejak itu dapat dikenali. Nomor versi kini tampil di footer halaman depan dan di `GET /api/v1/health`. Isi rilis ini, dirinci pada entri bertanggal di bawah:
+
+- Basis pengetahuan dengan alur draf, pemeriksaan, dan penerbitan; ekstraksi dan pembagian isi berkas simulasi; pencarian draf; pencarian teks penuh pada PostgreSQL.
+- SAVI AI dengan sitasi wajib, evidence gate, penolakan bila bukti kurang, dan penjaga cakupan yang kini mengenali istilah inti Narasi SUN (BUG-038).
+- Monitoring kerja lengkap dengan saringan ala Excel dan unduh Excel, termasuk daftar "Perlu ditindaklanjuti".
+- Penampil dokumen RAHASIA hanya-baca untuk `SIMULATED_DATA`, beserta pengelolaan pembaca oleh Ketua Tim dan Kasubdit PMP.
+- Tujuh tim pilot termasuk MONEV, kepanjangan resmi SUNOVATE di seluruh dokumen utama, dan panduan singkat di dalam aplikasi.
+- Backend PostgreSQL opsional, kontrol API (batas laju, ukuran permintaan, header keamanan), dan paket demo satu komputer (belum diaktifkan).
+
 ## 2026-10-26 — ScopeGuard mengenali istilah inti Narasi SUN
 
 - Pertanyaan istilah SUN yang tidak memuat kata "SUN" atau "lelang" sebelumnya ditolak sebagai di luar lingkup. Dari 14 pertanyaan glosarium Narasi SUN, 12 tertolak, misalnya perbedaan benchmark yield dan cut-off yield, SBR, DMFAS, BI-ETP, dan pembayaran kupon (BUG-038).
