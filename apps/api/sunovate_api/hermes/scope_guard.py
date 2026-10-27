@@ -95,6 +95,15 @@ FINANCIAL_PATTERNS = tuple(
         r"\b(beli|membeli|jual|menjual|lepas|melepas)\b.{0,40}\b(sun|sbn|ori|sbr|obligasi|seri)\b",
         r"\b(beli|membeli|jual|menjual)\b.{0,40}\b(sun|sbn|ori|sbr|obligasi)\b.{0,40}"
         r"\b(untung|cuan|profit|menguntungkan)\b",
+        # Direct recommendations or suitability advice about an instrument or series code
+        # (BUG-038 review): series codes now count as SUN context, so they must not let such
+        # requests reach retrieval.
+        r"\b(rekomendasikan|sarankan)\b.{0,20}"
+        r"\b(sun|sbn|ori|sbr|obligasi|spn|(?:fr|vr)\d{4}|(?:ori|sbr)\d{3}\w*)\b",
+        r"\brekomendasi\s+((?:fr|vr)\d{4}|(?:ori|sbr)\d{3}\w*|ori|sbr)\b",
+        r"\b(sun|sbn|ori|sbr|obligasi|(?:fr|vr)\d{4}|(?:ori|sbr)\d{3}\w*)\b.{0,40}"
+        r"\b(cocok|layak|bagus)\b.{0,30}\b(investasi|dibeli|beli)\b",
+        r"\b(beli|membeli|jual|menjual)\b.{0,10}\b((?:fr|vr)\d{4}|(?:ori|sbr)\d{3}\w*)\b",
     )
 )
 

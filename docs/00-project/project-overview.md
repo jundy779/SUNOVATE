@@ -1,7 +1,7 @@
 # Ringkasan Proyek SUNOVATE
 
 **Status:** DRAFT
-**Last Updated:** 2026-10-02
+**Last Updated:** 2026-10-27
 
 ## Purpose
 
@@ -11,8 +11,8 @@ Dokumen ini memberi gambaran singkat tentang SUNOVATE: apa yang dibangun, untuk 
 
 | Atribut | Isi | Label |
 |---|---|---|
-| Nama | SUNOVATE, SUN Organizational Values and Transformation through Experience | **CONFIRMED** (ditetapkan mentor 7 Oktober 2026; menggantikan nama kerja "SUN Integrated Management and Knowledge Platform" dari brief sesi 2026-10-01) |
-| Tagline | Menjaga pengetahuan, belajar dari pengalaman, berinovasi untuk meningkatkan kinerja. | **CONFIRMED** (ditetapkan mentor 7 Oktober 2026) |
+| Nama | SUNOVATE, SUN Organizational Values and Transformation through Experience | **CONFIRMED** (DEC-20261007-01, ditetapkan mentor 7 Oktober 2026; menggantikan nama kerja "SUN Integrated Management and Knowledge Platform" dari brief sesi 2026-10-01) |
+| Tagline | Menjaga pengetahuan, belajar dari pengalaman, berinovasi untuk meningkatkan kinerja. | **CONFIRMED** (DEC-20261007-01) |
 | Instansi | Direktorat Surat Utang Negara (Dit. SUN), Direktorat Jenderal Pengelolaan Pembiayaan dan Risiko (DJPPR), Kementerian Keuangan RI | **CONFIRMED** (sumber: brief sesi 2026-10-01) |
 | Pengembang | Peserta MagangHub, posisi Artificial Intelligence & Data Engineering, Web Development & UI/UX | **CONFIRMED** (sumber: brief sesi 2026-10-01) |
 | Periode | 21 September 2026 sampai 20 Maret 2027 | **CONFIRMED** (sumber: brief sesi 2026-10-01) |
@@ -99,4 +99,4 @@ Register lengkap di [risk-register.md](../12-governance/risk-register.md).
 
 ## Last Updated
 
-2026-10-02
+2026-10-27

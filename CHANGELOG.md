@@ -11,12 +11,15 @@ Versi naik dari 0.1.0 (fondasi, 1 Oktober) agar perubahan sejak itu dapat dikena
 - Tujuh tim pilot termasuk MONEV, kepanjangan resmi SUNOVATE di seluruh dokumen utama, dan panduan singkat di dalam aplikasi.
 - Backend PostgreSQL opsional, kontrol API (batas laju, ukuran permintaan, header keamanan), dan paket demo satu komputer (belum diaktifkan).
 
+Validasi aktual (Linux, 27 Oktober, pada PR #1 termasuk perbaikan hasil review): ESLint, Ruff, TypeScript, mypy strict, 45 test frontend, dan seluruh test backend mode simulated lulus; build produksi lulus dan footer hasil build memuat "Versi 0.2.0"; `GET /api/v1/health` melaporkan `0.2.0`; `pnpm savi:eval` tanpa kasus gagal. Validasi Windows, `pnpm db:test`, dan e2e Playwright belum dijalankan.
+
 ## 2026-10-26 — ScopeGuard mengenali istilah inti Narasi SUN
 
 - Pertanyaan istilah SUN yang tidak memuat kata "SUN" atau "lelang" sebelumnya ditolak sebagai di luar lingkup. Dari 14 pertanyaan glosarium Narasi SUN, 12 tertolak, misalnya perbedaan benchmark yield dan cut-off yield, SBR, DMFAS, BI-ETP, dan pembayaran kupon (BUG-038).
 - Kosakata domain ditambah istilah inti (yield, imbal hasil, kupon, cut-off, greenshoe, Global/Samurai/Kangaroo/Euro Bond, savings bond, early redemption, pasar perdana/sekunder, mitra distribusi, MONEV, DJPPR). Singkatan dan kode seri (ORI, SBR, SPTMU, DMFAS, STPG, JLM, IPG, FPG, NDR, MEKPK, SIPT, INDON, BI-ETP/SSSS/RTGS, FRxxxx, VRxxxx, ORIxxx, SBRxxx) dicocokkan peka huruf besar agar kata sehari-hari seperti "ori" tetap di luar lingkup.
 - Kosakata hanya meloloskan pertanyaan ke retrieval terotorisasi. Tanpa sumber terbit, SAVI tetap menjawab `INSUFFICIENT_EVIDENCE`. Penjaga keputusan keuangan dan policy override tetap berjalan lebih dulu. Pemetaan makna glosarium tetap diblokir (OQ-37).
-- Test baru: `apps/api/tests/test_scope_guard_sun_vocabulary.py` (24 kasus).
+- Karena kode seri kini dihitung sebagai konteks SUN, permintaan rekomendasi atau kecocokan investasi yang menyebut instrumen atau kode seri ("Rekomendasikan ORI029 untuk investasi saya", "Apakah ORI029 cocok untuk investasi saya?") ditambahkan ke penjaga keputusan keuangan agar tetap ditolak (temuan review PR #1).
+- Test baru: `apps/api/tests/test_scope_guard_sun_vocabulary.py` (30 kasus).
 
 ## 2026-10-26 — Kepanjangan resmi, status Secure Viewer, dan alias MONEV
 
