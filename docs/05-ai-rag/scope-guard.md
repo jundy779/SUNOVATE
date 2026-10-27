@@ -1,7 +1,7 @@
 # Scope Guard
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-11
+**Last Updated:** 2026-10-27
 
 ## Purpose
 

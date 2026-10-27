@@ -1,7 +1,7 @@
 # Register Bug
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-21
+**Last Updated:** 2026-10-27
 
 ## Purpose
 

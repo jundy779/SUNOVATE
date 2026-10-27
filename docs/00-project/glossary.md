@@ -1,7 +1,7 @@
 # Glosarium
 
 **Status:** DRAFT
-**Last Updated:** 2026-10-14
+**Last Updated:** 2026-10-27
 
 ## Purpose
 
@@ -108,4 +108,4 @@ Format sumber kompilasi: `Kompilasi Peraturan SUN, <regulasi>, Pasal X, hal. N` 
 
 ## Last Updated
 
-2026-10-14
+2026-10-27

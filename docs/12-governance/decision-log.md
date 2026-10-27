@@ -248,6 +248,18 @@ Entri berikut mencatat jawaban knowledge owner atas delapan pertanyaan slide 24 
 - **ADR/BR terkait:** ADR-020
 - **Tindak lanjut:** Tidak ada; jenis dokumen RAHASIA tetap menunggu kurasi ketua tim (OQ-40).
 
+### DEC-20261007-01
+
+- **Open question:** Tidak ada (identitas proyek)
+- **Tanggal jawaban:** 2026-10-07
+- **Sumber:** Notulensi Rapat SUNOVATE 6 Oktober 2026, bagian kronologi ("7 Oktober 2026, Penetapan identitas: Mentor menetapkan kepanjangan SUNOVATE dan tagline resmi sebagai identitas proyek")
+- **Jawaban:** SUNOVATE adalah singkatan dari "SUN Organizational Values and Transformation through Experience", dengan tagline "Menjaga pengetahuan, belajar dari pengalaman, berinovasi untuk meningkatkan kinerja."
+- **Keputusan:** Kepanjangan dan tagline ini menggantikan nama kerja "SUN Integrated Management and Knowledge Platform" dari brief sesi 2026-10-01.
+- **Status:** CONFIRMED (mentor, tercatat pada notulensi). Notulensi sendiri masih berstatus draf sampai identitas rapat dan peserta dikonfirmasi.
+- **Dampak:** README, AGENTS.md, docs/README.md, project-overview, developer-handover, footer halaman depan
+- **ADR/BR terkait:** Tidak ada
+- **Tindak lanjut:** Tidak ada
+
 ## Related Documents
 
 - [architecture-decisions](../03-architecture/architecture-decisions.md)
