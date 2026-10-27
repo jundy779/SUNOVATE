@@ -28,7 +28,7 @@ class Settings(BaseSettings):
     )
 
     app_name: str = "SUNOVATE API"
-    app_version: str = "0.1.0"
+    app_version: str = "0.2.0"
     app_env: AppEnv = "development"
     log_level: str = "INFO"
     api_prefix: str = "/api/v1"
