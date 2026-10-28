@@ -10,6 +10,12 @@
 - AUD-21 dan sebagian AUD-03: approval milik sendiri yang dihapus tidak tampil, tingkat kerahasiaan di direktori pengguna hanya untuk administrator, dan pembacaan audit log tercatat sebagai `AUDIT_LOG_READ` (BUG-049).
 - Belum dikerjakan karena bergantung pada keputusan peran mentor: AUD-03 penuh, AUD-09, AUD-12, AUD-13; AUD-05 (pencabutan sesi) membutuhkan penyimpanan sesi.
 - Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 48 test frontend, 470 test backend mode simulated (40 PostgreSQL dilewati), 510 test mode PostgreSQL, `pnpm db:check` (truncate ditolak, migrasi naik dan turun), render SQL Alembic, build produksi, dan 12/12 skenario Playwright e2e lulus. Permintaan POST lintas origin ke `/api/hermes` diuji manual dan ditolak 403.
+- Validasi aktual (Windows 11, Git Bash, Python 3.12 via uv): `git fetch origin && git pull --ff-only` (sudah terbaru). `git am` biasa gagal pada `apps/web/src/app/(workspace)/admin/page.tsx` karena berkas itu tersimpan CRLF di index (bertentangan dengan `.gitattributes` `eol=lf`) dan patch menulis ulang seluruh barisnya; patch diterapkan dengan `git am --keep-cr` sebagai `505248a`. Perubahan isi berkas itu hanya 2 baris (kolom clearance dapat kosong, "Hanya untuk administrator"); 166 baris lain adalah normalisasi CRLF ke LF.
+  - `pnpm api:setup` lulus. `pnpm validate` lulus: ESLint, Ruff, TypeScript, mypy strict (71 berkas), 48 test frontend (14 berkas), 469 test backend lulus (41 dilewati), dan build produksi (29 halaman statis).
+  - `pnpm db:check` lulus pada PostgreSQL sementara (pgserver): 31 tabel, "append-only: OK (update rejected: DBAPIError)" dan "append-only: OK (truncate rejected: DBAPIError)", upgrade ke `0004_audit_logs_no_truncate` lalu downgrade ke base berhasil.
+  - `pnpm db:sql` lulus dan merender `CREATE TRIGGER audit_logs_no_truncate` pada revisi `0004`.
+  - `pnpm db:test` tanpa beban lain lulus: 509 test lulus dan 1 dilewati (11 menit 42 detik untuk pytest); pgserver berhenti normal. Linux mencatat 510.
+  - Sebelum e2e, port 3000 dipakai proses lain di luar SUNOVATE (`node bot.js`); proses itu sudah berhenti sendiri saat akan dihentikan, sehingga tidak ada proses yang dihentikan. `pnpm e2e` dengan `pnpm api:dev` (`DATA_BACKEND=simulated`): 12/12 skenario lulus.
 
 ## 2026-10-28 — Perbaikan temuan audit kode yang masih terbuka
 
