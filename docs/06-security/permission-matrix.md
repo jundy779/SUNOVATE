@@ -1,7 +1,7 @@
 # Permission Matrix
 
 **Status:** NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-10
+**Last Updated:** 2026-10-28
 
 ## Purpose
 
@@ -49,6 +49,8 @@ Menetapkan daftar permission, pemberiannya ke role pengembangan, dan permission 
 | `data_quality:read` | Melihat data quality issue |
 | `data_quality:manage` | Mengelola data quality issue |
 | `scope:all_teams` | Mengakses rekaman semua tim (tetap tunduk pada klasifikasi) |
+| `secure_document:manage_team` | Menentukan pembaca dokumen RAHASIA milik tim sendiri (DEC-20261021-02) |
+| `secure_document:manage_all` | Menentukan pembaca dokumen RAHASIA seluruh tim (DEC-20261021-02) |
 
 ## Matriks role ke permission
 
@@ -88,6 +90,8 @@ Y = diberikan.
 | data_quality:read | Y | Y |  |  |  |  | Y |  |
 | data_quality:manage |  | Y |  |  |  |  |  |  |
 | scope:all_teams | Y | Y |  |  |  |  | Y |  |
+| secure_document:manage_team |  |  | Y |  |  |  |  |  |
+| secure_document:manage_all |  | Y |  |  |  |  |  |  |
 
 Aturan pelengkap (PROPOSED):
 
@@ -111,6 +115,9 @@ Semua path relatif terhadap prefix `/api/v1`.
 | GET | `/permissions` | `role:read` |
 | GET | `/classifications` | Autentikasi saja |
 | GET | `/knowledge` | `knowledge:read` |
+| GET | `/knowledge/drafts/search` | `knowledge:read`, lalu `knowledge:review` atau role `knowledge_owner` (hanya draf miliknya) |
+| POST | `/knowledge/chunk-preview`, `/knowledge/extract-preview` | `knowledge:review` |
+| POST | `/knowledge/chunk-drafts` | `knowledge:review` + `knowledge:create` + `document:create` + `document:version` |
 | GET | `/knowledge/{id}` | `knowledge:read` |
 | POST | `/knowledge` | `knowledge:create` |
 | PATCH | `/knowledge/{id}` | `knowledge:update` |
@@ -141,8 +148,17 @@ Semua path relatif terhadap prefix `/api/v1`.
 | POST | `/approvals/{id}/decision` | `approval:decide` (+ `knowledge:publish` untuk tipe `KNOWLEDGE_PUBLICATION`) |
 | POST | `/hermes/query` | `hermes:query` + `search:query` |
 | POST | `/hermes/messages/{id}/feedback` | `hermes:feedback` |
+| GET | `/hermes/sme-question-intake`, `/hermes/glossary-intake` | `knowledge:review` + `scope:all_teams` |
 | GET | `/providers` | `provider:read` |
 | GET | `/data-quality-issues` | `data_quality:read` |
+| GET | `/exports/work?kind=` | `work:read` (+ `pending:read` untuk `pending` dan `followUps`) |
+| GET | `/exports/attention` | `work:read` |
+| GET | `/secure-documents`, `/secure-documents/{id}` | `document:read` + terdaftar sebagai pembaca + clearance cukup |
+| POST | `/secure-documents/{id}/acknowledgements` | `document:read` + terdaftar sebagai pembaca |
+| GET | `/secure-documents/{id}/pages/{page}` | `document:read` + terdaftar sebagai pembaca + persetujuan pernyataan masih berlaku |
+| GET | `/secure-documents/manageable` | `document:read`; daftar hanya berisi dokumen yang dapat dikelola |
+| GET, POST | `/secure-documents/{id}/readers` | `secure_document:manage_all`, atau `secure_document:manage_team` untuk dokumen tim sendiri |
+| DELETE | `/secure-documents/{id}/readers/{email}` | `secure_document:manage_all`, atau `secure_document:manage_team` untuk dokumen tim sendiri |
 
 Catatan:
 
@@ -210,6 +226,10 @@ Permission `document:update` dan `document:version` tidak dimiliki `staff` pada 
 | `access_grant:manage` | Memberi atau mencabut delegasi permission yang terbatas scope dan waktu |
 
 `system_admin` tidak otomatis memperoleh hak mengubah isi file terbit. Jika delegasi per akun diperlukan, gunakan grant terpisah dengan `user_id`, permission, team scope, classification ceiling, `valid_from`, `valid_until`, `granted_by`, alasan, dan audit event. Pemetaan role dan pihak yang boleh memberi, menerbitkan, atau menarik izin menunggu OQ-35.
+## Kesesuaian dengan kode
+
+Daftar permission, matriks role, dan tabel endpoint di atas dijaga sama dengan `apps/api/sunovate_api/authz/catalog.py` dan route API oleh test `apps/api/tests/test_permission_matrix_doc.py`. Bila permission, pemberian role, atau endpoint berubah, dokumen ini wajib diperbarui dalam perubahan yang sama. Status matriks tetap NEEDS MENTOR VALIDATION (rencana induk Tahap 1 butir 2).
+
 ## Open Questions
 
 - **OPEN QUESTION** Apakah team_lead boleh mempublikasikan knowledge.

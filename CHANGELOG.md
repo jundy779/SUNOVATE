@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-28 — Matriks izin sesuai kode dan kontrak respons seluruh route
+
+- Sesuai rencana induk Tahap 1 butir 2 dan 5. `permission-matrix.md` kini memuat dua permission dokumen rahasia (`secure_document:manage_team`, `secure_document:manage_all`) beserta pemberiannya, dan 16 endpoint yang belum tercatat (draf knowledge, pratinjau ekstraksi dan chunk, intake SME dan glosarium, unduhan Excel, dokumen rahasia). Test baru `test_permission_matrix_doc.py` memastikan daftar permission, matriks role, dan tabel endpoint selalu sama dengan katalog dan route API. Status matriks tetap NEEDS MENTOR VALIDATION.
+- Test baru `test_response_contract.py` memeriksa seluruh route nonpublik (61): tanpa kredensial semuanya mengembalikan 401 dengan badan error standar, `X-Request-ID` yang sama dengan `requestId`, dan header keamanan.
+- Pesan 404 dan 405 bawaan router yang berbahasa Inggris ("Not Found", "Method Not Allowed") kini berbahasa Indonesia; pesan dari modul tidak berubah.
+- Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 45 test frontend, 446 test backend mode simulated (40 PostgreSQL dilewati), dan 486 test mode PostgreSQL (`pnpm db:test`) lulus. Frontend tidak berubah sehingga build dan e2e tidak dijalankan ulang.
+
 ## 0.2.0 - 2026-10-27 (pengembangan, belum siap produksi)
 
 Versi naik dari 0.1.0 (fondasi, 1 Oktober) agar perubahan sejak itu dapat dikenali. Nomor versi kini tampil di footer halaman depan dan di `GET /api/v1/health`. Isi rilis ini, dirinci pada entri bertanggal di bawah:

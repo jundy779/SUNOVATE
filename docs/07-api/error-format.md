@@ -44,6 +44,12 @@ Format error yang konsisten untuk semua endpoint `/api/v1` (implementasi: `apps/
 | 503 | `DATABASE_BUSY` | pada `DATA_BACKEND=postgres`, database terjangkau tetapi menolak atau membatalkan permintaan secara sementara: statement timeout, lock timeout, deadlock, atau serialization failure. Respons memuat header `Retry-After: 5`; klien boleh mengulang |
 | 503 | `HERMES_DISABLED` | `HERMES_MODE=disabled` atau `AI_PROVIDER=disabled` |
 
+## Bahasa pesan bawaan
+
+Untuk 404 dan 405 dari router (route tidak dikenal atau metode salah), pesan bawaan Starlette yang berbahasa Inggris ("Not Found", "Method Not Allowed") diganti pesan berbahasa Indonesia: "Data atau halaman tidak ditemukan" dan "Metode permintaan tidak diizinkan" (2026-10-28). Pesan yang ditetapkan modul tidak diubah.
+
+Kontrak respons diuji pada seluruh route API oleh `apps/api/tests/test_response_contract.py`: tanpa kredensial setiap route nonpublik mengembalikan 401 dengan badan standar (`code`, `message`, `details`, `requestId`), header `X-Request-ID` sama dengan `requestId`, serta header keamanan.
+
 ## Detail validasi
 
 ```json

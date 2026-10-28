@@ -9,6 +9,7 @@ import logging
 import os
 import re
 import traceback
+from http import HTTPStatus
 
 from fastapi import FastAPI, Request
 from fastapi.encoders import jsonable_encoder
@@ -115,6 +116,23 @@ _STATUS_CODES = {
 }
 
 
+_DEFAULT_MESSAGES = {
+    400: "Permintaan tidak valid",
+    404: "Data atau halaman tidak ditemukan",
+    405: "Metode permintaan tidak diizinkan",
+    406: "Format respons yang diminta tidak tersedia",
+    413: "Ukuran permintaan terlalu besar",
+    415: "Jenis isi permintaan tidak didukung",
+}
+
+
+def _english_phrase(status_code: int) -> str | None:
+    try:
+        return HTTPStatus(status_code).phrase
+    except ValueError:
+        return None
+
+
 def register_error_handlers(app: FastAPI) -> None:
     @app.exception_handler(ApiError)
     async def _api_error(_request: Request, exc: ApiError) -> JSONResponse:
@@ -138,6 +156,9 @@ def register_error_handlers(app: FastAPI) -> None:
     async def _http(_request: Request, exc: StarletteHTTPException) -> JSONResponse:
         code = _STATUS_CODES.get(exc.status_code, "HTTP_ERROR")
         message = exc.detail if isinstance(exc.detail, str) else "Permintaan tidak dapat diproses"
+        if message == _english_phrase(exc.status_code):
+            # Starlette's default detail is the English status phrase; users see Indonesian.
+            message = _DEFAULT_MESSAGES.get(exc.status_code, "Permintaan tidak dapat diproses")
         return JSONResponse(error_body(code, message), exc.status_code)
 
     @app.exception_handler(Exception)

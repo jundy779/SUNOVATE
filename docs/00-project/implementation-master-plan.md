@@ -60,9 +60,9 @@ Urutan pekerjaan:
 | Kontrol API | Status 14 Okt 2026 | Langkah berikutnya |
 |---|---|---|
 | Routing `/api/v1` | IMPLEMENTED | Pertahankan kontrak dan uji kompatibilitas |
-| Request ID dan format error | IMPLEMENTED | Tambahkan pemeriksaan pada seluruh respons penting |
+| Request ID dan format error | IMPLEMENTED; per 28 Okt diuji pada seluruh route (`test_response_contract.py`) | Pertahankan; perluas ke respons sukses penting bila kontrak klien bertambah |
 | Autentikasi pengembangan | IMPLEMENTED | Ganti dengan mekanisme yang disetujui sebelum produksi |
-| RBAC, scope tim, dan klasifikasi | IMPLEMENTED pada scaffold | Validasi matriks bersama mentor dan uji PostgreSQL |
+| RBAC, scope tim, dan klasifikasi | IMPLEMENTED pada scaffold; uji PostgreSQL lulus; matriks izin dijaga sama dengan kode (`test_permission_matrix_doc.py`, 28 Okt) | Validasi matriks bersama mentor (Gate T1) |
 | Audit logging | IMPLEMENTED | Tinjau retensi dan akses auditor |
 | CORS | IMPLEMENTED, perlu konfigurasi lingkungan | Batasi ke origin demo yang disetujui |
 | Rate limiting | IMPLEMENTED untuk satu proses dan konfigurasi Nginx demo | Validasi paket pada Docker/host demo yang disetujui |
@@ -161,7 +161,7 @@ Urutan ini berlaku sampai ada keputusan mentor yang mengubah prioritas:
 
 | No | Pekerjaan | Status | Bukti atau hambatan |
 |---|---|---|---|
-| 1 | Baseline requirement dan keputusan terbuka | IN PROGRESS | Dokumen ini, [open-questions.md](open-questions.md) (OQ-38 sampai OQ-42), DEC-20261021-01 dan DEC-20261021-02 di [decision-log.md](../12-governance/decision-log.md), task tracker sampai TASK-038 |
+| 1 | Baseline requirement dan keputusan terbuka | IN PROGRESS | Dokumen ini, [open-questions.md](open-questions.md) (OQ-38 sampai OQ-42), DEC-20261021-01 dan DEC-20261021-02 di [decision-log.md](../12-governance/decision-log.md), task tracker sampai TASK-042 |
 | 2 | Naskah demo untuk ditinjau mentor | READY FOR MENTOR REVIEW | [demo-scenario-month-one.md](demo-scenario-month-one.md) dan `pnpm demo:smoke` 12 langkah |
 | 3 | Validasi Nginx/Compose, trusted proxy, probe 25 pengguna | BLOCKED | Membutuhkan host demo yang disetujui dan Docker; per 23 Okt Docker belum terpasang di laptop pengembang (dicek dari Git Bash dan PowerShell), sehingga `pnpm compose:demo:check` dan `pnpm demo:load` belum dijalankan. `pnpm demo:preflight` (statis) lulus |
 | 4 | Pengujian repository PostgreSQL dan otorisasi | DONE untuk pengembangan | `pnpm db:test` lulus penuh di Linux dan Windows (PostgreSQL sementara), termasuk migrasi 0003; PostgreSQL pada host belum diuji |
