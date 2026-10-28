@@ -5,6 +5,7 @@
 - Aturan rilis dan tag ditambahkan ke `change-management.md`: tag beranotasi `vX.Y.Z` pada commit kenaikan versi, tag tidak dipindahkan, dan GitHub Release ditandai pre-release selama belum siap produksi.
 - Catatan rilis berbahasa sederhana untuk `v0.1.0` (`357df94`, fondasi) dan `v0.2.0` (`8d63d54`, basis pengetahuan, SAVI AI, dokumen rahasia) disimpan di `docs/13-handover/releases/`. Tag dan GitHub Release dibuat terpisah setelah perubahan ini masuk.
 - Hanya dokumentasi yang berubah.
+- Validasi aktual (Windows 11, Git Bash): `git fetch origin && git pull --ff-only` (sudah terbaru), patch 0017 diterapkan dengan `git am` sebagai `56b9989`. `pnpm lint` lulus (ESLint dan Ruff "All checks passed!"); lint dijalankan pada working tree yang juga memuat perubahan kode TASK-043 yang belum di-commit, sedangkan patch ini hanya dokumentasi.
 
 ## 2026-10-28 — Matriks izin sesuai kode dan kontrak respons seluruh route
 
