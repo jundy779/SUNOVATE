@@ -66,7 +66,7 @@ def list_approvals(
     items = [
         a
         for a in ctx.store.list_governed(ApprovalRequest)
-        if a.requested_by == principal.user_id
+        if (a.requested_by == principal.user_id and a.deleted_at is None)  # AUD-21
         or (principal.has("approval:decide") and ctx.authz.can_read(principal, a))
     ]
     if status:

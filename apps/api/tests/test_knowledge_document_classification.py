@@ -82,3 +82,26 @@ def test_detail_shows_the_document_to_readers_with_enough_clearance() -> None:
     body = response.json()["data"]
     assert HIDDEN_TITLE in [doc["title"] for doc in body["documents"]]
     assert MARKER in [section["content"] for section in body["sections"]]
+
+
+def test_search_never_uses_text_from_a_document_above_the_reader_clearance() -> None:
+    client = _client_with_restricted_attachment()
+    staff = login(client, "sim.staff.pppsun")
+    response = client.get("/api/v1/search", params={"q": MARKER}, headers=staff)
+    assert response.status_code == 200
+    assert MARKER not in response.text
+
+    lead = login(client, "sim.lead.psun")
+    allowed = client.get("/api/v1/search", params={"q": MARKER}, headers=lead)
+    assert MARKER in allowed.text, "readers with enough clearance still find the text"
+
+
+def test_savi_never_cites_text_from_a_document_above_the_reader_clearance() -> None:
+    client = _client_with_restricted_attachment()
+    staff = login(client, "sim.staff.pppsun")
+    question = f"Apa isi lampiran SUN {MARKER}?"
+    response = client.post("/api/v1/hermes/query", json={"question": question}, headers=staff)
+    assert response.status_code == 200
+    data = response.json()["data"]
+    assert MARKER not in (data.get("answer") or "")
+    assert all(MARKER not in str(citation) for citation in data["citations"])

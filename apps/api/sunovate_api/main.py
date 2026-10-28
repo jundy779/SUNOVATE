@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import time
 from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
@@ -25,7 +26,9 @@ from .core.errors import error_body, log_unhandled_error, register_error_handler
 from .core.logging import configure_logging, request_id_var
 from .modules import build_api_router
 
-_REQUEST_ID_MAX = 128
+# AUD-19: a client-supplied X-Request-ID is only kept when it is a short, plain token, so it cannot
+# smuggle text or forged correlation data into the append-only audit log; otherwise a UUID is used.
+_REQUEST_ID_PATTERN = re.compile(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,63}")
 _PRIVATE_RESPONSE_HEADERS = {
     "Cache-Control": "no-store, private, max-age=0, must-revalidate",
     "Pragma": "no-cache",
@@ -104,7 +107,7 @@ def create_app(settings: Settings | None = None, runtime: AppRuntime | None = No
         request: Request, call_next: Callable[[Request], Awaitable[Response]]
     ) -> Response:
         incoming = request.headers.get("x-request-id", "")
-        request_id = incoming if 0 < len(incoming) <= _REQUEST_ID_MAX else str(uuid4())
+        request_id = incoming if _REQUEST_ID_PATTERN.fullmatch(incoming) else str(uuid4())
         token = request_id_var.set(request_id)
         started = time.perf_counter()
         rejection: str | None = None

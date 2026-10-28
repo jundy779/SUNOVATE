@@ -72,11 +72,20 @@ async def main():
         except Exception as exc:
             await c.rollback()
             print("append-only: OK (update rejected:", type(exc).__name__ + ")")
+        try:
+            await c.execute(text("truncate audit_logs"))
+            truncate_rejected = False
+            print("append-only: FAILED (truncate allowed)")
+        except Exception as exc:
+            await c.rollback()
+            truncate_rejected = True
+            print("append-only: OK (truncate rejected:", type(exc).__name__ + ")")
     await engine.dispose()
     assert tables == 31, tables  # 30 initial tables + secure_document_readers (0003)
     assert hits >= 1
     assert labels == 0
     assert seq is not None
+    assert truncate_rejected, "audit_logs TRUNCATE must be rejected (AUD-04)"
     assert ktags >= 1 and ktags_pos0 == ktags, (ktags, ktags_pos0)
 
 asyncio.run(main())

@@ -2,7 +2,9 @@
 
 TRUNCATE + SIMULATED_DATA seed, used only by `pnpm db:test` on a temporary pgserver.
 Guarded twice: APP_ENV=test and SUNOVATE_DB_RESET_ALLOWED=1 (set only by
-scripts/validation/db_test_pgserver.py). The append-only trigger is not touched.
+scripts/validation/db_test_pgserver.py). The row-level append-only trigger is not touched; the
+TRUNCATE guard on audit_logs (migration 0004) is disabled only inside this reset transaction, so
+it is back in force before any test runs.
 """
 
 from __future__ import annotations
@@ -26,5 +28,7 @@ def reset_database(engine: Engine, settings: Settings) -> None:
         # The application's 15 s statement_timeout is too tight for TRUNCATE + reseed when the
         # machine is busy (BUG-036); this applies only to the throwaway test database reset.
         conn.execute(text("SET LOCAL statement_timeout = '120s'"))
+        conn.execute(text("ALTER TABLE audit_logs DISABLE TRIGGER audit_logs_no_truncate"))
         conn.execute(text(f"TRUNCATE {tables} RESTART IDENTITY CASCADE"))
+        conn.execute(text("ALTER TABLE audit_logs ENABLE TRIGGER audit_logs_no_truncate"))
         apply_plan(conn)  # seed SIMULATED_DATA

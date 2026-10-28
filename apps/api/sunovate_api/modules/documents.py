@@ -14,6 +14,7 @@ from ..authz.principal import Principal
 from ..context import AppContext
 from ..core.errors import ApiError, not_found
 from ..core.responses import ApiModel, Pagination, envelope, paginated, serialize
+from ..providers.development import is_safe_local_location
 from ..store.records import DocumentReference, DocumentVersion, KnowledgeEntry
 from ._common import governed_view
 
@@ -111,11 +112,11 @@ def register_version(
         doc = _get(ctx, principal, document_id)
         if not ctx.authz.can_write(principal, doc):
             ctx.authz.deny_write(principal, doc, "document_reference")
-        if not ctx.providers.document.describe(body.provider_location).location.startswith(
-            "local://"
-        ):
+        if not is_safe_local_location(body.provider_location):
             raise ApiError(
-                422, "VALIDATION_ERROR", "Hanya referensi local:// yang didukung pada pengembangan"
+                422,
+                "VALIDATION_ERROR",
+                "Hanya referensi local:// dengan path sederhana yang didukung pada pengembangan",
             )
         if any(v.checksum_sha256 == body.checksum_sha256 for v in ctx.store.versions_of(doc.id)):
             raise ApiError(

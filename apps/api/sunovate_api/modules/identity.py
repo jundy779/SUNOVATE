@@ -16,10 +16,12 @@ router = APIRouter(tags=["users, teams, roles"])
 @router.get("/users")
 def list_users(
     ctx: Ctx,
-    _p: Annotated[Principal, Depends(require("user:read", resource="user"))],
+    principal: Annotated[Principal, Depends(require("user:read", resource="user"))],
     pagination: Annotated[Pagination, Depends()],
 ) -> dict[str, Any]:
     store = ctx.store
+    # AUD-21: clearance levels are visible only to user administrators, not to every reader.
+    show_clearance = principal.has("user:manage")
     roles_by_user = store.role_codes_by_user()
     teams_by_user = store.team_ids_by_user()
     rows = []
@@ -27,6 +29,7 @@ def list_users(
         rows.append(
             {
                 **serialize(user),
+                "clearanceCode": user.clearance_code if show_clearance else None,
                 "roles": sorted(roles_by_user.get(user.id, frozenset())),
                 "teamCodes": sorted(
                     filter(

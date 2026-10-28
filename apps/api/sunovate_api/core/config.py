@@ -99,6 +99,9 @@ class Settings(BaseSettings):
         if self.dev_auth_enabled and self.app_env not in ("development", "test"):
             # Password-less login is for local development and tests only, never staging or UAT.
             raise ValueError("DEV_AUTH_ENABLED must be false unless APP_ENV is development or test")
+        if self.dev_auth_secret and len(self.dev_auth_secret) < 32:
+            # A short secret makes HMAC tokens guessable (AUD-17); empty means ephemeral random.
+            raise ValueError("DEV_AUTH_SECRET must be empty or at least 32 characters")
         if self.app_env == "production" and self.data_backend == "simulated":
             raise ValueError("DATA_BACKEND=simulated is not allowed when APP_ENV=production")
         return self

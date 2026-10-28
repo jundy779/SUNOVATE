@@ -1,7 +1,10 @@
+import { rejectCrossSite } from "@/lib/request-guard";
 import { NextResponse } from "next/server";
 import { apiRequest, ApiRequestError } from "@/lib/api";
 
 export async function POST(request: Request) {
+  const blocked = rejectCrossSite(request, { json: true });
+  if (blocked) return blocked;
   const payload = await request.json().catch(() => null);
   if (!payload || typeof payload !== "object") {
     return NextResponse.json({ message: "Bahan pemeriksaan tidak valid" }, { status: 422 });

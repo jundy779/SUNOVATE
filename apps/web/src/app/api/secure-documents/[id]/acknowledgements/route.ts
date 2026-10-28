@@ -1,9 +1,12 @@
+import { rejectCrossSite } from "@/lib/request-guard";
 import { NextResponse } from "next/server";
 import { apiRequest, ApiRequestError } from "@/lib/api";
 import { isUuid } from "@/lib/secure-documents";
 
 /** Records the reader's acceptance of the confidentiality notice; the API audits it. */
-export async function POST(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const blocked = rejectCrossSite(request);
+  if (blocked) return blocked;
   const { id } = await params;
   if (!isUuid(id)) return NextResponse.json({ code: "NOT_FOUND", message: "Dokumen tidak ditemukan" }, { status: 404 });
   try {

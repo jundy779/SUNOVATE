@@ -277,6 +277,19 @@ class SimulatedStore:
             values = list(self._versions.values())
         return _natural(v for v in values if v.document_reference_id == document_id)
 
+    def version_classifications(self, version_ids: Collection[UUID]) -> dict[UUID, str]:
+        wanted = set(version_ids)
+        with self.lock:
+            versions = [v for v in self._versions.values() if v.id in wanted]
+        documents = self.get_governed_many(
+            DocumentReference, {v.document_reference_id for v in versions}
+        )
+        return {
+            v.id: documents[v.document_reference_id].classification_code
+            for v in versions
+            if v.document_reference_id in documents
+        }
+
     def chunks_of_entry(self, entry_id: UUID) -> list[DocumentChunk]:
         return self.chunks_of_entries([entry_id]).get(entry_id, [])
 

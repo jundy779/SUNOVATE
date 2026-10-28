@@ -214,3 +214,24 @@ def test_pending_and_follow_up_crud_require_manage_permission() -> None:
     )
     assert updated.status_code == 200
     assert updated.json()["data"]["deadlineState"] == "COMPLETED"
+
+
+def test_document_version_rejects_unsafe_local_paths() -> None:
+    """AUD-20: only plain local:// segments, so no future provider can escape its storage root."""
+    client = make_client()
+    lead = login(client, "sim.lead.psun")
+    doc = sid("doc:K1")
+    for location in (
+        "local://../../etc/passwd",
+        "local://simulated/../rahasia.pdf",
+        "local:///absolut.pdf",
+        "local://simulated\\\\k1.pdf",
+        "local://simulated/%2e%2e/k1.pdf",
+        "local://simulated//k1.pdf",
+    ):
+        body = {"versionLabel": "v9", "checksumSha256": "b" * 64, "providerLocation": location}
+        response = client.post(f"{API}/documents/{doc}/versions", json=body, headers=lead)
+        assert response.status_code == 422, location
+    ok = {"versionLabel": "v9", "checksumSha256": "b" * 64,
+          "providerLocation": "local://simulated/k1-v9.pdf"}
+    assert client.post(f"{API}/documents/{doc}/versions", json=ok, headers=lead).status_code == 201

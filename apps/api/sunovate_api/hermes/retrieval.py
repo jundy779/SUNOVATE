@@ -6,7 +6,9 @@ FTS + pgvector retrieval is PROPOSED (docs/05-ai-rag/retrieval-strategy.md).
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
+from uuid import UUID
 
 from ..authz.principal import Principal
 from ..authz.service import AuthorizationService
@@ -54,6 +56,36 @@ class RetrievalService:
         # Defense in depth: drafts and in-review entries never reach retrieval (BR-04).
         return [e for e in entries if e.lifecycle_status == "PUBLISHED"]
 
+    def readable_chunks(
+        self,
+        principal: Principal,
+        chunks_by_entry: Mapping[UUID, list[DocumentChunk]],
+        *,
+        max_classification: str | None = None,
+    ) -> dict[UUID, list[DocumentChunk]]:
+        """Drop chunks whose document is classified above the reader (AUD-02).
+
+        A document may carry a higher classification than its entry. One batched lookup keeps
+        the statement count constant; a chunk without a known document classification is dropped.
+        """
+        version_ids = {c.document_version_id for chunks in chunks_by_entry.values() for c in chunks}
+        classifications = self._store.version_classifications(version_ids)
+
+        def allowed(chunk: DocumentChunk) -> bool:
+            code = classifications.get(chunk.document_version_id)
+            if code is None:
+                return False
+            if not self._authz.classification_allowed(principal.clearance_code, code):
+                return False
+            return max_classification is None or self._authz.classification_allowed(
+                max_classification, code
+            )
+
+        return {
+            entry_id: [chunk for chunk in chunks if allowed(chunk)]
+            for entry_id, chunks in chunks_by_entry.items()
+        }
+
     def candidates(
         self,
         principal: Principal,
@@ -67,7 +99,11 @@ class RetrievalService:
             return []
         results: list[RetrievedChunk] = []
         entries = self.authorized_entries(principal, max_classification=max_classification)
-        chunks = self._store.chunks_of_entries([e.id for e in entries])
+        chunks = self.readable_chunks(
+            principal,
+            self._store.chunks_of_entries([e.id for e in entries]),
+            max_classification=max_classification,
+        )
         for entry in entries:
             for chunk in chunks.get(entry.id, []):
                 text_terms = terms(f"{entry.title} {chunk.section_label} {chunk.content}")

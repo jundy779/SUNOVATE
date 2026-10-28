@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-10-28 — Penutupan sisa temuan audit 8 Oktober di kode
+
+- AUD-02: retrieval SAVI menyaring potongan teks dari dokumen di atas hak baca pengguna dengan satu lookup klasifikasi per permintaan (BUG-044). Pencarian sudah menyaring di store dan kini dijaga test.
+- AUD-04: migrasi `0004_audit_logs_no_truncate` menolak TRUNCATE pada `audit_logs`; `pnpm db:check` memeriksanya (BUG-045). Role database runtime terbatas tetap tugas deployment (KL-21).
+- AUD-08: hasil `/health/database` disimpan 10 detik sehingga panggilan anonim tidak membuka koneksi baru setiap kali (BUG-046).
+- AUD-18: sepuluh route handler web yang mengubah data menolak permintaan dari origin lain dan mewajibkan JSON (BUG-047).
+- AUD-17, AUD-19, AUD-20: secret token minimal 32 karakter atau kosong; `X-Request-ID` hanya diterima bila berupa token pendek sederhana; path `local://` hanya segmen sederhana (BUG-048).
+- AUD-21 dan sebagian AUD-03: approval milik sendiri yang dihapus tidak tampil, tingkat kerahasiaan di direktori pengguna hanya untuk administrator, dan pembacaan audit log tercatat sebagai `AUDIT_LOG_READ` (BUG-049).
+- Belum dikerjakan karena bergantung pada keputusan peran mentor: AUD-03 penuh, AUD-09, AUD-12, AUD-13; AUD-05 (pencabutan sesi) membutuhkan penyimpanan sesi.
+- Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 48 test frontend, 470 test backend mode simulated (40 PostgreSQL dilewati), 510 test mode PostgreSQL, `pnpm db:check` (truncate ditolak, migrasi naik dan turun), render SQL Alembic, build produksi, dan 12/12 skenario Playwright e2e lulus. Permintaan POST lintas origin ke `/api/hermes` diuji manual dan ditolak 403.
+
 ## 2026-10-28 — Perbaikan temuan audit kode yang masih terbuka
 
 - Token dengan karakter non-ASCII di header `Authorization` kini ditolak 401, bukan 500 (BUG-039, AUD-16).

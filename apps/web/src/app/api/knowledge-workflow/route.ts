@@ -1,3 +1,4 @@
+import { rejectCrossSite } from "@/lib/request-guard";
 import { NextResponse } from "next/server";
 import { apiRequest, ApiRequestError } from "@/lib/api";
 
@@ -5,6 +6,8 @@ const KNOWLEDGE_PATH = /^\/knowledge\/[0-9a-f-]{36}(\/submit)?$/;
 const DECISION_PATH = /^\/approvals\/[0-9a-f-]{36}\/decision$/;
 
 export async function POST(request: Request) {
+  const blocked = rejectCrossSite(request, { json: true });
+  if (blocked) return blocked;
   const payload = (await request.json()) as {
     path?: string;
     method?: "POST" | "PATCH";

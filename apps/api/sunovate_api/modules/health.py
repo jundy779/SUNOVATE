@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import asyncio
+import hashlib
+import time
 from typing import Any
 
 from fastapi import APIRouter
@@ -30,22 +32,40 @@ def health(ctx: Ctx) -> dict[str, Any]:
     )
 
 
-@router.get("/health/database", summary="PostgreSQL connectivity check")
-async def health_database(ctx: Ctx) -> dict[str, Any]:
+# AUD-08: the endpoint is public, so each anonymous call must not open a new database
+# connection. A result is reused for a short time; the cache key never contains the URL itself.
+DATABASE_CHECK_TTL_SECONDS = 10.0
+_database_checks: dict[str, tuple[float, bool]] = {}
+
+
+async def _database_reachable(database_url: str) -> bool:
     engine: AsyncEngine | None = None
     try:
-        # Invalid DATABASE_URL raises ValueError here -> 503 like any connectivity failure.
-        engine = create_async_engine(
-            async_database_url(ctx.settings.database_url), pool_pre_ping=False
-        )
+        # Invalid DATABASE_URL raises ValueError here -> unavailable like any failure.
+        engine = create_async_engine(async_database_url(database_url), pool_pre_ping=False)
         async with asyncio.timeout(3):
             async with engine.connect() as connection:
                 await connection.execute(text("SELECT 1"))
-    except Exception as exc:  # noqa: BLE001 - report unavailability without details
-        raise ApiError(503, "DATABASE_UNAVAILABLE", "Database tidak dapat dijangkau") from exc
+        return True
+    except Exception:  # noqa: BLE001 - report unavailability without details
+        return False
     finally:
         if engine is not None:
             await engine.dispose()
+
+
+@router.get("/health/database", summary="PostgreSQL connectivity check")
+async def health_database(ctx: Ctx) -> dict[str, Any]:
+    key = hashlib.sha256(ctx.settings.database_url.encode()).hexdigest()
+    now = time.monotonic()
+    cached = _database_checks.get(key)
+    if cached is not None and now - cached[0] < DATABASE_CHECK_TTL_SECONDS:
+        reachable = cached[1]
+    else:
+        reachable = await _database_reachable(ctx.settings.database_url)
+        _database_checks[key] = (time.monotonic(), reachable)
+    if not reachable:
+        raise ApiError(503, "DATABASE_UNAVAILABLE", "Database tidak dapat dijangkau")
     return envelope(
         {
             "status": "ok",

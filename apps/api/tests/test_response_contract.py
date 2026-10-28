@@ -71,3 +71,14 @@ def test_successful_responses_also_echo_the_request_id() -> None:
     response = CLIENT.get("/api/v1/health", headers={"X-Request-ID": "kontrak-200"})
     assert response.status_code == 200
     assert response.headers["x-request-id"] == "kontrak-200"
+
+
+@pytest.mark.parametrize(
+    "supplied",
+    ["a" * 65, "palsu id dengan spasi", "<script>", "-awal-tanda-hubung", "a;b"],
+)
+def test_unsafe_request_ids_are_replaced_with_a_server_id(supplied: str) -> None:
+    response = CLIENT.get("/api/v1/health", headers={"X-Request-ID": supplied})
+    issued = response.headers["x-request-id"]
+    assert issued != supplied
+    assert re.fullmatch(r"[0-9a-f-]{36}", issued)

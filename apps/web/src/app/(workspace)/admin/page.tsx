@@ -22,7 +22,7 @@ interface UserRow {
   id: string;
   email: string;
   displayName: string;
-  clearanceCode: string;
+  clearanceCode: string | null;
   roles: string[];
   teamCodes: string[];
 }
@@ -86,7 +86,7 @@ export default async function AdminPage() {
                     <td>{user.email}</td>
                     <td>{user.roles.map(roleLabel).join(", ")}</td>
                     <td>{user.teamCodes.join(", ") || "Semua tim"}</td>
-                    <td>{classificationLabel(user.clearanceCode)}</td>
+                    <td>{user.clearanceCode ? classificationLabel(user.clearanceCode) : "Hanya untuk administrator"}</td>
                   </tr>
                 ))}
               </tbody>

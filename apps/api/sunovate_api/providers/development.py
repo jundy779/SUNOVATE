@@ -66,14 +66,37 @@ class DisabledEmbeddingProvider:
         raise ProviderDisabledError("Embedding provider is disabled until a model is approved")
 
 
+_LOCAL_SEGMENT = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}")
+
+
+def is_safe_local_location(location: str) -> bool:
+    """`local://a/b/c.ext` with plain segments only (AUD-20).
+
+    Rejects traversal (`..`, `.`), empty segments, absolute or drive paths, backslashes,
+    percent-encoding, and control characters, so a future provider that reads from disk can join
+    the path under its storage root without escaping it.
+    """
+    if not location.startswith("local://"):
+        return False
+    path = location.removeprefix("local://")
+    if not path or len(path) > 900:
+        return False
+    return all(
+        segment not in {".", ".."} and _LOCAL_SEGMENT.fullmatch(segment) is not None
+        for segment in path.split("/")
+    )
+
+
 class LocalDocumentProvider:
     """Validates `local://` references only. Does not read, upload, or copy files."""
 
     name = "local"
 
     def describe(self, location: str) -> DocumentLocation:
-        if not location.startswith("local://"):
-            return DocumentLocation("local", location, False, "Hanya referensi local:// didukung")
+        if not is_safe_local_location(location):
+            return DocumentLocation(
+                "local", location, False, "Hanya referensi local:// dengan path sederhana didukung"
+            )
         return DocumentLocation(
             "local", location, False, "Referensi simulasi; file tidak tersedia di repository"
         )

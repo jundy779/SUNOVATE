@@ -1,9 +1,12 @@
+import { rejectCrossSite } from "@/lib/request-guard";
 import { NextResponse } from "next/server";
 import { apiRequest, ApiRequestError } from "@/lib/api";
 import { isUuid } from "@/lib/secure-documents";
 
 /** Grants read access to a RAHASIA document; the API enforces who may do this and audits it. */
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const blocked = rejectCrossSite(request, { json: true });
+  if (blocked) return blocked;
   const { id } = await params;
   if (!isUuid(id)) return NextResponse.json({ code: "NOT_FOUND", message: "Dokumen tidak ditemukan" }, { status: 404 });
   const body = (await request.json().catch(() => null)) as { email?: unknown } | null;

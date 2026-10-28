@@ -1,9 +1,12 @@
+import { rejectCrossSite } from "@/lib/request-guard";
 import { NextResponse } from "next/server";
 import { apiRequest, ApiRequestError } from "@/lib/api";
 
 const ALLOWED_PATH = /^\/(work-outputs|tasks|milestones|pending-matters|follow-ups)(\/[0-9a-f-]{36})?(\?revision=\d+)?$/;
 
 async function mutate(request: Request) {
+  const blocked = rejectCrossSite(request, { json: true });
+  if (blocked) return blocked;
   const payload = (await request.json()) as {
     path?: string;
     method?: "POST" | "PATCH" | "DELETE";

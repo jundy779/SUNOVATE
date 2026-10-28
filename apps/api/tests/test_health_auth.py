@@ -67,7 +67,8 @@ def test_tampered_token_is_rejected() -> None:
 
 
 def test_token_from_other_secret_is_rejected() -> None:
-    issuer, verifier = make_client(), make_client(dev_auth_secret="another-secret")
+    other_secret = "another-secret-that-is-at-least-32-chars"
+    issuer, verifier = make_client(), make_client(dev_auth_secret=other_secret)
     headers = login(issuer, "sim.staff.pppsun")
     assert verifier.get("/api/v1/auth/me", headers=headers).status_code == 401
 

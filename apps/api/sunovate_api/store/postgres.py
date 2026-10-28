@@ -506,6 +506,19 @@ class PostgresRepository:
 
     # Documents and chunks ----------------------------------------------------
 
+    def version_classifications(self, version_ids: Collection[UUID]) -> dict[UUID, str]:
+        ids = list(set(version_ids))
+        if not ids:
+            return {}
+        versions = _TABLES[DocumentVersion]
+        documents = _TABLES[DocumentReference]
+        rows = self._rows(
+            select(versions.c.id, documents.c.classification_code)
+            .join(documents, versions.c.document_reference_id == documents.c.id)
+            .where(versions.c.id.in_(ids))
+        )
+        return {row["id"]: row["classification_code"] for row in rows}
+
     def versions_of(self, document_id: UUID) -> list[DocumentVersion]:
         table, statement = self._select(DocumentVersion)
         rows = self._rows(
