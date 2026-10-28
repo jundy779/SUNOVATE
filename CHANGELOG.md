@@ -6,6 +6,11 @@
 - Test baru `test_response_contract.py` memeriksa seluruh route nonpublik (61): tanpa kredensial semuanya mengembalikan 401 dengan badan error standar, `X-Request-ID` yang sama dengan `requestId`, dan header keamanan.
 - Pesan 404 dan 405 bawaan router yang berbahasa Inggris ("Not Found", "Method Not Allowed") kini berbahasa Indonesia; pesan dari modul tidak berubah.
 - Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 45 test frontend, 446 test backend mode simulated (40 PostgreSQL dilewati), dan 486 test mode PostgreSQL (`pnpm db:test`) lulus. Frontend tidak berubah sehingga build dan e2e tidak dijalankan ulang.
+- Validasi aktual (Windows 11, Git Bash, Python 3.12 via uv): patch 0016 semula gagal diterapkan karena `main` lokal tertinggal 4 commit dari `origin/main` (rilis 0.2.0, termasuk TASK-040). `main` di-fast-forward ke `8d63d54`, lalu patch diterapkan dengan `git am` sebagai `574e2fa`.
+  - `pnpm api:setup` lulus. `pnpm validate` lulus: ESLint, Ruff, TypeScript, mypy strict (71 berkas), 45 test frontend (13 berkas), 445 test backend lulus (41 dilewati), dan build produksi (29 halaman statis).
+  - `pnpm db:test` tanpa beban lain lulus: 485 test lulus dan 1 dilewati (12 menit 58 detik untuk pytest); pgserver berhenti normal.
+  - `docs/06-security/permission-matrix.md` memuat `secure_document:manage_team` dan `secure_document:manage_all` pada daftar permission, matriks peran (masing-masing `team_lead` dan `knowledge_coordinator`), dan tabel endpoint `/secure-documents/{id}/readers`.
+  - `GET /api/v1/tidak-ada` (dan `/tidak-ada`) lewat `TestClient` mengembalikan 404 JSON `{"code":"NOT_FOUND","message":"Data atau halaman tidak ditemukan",...}`.
 
 ## 0.2.0 - 2026-10-27 (pengembangan, belum siap produksi)
 
