@@ -33,7 +33,9 @@ def test_export_returns_filtered_workbook_with_autofilter(kind: str) -> None:
     assert [cell.value for cell in sheet[5]][:3] == ["Judul", "Tim", "Status"]
     assert sheet.auto_filter.ref is not None and sheet.auto_filter.ref.startswith("A5:")
     assert sheet.freeze_panes == "A6"
-    assert "SIMULATED_DATA" in str(sheet["A3"].value)
+    notice = str(sheet["A3"].value)
+    assert notice.startswith("Data contoh.")
+    assert "SIMULATED_DATA" not in notice  # user-facing text has no internal labels
 
 
 def test_export_contains_exactly_the_rows_the_user_can_read() -> None:

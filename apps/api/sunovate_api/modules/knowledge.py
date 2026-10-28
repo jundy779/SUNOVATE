@@ -147,17 +147,38 @@ def _chunk_preview_payload(
     }
 
 
-def _view(ctx: AppContext, entry: KnowledgeEntry, *, detail: bool = False) -> dict[str, Any]:
+def _view(ctx: AppContext, entry: KnowledgeEntry) -> dict[str, Any]:
+    return governed_view(ctx, entry)
+
+
+def _detail_view(ctx: AppContext, principal: Principal, entry: KnowledgeEntry) -> dict[str, Any]:
+    """Entry with its documents and text, minus any document above the reader's clearance.
+
+    A document may carry a higher classification than its entry; its metadata and chunks must
+    not reach the reader through the entry (AUD-02).
+    """
     view = governed_view(ctx, entry)
-    if detail:
-        docs = ctx.store.list_governed(
-            DocumentReference, where={"knowledge_entry_id": entry.id, "deleted_at": None}
-        )
-        view["documents"] = [serialize(d, exclude=("deleted_at",)) for d in docs]
-        view["sections"] = [
-            {"index": c.chunk_index, "sectionLabel": c.section_label, "content": c.content}
-            for c in ctx.store.chunks_of_entry(entry.id)
-        ]
+    docs = ctx.store.list_governed(
+        DocumentReference, where={"knowledge_entry_id": entry.id, "deleted_at": None}
+    )
+    allowed = [
+        d
+        for d in docs
+        if ctx.authz.classification_allowed(principal.clearance_code, d.classification_code)
+    ]
+    allowed_ids = {d.id for d in allowed}
+    hidden_versions = {
+        version.id
+        for doc in docs
+        if doc.id not in allowed_ids
+        for version in ctx.store.versions_of(doc.id)
+    }
+    view["documents"] = [serialize(d, exclude=("deleted_at",)) for d in allowed]
+    view["sections"] = [
+        {"index": c.chunk_index, "sectionLabel": c.section_label, "content": c.content}
+        for c in ctx.store.chunks_of_entry(entry.id)
+        if c.document_version_id not in hidden_versions
+    ]
     return view
 
 
@@ -418,7 +439,7 @@ def create_chunk_draft(
                 "documentVersionId": str(version.id),
             },
         )
-    return envelope(_view(ctx, entry, detail=True), persisted=True)
+    return envelope(_detail_view(ctx, principal, entry), persisted=True)
 
 
 @router.get("/drafts/search")
@@ -526,7 +547,7 @@ def get_knowledge(
     principal: Annotated[Principal, Depends(require("knowledge:read", resource="knowledge"))],
 ) -> dict[str, Any]:
     entry = readable_or_404(ctx, principal, KnowledgeEntry, entry_id, "Knowledge")
-    return envelope(_view(ctx, entry, detail=True))
+    return envelope(_detail_view(ctx, principal, entry))
 
 
 @router.post("", status_code=201)

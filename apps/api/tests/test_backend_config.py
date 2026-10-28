@@ -129,6 +129,22 @@ def test_production_refuses_dev_auth() -> None:
         )
 
 
+@pytest.mark.parametrize("app_env", ["staging", "production"])
+def test_dev_auth_is_refused_outside_development_and_test(app_env: str) -> None:
+    with pytest.raises(ValidationError, match="DEV_AUTH_ENABLED"):
+        Settings(_env_file=None, app_env=app_env, dev_auth_enabled=True, data_backend="postgres")
+
+
+@pytest.mark.parametrize("app_env", ["development", "test"])
+def test_dev_auth_is_allowed_in_development_and_test(app_env: str) -> None:
+    assert Settings(_env_file=None, app_env=app_env, dev_auth_enabled=True).dev_auth_enabled
+
+
+def test_hermes_ceiling_cannot_include_confidential() -> None:
+    with pytest.raises(ValidationError, match="hermes_max_classification"):
+        Settings(_env_file=None, hermes_max_classification="CONFIDENTIAL")
+
+
 def test_unknown_data_backend_is_rejected() -> None:
     with pytest.raises(ValidationError):
         Settings(_env_file=None, data_backend="mysql")  # type: ignore[arg-type]
@@ -213,7 +229,7 @@ def test_private_response_headers_are_applied_to_every_api_response() -> None:
 
 
 def test_api_schema_and_interactive_docs_are_hidden_outside_development() -> None:
-    client = TestClient(create_app(make_settings(app_env="staging")))
+    client = TestClient(create_app(make_settings(app_env="staging", dev_auth_enabled=False)))
     assert client.get("/docs").status_code == 404
     assert client.get("/openapi.json").status_code == 404
 

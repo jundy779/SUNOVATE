@@ -127,7 +127,7 @@ def build_workbook(
     sheet["A1"].font = Font(bold=True, size=14, color=_NAVY)
     sheet["A2"] = f"Diunduh oleh {exported_by} pada {exported_at:%d-%m-%Y %H:%M} WIB"
     sheet["A3"] = (
-        "Data contoh (SIMULATED_DATA). Isi hanya mencakup data yang boleh dilihat pengunduh; "
+        "Data contoh. Isi hanya mencakup data yang boleh dilihat pengunduh; "
         "jangan diteruskan kepada pihak yang tidak berwenang."
     )
     for cell in (sheet["A2"], sheet["A3"]):

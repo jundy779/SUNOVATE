@@ -78,9 +78,8 @@ class Settings(BaseSettings):
     ai_provider: Literal["development_extractive", "disabled"] = "development_extractive"
     embedding_provider: Literal["disabled"] = "disabled"
     hermes_mode: Literal["development", "disabled"] = "development"
-    hermes_max_classification: Literal["PUBLIC", "INTERNAL", "RESTRICTED", "CONFIDENTIAL"] = (
-        "RESTRICTED"
-    )
+    # CONFIDENTIAL is never processed by Hermes, so it is not an accepted ceiling (BR-22, NFR-10).
+    hermes_max_classification: Literal["PUBLIC", "INTERNAL", "RESTRICTED"] = "RESTRICTED"
 
     deadline_due_soon_days: int = Field(default=7, ge=1, le=60)
 
@@ -97,11 +96,11 @@ class Settings(BaseSettings):
         unsafe_locks = [name for name, enabled in disabled_security_locks.items() if enabled]
         if unsafe_locks:
             raise ValueError(f"Security locks must remain false: {', '.join(unsafe_locks)}")
-        if self.app_env == "production":
-            if self.dev_auth_enabled:
-                raise ValueError("DEV_AUTH_ENABLED must be false when APP_ENV=production")
-            if self.data_backend == "simulated":
-                raise ValueError("DATA_BACKEND=simulated is not allowed when APP_ENV=production")
+        if self.dev_auth_enabled and self.app_env not in ("development", "test"):
+            # Password-less login is for local development and tests only, never staging or UAT.
+            raise ValueError("DEV_AUTH_ENABLED must be false unless APP_ENV is development or test")
+        if self.app_env == "production" and self.data_backend == "simulated":
+            raise ValueError("DATA_BACKEND=simulated is not allowed when APP_ENV=production")
         return self
 
     @property

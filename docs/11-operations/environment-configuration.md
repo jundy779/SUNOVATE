@@ -110,8 +110,8 @@ validasi database. URL nyata harus diberikan melalui environment lokal, bukan fi
 
 ## Aturan Keamanan Konfigurasi
 
-1. **Diimplementasikan**: Settings menolak start bila `APP_ENV=production` dengan `DEV_AUTH_ENABLED=true` atau `DATA_BACKEND=simulated` (ADR-005, ADR-007); kombinasi `APP_ENV=production`, `DATA_BACKEND=postgres`, `DEV_AUTH_ENABLED=false` valid (ADR-015). Diuji di `apps/api/tests/test_health_auth.py` dan `apps/api/tests/test_backend_config.py`. Skenario terkait: SEC-12 di [security-testing.md](../10-testing/security-testing.md).
-2. **PROPOSED**: `DEV_AUTH_ENABLED` wajib `false` di semua lingkungan selain development, termasuk UAT.
+1. **Diimplementasikan**: Settings menolak start bila `DEV_AUTH_ENABLED=true` dengan `APP_ENV` selain development atau test (BUG-040), dan bila `APP_ENV=production` dengan `DATA_BACKEND=simulated` (ADR-005, ADR-007); kombinasi `APP_ENV=production`, `DATA_BACKEND=postgres`, `DEV_AUTH_ENABLED=false` valid (ADR-015). Diuji di `apps/api/tests/test_health_auth.py` dan `apps/api/tests/test_backend_config.py`. Skenario terkait: SEC-12 di [security-testing.md](../10-testing/security-testing.md).
+2. **Diimplementasikan**: `DEV_AUTH_ENABLED` wajib `false` di semua lingkungan selain development dan test, termasuk staging dan UAT. `HERMES_MAX_CLASSIFICATION` hanya menerima PUBLIC, INTERNAL, atau RESTRICTED (BUG-041).
 3. **PROPOSED**: Rahasia (`DEV_AUTH_SECRET`, `POSTGRES_PASSWORD`, kredensial di `DATABASE_URL`) tidak pernah di-commit, tidak dicetak ke log, dan tidak ditempel di issue atau chat.
 4. **PROPOSED**: `.env` tetap di-ignore git. Periksa `git status` sebelum commit.
 5. **PROPOSED**: Nilai contoh di `.env.example` hanya untuk mesin lokal dan harus diganti di lingkungan lain.

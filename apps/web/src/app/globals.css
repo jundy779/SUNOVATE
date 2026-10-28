@@ -35,7 +35,7 @@ h1, h2, h3 { color: var(--navy); font-family: var(--font-heading); line-height: 
 .muted { color: var(--muted); }
 
 /* Public landing page */
-.eyebrow { margin: 0; color: var(--muted); font-size: .72rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; }
+.eyebrow { margin: 0; color: var(--muted); font-size: .72rem; font-weight: 700; letter-spacing: 0; text-transform: none; }
 .hero-actions { display: flex; align-items: center; gap: 1.4rem; margin-top: 2rem; }
 .text-link, .section-heading a, .action-link { color: var(--navy); font-weight: 700; text-decoration: underline; text-decoration-color: var(--gold); text-decoration-thickness: 2px; text-underline-offset: .25em; }
 
@@ -115,7 +115,7 @@ h2 { font-size: 1rem; }
 .table-wrap { position: relative; overflow-x: auto; }
 table { width: 100%; min-width: 680px; border-collapse: collapse; }
 th, td { padding: .78rem 1rem; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
-th { background: var(--paper); color: var(--muted); font-size: .69rem; letter-spacing: .055em; text-transform: uppercase; white-space: nowrap; }
+th { background: var(--paper); color: var(--muted); font-size: .69rem; letter-spacing: 0; text-transform: none; white-space: nowrap; }
 tbody tr:last-child td { border-bottom: 0; }
 tbody tr:hover { background: var(--paper); }
 .status { display: inline-flex; align-items: center; width: fit-content; border-radius: 999px; padding: .18rem .55rem; background: var(--paper); color: var(--navy); font-size: .73rem; font-weight: 700; white-space: nowrap; }
@@ -327,7 +327,7 @@ code { font-size: .8rem; background: var(--paper); padding: 0 .25rem; }
 .validation-item > header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .validation-id { color: var(--navy); font-size: .72rem; font-weight: 800; letter-spacing: .06em; }
 .validation-item h3 { margin: .75rem 0 1rem; color: var(--navy); font-size: 1rem; line-height: 1.45; }
-.validation-item h4 { margin: 0 0 .45rem; color: var(--navy); font-size: .76rem; letter-spacing: .035em; text-transform: uppercase; }
+.validation-item h4 { margin: 0 0 .45rem; color: var(--navy); font-size: .76rem; letter-spacing: 0; text-transform: none; }
 .validation-item p, .validation-item li { color: var(--muted); font-size: .82rem; line-height: 1.65; }
 .validation-item p, .validation-item ul { margin: 0; }
 .table-detail { display: block; margin-top: .35rem; color: var(--muted); font-size: .74rem; font-weight: 400; line-height: 1.5; }

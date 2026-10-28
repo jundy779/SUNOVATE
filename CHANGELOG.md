@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-10-28 — Perbaikan temuan audit kode yang masih terbuka
+
+- Token dengan karakter non-ASCII di header `Authorization` kini ditolak 401, bukan 500 (BUG-039, AUD-16).
+- Login pengembangan tanpa kata sandi kini ditolak saat start bila `APP_ENV` bukan development atau test, termasuk staging dan UAT, sesuai `environment-configuration.md` (BUG-040, AUD-01). Paket demo tetap memakai `APP_ENV=development`.
+- `HERMES_MAX_CLASSIFICATION` hanya menerima PUBLIC, INTERNAL, atau RESTRICTED; CONFIDENTIAL tidak lagi dapat dipilih (BUG-041, AUD-11; BR-22, NFR-10).
+- Detail knowledge menyembunyikan dokumen dan potongan isinya bila klasifikasi dokumen melebihi clearance pembaca (BUG-042, AUD-02). Versi dokumen hanya dibaca bila ada dokumen yang disembunyikan, sehingga jumlah query detail biasa tidak berubah. Pencarian dan SAVI AI masih mengandalkan invarian tulis (klasifikasi dokumen sama dengan entri) dan belum diubah.
+- Berkas Excel unduhan tidak lagi menampilkan "(SIMULATED_DATA)"; judul kolom tabel, eyebrow, dan judul butir validasi tidak lagi kapital penuh, sesuai `content-language.md` dan `design-system.md` (BUG-043).
+- Belum ditangani: AUD-04 (trigger audit belum menolak `TRUNCATE`; perlu revisi Alembic dan penyesuaian reset database uji) dan AUD-08 (`/health/database` publik membuat engine baru per panggilan).
+- Test baru: `test_knowledge_document_classification.py` (2), `test_non_ascii_token_is_rejected_with_401_not_500`, `test_dev_auth_is_refused_outside_development_and_test` (staging, production), `test_dev_auth_is_allowed_in_development_and_test` (development, test), dan `test_hermes_ceiling_cannot_include_confidential`. Test AUD-02, token non-ASCII, staging, dan plafon CONFIDENTIAL dipastikan gagal tanpa perbaikannya.
+- Validasi aktual (Windows 11, Git Bash, Python 3.12 via uv): `pnpm validate` lulus (ESLint, Ruff, TypeScript, mypy strict 71 berkas, 45 test frontend, 453 test backend lulus dan 41 dilewati, build produksi 29 halaman); run pertama gagal pada Ruff SIM102 (`if` bertingkat di `config.py`) lalu diperbaiki. `pnpm db:sql` lulus. `pnpm db:test` tanpa beban lain lulus (493 lulus, 1 dilewati). `pnpm e2e` 12/12 lulus.
+
 ## 2026-10-28 — Aturan rilis dan catatan rilis v0.1.0 serta v0.2.0
 
 - Aturan rilis dan tag ditambahkan ke `change-management.md`: tag beranotasi `vX.Y.Z` pada commit kenaikan versi, tag tidak dipindahkan, dan GitHub Release ditandai pre-release selama belum siap produksi.

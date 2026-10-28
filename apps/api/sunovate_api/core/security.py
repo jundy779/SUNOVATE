@@ -48,7 +48,10 @@ class DevTokenSigner:
     def verify(self, token: str, now: datetime | None = None) -> UUID:
         try:
             payload, signature = token.split(".", 1)
-        except ValueError as exc:
+            # Non-ASCII input cannot be a token we issued; ascii-encoding it would raise a 500.
+            payload.encode("ascii")
+            signature.encode("ascii")
+        except (ValueError, UnicodeError) as exc:
             raise unauthenticated("Token tidak valid") from exc
         if not hmac.compare_digest(signature, self._sign(payload)):
             raise unauthenticated("Token tidak valid")

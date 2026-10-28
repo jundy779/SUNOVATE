@@ -49,6 +49,16 @@ def test_protected_endpoint_requires_valid_token(header: str | None) -> None:
     assert set(body) == {"code", "message", "details", "requestId"}
 
 
+def test_non_ascii_token_is_rejected_with_401_not_500() -> None:
+    client = make_client(raise_server_exceptions=False)
+    for raw in ("\xe9abc.def", "abc.d\xe9f"):
+        response = client.get(
+            "/api/v1/auth/me", headers={"Authorization": f"Bearer {raw}".encode("latin-1")}
+        )
+        assert response.status_code == 401, raw
+        assert response.json()["code"] == "UNAUTHENTICATED"
+
+
 def test_tampered_token_is_rejected() -> None:
     client = make_client()
     token = login(client, "sim.staff.pppsun")["Authorization"]
