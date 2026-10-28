@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-28 — Aturan rilis dan catatan rilis v0.1.0 serta v0.2.0
+
+- Aturan rilis dan tag ditambahkan ke `change-management.md`: tag beranotasi `vX.Y.Z` pada commit kenaikan versi, tag tidak dipindahkan, dan GitHub Release ditandai pre-release selama belum siap produksi.
+- Catatan rilis berbahasa sederhana untuk `v0.1.0` (`357df94`, fondasi) dan `v0.2.0` (`8d63d54`, basis pengetahuan, SAVI AI, dokumen rahasia) disimpan di `docs/13-handover/releases/`. Tag dan GitHub Release dibuat terpisah setelah perubahan ini masuk.
+- Hanya dokumentasi yang berubah.
+
 ## 2026-10-28 — Matriks izin sesuai kode dan kontrak respons seluruh route
 
 - Sesuai rencana induk Tahap 1 butir 2 dan 5. `permission-matrix.md` kini memuat dua permission dokumen rahasia (`secure_document:manage_team`, `secure_document:manage_all`) beserta pemberiannya, dan 16 endpoint yang belum tercatat (draf knowledge, pratinjau ekstraksi dan chunk, intake SME dan glosarium, unduhan Excel, dokumen rahasia). Test baru `test_permission_matrix_doc.py` memastikan daftar permission, matriks role, dan tabel endpoint selalu sama dengan katalog dan route API. Status matriks tetap NEEDS MENTOR VALIDATION.
