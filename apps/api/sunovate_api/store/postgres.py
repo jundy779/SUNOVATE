@@ -71,6 +71,7 @@ from .records import (
     PendingMatter,
     Permission,
     Record,
+    RevokedToken,
     Role,
     SecureDocumentReader,
     Task,
@@ -114,6 +115,7 @@ _TABLES: Final[dict[type[Record], Table]] = {
     AiCitation: _table(m.AiCitation),
     AiFeedback: _table(m.AiFeedback),
     SecureDocumentReader: _table(m.SecureDocumentReader),
+    RevokedToken: _table(m.RevokedToken),
 }
 
 # Record types accepted by insert() (design 5.1); anything else -> TypeError.
@@ -328,6 +330,28 @@ class PostgresRepository:
         table, statement = self._select(User)
         rows = self._rows(statement.where(table.c.email == email.strip().lower()))
         return _from_row(User, rows[0]) if rows else None
+
+    def is_token_revoked(self, token_id: str) -> bool:
+        table = _TABLES[RevokedToken]
+        rows = self._rows(select(table.c.id).where(table.c.token_id == token_id).limit(1))
+        return bool(rows)
+
+    def revoke_token(self, token_id: str, user_id: UUID, expires_at: datetime) -> None:
+        self._require_transaction()
+        table = _TABLES[RevokedToken]
+        self._execute(
+            pg_insert(table)
+            .values(token_id=token_id, user_id=user_id, expires_at=expires_at)
+            .on_conflict_do_nothing(constraint="uq_revoked_tokens_token_id")
+        )
+
+    def purge_revoked_tokens(self, before: datetime) -> int:
+        self._require_transaction()
+        table = _TABLES[RevokedToken]
+        result = self._execute(
+            delete(table).where(table.c.expires_at <= before).returning(table.c.id)
+        )
+        return len(result.fetchall())
 
     def secure_reader_ids(self, document_id: UUID) -> frozenset[UUID]:
         table = _TABLES[SecureDocumentReader]

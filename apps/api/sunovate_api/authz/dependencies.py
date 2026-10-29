@@ -31,8 +31,11 @@ def current_principal(ctx: Ctx, authorization: Annotated[str | None, Header()] =
         raise unauthenticated("Penyedia identitas belum dikonfigurasi")
     if not authorization or not authorization.lower().startswith("bearer "):
         raise unauthenticated()
-    user_id = ctx.signer.verify(authorization[7:].strip())
-    return ctx.authz.principal_for(user_id)
+    claims = ctx.signer.verify_claims(authorization[7:].strip())
+    if ctx.store.is_token_revoked(claims.token_id):
+        # Signed out (AUD-05): a copied token stops working at logout, not only at expiry.
+        raise unauthenticated("Sesi telah diakhiri, silakan masuk kembali")
+    return ctx.authz.principal_for(claims.user_id)
 
 
 CurrentPrincipal = Annotated[Principal, Depends(current_principal)]

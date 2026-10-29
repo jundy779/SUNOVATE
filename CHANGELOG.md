@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-29 — Logout mencabut token di server (AUD-05)
+
+- Setiap token login kini memiliki ID acak. `POST /api/v1/auth/logout` mencatat ID token di tabel baru `revoked_tokens` (migrasi `0005_revoked_tokens`) sampai token itu kedaluwarsa, mencatat audit `LOGOUT` tanpa token, dan membersihkan pencabutan yang sudah kedaluwarsa. API menolak token yang dicabut dengan pesan "Sesi telah diakhiri, silakan masuk kembali". Logout satu sesi tidak memengaruhi sesi lain milik pengguna yang sama (BUG-050).
+- Tombol Keluar di web kini memanggil endpoint tersebut sebelum menghapus cookie; kegagalan pemanggilan tidak menghalangi keluar.
+- Token lama tanpa ID ditolak, sehingga pengguna perlu masuk ulang sekali setelah perubahan ini diterapkan. Masa berlaku token tetap 8 jam.
+- Skema menjadi 32 tabel; `db:check`, test integrasi, dan matriks izin diperbarui.
+- Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 48 test frontend, 476 test backend mode simulated (40 PostgreSQL dilewati), 516 test mode PostgreSQL, `pnpm db:check` (32 tabel, migrasi naik dan turun, TRUNCATE audit tetap ditolak), render SQL Alembic, build produksi, dan 13/13 skenario Playwright e2e lulus. Run `db:test` pertama gagal satu test karena test pembersihan memakai objek store khusus simulasi; test diubah agar memakai sesi backend lalu suite penuh diulang dan lulus.
+
 ## 2026-10-28 — Penutupan sisa temuan audit 8 Oktober di kode
 
 - AUD-02: retrieval SAVI menyaring potongan teks dari dokumen di atas hak baca pengguna dengan satu lookup klasifikasi per permintaan (BUG-044). Pencarian sudah menyaring di store dan kini dijaga test.

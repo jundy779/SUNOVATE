@@ -10,7 +10,9 @@ import base64
 import hashlib
 import hmac
 import json
+import re
 import secrets
+from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
@@ -23,6 +25,16 @@ def _b64encode(raw: bytes) -> str:
 
 def _b64decode(value: str) -> bytes:
     return base64.urlsafe_b64decode(value + "=" * (-len(value) % 4))
+
+
+_TOKEN_ID = re.compile(r"[0-9a-f]{32}")
+
+
+@dataclass(frozen=True)
+class TokenClaims:
+    user_id: UUID
+    token_id: str  # random per token, so one session can be revoked on logout (AUD-05)
+    expires_at: datetime
 
 
 class DevTokenSigner:
@@ -39,6 +51,7 @@ class DevTokenSigner:
         expires = issued + self._ttl
         body = {
             "sub": str(user_id),
+            "jti": secrets.token_hex(16),
             "iat": int(issued.timestamp()),
             "exp": int(expires.timestamp()),
         }
@@ -46,6 +59,9 @@ class DevTokenSigner:
         return f"{payload}.{self._sign(payload)}", expires
 
     def verify(self, token: str, now: datetime | None = None) -> UUID:
+        return self.verify_claims(token, now).user_id
+
+    def verify_claims(self, token: str, now: datetime | None = None) -> TokenClaims:
         try:
             payload, signature = token.split(".", 1)
             # Non-ASCII input cannot be a token we issued; ascii-encoding it would raise a 500.
@@ -59,8 +75,12 @@ class DevTokenSigner:
             body = json.loads(_b64decode(payload))
             user_id = UUID(str(body["sub"]))
             expires_at = int(body["exp"])
+            token_id = str(body["jti"])
         except (ValueError, KeyError, TypeError) as exc:
+            # Tokens without an id predate AUD-05 and cannot be revoked, so they are refused.
             raise unauthenticated("Token tidak valid") from exc
+        if not _TOKEN_ID.fullmatch(token_id):
+            raise unauthenticated("Token tidak valid")
         if (now or datetime.now(UTC)).timestamp() >= expires_at:
             raise unauthenticated("Sesi telah berakhir, silakan masuk kembali")
-        return user_id
+        return TokenClaims(user_id, token_id, datetime.fromtimestamp(expires_at, UTC))

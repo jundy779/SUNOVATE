@@ -109,6 +109,7 @@ Semua path relatif terhadap prefix `/api/v1`.
 | GET | `/health/database` | Publik |
 | POST | `/auth/dev/login` | Publik (hanya saat dev auth aktif) |
 | GET | `/auth/me` | Autentikasi saja |
+| POST | `/auth/logout` | Autentikasi saja; mencabut token yang dipakai sampai kedaluwarsa (AUD-05) |
 | GET | `/users` | `user:read` |
 | GET | `/teams` | `team:read` |
 | GET | `/roles` | `role:read` |

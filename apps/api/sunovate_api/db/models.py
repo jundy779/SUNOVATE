@@ -124,6 +124,18 @@ class TeamMembership(Base, TimestampMixin):
     team_id: Mapped[uuid.UUID] = _fk("teams.id", nullable=False, ondelete="CASCADE")
 
 
+class RevokedToken(Base, TimestampMixin):
+    """Session tokens revoked at logout; rows past `expires_at` may be purged (AUD-05)."""
+
+    __tablename__ = "revoked_tokens"
+    __table_args__ = (UniqueConstraint("token_id", name="uq_revoked_tokens_token_id"),)
+    token_id: Mapped[str] = mapped_column(String(32), nullable=False)
+    user_id: Mapped[uuid.UUID] = _fk("users.id", nullable=False, ondelete="CASCADE")
+    expires_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, index=True
+    )
+
+
 class SecureDocumentReader(Base, TimestampMixin):
     """Reader grant for a RAHASIA document (ADR-020). The document itself lives in the vault,
     so document_id has no foreign key; grant history is kept in audit_logs."""

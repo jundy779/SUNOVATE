@@ -199,3 +199,21 @@ test("each account on a shared browser gets its own welcome note", async ({ page
   await signIn("sim.lead.psun@sunovate.local");
   await expect(welcome()).toBeVisible();
 });
+
+test("signing out revokes the session token on the server", async ({ page, context, request }) => {
+  await page.goto("/login");
+  await expect(page.getByRole("button", { name: "Masuk dengan akses pengembangan" })).toBeEnabled();
+  await page.getByLabel("Email pengguna simulasi").fill("sim.staff.pppsun@sunovate.local");
+  await page.getByRole("button", { name: "Masuk dengan akses pengembangan" }).click();
+  await page.waitForURL(/\/dashboard$/);
+
+  const token = (await context.cookies()).find((cookie) => cookie.name === "sunovate_dev_token")?.value;
+  expect(token).toBeTruthy();
+  const me = () => request.get("http://127.0.0.1:8000/api/v1/auth/me", { headers: { Authorization: `Bearer ${token}` } });
+  expect((await me()).status()).toBe(200);
+
+  await page.locator("summary.topbar-account").click();
+  await page.getByRole("button", { name: "Keluar" }).click();
+  await page.waitForURL(/\/login$/);
+  expect((await me()).status()).toBe(401);
+});

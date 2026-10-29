@@ -91,6 +91,15 @@ class TeamMembership(Record):
 
 
 @dataclass(kw_only=True)
+class RevokedToken(Record):
+    """A signed-out session token, kept until it would have expired anyway (AUD-05)."""
+
+    token_id: str
+    user_id: UUID
+    expires_at: datetime
+
+
+@dataclass(kw_only=True)
 class SecureDocumentReader(Record):
     document_id: UUID
     user_id: UUID

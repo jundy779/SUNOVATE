@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-from typing import Any
+from datetime import UTC, datetime
+from typing import Annotated, Any
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Header
 from pydantic import Field
 
 from ..authz.dependencies import Ctx, CurrentPrincipal
@@ -60,6 +61,28 @@ def dev_login(body: DevLoginRequest, ctx: Ctx) -> dict[str, Any]:
             "user": principal_view(ctx, principal),
         }
     )
+
+
+@router.post("/logout", summary="Revoke the current session token")
+def logout(
+    ctx: Ctx,
+    principal: CurrentPrincipal,
+    authorization: Annotated[str | None, Header()] = None,
+) -> dict[str, Any]:
+    """Store the token id until it expires so the token can no longer be used (AUD-05)."""
+    claims = ctx.signer.verify_claims((authorization or "")[7:].strip())
+    now = datetime.now(UTC)
+    with ctx.store.transaction():
+        ctx.store.revoke_token(claims.token_id, claims.user_id, claims.expires_at)
+        purged = ctx.store.purge_revoked_tokens(now)  # housekeeping: expired ids are useless
+        ctx.store.audit(
+            actor_user_id=principal.user_id,
+            action="LOGOUT",
+            entity_type="user",
+            entity_id=principal.user_id,
+            detail={"purgedExpired": purged},
+        )
+    return envelope({"loggedOut": True})
 
 
 @router.get("/me", summary="Current principal")

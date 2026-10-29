@@ -105,7 +105,7 @@ Skenario SEC-40 sampai SEC-91 di bawah **PLANNED**: belum ada yang diimplementas
 |---|---|---|---|
 | SEC-60 | `GET /dashboard/summary` oleh setiap pengguna simulasi | Tidak ada field atau angka yield atau kepemilikan SBN | PLANNED sebagai uji otomatis; dicek manual 2026-10-06: field respons hanya `attention`, `metrics`, `recentKnowledge`, `referenceDate`, `scope`, `tasksByStatus` |
 | SEC-61 | Halaman `/dashboard` | Menampilkan "sumber data belum tersedia" tanpa angka | PLANNED; teks belum ada di UI |
-| SEC-62 | Skema database | Tidak ada tabel yield, lelang, transaksi, atau setelmen | Ada sebagian: `test_schema_has_thirty_one_tables` menghitung 31 tabel (dijalankan hanya pada PostgreSQL) |
+| SEC-62 | Skema database | Tidak ada tabel yield, lelang, transaksi, atau setelmen | Ada sebagian: `test_schema_has_thirty_two_tables` menghitung 32 tabel (dijalankan hanya pada PostgreSQL) |
 
 ### Paparan server pilot (NFR-39 sampai NFR-44, BR-37)
 

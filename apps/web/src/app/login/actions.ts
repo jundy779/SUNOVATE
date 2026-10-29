@@ -46,6 +46,13 @@ export async function loginAction(input: unknown): Promise<LoginResult> {
 }
 
 export async function logoutAction(): Promise<void> {
+  // Revoke the token on the server first, so a copy of it stops working too (AUD-05).
+  // apiRequest attaches the session token from the cookie; failures must not block logout.
+  try {
+    await apiRequest<{ loggedOut: boolean }>("/auth/logout", { method: "POST" });
+  } catch {
+    // Expired or already revoked sessions still end locally below.
+  }
   const store = await cookies();
   store.delete(SESSION_COOKIE);
   redirect("/login");

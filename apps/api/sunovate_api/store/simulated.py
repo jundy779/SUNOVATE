@@ -9,6 +9,7 @@ from __future__ import annotations
 import threading
 from collections.abc import Collection, Iterable, Iterator, Mapping, Sequence
 from contextlib import contextmanager
+from datetime import datetime
 from typing import Any, cast
 from uuid import UUID
 
@@ -35,6 +36,7 @@ from .records import (
     PendingMatter,
     Permission,
     Record,
+    RevokedToken,
     Role,
     SecureDocumentReader,
     Task,
@@ -99,6 +101,7 @@ class SimulatedStore:
         self._approvals: dict[UUID, ApprovalRequest] = _index(ds.approvals)
         self._data_quality_issues: dict[UUID, DataQualityIssue] = _index(ds.data_quality_issues)
         self._audit_logs: list[AuditLog] = list(ds.audit_logs)
+        self._revoked_tokens: dict[str, RevokedToken] = {}
         self._secure_readers: dict[tuple[UUID, UUID], SecureDocumentReader] = {
             (r.document_id, r.user_id): r for r in ds.secure_readers
         }
@@ -166,6 +169,23 @@ class SimulatedStore:
     def user_by_email(self, email: str) -> User | None:
         wanted = email.strip().lower()
         return next((u for u in self.users() if u.email == wanted), None)
+
+    def is_token_revoked(self, token_id: str) -> bool:
+        with self.lock:
+            return token_id in self._revoked_tokens
+
+    def revoke_token(self, token_id: str, user_id: UUID, expires_at: datetime) -> None:
+        self._require_transaction()
+        self._revoked_tokens.setdefault(
+            token_id, RevokedToken(token_id=token_id, user_id=user_id, expires_at=expires_at)
+        )
+
+    def purge_revoked_tokens(self, before: datetime) -> int:
+        self._require_transaction()
+        expired = [k for k, v in self._revoked_tokens.items() if v.expires_at <= before]
+        for key in expired:
+            del self._revoked_tokens[key]
+        return len(expired)
 
     def secure_reader_ids(self, document_id: UUID) -> frozenset[UUID]:
         with self.lock:

@@ -81,7 +81,7 @@ async def main():
             truncate_rejected = True
             print("append-only: OK (truncate rejected:", type(exc).__name__ + ")")
     await engine.dispose()
-    assert tables == 31, tables  # 30 initial tables + secure_document_readers (0003)
+    assert tables == 32, tables  # 30 initial + 0003 secure_document_readers + 0005 revoked_tokens
     assert hits >= 1
     assert labels == 0
     assert seq is not None
