@@ -7,6 +7,13 @@
 - Versi yang dipilih sudah dirilis sedikitnya satu minggu; versi yang lebih baru dari itu sengaja tidak dipakai (BUG-051).
 - Langkah pertama e2e kini memberi waktu 30 detik untuk kompilasi pertama dashboard di mode pengembangan; satu run sempat gagal di sana saat `db:test` berjalan bersamaan.
 - Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 48 test frontend, 476 test backend mode simulated (40 PostgreSQL dilewati), 516 test mode PostgreSQL, `extraction:eval`, `savi:eval`, `search:eval`, `demo:smoke`, dan build produksi Next.js 16.4.2 lulus. E2e: run pertama 12/13 (langkah dashboard pertama melewati batas 5 detik saat `db:test` berjalan bersamaan), lalu 13/13 dua kali berturut-turut tanpa beban lain.
+- Validasi aktual (Windows 11, Git Bash, Python 3.12 via uv): `git fetch origin && git pull --ff-only` (sudah terbaru), patch 0020 diterapkan dengan `git am` sebagai `ae49551`. Sebelum instalasi, perubahan dependensi diperiksa: `pnpm-workspace.yaml` hanya menghapus pengecualian usia rilis untuk Next 16.3.8, tidak ada host tarball baru di `pnpm-lock.yaml`, dan semua sumber di `uv.lock` dari `files.pythonhosted.org`.
+  - `pnpm install` lulus: "Lockfile passes supply-chain policies (599 entries)", lockfile tidak berubah. `pnpm api:setup` lulus (antara lain pypdf 6.21.2, pytest 9.0.3).
+  - `pnpm audit`: "No known vulnerabilities found" (0 temuan).
+  - `pnpm validate` lulus: ESLint, Ruff, TypeScript, mypy strict (71 berkas), 48 test frontend (14 berkas), 475 test backend lulus (41 dilewati), dan build produksi Next.js 16.4.2 (29 halaman statis).
+  - `pnpm extraction:eval` lulus: 13 kasus, seluruh metrik 1,0, `forbidden_hits` 0, 4 kasus penolakan dengan akurasi 1,0. `pnpm savi:eval` lulus: 43 kasus di 10 kategori, akurasi keputusan 1,0 di setiap kategori, kebocoran 0, jawaban adversarial 0.
+  - `pnpm db:test` tanpa beban lain lulus: 515 test lulus dan 1 dilewati (10 menit 16 detik untuk pytest). Setelah test selesai pgserver tidak berhenti normal (`pg_ctl: server does not shut down`) dan dihentikan paksa oleh skrip; exit code 0 dan tidak ada proses `postgres` tersisa.
+  - Dev server dinyalakan ulang. `pnpm e2e` dengan `pnpm api:dev` (`DATA_BACKEND=simulated`): 13/13 skenario lulus.
 
 ## 2026-10-29 — Logout mencabut token di server (AUD-05)
 
