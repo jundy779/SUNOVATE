@@ -27,6 +27,7 @@ Menjelaskan cara menguji API `apps/api` (FastAPI), termasuk pengujian negatif ot
 | Unit dan API test (pytest) | `pnpm api:test` |
 | Evaluasi kualitas ekstraksi simulasi | `pnpm extraction:eval` |
 | Evaluasi kualitas jawaban SAVI per kategori | `pnpm savi:eval` |
+| Pemeriksaan kerentanan dependency web dan Python (butuh internet, tidak termasuk `validate`) | `pnpm deps:audit` |
 | Seluruh gate frontend dan backend | `pnpm validate` |
 
 ## Pola Pengujian API

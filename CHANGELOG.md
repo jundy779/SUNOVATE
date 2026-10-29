@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-29 — Perintah pemeriksaan kerentanan dependency
+
+- Perintah baru `pnpm deps:audit` (`scripts/validation/deps_audit.py`) menjalankan `pnpm audit` untuk workspace web dan `pip-audit` versi 2.10.1 (dikunci) terhadap lockfile API yang diekspor, lalu mencetak satu ringkasan: paket, versi terpasang, ID advisory, dan versi perbaikan. Kode keluar 0 bila bersih, 1 bila ada kerentanan, dan 2 (BLOCKED) bila alat atau jaringan tidak tersedia sehingga hasilnya tidak diketahui; keluaran yang tidak dapat dibaca tidak pernah dianggap lulus.
+- Perintah ini sengaja tidak dimasukkan ke `pnpm validate` karena bergantung pada jaringan dan pada advisory yang terbit setelah kode ditulis. Jalankan secara rutin dan sebelum setiap rilis.
+- Validasi aktual (Linux): `pnpm deps:audit` PASSED (0 temuan), 6 test baru tanpa akses jaringan, ESLint, Ruff, mypy strict, dan seluruh test backend lulus.
+
 ## 2026-10-29 — Pembaruan dependency dengan kerentanan yang diketahui
 
 - `pnpm audit` menemukan 10 kerentanan, termasuk dua critical pada Next.js 16.3.8 (eksekusi kode jarak jauh tanpa autentikasi lewat Image Optimization dan fungsi `use cache`). Dinaikkan: Next.js dan `eslint-config-next` ke 16.4.2, Zod ke 4.6.7, dan Vite ke 8.3.5 sebagai devDependency eksplisit (sebelumnya terpasang otomatis sebagai peer Vitest pada 8.3.1). Pengecualian usia rilis untuk Next.js 16.3.8 yang tidak lagi dipakai dihapus dari `pnpm-workspace.yaml`. Hasil: `pnpm audit` 0 temuan, termasuk `braces` yang sebelumnya tercatat di keterbatasan.
