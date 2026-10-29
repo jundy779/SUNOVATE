@@ -9,7 +9,8 @@ test("staff logs in, sees scoped dashboard, and asks SAVI AI", async ({ page }) 
   await page.getByLabel("Email pengguna simulasi").fill("sim.staff.pppsun@sunovate.local");
   await page.getByRole("button", { name: "Masuk dengan akses pengembangan" }).click();
 
-  await expect(page.getByRole("heading", { name: "Ringkasan kerja", exact: true })).toBeVisible();
+  // First visit compiles the dashboard in development mode; allow for a slow first build.
+  await expect(page.getByRole("heading", { name: "Ringkasan kerja", exact: true })).toBeVisible({ timeout: 30_000 });
   await expect(page.getByText("Data contoh", { exact: false }).first()).toBeVisible();
   await expect(page.getByText("Yield SUN", { exact: true })).toBeVisible();
   await expect(page.getByText("Kepemilikan SBN", { exact: true })).toBeVisible();

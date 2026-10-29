@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-29 — Pembaruan dependency dengan kerentanan yang diketahui
+
+- `pnpm audit` menemukan 10 kerentanan, termasuk dua critical pada Next.js 16.3.8 (eksekusi kode jarak jauh tanpa autentikasi lewat Image Optimization dan fungsi `use cache`). Dinaikkan: Next.js dan `eslint-config-next` ke 16.4.2, Zod ke 4.6.7, dan Vite ke 8.3.5 sebagai devDependency eksplisit (sebelumnya terpasang otomatis sebagai peer Vitest pada 8.3.1). Pengecualian usia rilis untuk Next.js 16.3.8 yang tidak lagi dipakai dihapus dari `pnpm-workspace.yaml`. Hasil: `pnpm audit` 0 temuan, termasuk `braces` yang sebelumnya tercatat di keterbatasan.
+- `pip-audit` menemukan kerentanan pada pypdf (pengurai berkas unggahan), Pillow, cryptography, certifi, opentelemetry-api, dan pytest. Dinaikkan ke pypdf 6.21.2, Pillow 13.0.0, cryptography 50.0.2, certifi 2026.10.19, opentelemetry-api 1.45.1, dan pytest 9.0.3; rentang di `pyproject.toml` disesuaikan. Hasil: tidak ada kerentanan yang diketahui.
+- Versi yang dipilih sudah dirilis sedikitnya satu minggu; versi yang lebih baru dari itu sengaja tidak dipakai (BUG-051).
+- Langkah pertama e2e kini memberi waktu 30 detik untuk kompilasi pertama dashboard di mode pengembangan; satu run sempat gagal di sana saat `db:test` berjalan bersamaan.
+- Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 48 test frontend, 476 test backend mode simulated (40 PostgreSQL dilewati), 516 test mode PostgreSQL, `extraction:eval`, `savi:eval`, `search:eval`, `demo:smoke`, dan build produksi Next.js 16.4.2 lulus. E2e: run pertama 12/13 (langkah dashboard pertama melewati batas 5 detik saat `db:test` berjalan bersamaan), lalu 13/13 dua kali berturut-turut tanpa beban lain.
+
 ## 2026-10-29 — Logout mencabut token di server (AUD-05)
 
 - Setiap token login kini memiliki ID acak. `POST /api/v1/auth/logout` mencatat ID token di tabel baru `revoked_tokens` (migrasi `0005_revoked_tokens`) sampai token itu kedaluwarsa, mencatat audit `LOGOUT` tanpa token, dan membersihkan pencabutan yang sudah kedaluwarsa. API menolak token yang dicabut dengan pesan "Sesi telah diakhiri, silakan masuk kembali". Logout satu sesi tidak memengaruhi sesi lain milik pengguna yang sama (BUG-050).
