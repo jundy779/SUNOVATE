@@ -4,6 +4,7 @@
 
 - `pip-audit` di `pnpm deps:audit` kini memakai `--no-deps --disable-pip`. Daftar yang diperiksa adalah ekspor lockfile yang lengkap dan terkunci, sehingga resolusi pip tidak diperlukan; pemeriksaan tidak lagi membangun virtualenv sementara (sebelumnya sekitar 4 menit di Windows).
 - Validasi aktual (Linux): pemeriksaan Python turun dari 16 menjadi 6 detik dengan cakupan 57 paket terkunci (sebelumnya 56) dan 0 temuan; `pnpm deps:audit` PASSED; Ruff dan test `test_deps_audit.py` lulus.
+- Validasi aktual (Windows 11, Git Bash, Python 3.12 via uv): `git fetch origin && git pull --ff-only` (sudah terbaru), patch 0022 diterapkan dengan `git am` sebagai `3731f43`. `pnpm deps:audit` lulus: status `PASSED`, `findings` 0, exit code 0, 17 detik, dibanding 254 detik pada run sebelumnya (patch 0021) yang masih membuat virtualenv sementara untuk resolusi pip. `pip-audit==2.10.1` sudah ada di cache uv sejak run sebelumnya, sehingga sebagian kecil selisih waktu dapat berasal dari cache.
 
 ## 2026-10-29 — Perintah pemeriksaan kerentanan dependency
 
