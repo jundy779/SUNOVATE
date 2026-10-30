@@ -116,8 +116,12 @@ def audit_python() -> list[dict[str, Any]]:
         requirements = Path(tmp) / "requirements.txt"
         requirements.write_text(exported.stdout, encoding="utf-8")
         result = _run(
+            # The export is the complete, pinned lockfile, so pip resolution is unnecessary:
+            # --no-deps --disable-pip audits exactly the locked versions and skips building a
+            # temporary virtualenv (several minutes on Windows).
             [uv, "tool", "run", "--from", PIP_AUDIT, "pip-audit", "-r", str(requirements),
-             "--vulnerability-service", "pypi", "--progress-spinner", "off", "--format", "json"],
+             "--no-deps", "--disable-pip", "--vulnerability-service", "pypi",
+             "--progress-spinner", "off", "--format", "json"],
             API,
         )
     return parse_pip_audit(result.stdout)

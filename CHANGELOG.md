@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-10-29 — `deps:audit` lebih cepat
+
+- `pip-audit` di `pnpm deps:audit` kini memakai `--no-deps --disable-pip`. Daftar yang diperiksa adalah ekspor lockfile yang lengkap dan terkunci, sehingga resolusi pip tidak diperlukan; pemeriksaan tidak lagi membangun virtualenv sementara (sebelumnya sekitar 4 menit di Windows).
+- Validasi aktual (Linux): pemeriksaan Python turun dari 16 menjadi 6 detik dengan cakupan 57 paket terkunci (sebelumnya 56) dan 0 temuan; `pnpm deps:audit` PASSED; Ruff dan test `test_deps_audit.py` lulus.
+
 ## 2026-10-29 — Perintah pemeriksaan kerentanan dependency
 
 - Perintah baru `pnpm deps:audit` (`scripts/validation/deps_audit.py`) menjalankan `pnpm audit` untuk workspace web dan `pip-audit` versi 2.10.1 (dikunci) terhadap lockfile API yang diekspor, lalu mencetak satu ringkasan: paket, versi terpasang, ID advisory, dan versi perbaikan. Kode keluar 0 bila bersih, 1 bila ada kerentanan, dan 2 (BLOCKED) bila alat atau jaringan tidak tersedia sehingga hasilnya tidak diketahui; keluaran yang tidak dapat dibaca tidak pernah dianggap lulus.
