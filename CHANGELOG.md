@@ -5,6 +5,9 @@
 - Perintah baru `pnpm deps:audit` (`scripts/validation/deps_audit.py`) menjalankan `pnpm audit` untuk workspace web dan `pip-audit` versi 2.10.1 (dikunci) terhadap lockfile API yang diekspor, lalu mencetak satu ringkasan: paket, versi terpasang, ID advisory, dan versi perbaikan. Kode keluar 0 bila bersih, 1 bila ada kerentanan, dan 2 (BLOCKED) bila alat atau jaringan tidak tersedia sehingga hasilnya tidak diketahui; keluaran yang tidak dapat dibaca tidak pernah dianggap lulus.
 - Perintah ini sengaja tidak dimasukkan ke `pnpm validate` karena bergantung pada jaringan dan pada advisory yang terbit setelah kode ditulis. Jalankan secara rutin dan sebelum setiap rilis.
 - Validasi aktual (Linux): `pnpm deps:audit` PASSED (0 temuan), 6 test baru tanpa akses jaringan, ESLint, Ruff, mypy strict, dan seluruh test backend lulus.
+- Validasi aktual (Windows 11, Git Bash, Python 3.12 via uv): `git fetch origin && git pull --ff-only` (sudah terbaru), patch 0021 diterapkan dengan `git am` sebagai `5659975`.
+  - `pnpm validate` lulus: ESLint, Ruff, TypeScript, mypy strict (71 berkas), 48 test frontend (14 berkas), 481 test backend lulus (41 dilewati), dan build produksi (29 halaman statis).
+  - `pnpm deps:audit` lulus: status `PASSED`, `findings` 0, `pip-audit==2.10.1`, exit code 0, sekitar 4 menit (sebagian besar untuk resolusi dependensi pip-audit). Di dalam `uv run`, `shutil.which` menemukan `pnpm` sebagai shim `C:\Users\LENOVO\AppData\Roaming\npm\pnpm.CMD` dan `uv` sebagai `C:\Users\LENOVO\.local\bin\uv.EXE`; keduanya berjalan tanpa galat lewat `subprocess.run`.
 
 ## 2026-10-29 — Pembaruan dependency dengan kerentanan yang diketahui
 
