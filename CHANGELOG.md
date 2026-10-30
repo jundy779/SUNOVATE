@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-29 — Server PostgreSQL uji berhenti normal
+
+- Diagnostik di Windows menunjukkan `pg_ctl -w stop` di akhir `pnpm db:test` memakan sekitar 38 detik, mendekati batas tunggu bawaan 60 detik, sehingga pada sebagian run pgserver mematikan server secara paksa. `scripts/validation/db_test_pgserver.py` kini menyetel server uji sementara dengan `fsync`, `synchronous_commit`, dan `full_page_writes` off (aman karena hanya berisi `SIMULATED_DATA` dan dihapus setelah run) serta `PGCTLTIMEOUT=180`, sehingga checkpoint akhir lebih ringan dan batas tunggu lebih longgar (BUG-052).
+- Peringatan deprecation dihapus: `path_separator = os` di `alembic.ini` dan `asyncio_default_fixture_loop_scope = "function"` di konfigurasi pytest.
+- Validasi aktual (Linux, dijalankan sebagai root): `pnpm db:test` dengan `PYTHONWARNINGS=default` 522 lulus tanpa peringatan dan tanpa penghentian paksa; `pnpm db:check`, ESLint, Ruff, dan seluruh test lulus. Percobaan menghentikan server dengan skrip sendiri ditinggalkan karena `pg_ctl` tidak boleh dijalankan sebagai root di Linux; pgserver sudah menangani pengguna yang benar.
+
 ## 2026-10-29 — `deps:audit` lebih cepat
 
 - `pip-audit` di `pnpm deps:audit` kini memakai `--no-deps --disable-pip`. Daftar yang diperiksa adalah ekspor lockfile yang lengkap dan terkunci, sehingga resolusi pip tidak diperlukan; pemeriksaan tidak lagi membangun virtualenv sementara (sebelumnya sekitar 4 menit di Windows).

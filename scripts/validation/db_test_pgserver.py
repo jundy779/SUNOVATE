@@ -37,7 +37,27 @@ def prepare(*args: str, env: dict[str, str]) -> None:
         raise SystemExit(f"FAILED: {' '.join(args)}")
 
 
+# The throwaway server holds SIMULATED_DATA only and is deleted after the run, so durability can be
+# traded for speed. Hundreds of TRUNCATE + reseed cycles otherwise leave a large final checkpoint;
+# on Windows the shutdown took about 38 s, close to pg_ctl's default 60 s wait (PGCTLTIMEOUT), and
+# an occasional timeout made pgserver kill the server instead of stopping it. pgserver's own
+# `pg_ctl -w stop` honours PGCTLTIMEOUT, so the longer wait below needs no custom stop logic.
+TEST_ONLY_SETTINGS = (
+    "ALTER SYSTEM SET fsync = off;",
+    "ALTER SYSTEM SET synchronous_commit = off;",
+    "ALTER SYSTEM SET full_page_writes = off;",
+    "SELECT pg_reload_conf();",
+)
+STOP_TIMEOUT_SECONDS = "180"
+
+
+def tune_for_tests(server: object) -> None:
+    for statement in TEST_ONLY_SETTINGS:
+        server.psql(statement)  # type: ignore[attr-defined]
+
+
 def main() -> int:
+    os.environ["PGCTLTIMEOUT"] = STOP_TIMEOUT_SECONDS
     data_dir = Path(tempfile.mkdtemp(prefix="sunovate-pg-test-"))
     try:
         server = pgserver.get_server(str(data_dir), cleanup_mode="stop")
@@ -61,6 +81,7 @@ def main() -> int:
             "PYTHONIOENCODING": "utf-8",
         }
         env.pop("DATA_BACKEND", None)
+        tune_for_tests(server)
         prepare("-m", "alembic", "upgrade", "head", env=env)
         prepare("-m", "sunovate_api.db.seed", env=env)
         print("$ -m pytest -q (SUNOVATE_TEST_BACKEND=postgres)", flush=True)
