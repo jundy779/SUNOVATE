@@ -4,6 +4,7 @@
 
 - Pemeriksaan visual di 344 dan 373 px (layar luar HP lipat) menemukan nilai "Pemeriksa" pada ringkasan Antrean Pemeriksaan terpotong di tengah kata dan menyisakan sel kosong abu-abu. Di layar 560 px ke bawah ringkasan kini satu kolom dan kata tidak lagi dipotong di sembarang huruf.
 - Validasi aktual (Linux): tangkapan layar penuh delapan halaman (Ringkasan, Pencarian, SAVI AI, Dokumen Rahasia, Panduan, Basis Pengetahuan, Administrasi, Antrean Pemeriksaan) pada 344 px diperiksa visual; ESLint dan 14/14 skenario Playwright e2e lulus.
+- Validasi aktual (Windows 11, Git Bash, Python 3.12 via uv): `git fetch origin && git pull --ff-only` (sudah terbaru), patch 0025 diterapkan dengan `git am` sebagai `96bee21` (hanya `globals.css` dan `CHANGELOG.md`). `pnpm validate` lulus: ESLint, Ruff, TypeScript, mypy strict (71 berkas), 48 test frontend (14 berkas), 481 test backend lulus (41 dilewati), dan build produksi (29 halaman statis). `pnpm e2e` dengan `pnpm api:dev` (`DATA_BACKEND=simulated`): 14/14 skenario lulus.
 
 ## 2026-11-02 — Tampilan HP lipat dan tablet
 
