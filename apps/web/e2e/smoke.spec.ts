@@ -218,3 +218,37 @@ test("signing out revokes the session token on the server", async ({ page, conte
   await page.waitForURL(/\/login$/);
   expect((await me()).status()).toBe(401);
 });
+
+test("folding and unfolding a foldable phone keeps the page and what was typed", async ({ page }) => {
+  const cover = { width: 373, height: 839 };
+  const inner = { width: 884, height: 1028 };
+  await page.setViewportSize(cover);
+  await page.goto("/login");
+  await expect(page.getByRole("button", { name: "Masuk dengan akses pengembangan" })).toBeEnabled();
+  await page.getByLabel("Email pengguna simulasi").fill("sim.coordinator@sunovate.local");
+  await page.getByRole("button", { name: "Masuk dengan akses pengembangan" }).click();
+  await page.waitForURL(/\/dashboard$/);
+
+  // A marker on window disappears if the browser or the app reloads the page.
+  await page.goto("/savi-ai");
+  const question = page.getByLabel("Pertanyaan untuk SAVI AI");
+  await question.fill("Apa metadata wajib saat mendaftarkan dokumen?");
+  await page.evaluate(() => { (window as unknown as { foldMarker: number }).foldMarker = 1; });
+  for (const size of [inner, cover, inner]) {
+    await page.setViewportSize(size);
+    await page.waitForTimeout(300);
+  }
+  expect(await page.evaluate(() => (window as unknown as { foldMarker?: number }).foldMarker)).toBe(1);
+  await expect(question).toHaveValue("Apa metadata wajib saat mendaftarkan dokumen?");
+
+  await page.goto("/work-monitoring");
+  await page.getByLabel("Cari judul").fill("SIMULASI");
+  await page.evaluate(() => { (window as unknown as { foldMarker: number }).foldMarker = 2; });
+  for (const size of [cover, inner]) {
+    await page.setViewportSize(size);
+    await page.waitForTimeout(300);
+  }
+  expect(await page.evaluate(() => (window as unknown as { foldMarker?: number }).foldMarker)).toBe(2);
+  await expect(page.getByLabel("Cari judul")).toHaveValue("SIMULASI");
+  await expect(page.getByRole("navigation", { name: "Navigasi utama" }).getByRole("link", { name: "Dokumen Rahasia" })).toBeInViewport();
+});

@@ -162,7 +162,9 @@ tbody tr:hover { background: var(--paper); }
 
 /* Forms, details, search, chat */
 .toolbar { margin: 1.5rem 0; display: flex; gap: .75rem; align-items: center; flex-wrap: wrap; padding: .85rem; border: 1px solid var(--line); background: var(--white); }
-.toolbar input, .search-form input { min-width: min(30rem, 68vw); }
+.toolbar input, .search-form input { min-width: min(30rem, 100%); }
+.search-form div > * { min-width: 0; }
+.search-form div input { flex: 1 1 auto; }
 .search-form { display: grid; gap: .5rem; margin-top: 1.5rem; max-width: 48rem; padding: 1.25rem; border: 1px solid var(--line); background: var(--white); }
 .search-form div { display: flex; gap: .5rem; }
 .breadcrumb { color: var(--muted); font-size: .8rem; }
@@ -274,8 +276,9 @@ code { font-size: .8rem; background: var(--paper); padding: 0 .25rem; }
 .workflow-feedback, .workflow-waiting, .workflow-history { margin: 0; padding: .8rem 1.1rem; border-bottom: 1px solid var(--line); background: var(--paper); color: var(--navy); font-size: .76rem; }
 .workflow-feedback { border-left: 3px solid var(--success); }
 .workflow-waiting { border-left: 3px solid var(--gold); }
-.approval-summary { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 1.5rem; border: 1px solid var(--line); border-top: 3px solid var(--navy); background: var(--line); gap: 1px; }
-.approval-summary div { display: grid; gap: .35rem; padding: 1rem 1.1rem; background: var(--white); }
+.approval-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(160px, 100%), 1fr)); margin-top: 1.5rem; border: 1px solid var(--line); border-top: 3px solid var(--navy); background: var(--line); gap: 1px; }
+.approval-summary div { display: grid; gap: .35rem; min-width: 0; padding: 1rem 1.1rem; background: var(--white); }
+.approval-summary strong { overflow-wrap: anywhere; }
 .approval-summary strong { color: var(--navy); font: 700 1.45rem/1 var(--font-heading); }
 .approval-summary span { color: var(--muted); font-size: .7rem; }
 .approval-table table { min-width: 1080px; }
@@ -368,10 +371,16 @@ code { font-size: .8rem; background: var(--paper); padding: 0 .25rem; }
   .auth-page { grid-template-columns: 1fr; }
 }
 
-@media (max-width: 900px) {
-  .savi-welcome { grid-template-columns: 1fr; }
-  .ingestion-layout { grid-template-columns: 1fr; }
-  .ingestion-save { align-items: stretch; flex-direction: column; }
+/* Tablets and the inner screen of foldables (about 768-1000 px wide, e.g. Galaxy Z Fold opened at
+   about 884 px) keep the side menu, only narrower, so every menu item stays visible. */
+@media (min-width: 768px) and (max-width: 1000px) {
+  .app-shell { grid-template-columns: 208px minmax(0, 1fr); }
+  .sidebar nav { padding: 1rem .5rem; }
+  .sidebar nav a { gap: .55rem; padding: .6rem .6rem; font-size: .88rem; }
+}
+
+/* Phones and the outer (cover) screen of foldables: the menu moves to a scrollable top bar. */
+@media (max-width: 767px) {
   .app-shell { grid-template-columns: minmax(0, 1fr); }
   .sidebar, .sidebar-inner { min-width: 0; }
   .sidebar { min-height: auto; }
@@ -382,6 +391,12 @@ code { font-size: .8rem; background: var(--paper); padding: 0 .25rem; }
   .sidebar nav { display: flex; overflow-x: auto; padding: .65rem; }
   .sidebar nav a { flex: 0 0 auto; }
   .sidebar-note { display: none; }
+}
+
+@media (max-width: 900px) {
+  .savi-welcome { grid-template-columns: 1fr; }
+  .ingestion-layout { grid-template-columns: 1fr; }
+  .ingestion-save { align-items: stretch; flex-direction: column; }
   .topbar { flex-wrap: wrap; }
   .global-search { width: 100%; order: 2; }
   .topbar-account { margin-left: 0; padding-left: 0; border-left: 0; }

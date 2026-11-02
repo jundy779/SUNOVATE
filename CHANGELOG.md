@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-02 — Tampilan HP lipat dan tablet
+
+- Diuji pada ukuran Galaxy Z Fold: layar luar 344 dan 373 px, layar dalam 884 × 1028 dan 1028 × 884 px, ditambah 390, 768, 820, dan 1440 px, pada 12 halaman.
+- Dari 768 px ke atas (tablet dan layar dalam HP lipat) menu samping kini tetap tampil dengan lebar 208 px sampai 1000 px, sehingga semua menu terlihat; di bawah 768 px (HP dan layar luar HP lipat) menu tetap berupa bilah atas yang dapat digeser.
+- Penyaring Monitoring Kerja membungkus ke dua baris sampai 1100 px sehingga tombol Unduh Excel tidak terpotong; tabel kerja lebih ringkas pada layar sedang; ringkasan Antrean Pemeriksaan dan formulir pencarian tidak lagi meluber (BUG-053).
+- Membuka dan menutup HP lipat tidak memuat ulang halaman dan tidak menghapus isian: dibuktikan e2e yang mengubah ukuran layar luar ke dalam dan sebaliknya sambil memeriksa penanda halaman, pertanyaan SAVI yang sedang diketik, dan kata kunci saringan. Aplikasi tidak memiliki kode yang memuat ulang halaman saat ukuran layar berubah.
+- Validasi aktual (Linux): ESLint, TypeScript, 48 test frontend, build produksi, dan 14/14 skenario Playwright e2e lulus; tidak ada halaman yang meluber ke samping pada delapan ukuran layar. Perangkat HP lipat asli, Samsung Internet, dan mode dua layar dengan engsel belum diuji.
+
 ## 2026-10-29 — Server PostgreSQL uji berhenti normal
 
 - Diagnostik di Windows menunjukkan `pg_ctl -w stop` di akhir `pnpm db:test` memakan sekitar 38 detik, mendekati batas tunggu bawaan 60 detik, sehingga pada sebagian run pgserver mematikan server secara paksa. `scripts/validation/db_test_pgserver.py` kini menyetel server uji sementara dengan `fsync`, `synchronous_commit`, dan `full_page_writes` off (aman karena hanya berisi `SIMULATED_DATA` dan dihapus setelah run) serta `PGCTLTIMEOUT=180`, sehingga checkpoint akhir lebih ringan dan batas tunggu lebih longgar (BUG-052).

@@ -232,7 +232,16 @@
 .sort-indicator { display: inline-block; width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; opacity: .35; border-top: 5px solid currentColor; }
 .sort-indicator.is-asc { opacity: 1; border-top: 0; border-bottom: 5px solid currentColor; }
 .sort-indicator.is-desc { opacity: 1; }
-@media (max-width: 760px) { .work-toolbar { grid-template-columns: 1fr 1fr; } .work-toolbar label:first-child { grid-column: 1 / -1; } .work-download { grid-column: 1 / -1; justify-self: start; } }
+/* Up to 1100 px the side menu narrows the panel, so the filters wrap onto two rows. */
+@media (max-width: 1100px) { .work-toolbar { grid-template-columns: 1fr 1fr; } .work-toolbar label:first-child { grid-column: 1 / -1; } .work-download { grid-column: 1 / -1; justify-self: start; } }
+
+/* Narrower screens (tablets, foldable inner screens): tighter work table so all columns fit more often. */
+@media (max-width: 1100px) {
+  .work-table table { min-width: 720px; }
+  .work-table td:first-child { min-width: 180px; }
+  .work-table th, .work-table td { padding-left: .55rem; padding-right: .55rem; }
+  .work-table td { font-size: .86rem; }
+}
 
 /* Secure viewer for RAHASIA documents (ADR-020) */
 .sv { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.75rem; max-width: 1100px; }
