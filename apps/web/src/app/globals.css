@@ -278,7 +278,7 @@ code { font-size: .8rem; background: var(--paper); padding: 0 .25rem; }
 .workflow-waiting { border-left: 3px solid var(--gold); }
 .approval-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(160px, 100%), 1fr)); margin-top: 1.5rem; border: 1px solid var(--line); border-top: 3px solid var(--navy); background: var(--line); gap: 1px; }
 .approval-summary div { display: grid; gap: .35rem; min-width: 0; padding: 1rem 1.1rem; background: var(--white); }
-.approval-summary strong { overflow-wrap: anywhere; }
+.approval-summary strong { overflow-wrap: break-word; }
 .approval-summary strong { color: var(--navy); font: 700 1.45rem/1 var(--font-heading); }
 .approval-summary span { color: var(--muted); font-size: .7rem; }
 .approval-table table { min-width: 1080px; }
@@ -411,6 +411,7 @@ code { font-size: .8rem; background: var(--paper); padding: 0 .25rem; }
 }
 
 @media (max-width: 560px) {
+  .approval-summary { grid-template-columns: minmax(0, 1fr); }
   .savi-answer-header, .savi-form-heading { align-items: flex-start; flex-direction: column; }
   .savi-answer-header { gap: .45rem; }
   .chat { padding: .75rem; }

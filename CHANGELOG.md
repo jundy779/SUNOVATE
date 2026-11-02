@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-02 — Ringkasan Antrean Pemeriksaan di layar HP
+
+- Pemeriksaan visual di 344 dan 373 px (layar luar HP lipat) menemukan nilai "Pemeriksa" pada ringkasan Antrean Pemeriksaan terpotong di tengah kata dan menyisakan sel kosong abu-abu. Di layar 560 px ke bawah ringkasan kini satu kolom dan kata tidak lagi dipotong di sembarang huruf.
+- Validasi aktual (Linux): tangkapan layar penuh delapan halaman (Ringkasan, Pencarian, SAVI AI, Dokumen Rahasia, Panduan, Basis Pengetahuan, Administrasi, Antrean Pemeriksaan) pada 344 px diperiksa visual; ESLint dan 14/14 skenario Playwright e2e lulus.
+
 ## 2026-11-02 — Tampilan HP lipat dan tablet
 
 - Diuji pada ukuran Galaxy Z Fold: layar luar 344 dan 373 px, layar dalam 884 × 1028 dan 1028 × 884 px, ditambah 390, 768, 820, dan 1440 px, pada 12 halaman.
