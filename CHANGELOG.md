@@ -7,6 +7,13 @@
 - Penyaring Monitoring Kerja membungkus ke dua baris sampai 1100 px sehingga tombol Unduh Excel tidak terpotong; tabel kerja lebih ringkas pada layar sedang; ringkasan Antrean Pemeriksaan dan formulir pencarian tidak lagi meluber (BUG-053).
 - Membuka dan menutup HP lipat tidak memuat ulang halaman dan tidak menghapus isian: dibuktikan e2e yang mengubah ukuran layar luar ke dalam dan sebaliknya sambil memeriksa penanda halaman, pertanyaan SAVI yang sedang diketik, dan kata kunci saringan. Aplikasi tidak memiliki kode yang memuat ulang halaman saat ukuran layar berubah.
 - Validasi aktual (Linux): ESLint, TypeScript, 48 test frontend, build produksi, dan 14/14 skenario Playwright e2e lulus; tidak ada halaman yang meluber ke samping pada delapan ukuran layar. Perangkat HP lipat asli, Samsung Internet, dan mode dua layar dengan engsel belum diuji.
+- Validasi aktual (Windows 11, Git Bash, Python 3.12 via uv): `git fetch origin && git pull --ff-only` (sudah terbaru), tidak ada dev server berjalan, patch 0024 diterapkan dengan `git am` sebagai `c1dcfbc`.
+  - `pnpm validate` lulus: ESLint, Ruff, TypeScript, mypy strict (71 berkas), 48 test frontend (14 berkas), 481 test backend lulus (41 dilewati), dan build produksi (29 halaman statis).
+  - Dev server dinyalakan ulang. `pnpm e2e` dengan `pnpm api:dev` (`DATA_BACKEND=simulated`): 14/14 skenario lulus, termasuk "folding and unfolding a foldable phone keeps the page and what was typed".
+- Pemeriksaan manual sebagai `sim.coordinator` di `/work-monitoring` memakai emulasi viewport browser bawaan Claude Code (bukan DevTools Chrome), diukur lewat DOM:
+  - 884x1028: menu samping tampil dengan lebar 208 px dan 9 item menu; tombol "Unduh Excel" 115x44 px, tidak terpotong oleh elemen induk; halaman tidak bergulir ke samping, tabel bergulir di dalam wadahnya (720 px di ruang 606 px).
+  - Setelah mengetik "penyusunan" di "Cari judul" (3 baris), ukuran diganti ke 373x839: dokumen yang sama tanpa muat ulang, isian dan 3 baris tetap ada, menu pindah ke bilah atas selebar layar, tombol "Unduh Excel" berada penuh di dalam viewport, dan tidak ada elemen yang melewati lebar 373 px. Kembali ke 884x1028: isian dan 3 baris tetap ada, menu samping kembali 208 px dengan 9 item.
+  - Tangkapan layar pane pada 373 px tampak terpotong di sisi kanan, tetapi pengukuran DOM menunjukkan lebar dokumen tepat 373 px tanpa elemen yang meluap; potongan berasal dari pengambilan gambar pane, bukan tata letak.
 
 ## 2026-10-29 — Server PostgreSQL uji berhenti normal
 
