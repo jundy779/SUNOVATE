@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { KnowledgeCycle } from "@/components/knowledge-cycle";
 import { PublicSiteHeader } from "@/components/public-site-header";
+import { SiteFooter } from "@/components/site-footer";
 import { UiIcon, type IconName } from "@/components/ui-icons";
 
 const services: { label: string; detail: string; icon: IconName; href: string }[] = [
@@ -112,15 +113,7 @@ export default function Home() {
         </span>
       </p>
 
-      <footer className="site-footer">
-        <div>
-          <strong>SUNOVATE</strong>
-          <span>SUN Organizational Values and Transformation through Experience</span>
-        </div>
-        <span>Direktorat Surat Utang Negara, DJPPR, Kementerian Keuangan</span>
-        <span>Bukan sistem transaksi atau pengambilan keputusan keuangan</span>
-        <span>Versi {process.env.NEXT_PUBLIC_APP_VERSION}</span>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }

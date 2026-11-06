@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-06 — Kepala dan kaki halaman yang rapi
+
+- Kaki halaman beranda dirancang ulang dengan gaya situs institusi: logo DSUN, nama dan kepanjangan SUNOVATE, kolom Jelajahi (tautan bagian beranda dan Masuk), Instansi (Direktorat SUN, DJPPR, Kementerian Keuangan), dan Batas layanan, lalu bilah bawah berisi hak cipta dan versi. Sebelumnya tiga teks berjajar dengan nomor versi mengambang di tengah.
+- Halaman masuk kini memiliki bilah bawah yang sama, dan setiap halaman kerja memiliki kaki halaman tipis berisi hak cipta, versi, dan keterangan data contoh. Komponen bersama: `components/site-footer.tsx`.
+- Di layar HP, bilah Kementerian Keuangan kini satu baris rapi (nama DJPPR disembunyikan, garis pemisah tidak lagi menggantung) dan tombol Akses SUNOVATE serta tautan Lihat cara kerjanya rata kiri mengikuti teks, tidak lagi di tengah.
+- Validasi aktual (Linux): ESLint, TypeScript, 48 test frontend, build produksi, dan 14/14 skenario Playwright e2e lulus; beranda, halaman masuk, dan Ringkasan diperiksa visual pada 1440 dan 390 px.
+
 ## 2026-11-06 — Kerapian tampilan halaman kerja
 
 - Judul halaman kini seragam di semua halaman kerja: Ringkasan, Monitoring Kerja, Basis Pengetahuan, Pencarian, Antrean Pemeriksaan, SAVI AI, Dokumen Rahasia, Panduan, dan Administrasi memakai ukuran, ketebalan, label kecil di atas judul, dan garis navy di bawah kepala halaman yang sama. Sebelumnya Ringkasan, Panduan, dan Dokumen Rahasia memakai judul tebal besar, sedangkan halaman lain memakai judul tipis lebih kecil.

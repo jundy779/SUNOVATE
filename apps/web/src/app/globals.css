@@ -455,7 +455,7 @@ code { font-size: .8rem; background: var(--paper); padding: 0 .25rem; }
 
 
 @media (max-width: 560px) {
-  .hero-actions { align-items: stretch; }
+  .hero-actions { align-items: flex-start; }
 }
 
 @media (prefers-reduced-motion: reduce) {

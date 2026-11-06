@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PublicSiteHeader } from "@/components/public-site-header";
+import { SiteFooter } from "@/components/site-footer";
 import { UiIcon } from "@/components/ui-icons";
 import { LoginForm } from "./login-form";
 
@@ -44,6 +45,7 @@ export default function LoginPage() {
           </div>
         </section>
       </div>
+      <SiteFooter compact />
     </main>
   );
 }

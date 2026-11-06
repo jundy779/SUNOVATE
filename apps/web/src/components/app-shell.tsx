@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Principal } from "@sunovate/contracts";
 import { logoutAction } from "@/app/login/actions";
+import { WorkspaceFooter } from "@/components/site-footer";
 import { WorkspaceNav } from "@/components/workspace-nav";
 import { UiIcon } from "@/components/ui-icons";
 import { classificationLabel } from "@/lib/ui-labels";
@@ -61,6 +62,7 @@ export function AppShell({ principal, children }: { principal: Principal; childr
           </details>
         </header>
         <main id="main-content">{children}</main>
+        <WorkspaceFooter />
       </div>
     </div>
   );

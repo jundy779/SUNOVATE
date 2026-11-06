@@ -36,7 +36,8 @@ test("public landing page explains scope without loading authenticated data", as
   await expect(page).toHaveTitle("SUNOVATE");
   await expect(page.getByRole("heading", { name: /Pengetahuan organisasi/ })).toBeVisible();
   await expect(page.getByRole("link", { name: "Akses SUNOVATE" })).toHaveAttribute("href", "/login");
-  await expect(page.getByText("Bukan sistem transaksi atau pengambilan keputusan keuangan")).toBeVisible();
+  await expect(page.getByText("SUNOVATE bukan sistem transaksi dan tidak mengambil keputusan keuangan", { exact: false })).toBeVisible();
+  await expect(page.getByText(/Versi \d+\.\d+\.\d+/)).toBeVisible();
 });
 
 test("unauthenticated visitors are redirected to login", async ({ page }) => {
