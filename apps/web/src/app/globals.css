@@ -26,7 +26,7 @@ button, input, select, textarea { font: inherit; }
 button { cursor: pointer; }
 input, select, textarea { color: var(--navy-deep); }
 :focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
-h1, h2, h3, p { overflow-wrap: anywhere; }
+h1, h2, h3, p { overflow-wrap: break-word; }
 h1, h2, h3 { color: var(--navy); font-family: var(--font-heading); line-height: 1.2; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 .sr-only table { min-width: 0; }
@@ -99,7 +99,11 @@ textarea { width: 100%; resize: vertical; }
 .account-popover > span { color: var(--muted); font-size: .72rem; }
 .user-avatar { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: var(--navy); color: var(--white); font-weight: 700; }
 main:not(.site, .login, .auth-page) { max-width: 1440px; margin: auto; padding: 2.25rem clamp(1rem, 3vw, 2.25rem) 4rem; }
-.page-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 2rem; padding-bottom: 1.75rem; border-bottom: 1px solid var(--line); }
+.page-header { display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--navy); }
+/* One heading style for every workspace page (Ringkasan, page headers, dokumen rahasia, panduan). */
+.page-header h1, .db-masthead h1, .sv-head h1 { margin: .35rem 0 .55rem; color: var(--navy); font: 600 clamp(1.9rem, 2.6vw, 2.5rem)/1.12 var(--font-heading); letter-spacing: -.02em; }
+.page-header .lede, .db-masthead .db-standfirst { max-width: 72ch; margin: 0; color: var(--muted); font-size: .95rem; line-height: 1.6; }
+.page-header .eyebrow, .db-masthead .kicker { margin: 0; color: var(--navy); font-size: .8rem; font-weight: 700; letter-spacing: .01em; }
 .page-actions { display: flex; align-items: center; gap: .65rem; flex-wrap: wrap; justify-content: flex-end; }
 h1 { margin: .4rem 0 .5rem; font-size: clamp(1.7rem, 2.4vw, 2.1rem); letter-spacing: -.02em; }
 h2 { font-size: 1rem; }
@@ -163,9 +167,11 @@ tbody tr:hover { background: var(--paper); }
 /* Forms, details, search, chat */
 .toolbar { margin: 1.5rem 0; display: flex; gap: .75rem; align-items: center; flex-wrap: wrap; padding: .85rem; border: 1px solid var(--line); background: var(--white); }
 .toolbar input, .search-form input { min-width: min(30rem, 100%); }
+.toolbar label:has(input) { flex: 1 1 20rem; min-width: 0; }
+.toolbar label:has(input) input { width: 100%; min-width: 0; }
 .search-form div > * { min-width: 0; }
 .search-form div input { flex: 1 1 auto; }
-.search-form { display: grid; gap: .5rem; margin-top: 1.5rem; max-width: 48rem; padding: 1.25rem; border: 1px solid var(--line); background: var(--white); }
+.search-form { display: grid; gap: .5rem; margin-top: 1.5rem; max-width: 64rem; padding: 1.25rem; border: 1px solid var(--line); background: var(--white); }
 .search-form div { display: flex; gap: .5rem; }
 .breadcrumb { color: var(--muted); font-size: .8rem; }
 .breadcrumb a { color: var(--navy); text-decoration: underline; text-decoration-color: var(--gold); }
@@ -281,6 +287,7 @@ code { font-size: .8rem; background: var(--paper); padding: 0 .25rem; }
 .approval-summary strong { overflow-wrap: break-word; }
 .approval-summary strong { color: var(--navy); font: 700 1.45rem/1 var(--font-heading); }
 .approval-summary span { color: var(--muted); font-size: .7rem; }
+.approval-summary .approval-role strong { font-size: 1.05rem; line-height: 1.45; }
 .approval-table table { min-width: 1080px; }
 .approval-table td:first-child { min-width: 240px; white-space: normal; }
 .approval-table td strong, .approval-table td small { display: block; }

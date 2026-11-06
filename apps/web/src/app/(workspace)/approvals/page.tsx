@@ -45,7 +45,7 @@ export default async function ApprovalsPage({ searchParams }: { searchParams: Se
       <div className="approval-summary" aria-label="Ringkasan antrean">
         <div><strong>{meta.total ?? data.length}</strong><span>Permintaan ditampilkan</span></div>
         <div><strong>{pending}</strong><span>Menunggu keputusan</span></div>
-        <div><strong>{isReviewer ? "Pemeriksa" : "Pengaju"}</strong><span>Tampilan sesuai peran</span></div>
+        <div className="approval-role"><strong>{isReviewer ? "Sebagai pemeriksa" : "Sebagai pengaju"}</strong><span>Tampilan sesuai peran Anda</span></div>
       </div>
       <form className="toolbar" aria-label="Penyaringan antrean">
         <label><span className="sr-only">Status</span><select name="status" defaultValue={status}><option value="">Semua status</option>{Object.entries(STATUS_LABELS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>

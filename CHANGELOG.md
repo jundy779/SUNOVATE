@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-11-06 — Kerapian tampilan halaman kerja
+
+- Judul halaman kini seragam di semua halaman kerja: Ringkasan, Monitoring Kerja, Basis Pengetahuan, Pencarian, Antrean Pemeriksaan, SAVI AI, Dokumen Rahasia, Panduan, dan Administrasi memakai ukuran, ketebalan, label kecil di atas judul, dan garis navy di bawah kepala halaman yang sama. Sebelumnya Ringkasan, Panduan, dan Dokumen Rahasia memakai judul tebal besar, sedangkan halaman lain memakai judul tipis lebih kecil.
+- Kata dalam judul dan paragraf tidak lagi dipotong di sembarang huruf pada layar sempit.
+- Kolom pencarian di Basis Pengetahuan dan Antrean Pemeriksaan kini memanjang mengisi bilah penyaring, dan formulir Pencarian lebih lebar di layar besar.
+- Ringkasan Antrean Pemeriksaan menampilkan peran sebagai teks ("Sebagai pemeriksa" atau "Sebagai pengaju") dengan ukuran biasa, bukan seperti angka besar.
+- Palet tetap Color Panel SUNOVATE. Font Aptos tidak dapat disertakan di aplikasi karena lisensinya, sehingga tampil bila terpasang di komputer pengguna (Microsoft 365) dan memakai Segoe UI bila tidak.
+- Validasi aktual (Linux): ESLint, TypeScript, 48 test frontend, dan 14/14 skenario Playwright e2e lulus; tidak ada halaman yang meluber pada 344, 884, dan 1440 px; kepala halaman diperiksa visual lewat tangkapan layar.
+
 ## 2026-11-02 — Ringkasan Antrean Pemeriksaan di layar HP
 
 - Pemeriksaan visual di 344 dan 373 px (layar luar HP lipat) menemukan nilai "Pemeriksa" pada ringkasan Antrean Pemeriksaan terpotong di tengah kata dan menyisakan sel kosong abu-abu. Di layar 560 px ke bawah ringkasan kini satu kolom dan kata tidak lagi dipotong di sembarang huruf.
