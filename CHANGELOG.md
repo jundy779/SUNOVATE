@@ -6,6 +6,14 @@
 - Halaman masuk kini memiliki bilah bawah yang sama, dan setiap halaman kerja memiliki kaki halaman tipis berisi hak cipta, versi, dan keterangan data contoh. Komponen bersama: `components/site-footer.tsx`.
 - Di layar HP, bilah Kementerian Keuangan kini satu baris rapi (nama DJPPR disembunyikan, garis pemisah tidak lagi menggantung) dan tombol Akses SUNOVATE serta tautan Lihat cara kerjanya rata kiri mengikuti teks, tidak lagi di tengah.
 - Validasi aktual (Linux): ESLint, TypeScript, 48 test frontend, build produksi, dan 14/14 skenario Playwright e2e lulus; beranda, halaman masuk, dan Ringkasan diperiksa visual pada 1440 dan 390 px.
+- Validasi aktual (Windows 11, Git Bash, Python 3.12 via uv): `git fetch origin && git pull --ff-only` (sudah terbaru), tidak ada dev server berjalan, patch 0026 dan 0027 diterapkan berurutan dengan `git am` sebagai `8c7f79d` dan `741f102`.
+  - `pnpm validate` lulus (7 menit 14 detik): ESLint, Ruff, TypeScript, mypy strict (71 berkas), 48 test frontend (14 berkas), 481 test backend lulus (41 dilewati), dan build produksi (29 halaman statis).
+  - Dev server dinyalakan ulang. Percobaan `pnpm e2e` pertama gagal 12/14 karena web dijalankan dengan `pnpm dev` (host `localhost`), sementara Playwright membuka `127.0.0.1:3000`. Next.js 16 memblokir sumber daya dev lintas-origin itu, sehingga halaman masuk tidak terhidrasi dan tombol masuk tetap nonaktif. Setelah web dijalankan seperti perintah `webServer` Playwright (`next dev --hostname 127.0.0.1 --port 3000`), `pnpm e2e` dengan `pnpm api:dev` (`DATA_BACKEND=simulated`) lulus 14/14. Bukan regresi patch: kode tidak diubah.
+  - Pemeriksaan di browser bawaan Claude Code, diukur lewat DOM:
+    - Beranda: kaki halaman institusi tampil (logo DSUN, Jelajahi, Instansi, Batas layanan, bilah bawah "Versi 0.2.0").
+    - Halaman masuk: bilah bawah ringkas tampil.
+    - Tujuh halaman kerja (Ringkasan, Basis Pengetahuan, Antrean Pemeriksaan, Pencarian, Monitoring Kerja, SAVI AI, Dokumen Rahasia) sebagai `sim.staff.pppsun`: semuanya memakai judul 30.4 px, tebal 600, Aptos Display, dan kaki halaman kerja tampil.
+    - 390 x 844 px: logo, SUNOVATE, dan tombol Masuk berada dalam satu baris; tombol Akses SUNOVATE rata kiri sejajar paragraf (x = 20 px); tidak ada geser horizontal (lebar dokumen 390 px).
 
 ## 2026-11-06 — Kerapian tampilan halaman kerja
 
