@@ -1,6 +1,6 @@
 # Permission Matrix
 
-**Status:** NEEDS MENTOR VALIDATION
+**Status:** CONFIRMED (mentor, DEC-20261110-01) untuk daftar peran dan lingkupnya; rincian permission per endpoint mengikuti kode
 **Last Updated:** 2026-10-28
 
 ## Purpose

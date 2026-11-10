@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-10 — Persetujuan mentor atas paket tinjauan
+
+- Project lead meneruskan dan mengonfirmasi jawaban mentor atas Paket Tinjauan Mentor tertanggal 30 Oktober 2026: seluruh usulan disetujui. Dicatat sebagai DEC-20261110-01.
+- Berlaku sekarang: daftar peran dan lingkupnya (matriks izin berstatus CONFIRMED untuk peran), model AI SAVI dijalankan di server kantor dan layanan eksternal hanya dengan persetujuan tertulis (OQ-11 menjadi PARTIAL), rujukan pasal delapan skenario mentor disesuaikan ke PMK 168/PMK.08/2019 (OQ-38 ANSWERED), serta kriteria MVP dan naskah demo.
+- Belum berisi jawaban: komputer dan kontak TIK, hasil pemeriksaan TPM, kebijakan browser dari TIK, dan fungsi Tim SUN Tematik. Persetujuan bersifat umum dan disampaikan lewat project lead; bukti tertulis dilampirkan bila tersedia.
+- Hanya dokumentasi yang berubah. Test `test_permission_matrix_doc.py` tetap lulus.
+
 ## 2026-11-10 — Audit frontend: kecepatan, keamanan skrip, dan gerak tampilan
 
 Diukur pada build produksi (`next build` lalu `next start`) dengan Chromium, bukan pada mode pengembangan.

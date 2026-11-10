@@ -1,7 +1,7 @@
 # Decision Log
 
 **Status:** PROPOSED
-**Last Updated:** 2026-10-20
+**Last Updated:** 2026-11-10
 
 ## Purpose
 
@@ -259,6 +259,26 @@ Entri berikut mencatat jawaban knowledge owner atas delapan pertanyaan slide 24 
 - **Dampak:** README, AGENTS.md, docs/README.md, project-overview, developer-handover, footer halaman depan
 - **ADR/BR terkait:** Tidak ada
 - **Tindak lanjut:** Tidak ada
+
+### DEC-20261110-01
+
+- **Open question:** OQ-11 (sebagian), OQ-38; persetujuan matriks izin (Gate T1) dan naskah demo
+- **Tanggal jawaban:** disampaikan project lead pada 2026-11-10
+- **Sumber:** Paket Tinjauan Mentor SUNOVATE tertanggal 30 Oktober 2026 (ringkasan progres, naskah demo 10 menit, tabel "Siapa bisa apa", dan delapan keputusan beserta usulan). Project lead meneruskan jawaban mentor: "setuju semuanya", lalu mengonfirmasinya kembali pada 10 November 2026. Jawaban bersifat umum, tanpa catatan per butir dan tanpa koreksi.
+- **Jawaban:** Mentor menyetujui seluruh usulan pada paket tinjauan.
+- **Keputusan:** Usulan pada setiap butir berlaku sebagaimana tertulis di paket:
+  1. Daftar peran dan lingkupnya disetujui sesuai tabel "Siapa bisa apa"; Pimpinan sementara memakai peran Pembaca.
+  2. Model AI untuk SAVI dijalankan di server kantor. Layanan eksternal hanya boleh dipakai dengan persetujuan tertulis dan batas biaya, sehingga tanpa persetujuan itu tidak ada potongan dokumen yang dikirim ke luar jaringan kantor.
+  3. Rujukan pasal pada delapan skenario mentor disesuaikan ke PMK 168/PMK.08/2019 (Pasal 12, 14, 17, 22, 23).
+  4. Uji coba memakai satu komputer kantor khusus untuk sekitar 25 pengguna dengan kontak TIK.
+  5. Ketersediaan penyimpan kunci diperiksa dengan `Get-Tpm` pada komputer yang dipakai.
+  6. Kebijakan browser (DevTools, ekstensi, tangkapan layar) diminta kepada TIK untuk komputer kantor.
+  7. Fungsi Tim SUN Tematik dijelaskan oleh mentor.
+  8. MVP dinyatakan selesai bila alur unggah, periksa, cari, SAVI, sitasi, dan audit dapat didemokan, dengan demo sekitar akhir Desember 2026. Naskah demo 10 menit disetujui.
+- **Status:** CONFIRMED (mentor, diteruskan project lead) untuk butir 1, 2, 3, dan 8. Butir 4 sampai 7 menyetujui cara menindaklanjutinya, tetapi isi jawabannya belum ada: nama komputer dan kontak TIK (butir 4), hasil `Get-Tpm` (butir 5), keputusan TIK (butir 6), dan penjelasan fungsi SUN Tematik (butir 7).
+- **Dampak:** [permission-matrix](../06-security/permission-matrix.md), [open-questions](../00-project/open-questions.md), [demo-scenario-month-one](../01-product/demo-scenario-month-one.md), `sme_question_intake.json`, rancangan gateway model SAVI
+- **ADR/BR terkait:** ADR-004, ADR-006, ADR-020
+- **Tindak lanjut:** menyesuaikan rujukan pasal pada delapan skenario lalu membuka blokirnya dari retrieval; memilih model lokal dan spesifikasi servernya; mengumpulkan isi jawaban butir 4 sampai 7; menetapkan tanggal demo. Bila tersedia, bukti tertulis persetujuan (pesan atau notulen) dilampirkan pada entri ini.
 
 ## Related Documents
 
