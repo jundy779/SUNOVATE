@@ -253,3 +253,19 @@ test("folding and unfolding a foldable phone keeps the page and what was typed",
   await expect(page.getByLabel("Cari judul")).toHaveValue("SIMULASI");
   await expect(page.getByRole("navigation", { name: "Navigasi utama" }).getByRole("link", { name: "Dokumen Rahasia" })).toBeInViewport();
 });
+
+test("pages use a per-request script nonce and never allow inline scripts", async ({ request }) => {
+  const first = await request.get("/login");
+  const second = await request.get("/login");
+  const policy = first.headers()["content-security-policy"] ?? "";
+  const scripts = policy.split(";").find((part) => part.trim().startsWith("script-src")) ?? "";
+  expect(scripts).toMatch(/'nonce-[A-Za-z0-9+/=]+'/);
+  expect(scripts).toContain("'strict-dynamic'");
+  expect(scripts).not.toContain("'unsafe-inline'");
+  expect(policy).toContain("frame-ancestors 'none'");
+  expect(second.headers()["content-security-policy"]).not.toBe(policy);
+  // The page itself is never stored; its scripts carry the nonce from the header.
+  expect(first.headers()["cache-control"]).toContain("no-store");
+  const nonce = /'nonce-([^']+)'/.exec(scripts)?.[1] ?? "";
+  expect(await first.text()).toContain(`nonce="${nonce}"`);
+});

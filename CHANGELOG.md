@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-11-10 — Audit frontend: kecepatan, keamanan skrip, dan gerak tampilan
+
+Diukur pada build produksi (`next build` lalu `next start`) dengan Chromium, bukan pada mode pengembangan.
+
+- Kecepatan: berkas statis (`/_next/static`, `/_next/image`, `/brand`) tidak lagi dikirim dengan `no-store`. Halaman dan seluruh respons API tetap `no-store`. Kunjungan ulang beranda turun dari 213,8 KB menjadi 7,2 KB, Ringkasan dari 287,8 KB menjadi 14,9 KB, Monitoring Kerja dari 183,9 KB menjadi 19,7 KB, dan SAVI AI dari 218,2 KB menjadi 19,6 KB. Berkas gambar `sunovate-institutional-hero.jpg` (308 KB) yang tidak dipakai dihapus.
+- Kestabilan tata letak: catatan sambutan di Ringkasan kini diketahui server lewat cookie per akun, sehingga halaman tidak bergeser setelah dimuat (CLS dari 0,04-0,10 menjadi 0). Pilihan tutup yang lama di browser tetap dihormati.
+- Keamanan: `src/proxy.ts` memberi setiap halaman kebijakan CSP dengan nonce acak per permintaan dan `strict-dynamic`; skrip inline tanpa nonce tidak dijalankan lagi (`unsafe-inline` hanya tersisa untuk gaya). Seluruh halaman dirender per permintaan agar nonce dapat dipasang. Rute API dan gambar dokumen RAHASIA tetap memakai kebijakan statis yang lebih ketat. Uji: markup dengan event handler inline yang disisipkan ke halaman diblokir, dan tidak ada pelanggaran CSP saat membuka 11 halaman.
+- Gerak tampilan (`motion.css`): bagian halaman kerja muncul berurutan dengan judul yang langsung tampil, teks hero beranda muncul dari atas ke bawah, garis emas judul bagian tergambar, bagian beranda muncul saat digulir, kepala beranda menempel dengan bayangan saat digulir, serta respons halus pada tautan, tombol, baris tabel, dan isian. Semua dimatikan bila pengguna meminta gerak dikurangi.
+- Ikon situs (`icon.svg`) ditambahkan sehingga browser tidak lagi mendapat 404 untuk favicon.
+- HSTS belum dipasang di aplikasi karena paket demo masih HTTP; dipasang di titik terminasi TLS saat tersedia (BUG-054).
+- Validasi aktual (Linux): ESLint, TypeScript, 49 test frontend, build produksi, dan 14/14 skenario Playwright e2e lulus pada mode pengembangan, ditambah skenario baru pemeriksaan nonce yang lulus (15 skenario). Satu kesalahan ditemukan e2e sebelum dikirim: fungsi dari modul klien dipanggil di server sehingga Ringkasan gagal dimuat; fungsi itu dipindah ke `lib/guide-welcome-keys.ts`. Backend tidak berubah.
+
 ## 2026-11-06 — Kepala dan kaki halaman yang rapi
 
 - Kaki halaman beranda dirancang ulang dengan gaya situs institusi: logo DSUN, nama dan kepanjangan SUNOVATE, kolom Jelajahi (tautan bagian beranda dan Masuk), Instansi (Direktorat SUN, DJPPR, Kementerian Keuangan), dan Batas layanan, lalu bilah bawah berisi hak cipta dan versi. Sebelumnya tiga teks berjajar dengan nomor versi mengambang di tengah.

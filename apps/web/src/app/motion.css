@@ -1,0 +1,57 @@
+/* Motion for SUNOVATE: short, quiet, and institutional (no bounce, no parallax).
+   Everything in this file is decorative. It is applied only when the user has not asked the
+   operating system for reduced motion, and the layout is identical without it. */
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes rise-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes rule-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes header-shadow { to { box-shadow: 0 6px 18px rgb(9 31 66 / 10%); } }
+
+  /* 1. A workspace page arrives in order. The page header (first child) is never faded, so the
+        title paints immediately; the sections below it follow in a short sequence. */
+  .workspace #main-content > *:not(:first-child) { animation: rise-in 280ms var(--ease-out) both; }
+  .workspace #main-content > *:nth-child(3) { animation-delay: 45ms; }
+  .workspace #main-content > *:nth-child(n + 4) { animation-delay: 90ms; }
+
+  /* 2. The landing hero reads top to bottom, and the gold rule above each heading draws in. */
+  .hero-text > * { animation: rise-in 520ms var(--ease-out) both; }
+  .hero-text > *:nth-child(2) { animation-delay: 90ms; }
+  .hero-text > *:nth-child(3) { animation-delay: 180ms; }
+  .hero-text > *:nth-child(4) { animation-delay: 270ms; }
+  .hero-figure { animation: fade-in 700ms var(--ease-out) 150ms both; }
+  .ed-head::before { transform-origin: left; animation: rule-grow 600ms var(--ease-out) 200ms both; }
+  .login-panel-inner > * { animation: rise-in 420ms var(--ease-out) both; }
+  .login-panel-inner > *:nth-child(2) { animation-delay: 70ms; }
+  .login-panel-inner > *:nth-child(n + 3) { animation-delay: 140ms; }
+
+  /* 3. Links and controls respond to the pointer. */
+  .text-link, .section-heading a, .action-link, .results a, .list a, .site-footer a {
+    transition: text-decoration-color 160ms ease, text-underline-offset 160ms ease, color 160ms ease;
+  }
+  .text-link:hover, .section-heading a:hover, .action-link:hover, .results a:hover, .list a:hover { text-underline-offset: .32em; }
+  .button:active { transform: translateY(0); box-shadow: none; }
+  tbody tr { transition: background-color 120ms ease; }
+  .results li, .db-block, .panel { transition: border-color 160ms ease, box-shadow 160ms ease; }
+  .results li:hover { border-left-color: var(--gold); box-shadow: 0 4px 14px rgb(9 31 66 / 7%); }
+  input, select, textarea { transition: border-color 140ms ease, box-shadow 140ms ease; }
+  .nav-marker { transition: background-color 180ms ease, height 180ms ease; }
+  .status { transition: background-color 160ms ease; }
+
+  /* 4. Sections further down the landing page rise in as they are scrolled into view, and the
+        public header gains a shadow once the page has moved. Browsers without scroll-driven
+        animation simply show everything at once. */
+  @supports (animation-timeline: view()) {
+    .service-rail li, .briefing-lead, .briefing-side > *, .site-footer-main > * {
+      animation: rise-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+    .site-header { animation: header-shadow linear both; animation-timeline: scroll(); animation-range: 0 120px; }
+  }
+}
+
+/* Reduced motion: no decorative animation at all, and no transition lag. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; }
+}

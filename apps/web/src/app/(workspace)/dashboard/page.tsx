@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { GuideWelcome } from "@/components/guide-welcome";
+import { welcomeCookieName } from "@/lib/guide-welcome-keys";
 import type { DashboardSummary, Principal } from "@sunovate/contracts";
 import { DeadlineTag, EmptyState } from "@/components/page-elements";
 import { TaskStatusChart } from "@/components/task-status-chart";
@@ -18,6 +20,7 @@ export default async function DashboardPage() {
     apiGet<DashboardSummary>("/dashboard/summary"),
     apiGet<Principal>("/auth/me"),
   ]);
+  const welcomeDismissed = (await cookies()).get(welcomeCookieName(principal.id))?.value === "1";
   const scope = data.scope.allTeams ? "Seluruh tim Direktorat SUN" : data.scope.teamCodes.join(", ");
   const ledger: { label: string; value: number; detail: string; tone: Tone }[] = [
     { label: "Tugas aktif", value: data.metrics.totalActiveTasks, detail: "Belum berstatus selesai", tone: "plain" },
@@ -49,7 +52,7 @@ export default async function DashboardPage() {
         </div>
       </header>
 
-      <GuideWelcome userId={principal.id} />
+      <GuideWelcome userId={principal.id} initiallyDismissed={welcomeDismissed} />
 
       <dl className="db-context" aria-label="Cakupan ringkasan">
         <div><dt>Cakupan</dt><dd>{scope || "Belum ada tim"}</dd></div>
