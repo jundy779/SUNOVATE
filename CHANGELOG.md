@@ -9,6 +9,14 @@
 - Penyesuaian rujukan bukan validasi jawaban: seluruh kasus tetap `BLOCKED` dan belum dibaca SAVI. Jalur menjadi sumber SAVI adalah alur draf, pemeriksaan, dan penerbitan pengetahuan agar ada pemilik, klasifikasi, sitasi, dan jejak audit.
 - Halaman Pemeriksaan SAVI menampilkan bagian "Rujukan yang sudah dicocokkan". Test baru memastikan rujukan terverifikasi hanya menunjuk PMK 168/PMK.08/2019 dengan halaman dan semua kasus tetap diblokir.
 - Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 50 test frontend, 483 test backend mode simulated (40 PostgreSQL dilewati), `savi:eval`, dan `search:eval` lulus. Runtime SAVI dan pencarian tidak berubah karena register tetap dikecualikan dari runtime.
+- Validasi aktual (Windows 11, Git Bash, Python 3.12 via uv): `git fetch origin && git pull --ff-only` (sudah terbaru), patch 0030 diterapkan dengan `git am` sebagai `d7c5dcb`.
+  - `pnpm validate` lulus (4 menit 51 detik): ESLint, Ruff, TypeScript, mypy strict (71 berkas), 50 test frontend (14 berkas), 482 test backend lulus (41 dilewati), dan build produksi (30 halaman).
+  - `pnpm savi:eval` lulus: 43 kasus, akurasi keputusan 1,0, tidak ada kasus gagal.
+  - `pnpm e2e` dengan `pnpm api:dev` (`DATA_BACKEND=simulated`), server web dinyalakan Playwright di `127.0.0.1`: 15/15 skenario lulus.
+  - Pemeriksaan di browser bawaan Claude Code sebagai `sim.coordinator` di `/savi-validation` (server pengembangan di `127.0.0.1`), dibaca lewat DOM:
+    - Bagian "Rujukan yang sudah dicocokkan" tampil pada Pertanyaan 001, 003, 005, 006, dan 007. Isinya: 003 Pasal 12 ayat (1) sampai (3), hal. 148; 005 Pasal 21 ayat (1), hal. 152, dan Pasal 24, hal. 153; 006 Pasal 22 ayat (1), hal. 152, dan Pasal 23 ayat (1) sampai (3), hal. 152-153; 007 Pasal 14, hal. 149, Pasal 15 dan 16, hal. 149, serta Pasal 17 ayat (1) sampai (6), hal. 150.
+    - Semua rujukan itu dari PMK 168/PMK.08/2019 dengan halaman Kompilasi Peraturan SUN. SME-001 (Pasal 12 ayat (1), hal. 148; Pasal 13, hal. 148-149) juga tampil, sesuai rancangan patch.
+    - Pertanyaan 002, 004, dan 008 tidak memiliki bagian tersebut.
 
 ## 2026-11-10 — Persetujuan mentor atas paket tinjauan
 
