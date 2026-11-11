@@ -14,6 +14,7 @@ from . import (
     identity,
     knowledge,
     pending,
+    savi_tasks,
     search,
     secure_viewer,
     system,
@@ -37,6 +38,7 @@ def build_api_router() -> APIRouter:
         audit,
         approvals,
         hermes,
+        savi_tasks,
         secure_viewer,
         system,
     ):

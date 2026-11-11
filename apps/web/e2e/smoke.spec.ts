@@ -269,3 +269,21 @@ test("pages use a per-request script nonce and never allow inline scripts", asyn
   const nonce = /'nonce-([^']+)'/.exec(scripts)?.[1] ?? "";
   expect(await first.text()).toContain(`nonce="${nonce}"`);
 });
+
+test("SAVI drafts an administrative report that the employee reviews", async ({ page }) => {
+  await page.goto("/login");
+  await expect(page.getByRole("button", { name: "Masuk dengan akses pengembangan" })).toBeEnabled();
+  await page.getByLabel("Email pengguna simulasi").fill("sim.staff.pppsun@sunovate.local");
+  await page.getByRole("button", { name: "Masuk dengan akses pengembangan" }).click();
+  await page.waitForURL(/\/dashboard$/);
+
+  await page.goto("/savi-ai");
+  await page.getByRole("button", { name: "Susun draf" }).click();
+  const editor = page.getByLabel("Periksa dan ubah draf sebelum disetujui");
+  await expect(editor).toHaveValue(/Cakupan: PPPSUN/);
+  await expect(page.getByText(/belum disimpan atau dikirim/)).toBeVisible();
+  await editor.fill("Laporan yang sudah diperiksa pegawai.");
+  await page.getByRole("button", { name: "Tolak draf" }).click();
+  await expect(page.getByText("Draf ditolak dan tidak dipakai.")).toBeVisible();
+  await expect(editor).toHaveCount(0);
+});

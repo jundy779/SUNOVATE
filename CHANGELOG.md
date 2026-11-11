@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-11-11 — SAVI menyusun draf tugas administratif untuk diriviu pegawai
+
+- Arahan mentor DEC-20261111-02: SAVI melaksanakan tugas administratif pegawai dengan hasil yang diriviu pegawai, mencakup rekap dan laporan dari Monitoring Kerja, draf notulen dan tindak lanjut rapat, draf nota dinas atau surat, serta ringkasan dokumen. Dicatat sebagai FR-61.
+- Tugas pertama yang dibangun adalah draf laporan pekerjaan, karena tidak memerlukan model AI. `POST /api/v1/savi/tasks/work-report` menyusun rekap dari tugas dan tindak lanjut yang boleh dibaca pegawai: tugas aktif, tugas terlambat, tugas jatuh tempo dekat, tindak lanjut terlambat atau jatuh tempo dekat, tugas selesai minggu ini, serta daftar yang perlu ditindaklanjuti dengan tenggat dan penanggung jawab. Tanggal memakai format dd-mm-yyyy. `POST /api/v1/savi/tasks/reviews` mencatat keputusan pegawai (disetujui atau ditolak, diubah atau tidak) tanpa isi draf. Keduanya memerlukan `hermes:query` dan `work:read`.
+- Halaman SAVI AI mendapat panel "Tugas administratif": pegawai menyusun draf, memeriksa dan mengubahnya di kotak teks, lalu memilih "Setujui dan salin" (teks hasil riviu disalin untuk ditempel) atau "Tolak draf". Draf tidak disimpan atau dikirim ke mana pun.
+- Pemeriksaan visual menemukan ringkasan menulis "Terlambat: 0" padahal daftarnya memuat tindak lanjut terlambat, dan tanggal tampil sebagai 2026-09-30; keduanya diperbaiki sebelum dikirim.
+- Kelas tombol `button-secondary` yang sudah dipakai di halaman Pemeriksaan SAVI ternyata tidak memiliki gaya sehingga tampil seperti tombol utama; kini bergaya tombol sekunder.
+- Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 52 test frontend, 490 test backend mode simulated (40 PostgreSQL dilewati), 530 test mode PostgreSQL, build produksi, dan 16/16 skenario Playwright e2e lulus, termasuk skenario baru penyusunan dan penolakan draf. Alur penuh (susun, ubah, setujui, salin) diperiksa di Chromium: teks yang disalin sama dengan teks hasil riviu.
+
 ## 2026-11-11 — Kepanjangan resmi SAVI
 
 - Mentor menetapkan SAVI sebagai singkatan dari "SUN AI Virtual Intelligence" (DEC-20261111-01). Kepanjangan ditampilkan di label kepala halaman SAVI AI dan pada bagian "Cara SAVI AI menjawab" di beranda, serta dicatat di README dan glosarium. Nama tampilan tetap "SAVI AI".

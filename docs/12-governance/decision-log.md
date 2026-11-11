@@ -292,6 +292,18 @@ Entri berikut mencatat jawaban knowledge owner atas delapan pertanyaan slide 24 
 - **ADR/BR terkait:** ADR-004
 - **Tindak lanjut:** Tidak ada
 
+### DEC-20261111-02
+
+- **Open question:** Tidak ada (perluasan lingkup SAVI)
+- **Tanggal jawaban:** 2026-11-11
+- **Sumber:** Arahan mentor yang diteruskan project lead pada 2026-11-11: SAVI "melaksanakan tugas administratif pegawai dengan riviu hasil oleh pegawai". Atas empat contoh dari tim (rekap dan laporan dari Monitoring Kerja, draf notulen dan tindak lanjut rapat, draf nota dinas atau surat dari template, ringkasan dokumen dengan rujukan), mentor menjawab "iya semacam yang disebutkan itu". Target: demo akhir Desember 2026.
+- **Jawaban:** SAVI menyiapkan draf tugas administratif; pegawai memeriksa, mengubah, lalu menyetujui atau menolak.
+- **Keputusan:** Tidak ada draf yang tersimpan, terkirim, atau berlaku sebelum disetujui pegawai, dan keputusan pegawai tercatat di audit tanpa isi draf. SAVI hanya memakai data yang boleh diakses pegawai tersebut. Rekap dan laporan dari Monitoring Kerja dibangun lebih dulu karena tidak memerlukan model AI; tiga tugas lainnya memakai model AI lokal (DEC-20261110-01).
+- **Status:** CONFIRMED (mentor, diteruskan project lead) untuk prinsip dan keempat jenis tugas. Format template nota dinas dan notulen belum ditetapkan.
+- **Dampak:** FR-61, permission-matrix, halaman SAVI AI, modul `savi_tasks`
+- **ADR/BR terkait:** ADR-004
+- **Tindak lanjut:** template resmi nota dinas atau surat dan format notulen yang dipakai Direktorat SUN; pemilihan model AI lokal untuk tiga tugas berbasis teks.
+
 ## Related Documents
 
 - [architecture-decisions](../03-architecture/architecture-decisions.md)

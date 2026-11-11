@@ -154,6 +154,8 @@ Semua path relatif terhadap prefix `/api/v1`.
 | GET | `/data-quality-issues` | `data_quality:read` |
 | GET | `/exports/work?kind=` | `work:read` (+ `pending:read` untuk `pending` dan `followUps`) |
 | GET | `/exports/attention` | `work:read` |
+| POST | `/savi/tasks/work-report` | `hermes:query` + `work:read`; draf hanya dari pekerjaan yang boleh dibaca pemanggil (DEC-20261111-02) |
+| POST | `/savi/tasks/reviews` | `hermes:query` + `work:read`; mencatat keputusan pegawai atas draf, tanpa isi draf |
 | GET | `/secure-documents`, `/secure-documents/{id}` | `document:read` + terdaftar sebagai pembaca + clearance cukup |
 | POST | `/secure-documents/{id}/acknowledgements` | `document:read` + terdaftar sebagai pembaca |
 | GET | `/secure-documents/{id}/pages/{page}` | `document:read` + terdaftar sebagai pembaca + persetujuan pernyataan masih berlaku |

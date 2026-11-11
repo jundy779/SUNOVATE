@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import type { Principal } from "@sunovate/contracts";
 import { HermesChat } from "@/components/hermes-chat";
+import { SaviAdminTask } from "@/components/savi-admin-task";
 import { PageHeader, Panel, SimulatedLabel } from "@/components/page-elements";
 import { UiIcon } from "@/components/ui-icons";
 import { apiGet } from "@/lib/api";
@@ -32,6 +33,11 @@ export default async function SaviAiPage() {
       <Panel title="Percakapan">
         <HermesChat />
       </Panel>
+      {me.permissions.includes("work:read") ? (
+        <Panel title="Tugas administratif">
+          <SaviAdminTask />
+        </Panel>
+      ) : null}
     </>
   );
 }
