@@ -18,6 +18,14 @@ Diukur pada build produksi (`next build` lalu `next start`) dengan Chromium, buk
 - Ikon situs (`icon.svg`) ditambahkan sehingga browser tidak lagi mendapat 404 untuk favicon.
 - HSTS belum dipasang di aplikasi karena paket demo masih HTTP; dipasang di titik terminasi TLS saat tersedia (BUG-054).
 - Validasi aktual (Linux): ESLint, TypeScript, 49 test frontend, build produksi, dan 14/14 skenario Playwright e2e lulus pada mode pengembangan, ditambah skenario baru pemeriksaan nonce yang lulus (15 skenario). Satu kesalahan ditemukan e2e sebelum dikirim: fungsi dari modul klien dipanggil di server sehingga Ringkasan gagal dimuat; fungsi itu dipindah ke `lib/guide-welcome-keys.ts`. Backend tidak berubah.
+- Validasi aktual (Windows 11, Git Bash, Python 3.12 via uv): `git fetch origin && git pull --ff-only` (sudah terbaru), tidak ada dev server berjalan, patch 0028 dan 0029 diterapkan berurutan dengan `git am` sebagai `ac4f85d` dan `7c8b35f` (0029 hanya dokumentasi).
+  - `pnpm validate` lulus (2 menit 38 detik): ESLint, Ruff, TypeScript, mypy strict (71 berkas), 49 test frontend (14 berkas), 481 test backend lulus (41 dilewati), dan build produksi (30 halaman).
+  - `pnpm e2e` dengan `pnpm api:dev` (`DATA_BACKEND=simulated`), server web dinyalakan Playwright di `127.0.0.1`: 15/15 skenario lulus, termasuk "pages use a per-request script nonce and never allow inline scripts".
+  - Build produksi (`pnpm --filter @sunovate/web build`, lalu `next start --hostname 127.0.0.1 --port 3000`), diperiksa dengan curl dan browser bawaan Claude Code sebagai `sim.coordinator`:
+    - Cache-Control: berkas `/_next/static` (CSS dan JS) bernilai `public, max-age=31536000, immutable`. Halaman `/`, `/login`, `/dashboard`, serta `/api/exports/work`, `/api/hermes`, `/api/knowledge-workflow`, dan `/api/exports/attention` (unduhan Excel 200 dengan sesi) bernilai `no-store, private, max-age=0, must-revalidate`.
+    - CSP halaman memuat `'nonce-…'` dan `'strict-dynamic'` pada `script-src` tanpa `'unsafe-inline'`; `'unsafe-inline'` hanya ada di `style-src`. Semua tag `<script>` membawa nonce (11/11 di halaman masuk, 12/12 di beranda).
+    - Tidak ada error atau pesan CSP di konsol setelah membuka halaman masuk, Ringkasan, Monitoring Kerja, Basis Pengetahuan, SAVI AI, Dokumen Rahasia, dan beranda.
+    - Ringkasan tampil normal. Chromium headless Playwright (1280x800, tiga kali muat penuh) mencatat CLS 0 tanpa entri layout-shift. Pane browser Claude Code yang tersembunyi sempat mencatat pergeseran (0,78 sampai 0,91) karena viewport-nya berubah ukuran dan render streaming tertunda saat pane tidak tampil, bukan karena tata letak halaman.
 
 ## 2026-11-06 — Kepala dan kaki halaman yang rapi
 
