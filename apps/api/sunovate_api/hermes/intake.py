@@ -25,6 +25,8 @@ class SmeQuestionCase(ApiModel):
     draft_answer: str = Field(min_length=3)
     supplied_references: list[str] = Field(min_length=1)
     candidate_references: list[str] = Field(default_factory=list)
+    # Provisions checked against the regulation text (DEC-20261110-01); not a validated answer.
+    verified_references: list[str] = Field(default_factory=list)
     validation_notes: list[str] = Field(min_length=1)
     validation_status: ValidationStatus
     runtime_eligibility: Literal["BLOCKED"]
@@ -35,6 +37,7 @@ class SmeQuestionIntake(ApiModel):
     source: str
     purpose: str
     activation_status: Literal["EXCLUDED_FROM_RUNTIME"]
+    reference_review: str | None = None
     cases: list[SmeQuestionCase] = Field(min_length=1)
 
 

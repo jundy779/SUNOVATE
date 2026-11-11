@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-11-11 — Rujukan delapan skenario mentor disesuaikan ke PMK 168/PMK.08/2019
+
+- Sesuai DEC-20261110-01, rujukan pasal di `sme_question_intake.json` dicocokkan dengan teks PMK 168/PMK.08/2019 tentang Lelang SUN di Pasar Perdana Domestik pada Kompilasi Peraturan SUN (hal. 140-167). Rujukan mentor yang asli tetap disimpan; rujukan hasil pencocokan dicatat terpisah di kolom baru `verifiedReferences` beserta halamannya.
+- Lima skenario mendapat rujukan terverifikasi: SME-001 (Pasal 12 ayat (1), Pasal 13), SME-003 (Pasal 12 ayat (1)-(3)), SME-005 (Pasal 21 ayat (1), Pasal 24), SME-006 (Pasal 22 ayat (1), Pasal 23 ayat (1)-(3)), SME-007 (Pasal 14 sampai 17). Jawaban SME-003, 005, 006, dan 007 diselaraskan dengan bunyi pasal; misalnya syarat Lelang SUN Tambahan kini menyebut kedua syarat Pasal 14, dan gagal setelmen Dealer Utama menyebut pembatalan serta sanksi tidak boleh mengikuti 3 lelang berturut-turut menurut Pasal 23.
+- SME-002 (koreksi setelah penguncian), SME-004 (selisih T&C), dan SME-008 (data investor ritel) tidak diatur PMK 168/PMK.08/2019 sehingga tidak diberi rujukan baru dan tetap menunggu SOP atau rujukan lain.
+- Ketentuan penghitungan Setelmen pada Pasal 5 ayat (3), 10 ayat (2), dan 11 ayat (2) PMK 168/PMK.08/2019 dicabut PMK 111/2024 Pasal 30 angka 4 dan tidak dirujuk. Status berlaku di luar Kompilasi belum diperiksa ke JDIH.
+- Penyesuaian rujukan bukan validasi jawaban: seluruh kasus tetap `BLOCKED` dan belum dibaca SAVI. Jalur menjadi sumber SAVI adalah alur draf, pemeriksaan, dan penerbitan pengetahuan agar ada pemilik, klasifikasi, sitasi, dan jejak audit.
+- Halaman Pemeriksaan SAVI menampilkan bagian "Rujukan yang sudah dicocokkan". Test baru memastikan rujukan terverifikasi hanya menunjuk PMK 168/PMK.08/2019 dengan halaman dan semua kasus tetap diblokir.
+- Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 50 test frontend, 483 test backend mode simulated (40 PostgreSQL dilewati), `savi:eval`, dan `search:eval` lulus. Runtime SAVI dan pencarian tidak berubah karena register tetap dikecualikan dari runtime.
+
 ## 2026-11-10 — Persetujuan mentor atas paket tinjauan
 
 - Project lead meneruskan dan mengonfirmasi jawaban mentor atas Paket Tinjauan Mentor tertanggal 30 Oktober 2026: seluruh usulan disetujui. Dicatat sebagai DEC-20261110-01.

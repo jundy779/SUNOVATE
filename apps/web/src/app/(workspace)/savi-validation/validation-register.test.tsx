@@ -9,6 +9,7 @@ const CASES: IntakeCase[] = [
     draftAnswer: "Lakukan rekonsiliasi berdasarkan sumber resmi.",
     suppliedReferences: ["PMK 111 Tahun 2024"],
     candidateReferences: ["SOP lelang yang disahkan"],
+    verifiedReferences: ["PMK 168/PMK.08/2019 Pasal 12 ayat (1) (Kompilasi Peraturan SUN, hal. 148)"],
     validationNotes: ["Konfirmasi kepada SME lelang"],
     validationStatus: "PENDING_SME_VALIDATION",
     runtimeEligibility: "BLOCKED",
@@ -19,6 +20,7 @@ const CASES: IntakeCase[] = [
     draftAnswer: "Ajukan koreksi melalui jalur resmi.",
     suppliedReferences: ["PMK 111 Tahun 2024"],
     candidateReferences: [],
+    verifiedReferences: [],
     validationNotes: ["Rujukan pasal perlu diperbaiki"],
     validationStatus: "NEEDS_REVISION",
     runtimeEligibility: "BLOCKED",
@@ -46,6 +48,12 @@ describe("ValidationRegister", () => {
     });
     expect(screen.getByText(AUCTION_QUESTION)).toBeInTheDocument();
     expect(screen.queryByText(LOCKED_QUESTION)).not.toBeInTheDocument();
+  });
+
+  it("lists references already matched to the regulation text", () => {
+    render(<ValidationRegister cases={CASES} />);
+    expect(screen.getByText("Rujukan yang sudah dicocokkan")).toBeTruthy();
+    expect(screen.getByText(/PMK 168\/PMK\.08\/2019 Pasal 12 ayat \(1\)/)).toBeTruthy();
   });
 
   it("shows a recoverable empty state and supports printing", () => {

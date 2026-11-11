@@ -16,6 +16,7 @@ export interface IntakeCase {
   draftAnswer: string;
   suppliedReferences: string[];
   candidateReferences: string[];
+  verifiedReferences: string[];
   validationNotes: string[];
   validationStatus: ValidationStatus;
   runtimeEligibility: "BLOCKED";
@@ -46,6 +47,7 @@ function searchableText(item: IntakeCase) {
     item.draftAnswer,
     ...item.suppliedReferences,
     ...item.candidateReferences,
+    ...item.verifiedReferences,
     ...item.validationNotes,
   ]
     .join(" ")
@@ -160,6 +162,14 @@ export function ValidationRegister({ cases }: { cases: IntakeCase[] }) {
                   <ul>
                     {item.suppliedReferences.map((source) => <li key={source}>{source}</li>)}
                   </ul>
+                  {item.verifiedReferences.length ? (
+                    <>
+                      <h4>Rujukan yang sudah dicocokkan</h4>
+                      <ul>
+                        {item.verifiedReferences.map((source) => <li key={source}>{source}</li>)}
+                      </ul>
+                    </>
+                  ) : null}
                   {item.candidateReferences.length ? (
                     <>
                       <h4>Kandidat sumber koreksi</h4>

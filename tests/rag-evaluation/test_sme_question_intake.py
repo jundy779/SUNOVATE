@@ -64,3 +64,17 @@ def test_sme_intake_is_not_silently_promoted_to_golden_set() -> None:
     golden_questions = {case["question"] for case in _load(GOLDEN)["cases"]}
 
     assert intake_questions.isdisjoint(golden_questions)
+
+
+def test_verified_references_cite_the_auction_regulation_with_a_page() -> None:
+    """DEC-20261110-01: references are corrected to PMK 168/PMK.08/2019 with a page in the
+    Kompilasi Peraturan SUN, while every case stays blocked from the SAVI runtime."""
+    intake = _load(INTAKE)
+    assert "DEC-20261110-01" in intake["referenceReview"]
+    corrected = {case["id"] for case in intake["cases"] if case.get("verifiedReferences")}
+    assert corrected == {"SME-001", "SME-003", "SME-005", "SME-006", "SME-007"}
+    for case in intake["cases"]:
+        for reference in case.get("verifiedReferences", []):
+            assert reference.startswith("PMK 168/PMK.08/2019 Pasal ")
+            assert "Kompilasi Peraturan SUN, hal. " in reference
+        assert case["runtimeEligibility"] == "BLOCKED"
