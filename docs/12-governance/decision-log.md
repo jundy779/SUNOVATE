@@ -1,7 +1,7 @@
 # Decision Log
 
 **Status:** PROPOSED
-**Last Updated:** 2026-11-10
+**Last Updated:** 2026-11-11
 
 ## Purpose
 
@@ -279,6 +279,18 @@ Entri berikut mencatat jawaban knowledge owner atas delapan pertanyaan slide 24 
 - **Dampak:** [permission-matrix](../06-security/permission-matrix.md), [open-questions](../00-project/open-questions.md), [demo-scenario-month-one](../01-product/demo-scenario-month-one.md), `sme_question_intake.json`, rancangan gateway model SAVI
 - **ADR/BR terkait:** ADR-004, ADR-006, ADR-020
 - **Tindak lanjut:** menyesuaikan rujukan pasal pada delapan skenario lalu membuka blokirnya dari retrieval; memilih model lokal dan spesifikasi servernya; mengumpulkan isi jawaban butir 4 sampai 7; menetapkan tanggal demo. Bila tersedia, bukti tertulis persetujuan (pesan atau notulen) dilampirkan pada entri ini.
+
+### DEC-20261111-01
+
+- **Open question:** Tidak ada (identitas asisten AI)
+- **Tanggal jawaban:** 2026-11-11
+- **Sumber:** Jawaban mentor yang diteruskan project lead pada 2026-11-11 atas pertanyaan "SAVI AI singkatan dari apa", dengan tiga usulan kepanjangan dari tim. Mentor tidak memilih usulan tersebut dan memberi kepanjangan sendiri.
+- **Jawaban:** SAVI adalah singkatan dari "SUN AI Virtual Intelligence".
+- **Keputusan:** Kepanjangan ini menjadi identitas resmi asisten AI SUNOVATE. Nama tampilan tetap "SAVI AI". Ejaan dibakukan menjadi "Intelligence" (pesan yang diteruskan menulis "INTELEGENCE").
+- **Status:** CONFIRMED (mentor, diteruskan project lead)
+- **Dampak:** halaman SAVI AI, bagian "Cara SAVI AI menjawab" di beranda, README, glosarium
+- **ADR/BR terkait:** ADR-004
+- **Tindak lanjut:** Tidak ada
 
 ## Related Documents
 

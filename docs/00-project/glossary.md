@@ -70,6 +70,7 @@ Format sumber kompilasi: `Kompilasi Peraturan SUN, <regulasi>, Pasal X, hal. N` 
 
 | Istilah | Definisi | Label |
 |---|---|---|
+| SAVI AI | SUN AI Virtual Intelligence: nama publik asisten pengetahuan SUNOVATE yang menjawab hanya dari pengetahuan terbit yang boleh diakses penanya, dengan sitasi. Mesin internalnya disebut Hermes. | **CONFIRMED** (mentor, DEC-20261111-01) |
 | Hermes | AI Knowledge Assistant SUNOVATE. Hanya menerima konteks terotorisasi melalui HermesGateway, tidak mengakses database. | **CONFIRMED** ([Brief], ADR-004) |
 | HermesGateway | Application service yang menjadi satu-satunya pintu Hermes ke data. | **CONFIRMED** (ADR-004) |
 | RAG | Retrieval-Augmented Generation; jawaban disusun dari potongan dokumen yang diambil terlebih dahulu. | **PROPOSED** pendekatan |

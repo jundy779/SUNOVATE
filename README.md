@@ -11,7 +11,7 @@ program MagangHub periode 21 September 2026 sampai 20 Maret 2027. **Bukan sistem
 ## Batas penting
 - Seluruh data adalah `SIMULATED_DATA` fiktif. Tidak ada data internal, keuangan, atau pribadi.
 - Integrasi produksi (SSO, SharePoint, Power BI, Telegram, WhatsApp, Kemenkeu Satu, Bank Indonesia, data pasar) **tidak tersedia** dan dinonaktifkan.
-- Asisten AI tampil ke pengguna sebagai **SAVI AI**. Nama Hermes hanya dipakai pada identifier kode internal (mesin yang direncanakan: Hermes Agent, Nous Research). SAVI saat ini berjalan pada mode `development_extractive`, embedding nonaktif, dan bukan RAG produksi.
+- Asisten AI tampil ke pengguna sebagai **SAVI AI** (SUN AI Virtual Intelligence, DEC-20261111-01). Nama Hermes hanya dipakai pada identifier kode internal (mesin yang direncanakan: Hermes Agent, Nous Research). SAVI saat ini berjalan pada mode `development_extractive`, embedding nonaktif, dan bukan RAG produksi.
 - SAVI tidak mengakses database secara langsung, tidak memberi keputusan keuangan, dan tidak menjalankan aksi tulis tanpa persetujuan manusia.
 - File berklasifikasi `RAHASIA` (file tertentu saja) hanya boleh dibaca lewat Secure Viewer tanpa download, edit, hapus, copy, atau cetak. Status: penampil, daftar pembaca, pernyataan kerahasiaan, tanda air, batas laju, dan enkripsi envelope sudah berjalan untuk `SIMULATED_DATA` (ADR-020, TASK-027 sampai TASK-032). Saat ini isi dienkripsi dengan kunci sementara per proses yang hilang saat API dimulai ulang. Kunci berbasis TPM (HSM menyusul) belum terpasang, sehingga dokumen asli tetap dilarang (OQ-40 sampai OQ-42).
 - SUNOVATE bukan SUN Job Monitor dan tidak menggantikan sistem transaksi SUN resmi.

@@ -15,7 +15,7 @@ export default async function SaviAiPage() {
   return (
     <>
       <PageHeader
-        eyebrow="SAVI AI"
+        eyebrow="SAVI AI · SUN AI Virtual Intelligence"
         title="Asisten pengetahuan berbasis sumber"
         description="SAVI AI menjawab hanya dari pengetahuan terbit yang boleh Anda akses, selalu dengan sitasi. SAVI AI tidak mengakses database secara langsung, tidak memberi keputusan keuangan, dan tidak menjalankan perubahan data tanpa persetujuan manusia."
         action={<SimulatedLabel />}

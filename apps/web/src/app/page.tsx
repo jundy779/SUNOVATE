@@ -84,7 +84,7 @@ export default function Home() {
           <section aria-labelledby="savi-title">
             <header className="ed-head">
               <h2 id="savi-title">Cara SAVI AI menjawab</h2>
-              <p>Asisten pengetahuan untuk pertanyaan seputar Surat Utang Negara</p>
+              <p>SUN AI Virtual Intelligence: asisten pengetahuan untuk pertanyaan seputar Surat Utang Negara</p>
             </header>
             <dl className="rule-list">
               {answerRules.map(([term, detail]) => (

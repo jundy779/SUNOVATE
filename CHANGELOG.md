@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-11 — Kepanjangan resmi SAVI
+
+- Mentor menetapkan SAVI sebagai singkatan dari "SUN AI Virtual Intelligence" (DEC-20261111-01). Kepanjangan ditampilkan di label kepala halaman SAVI AI dan pada bagian "Cara SAVI AI menjawab" di beranda, serta dicatat di README dan glosarium. Nama tampilan tetap "SAVI AI".
+- Validasi aktual (Linux): TypeScript, ESLint, 50 test frontend, dan 15/15 skenario Playwright e2e lulus; label kepala halaman SAVI AI diperiksa visual.
+
 ## 2026-11-11 — Rujukan delapan skenario mentor disesuaikan ke PMK 168/PMK.08/2019
 
 - Sesuai DEC-20261110-01, rujukan pasal di `sme_question_intake.json` dicocokkan dengan teks PMK 168/PMK.08/2019 tentang Lelang SUN di Pasar Perdana Domestik pada Kompilasi Peraturan SUN (hal. 140-167). Rujukan mentor yang asli tetap disimpan; rujukan hasil pencocokan dicatat terpisah di kolom baru `verifiedReferences` beserta halamannya.
