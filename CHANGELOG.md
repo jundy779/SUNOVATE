@@ -5,6 +5,7 @@
 - Mentor menilai teks pembuka beranda kurang profesional. Judul "Pengetahuan organisasi yang tetap utuh ketika orangnya berganti." diganti "SUNOVATE, Sistem Manajemen Pengetahuan Direktorat Surat Utang Negara", label di atasnya menjadi "Direktorat Surat Utang Negara · DJPPR", dan paragraf pembuka kini menjelaskan SUNOVATE beserta kepanjangannya: menghimpun regulasi, panduan kerja, keputusan, dan pembelajaran pengelolaan SUN dalam satu sistem yang aman, tertata, dan mudah ditelusuri, dilengkapi asisten SAVI AI. Arah "tentang SUNOVATE" dipilih project lead.
 - Skenario e2e beranda disesuaikan dengan judul baru.
 - Validasi aktual (Linux): TypeScript, ESLint, 52 test frontend, dan 16/16 skenario Playwright e2e lulus; beranda diperiksa visual pada 1440 dan 390 px.
+- Validasi aktual (Windows 11, Git Bash, Python 3.12 via uv): patch 0034 diterapkan dengan `git am` sebagai `715bf02`. Hasil validasi gabungan dengan patch 0033 tercatat di entri "Penghubung SAVI ke Hermes Agent". Beranda dibuka di browser bawaan Claude Code (server pengembangan di `127.0.0.1`): satu-satunya `h1` berbunyi "SUNOVATE, Sistem Manajemen Pengetahuan Direktorat Surat Utang Negara", dengan label "Direktorat Surat Utang Negara · DJPPR" di atasnya dan paragraf pembuka yang menyebut kepanjangan SUNOVATE serta asisten SAVI AI.
 
 ## 2026-11-12 — Penghubung SAVI ke Hermes Agent
 
@@ -14,6 +15,13 @@
 - Panduan `docs/05-ai-rag/hermes-agent-setup.md` menjelaskan konfigurasi aman Hermes Agent: semua toolset dimatikan lewat `agent.disabled_toolsets`, memori dan profil pengguna mati, penulisan skill wajib persetujuan, API server hanya di `127.0.0.1` dengan kunci, model di jaringan kantor, beserta lima pemeriksaan sebelum dipakai. Model yang dipakai Hermes tetap kendali operasional karena SUNOVATE tidak dapat memeriksanya.
 - Belum diuji dengan Hermes Agent dan model sungguhan; pengujian memakai server tiruan di loopback. Spesifikasi server kantor masih ditunggu (OQ-11).
 - Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 52 test frontend, 509 test backend mode simulated (40 PostgreSQL dilewati), 549 test mode PostgreSQL, `savi:eval`, dan `demo:smoke` lulus. 18 test baru menjalankan server Hermes Agent tiruan di loopback: jawaban bersitasi, penolakan karena sumber kurang, tiga jenis kegagalan, server tak terjangkau, instruksi sisipan di dalam potongan, batasan alamat endpoint, validasi konfigurasi, serta alur SAVI penuh lewat API dengan server tiruan menjawab dan gagal. Frontend tidak berubah.
+- Validasi aktual (Windows 11, Git Bash, Python 3.12 via uv): `git fetch origin && git pull --ff-only` (sudah terbaru), dev server dihentikan.
+  - Patch 0033 diterapkan dengan `git am` sebagai `3a302a0` dan mengubah tepat 10 berkas (477 baris ditambah, 7 dihapus). Berkas patch yang dikirim ulang bersama 0034 identik isinya; bedanya hanya baris versi git di akhir berkas, sehingga tidak diterapkan dua kali. Patch 0034 menyusul sebagai `715bf02`.
+  - `HERMES_MODE` tetap `development` di `.env` dan nilai bawaan; Hermes Agent tidak dipasang atau dinyalakan.
+  - `pnpm validate` lulus (2 menit 59 detik): ESLint, Ruff, TypeScript, mypy strict (73 berkas), 52 test frontend (15 berkas), 508 test backend lulus (41 dilewati), dan build produksi (32 halaman).
+  - `pnpm db:test` tanpa beban lain: 548 lulus, 1 dilewati, dalam 551 detik (total 573 detik). Waktunya lebih lama dari 325 detik pada patch 0032 (529 test). Satu putaran sebelumnya hanya dengan patch 0033 juga lulus 548/1 dalam 512 detik, tetapi sebagian berjalan bersamaan dengan web dan API yang dinyalakan untuk pemeriksaan mentor, sehingga tidak dihitung sebagai hasil tanpa beban.
+  - `pnpm savi:eval` lulus: 43 kasus, akurasi keputusan 1,0, tidak ada kasus gagal.
+  - `pnpm e2e` dengan `pnpm api:dev` (`DATA_BACKEND=simulated`, `environment: development`), server web dinyalakan Playwright di `127.0.0.1`: 16/16 skenario lulus.
 
 ## 2026-11-11 — SAVI menyusun draf tugas administratif untuk diriviu pegawai
 
