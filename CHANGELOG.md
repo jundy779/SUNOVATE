@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-12 — Teks pembuka beranda diganti atas permintaan mentor
+
+- Mentor menilai teks pembuka beranda kurang profesional. Judul "Pengetahuan organisasi yang tetap utuh ketika orangnya berganti." diganti "SUNOVATE, Sistem Manajemen Pengetahuan Direktorat Surat Utang Negara", label di atasnya menjadi "Direktorat Surat Utang Negara · DJPPR", dan paragraf pembuka kini menjelaskan SUNOVATE beserta kepanjangannya: menghimpun regulasi, panduan kerja, keputusan, dan pembelajaran pengelolaan SUN dalam satu sistem yang aman, tertata, dan mudah ditelusuri, dilengkapi asisten SAVI AI. Arah "tentang SUNOVATE" dipilih project lead.
+- Skenario e2e beranda disesuaikan dengan judul baru.
+- Validasi aktual (Linux): TypeScript, ESLint, 52 test frontend, dan 16/16 skenario Playwright e2e lulus; beranda diperiksa visual pada 1440 dan 390 px.
+
 ## 2026-11-12 — Penghubung SAVI ke Hermes Agent
 
 - `HermesAgentClient` (`providers/hermes_agent.py`) menghubungkan `HermesGateway` ke API server Hermes Agent dari Nous Research lewat `/v1/chat/completions` yang kompatibel OpenAI. Aktif hanya dengan `HERMES_MODE=hermes_agent`; mode bawaan tetap `development`.

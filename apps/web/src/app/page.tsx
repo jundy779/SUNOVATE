@@ -30,11 +30,12 @@ export default function Home() {
 
       <section className="hero" aria-labelledby="hero-title">
         <div className="hero-text">
-          <p className="kicker">Memori institusional Direktorat Surat Utang Negara</p>
-          <h1 id="hero-title">Pengetahuan organisasi yang tetap utuh ketika orangnya berganti.</h1>
+          <p className="kicker">Direktorat Surat Utang Negara · DJPPR</p>
+          <h1 id="hero-title">SUNOVATE, Sistem Manajemen Pengetahuan Direktorat Surat Utang Negara</h1>
           <p className="hero-standfirst">
-            SUNOVATE menyimpan pengalaman kerja, keputusan, dan rujukan SUN dalam satu tempat yang tertata,
-            sehingga konteks sebuah kebijakan masih dapat ditelusuri bertahun-tahun kemudian.
+            SUNOVATE (SUN Organizational Values and Transformation through Experience) menghimpun regulasi,
+            panduan kerja, keputusan, dan pembelajaran pengelolaan Surat Utang Negara dalam satu sistem yang
+            aman, tertata, dan mudah ditelusuri, dilengkapi asisten SAVI AI.
           </p>
           <div className="hero-actions">
             <Link className="button" href="/login">Akses SUNOVATE</Link>
