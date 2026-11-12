@@ -17,6 +17,7 @@ from .development import (
     DisabledNotificationProvider,
     LocalDocumentProvider,
 )
+from .hermes_agent import HermesAgentClient
 from .interfaces import (
     AIProvider,
     DocumentProvider,
@@ -48,7 +49,13 @@ class Providers:
             status("DocumentProvider", self.document.name, "SharePoint belum tersedia; OQ-06"),
             status("IdentityProvider", self.identity.name, "SSO belum ditetapkan; OQ-07"),
             status("NotificationProvider", self.notification.name, "Tidak ada kanal produksi"),
-            status("HermesClient", self.hermes.name, "Runtime pengembangan tanpa akses DB"),
+            status(
+                "HermesClient",
+                self.hermes.name,
+                "Hermes Agent lokal; hanya menerima potongan terotorisasi"
+                if self.hermes.name == "hermes_agent"
+                else "Runtime pengembangan tanpa akses DB",
+            ),
             ProviderStatus(
                 "MarketDataProvider",
                 "not_implemented",
@@ -72,5 +79,14 @@ def build_providers(settings: Settings, lookup: Callable[[str], User | None]) ->
         document=LocalDocumentProvider(),
         identity=DevelopmentIdentityProvider(lookup),
         notification=DisabledNotificationProvider(),
-        hermes=DevelopmentHermesClient(ai),
+        hermes=(
+            HermesAgentClient(
+                settings.hermes_agent_base_url,
+                settings.hermes_agent_api_key,
+                settings.hermes_agent_model,
+                settings.hermes_agent_timeout_seconds,
+            )
+            if settings.hermes_mode == "hermes_agent"
+            else DevelopmentHermesClient(ai)
+        ),
     )

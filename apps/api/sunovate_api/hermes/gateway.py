@@ -18,7 +18,13 @@ from uuid import UUID
 from ..authz.principal import Principal
 from ..authz.service import AuthorizationService
 from ..core.errors import ApiError, not_found
-from ..providers.interfaces import ContextPassage, GenerationRequest, HermesClient
+from ..providers.hermes_agent import HermesAgentUnavailableError
+from ..providers.interfaces import (
+    ContextPassage,
+    GenerationRequest,
+    GenerationResult,
+    HermesClient,
+)
 from ..store.records import AiCitation, AiConversation, AiMessage, ApprovalRequest
 from ..store.repository import Repository
 from .guards import CitationValidator, OutputGuard
@@ -245,7 +251,14 @@ class HermesGateway:
                     ContextPassage(n, i.entry.title, i.chunk.section_label, i.chunk.content)
                     for n, i in citation_map.items()
                 ]
-                draft = self._client.answer(GenerationRequest(question, passages, query_terms))
+                try:
+                    draft = self._client.answer(GenerationRequest(question, passages, query_terms))
+                except HermesAgentUnavailableError:
+                    # The runtime failed: say so plainly instead of a 500 or a guessed answer.
+                    draft = GenerationResult(text="", provider=self._client.name)
+                    unavailable = True
+                else:
+                    unavailable = False
                 check = self._citations.validate(
                     draft.text, citation_map, frozenset(i.chunk.id for i in safe)
                 )
@@ -258,7 +271,22 @@ class HermesGateway:
                     ],
                     ceiling=ceiling,
                 )
-                if not check.valid:
+                if unavailable:
+                    decision, reason, answer = (
+                        "INSUFFICIENT_EVIDENCE",
+                        "runtime_unavailable",
+                        (INSUFFICIENT_MESSAGE),
+                    )
+                    follow_up = HermesFollowUp(
+                        status="RUNTIME_UNAVAILABLE",
+                        title="SAVI sedang tidak dapat dihubungi",
+                        guidance=(
+                            "Layanan AI SAVI sedang tidak tersedia. Coba lagi beberapa saat lagi "
+                            "atau gunakan Pencarian untuk membuka sumbernya langsung."
+                        ),
+                        clarification_prompt=None,
+                    )
+                elif not check.valid:
                     decision, reason, answer = (
                         "INSUFFICIENT_EVIDENCE",
                         check.reason,

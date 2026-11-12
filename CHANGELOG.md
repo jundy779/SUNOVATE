@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-11-12 — Penghubung SAVI ke Hermes Agent
+
+- `HermesAgentClient` (`providers/hermes_agent.py`) menghubungkan `HermesGateway` ke API server Hermes Agent dari Nous Research lewat `/v1/chat/completions` yang kompatibel OpenAI. Aktif hanya dengan `HERMES_MODE=hermes_agent`; mode bawaan tetap `development`.
+- Pengaman di sisi SUNOVATE: endpoint hanya boleh loopback atau jaringan privat (alamat publik, nama host selain localhost, `file:`, dan `ftp:` ditolak), `HERMES_AGENT_API_KEY` minimal 16 karakter wajib, tidak ada definisi alat yang dikirim, temperatur 0, dan hanya pertanyaan serta potongan terotorisasi yang dikirim. Potongan dibungkus sebagai data dan prompt sistem memerintahkan isinya tidak diperlakukan sebagai perintah. Setiap penanda sitasi tetap divalidasi oleh `CitationValidator`.
+- Bila Hermes Agent gagal (tidak terjangkau, batas waktu, status error, atau jawaban kosong), SAVI menjawab dengan keputusan `INSUFFICIENT_EVIDENCE`, alasan `runtime_unavailable`, dan tindak lanjut "SAVI sedang tidak dapat dihubungi", bukan error 500 atau jawaban tebakan. Bila model menyatakan sumber tidak cukup, jawabannya diperlakukan sebagai bukti tidak cukup.
+- Panduan `docs/05-ai-rag/hermes-agent-setup.md` menjelaskan konfigurasi aman Hermes Agent: semua toolset dimatikan lewat `agent.disabled_toolsets`, memori dan profil pengguna mati, penulisan skill wajib persetujuan, API server hanya di `127.0.0.1` dengan kunci, model di jaringan kantor, beserta lima pemeriksaan sebelum dipakai. Model yang dipakai Hermes tetap kendali operasional karena SUNOVATE tidak dapat memeriksanya.
+- Belum diuji dengan Hermes Agent dan model sungguhan; pengujian memakai server tiruan di loopback. Spesifikasi server kantor masih ditunggu (OQ-11).
+- Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 52 test frontend, 509 test backend mode simulated (40 PostgreSQL dilewati), 549 test mode PostgreSQL, `savi:eval`, dan `demo:smoke` lulus. 18 test baru menjalankan server Hermes Agent tiruan di loopback: jawaban bersitasi, penolakan karena sumber kurang, tiga jenis kegagalan, server tak terjangkau, instruksi sisipan di dalam potongan, batasan alamat endpoint, validasi konfigurasi, serta alur SAVI penuh lewat API dengan server tiruan menjawab dan gagal. Frontend tidak berubah.
+
 ## 2026-11-11 — SAVI menyusun draf tugas administratif untuk diriviu pegawai
 
 - Arahan mentor DEC-20261111-02: SAVI melaksanakan tugas administratif pegawai dengan hasil yang diriviu pegawai, mencakup rekap dan laporan dari Monitoring Kerja, draf notulen dan tindak lanjut rapat, draf nota dinas atau surat, serta ringkasan dokumen. Dicatat sebagai FR-61.

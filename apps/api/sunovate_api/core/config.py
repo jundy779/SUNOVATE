@@ -77,7 +77,12 @@ class Settings(BaseSettings):
     notification_provider: Literal["disabled"] = "disabled"
     ai_provider: Literal["development_extractive", "disabled"] = "development_extractive"
     embedding_provider: Literal["disabled"] = "disabled"
-    hermes_mode: Literal["development", "disabled"] = "development"
+    hermes_mode: Literal["development", "hermes_agent", "disabled"] = "development"
+    # Hermes Agent API server (only when HERMES_MODE=hermes_agent); loopback or private network.
+    hermes_agent_base_url: str = "http://127.0.0.1:8642/v1"
+    hermes_agent_api_key: str = ""
+    hermes_agent_model: str = "hermes-agent"
+    hermes_agent_timeout_seconds: float = Field(default=60.0, gt=0, le=300)
     # CONFIDENTIAL is never processed by Hermes, so it is not an accepted ceiling (BR-22, NFR-10).
     hermes_max_classification: Literal["PUBLIC", "INTERNAL", "RESTRICTED"] = "RESTRICTED"
 
@@ -99,6 +104,13 @@ class Settings(BaseSettings):
         if self.dev_auth_enabled and self.app_env not in ("development", "test"):
             # Password-less login is for local development and tests only, never staging or UAT.
             raise ValueError("DEV_AUTH_ENABLED must be false unless APP_ENV is development or test")
+        if self.hermes_mode == "hermes_agent":
+            from ..providers.hermes_agent import is_internal_endpoint  # noqa: PLC0415 - avoid cycle
+
+            if not is_internal_endpoint(self.hermes_agent_base_url):
+                raise ValueError("HERMES_AGENT_BASE_URL must be a loopback or private address")
+            if len(self.hermes_agent_api_key) < 16:
+                raise ValueError("HERMES_AGENT_API_KEY must be set (at least 16 characters)")
         if self.dev_auth_secret and len(self.dev_auth_secret) < 32:
             # A short secret makes HMAC tokens guessable (AUD-17); empty means ephemeral random.
             raise ValueError("DEV_AUTH_SECRET must be empty or at least 32 characters")

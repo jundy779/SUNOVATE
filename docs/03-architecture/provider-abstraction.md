@@ -14,7 +14,7 @@ Mendokumentasikan interface provider dan implementasi yang ada, agar integrasi p
 | `DocumentProvider` | `describe(location)` | `LocalDocumentProvider` (hanya validasi `local://`, tidak membaca file) | `DOCUMENT_PROVIDER=local` | Belum ada (OQ-06) |
 | `IdentityProvider` | `resolve_login(email)` | `DevelopmentIdentityProvider` (hanya pengguna `SIMULATED_DATA`) | `IDENTITY_PROVIDER=development` | Belum ada (OQ-07) |
 | `NotificationProvider` | `send(...)` | `DisabledNotificationProvider` (selalu `False`) | `NOTIFICATION_PROVIDER=disabled` | Belum ada |
-| `HermesClient` | `answer(GenerationRequest)` | `DevelopmentHermesClient` (mendelegasikan ke `AIProvider`) | `HERMES_MODE=development\|disabled` | Belum ada |
+| `HermesClient` | `answer(GenerationRequest)` | `DevelopmentHermesClient` (mendelegasikan ke `AIProvider`); `HermesAgentClient` ke API server Hermes Agent di loopback atau jaringan privat | `HERMES_MODE=development\|hermes_agent\|disabled` | Siap dihubungkan; model lokal belum ditetapkan ([hermes-agent-setup](../05-ai-rag/hermes-agent-setup.md)) |
 | `MarketDataProvider` | - | Tidak diimplementasikan; dilaporkan `not_implemented` | - | Belum ada |
 
 Komponen aplikasi pendukung: `RetrievalService`, `AuthorizationService`, `CitationValidator`, `OutputGuard`, `ScopeGuard`, `HermesGateway` (lihat [hermes-overview.md](../05-ai-rag/hermes-overview.md)).
