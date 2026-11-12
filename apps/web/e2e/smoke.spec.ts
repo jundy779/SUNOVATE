@@ -287,3 +287,27 @@ test("SAVI drafts an administrative report that the employee reviews", async ({ 
   await expect(page.getByText("Draf ditolak dan tidak dipakai.")).toBeVisible();
   await expect(editor).toHaveCount(0);
 });
+
+test.describe("SAVI administrative task approval", () => {
+  test.use({ permissions: ["clipboard-read", "clipboard-write"] });
+
+  test("an approved draft is copied exactly as the employee edited it", async ({ page }) => {
+    await page.goto("/login");
+    await expect(page.getByRole("button", { name: "Masuk dengan akses pengembangan" })).toBeEnabled();
+    await page.getByLabel("Email pengguna simulasi").fill("sim.staff.pppsun@sunovate.local");
+    await page.getByRole("button", { name: "Masuk dengan akses pengembangan" }).click();
+    await page.waitForURL(/\/dashboard$/);
+
+    await page.goto("/savi-ai");
+    await page.getByRole("button", { name: "Susun draf" }).click();
+    const editor = page.getByLabel("Periksa dan ubah draf sebelum disetujui");
+    await expect(editor).toHaveValue(/Cakupan: PPPSUN/);
+    const edited = `${await editor.inputValue()}\nCatatan pegawai: sudah diperiksa.`;
+    await editor.fill(edited);
+    await page.getByRole("button", { name: "Setujui dan salin" }).click();
+    await expect(page.getByText("Draf disetujui dan disalin. Tempelkan ke dokumen atau pesan Anda.")).toBeVisible();
+    const copied = await page.evaluate(() => navigator.clipboard.readText());
+    // Windows stores line breaks as CRLF on the clipboard; the text itself must be identical.
+    expect(copied.replace(/\r\n/g, "\n")).toBe(edited);
+  });
+});

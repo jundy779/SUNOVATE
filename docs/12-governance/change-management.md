@@ -83,6 +83,7 @@ flowchart LR
 |---|---|---|---|
 | `v0.1.0` | `357df94` | 2026-10-02 | [v0.1.0](../13-handover/releases/v0.1.0.md) |
 | `v0.2.0` | `8d63d54` | 2026-10-27 | [v0.2.0](../13-handover/releases/v0.2.0.md) |
+| `v0.3.0` | commit kenaikan versi 0.3.0 | 2026-11-12 | [v0.3.0](../13-handover/releases/v0.3.0.md) |
 
 ## CHANGELOG
 

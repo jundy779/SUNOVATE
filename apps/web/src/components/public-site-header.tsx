@@ -11,7 +11,7 @@ export function PublicSiteHeader({ compact = false }: { compact?: boolean }) {
       </div>
       <header className="site-header">
         <Link className="site-brand" href="/" aria-label="Beranda SUNOVATE">
-          <Image src="/brand/logo-dsun.png" alt="Direktorat Surat Utang Negara" width={122} height={54} priority />
+          <Image src="/brand/logo-dsun.png" alt="Direktorat Surat Utang Negara" width={122} height={54} loading="eager" />
           <span className="site-wordmark">
             <strong>SUNOVATE</strong>
             <small>Direktorat Surat Utang Negara</small>

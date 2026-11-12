@@ -14,6 +14,8 @@ from typing import Literal
 from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from .. import __version__
+
 AppEnv = Literal["development", "test", "staging", "production"]
 # Runtime data backends: in-memory SIMULATED_DATA store or PostgreSQL (ADR-015, PROPOSED).
 DataBackendName = Literal["simulated", "postgres"]
@@ -28,7 +30,7 @@ class Settings(BaseSettings):
     )
 
     app_name: str = "SUNOVATE API"
-    app_version: str = "0.2.0"
+    app_version: str = __version__  # single source: sunovate_api/__init__.py
     app_env: AppEnv = "development"
     log_level: str = "INFO"
     api_prefix: str = "/api/v1"

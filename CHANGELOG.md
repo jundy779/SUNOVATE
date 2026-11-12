@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0 - 2026-11-12 (pengembangan, belum siap produksi)
+
+- Versi dinaikkan ke 0.3.0 di `package.json` root, web, dan contracts, `apps/api/pyproject.toml`, `sunovate_api/__init__.py`, dan `uv.lock`. Catatan rilis: `docs/13-handover/releases/v0.3.0.md`.
+- Isi rilis adalah seluruh entri bertanggal 28 Oktober sampai 12 November 2026 di bawah: penutupan temuan audit, pencabutan sesi saat keluar, pembaruan pustaka dan `pnpm deps:audit`, server uji PostgreSQL yang lebih cepat, tampilan HP lipat dan tablet, kepala dan kaki halaman, kinerja dan kebijakan keamanan skrip, keputusan mentor DEC-20261110-01, DEC-20261111-01, dan DEC-20261111-02, skenario mentor sesuai PMK 168/PMK.08/2019, draf laporan pekerjaan SAVI, penghubung Hermes Agent, dan teks pembuka beranda.
+- Versi API kini dibaca dari satu sumber (`sunovate_api.__version__`). Sebelumnya `core/config.py` menyimpan angka versi sendiri, sehingga `/api/v1/health` tetap melaporkan 0.2.0 setelah versi paket dinaikkan; test baru `test_version_consistency.py` memastikan ketiga `package.json`, `pyproject.toml`, `uv.lock`, dan `/api/v1/health` selalu sama.
+- Perbaikan kecil yang ikut dalam rilis ini: logo tidak lagi memakai `priority` yang sudah usang di Next.js 16 (diganti `loading="eager"`), dan skenario e2e baru memastikan draf yang disetujui pegawai tersalin persis sama dengan hasil ubahannya, dengan akhir baris CRLF Windows dinormalkan.
+- Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 52 test frontend, 510 test backend mode simulated (40 PostgreSQL dilewati), 550 test mode PostgreSQL, dan 17/17 skenario Playwright e2e lulus. `/api/v1/health` dan kaki halaman menampilkan 0.3.0. Build produksi tanpa peringatan atau error di konsol browser pada beranda dan empat halaman kerja, di kepadatan layar 1x dan 2x.
+
 ## 2026-11-12 — Teks pembuka beranda diganti atas permintaan mentor
 
 - Mentor menilai teks pembuka beranda kurang profesional. Judul "Pengetahuan organisasi yang tetap utuh ketika orangnya berganti." diganti "SUNOVATE, Sistem Manajemen Pengetahuan Direktorat Surat Utang Negara", label di atasnya menjadi "Direktorat Surat Utang Negara · DJPPR", dan paragraf pembuka kini menjelaskan SUNOVATE beserta kepanjangannya: menghimpun regulasi, panduan kerja, keputusan, dan pembelajaran pengelolaan SUN dalam satu sistem yang aman, tertata, dan mudah ditelusuri, dilengkapi asisten SAVI AI. Arah "tentang SUNOVATE" dipilih project lead.
