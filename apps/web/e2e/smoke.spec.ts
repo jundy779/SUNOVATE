@@ -34,7 +34,7 @@ test("staff logs in, sees scoped dashboard, and asks SAVI AI", async ({ page }) 
 test("public landing page explains scope without loading authenticated data", async ({ page }) => {
   await page.goto("/");
   await expect(page).toHaveTitle("SUNOVATE");
-  await expect(page.getByRole("heading", { name: /Sistem Manajemen Pengetahuan Direktorat Surat Utang Negara/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /SUNOVATE \(SUN Organizational Values and Transformation through Experience\)/ })).toBeVisible();
   await expect(page.getByRole("link", { name: "Akses SUNOVATE" })).toHaveAttribute("href", "/login");
   await expect(page.getByText("SUNOVATE bukan sistem transaksi dan tidak mengambil keputusan keuangan", { exact: false })).toBeVisible();
   await expect(page.getByText(/Versi \d+\.\d+\.\d+/)).toBeVisible();

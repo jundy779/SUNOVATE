@@ -31,9 +31,6 @@
 .site-header { position: sticky; top: 0; z-index: 30; display: flex; align-items: stretch; gap: 2rem; min-height: 80px; padding: 0 var(--gutter); border-bottom: 1px solid var(--line); background: var(--white); }
 .site-brand { display: flex; align-items: center; gap: 1.1rem; color: var(--navy); }
 .site-brand img { width: 122px; height: auto; }
-.site-wordmark { display: grid; gap: .25rem; padding-left: 1.1rem; border-left: 1px solid var(--line); }
-.site-wordmark strong { font: 700 1.18rem/1 var(--font-heading); letter-spacing: .07em; }
-.site-wordmark small { color: var(--muted); font-size: .7rem; }
 .site-nav { display: flex; align-items: stretch; gap: clamp(1rem, 2.4vw, 2.4rem); margin-left: auto; }
 .site-nav a { display: flex; align-items: center; border-bottom: 3px solid transparent; color: var(--navy); font-size: .88rem; font-weight: 600; transition: border-color 160ms ease; }
 .site-nav a:hover, .site-nav a:focus-visible { border-bottom-color: var(--gold); }
@@ -272,6 +269,7 @@
 /* Responsive */
 @media (max-width: 1100px) {
   .site-nav { display: none; }
+  .site-nav + .site-cta { margin-left: auto; }
   .hero, .briefing, .db-grid, .db-savi { grid-template-columns: minmax(0, 1fr); }
   .service-rail { grid-template-columns: minmax(0, 1fr); }
   .service-rail h2 { padding: 1.25rem 0 .5rem; border-right: 0; }
@@ -298,7 +296,6 @@
   .gov-bar span + span { padding-left: .8rem; }
   .site-header { gap: 1rem; min-height: 68px; }
   .site-brand img { width: 92px; }
-  .site-wordmark small { display: none; }
   .service-rail ul, .db-ledger, .db-indicators dl { grid-template-columns: minmax(0, 1fr); }
   .service-rail li + li { border-left: 0; border-top: 1px solid var(--line); }
   .db-ledger-item + .db-ledger-item { border-left: 0; border-top: 1px solid var(--line); }

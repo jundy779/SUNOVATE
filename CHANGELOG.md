@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-12 — Judul beranda dan kepala halaman satu identitas (arahan mentor)
+
+- Atas arahan mentor, judul beranda menjadi "SUNOVATE (SUN Organizational Values and Transformation through Experience)". Frasa "Sistem Manajemen Pengetahuan Direktorat Surat Utang Negara" dipindah ke paragraf deskripsi di bawahnya. Pengecekan judul di `e2e/smoke.spec.ts` disesuaikan.
+- Mentor menilai logo DSUN yang berdampingan dengan tulisan "SUNOVATE / Direktorat Surat Utang Negara" di kepala halaman publik (beranda dan login) terkesan dua identitas. Tulisan itu dihapus, sehingga kepala halaman hanya menampilkan logo DSUN; aturan CSS `.site-wordmark` yang tidak terpakai ikut dihapus.
+- Perbaikan kecil: di layar di bawah 1100 px, ketika navigasi disembunyikan, tombol "Masuk" kembali rata kanan dan tidak lagi menempel ke logo.
+- Belum diubah: sidebar halaman kerja masih menampilkan logo DSUN bersama tulisan "SUNOVATE"; menunggu keputusan apakah dibuat sama.
+- Validasi aktual (Windows 11, Git Bash, Python 3.12 via uv): `pnpm validate` lulus (52 test frontend, 509 test backend lulus dan 41 dilewati, build produksi) dan `pnpm e2e` 17/17 lulus.
+
 ## 0.3.0 - 2026-11-12 (pengembangan, belum siap produksi)
 
 - Versi dinaikkan ke 0.3.0 di `package.json` root, web, dan contracts, `apps/api/pyproject.toml`, `sunovate_api/__init__.py`, dan `uv.lock`. Catatan rilis: `docs/13-handover/releases/v0.3.0.md`.

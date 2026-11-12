@@ -31,11 +31,11 @@ export default function Home() {
       <section className="hero" aria-labelledby="hero-title">
         <div className="hero-text">
           <p className="kicker">Direktorat Surat Utang Negara · DJPPR</p>
-          <h1 id="hero-title">SUNOVATE, Sistem Manajemen Pengetahuan Direktorat Surat Utang Negara</h1>
+          <h1 id="hero-title">SUNOVATE (SUN Organizational Values and Transformation through Experience)</h1>
           <p className="hero-standfirst">
-            SUNOVATE (SUN Organizational Values and Transformation through Experience) menghimpun regulasi,
-            panduan kerja, keputusan, dan pembelajaran pengelolaan Surat Utang Negara dalam satu sistem yang
-            aman, tertata, dan mudah ditelusuri, dilengkapi asisten SAVI AI.
+            Sistem Manajemen Pengetahuan Direktorat Surat Utang Negara yang menghimpun regulasi, panduan kerja,
+            keputusan, dan pembelajaran pengelolaan Surat Utang Negara dalam satu sistem yang aman, tertata, dan
+            mudah ditelusuri, dilengkapi asisten SAVI AI.
           </p>
           <div className="hero-actions">
             <Link className="button" href="/login">Akses SUNOVATE</Link>
