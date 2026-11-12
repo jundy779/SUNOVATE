@@ -8,6 +8,17 @@
 - Pemeriksaan visual menemukan ringkasan menulis "Terlambat: 0" padahal daftarnya memuat tindak lanjut terlambat, dan tanggal tampil sebagai 2026-09-30; keduanya diperbaiki sebelum dikirim.
 - Kelas tombol `button-secondary` yang sudah dipakai di halaman Pemeriksaan SAVI ternyata tidak memiliki gaya sehingga tampil seperti tombol utama; kini bergaya tombol sekunder.
 - Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 52 test frontend, 490 test backend mode simulated (40 PostgreSQL dilewati), 530 test mode PostgreSQL, build produksi, dan 16/16 skenario Playwright e2e lulus, termasuk skenario baru penyusunan dan penolakan draf. Alur penuh (susun, ubah, setujui, salin) diperiksa di Chromium: teks yang disalin sama dengan teks hasil riviu.
+- Validasi aktual (Windows 11, Git Bash, Python 3.12 via uv): `git fetch origin && git pull --ff-only` (sudah terbaru), tidak ada dev server berjalan, patch 0031 dan 0032 diterapkan berurutan dengan `git am` sebagai `ec2ccd4` dan `c200f77`.
+  - `pnpm validate` lulus (2 menit 45 detik): ESLint, Ruff, TypeScript, mypy strict (72 berkas), 52 test frontend (15 berkas), 489 test backend lulus (41 dilewati), dan build produksi (32 halaman).
+  - `pnpm db:test` tanpa beban lain: 529 lulus, 1 dilewati, dalam 325 detik (total 370 detik termasuk server PostgreSQL uji).
+  - `pnpm e2e` dengan `pnpm api:dev` (`DATA_BACKEND=simulated`), server web dinyalakan Playwright di `127.0.0.1`: 16/16 skenario lulus, termasuk "SAVI drafts an administrative report that the employee reviews".
+  - Pemeriksaan manual sebagai `sim.staff.pppsun` di `/savi-ai` (server pengembangan di `127.0.0.1`):
+    - "Susun draf" menghasilkan "Draf laporan pekerjaan per 12-11-2026" dengan "Cakupan: PPPSUN" dari 2 butir Monitoring Kerja. Semua tanggal berformat dd-mm-yyyy (12-11-2026, 30-09-2026, 15-11-2026).
+    - Satu baris ditambahkan di kotak teks lewat ketikan, lalu "Setujui dan salin" ditekan. Aplikasi memanggil `navigator.clipboard.writeText` satu kali dengan teks yang identik dengan hasil ubahan.
+    - Browser bawaan Claude Code menolak akses clipboard, sehingga aplikasi menampilkan pesan cadangan "Draf disetujui. Salin teks di atas secara manual." Ini perilaku yang dirancang saat clipboard tidak diizinkan.
+  - Alur yang sama diulang di Chromium Playwright dengan izin clipboard:
+    - Keputusan tercatat (`/api/savi/tasks/reviews` 201, `decision: ACCEPTED`, `edited: true`), dan muncul pesan "Draf disetujui dan disalin."
+    - Isi clipboard sama dengan teks hasil ubahan setelah akhir baris dinormalkan. Clipboard Windows mengubah `\n` menjadi `\r\n` (695 menjadi 710 karakter untuk 16 baris), sedangkan teks di kotak isian tidak mengandung `\r`.
 
 ## 2026-11-11 — Kepanjangan resmi SAVI
 
