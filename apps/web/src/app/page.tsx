@@ -31,7 +31,10 @@ export default function Home() {
       <section className="hero" aria-labelledby="hero-title">
         <div className="hero-text">
           <p className="kicker">Direktorat Surat Utang Negara · DJPPR</p>
-          <h1 id="hero-title">SUNOVATE (SUN Organizational Values and Transformation through Experience)</h1>
+          <h1 id="hero-title">
+            SUNOVATE{" "}
+            <span className="hero-title-expansion">(SUN Organizational Values and Transformation through Experience)</span>
+          </h1>
           <p className="hero-standfirst">
             Sistem Manajemen Pengetahuan Direktorat Surat Utang Negara yang menghimpun regulasi, panduan kerja,
             keputusan, dan pembelajaran pengelolaan Surat Utang Negara dalam satu sistem yang aman, tertata, dan

@@ -19,7 +19,6 @@ export function AppShell({ principal, children }: { principal: Principal; childr
           <Link className="brand" href="/dashboard">
             <Image src="/brand/logo-dsun.png" alt="Direktorat Surat Utang Negara" width={142} height={63} loading="eager" />
             <span>SUNOVATE</span>
-            <small>Ruang pengetahuan dan transformasi</small>
           </Link>
           <WorkspaceNav permissions={principal.permissions} />
           <div className="sidebar-note">

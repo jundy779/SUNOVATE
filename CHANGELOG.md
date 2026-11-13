@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-13 — Judul beranda dua tingkat, sidebar, dan gulir halus
+
+- Judul beranda kini dua tingkat: "SUNOVATE" sebagai judul besar dan kepanjangannya "(SUN Organizational Values and Transformation through Experience)" sebagai baris kedua yang lebih kecil. Isinya tidak berubah. Di HP, judul turun dari 5-6 baris menjadi dua bagian ringkas sehingga tombol Akses SUNOVATE tampil lebih awal (390 px: dari sekitar 5 baris judul menjadi tinggi judul 93 px).
+- Sidebar halaman kerja: logo DSUN dan tulisan "SUNOVATE" dipertahankan karena di dalam aplikasi tidak ada judul besar lain yang menunjukkan nama aplikasi; tulisan kecil "Ruang pengetahuan dan transformasi" dihapus beserta CSS-nya. Ini menyelesaikan catatan "menunggu keputusan" pada entri sebelumnya; keputusan diambil project lead atas rekomendasi tim.
+- Elemen `<html>` diberi `data-scroll-behavior="smooth"` sesuai saran Next.js 16, sehingga gulir halus untuk tautan di dalam halaman tetap berlaku tetapi perpindahan antarhalaman tidak ikut digulir halus.
+- Validasi aktual (Linux): TypeScript, ESLint, 52 test frontend, dan 17/17 skenario Playwright e2e lulus; beranda diperiksa visual di 1440, 390, dan 344 px tanpa luberan, sidebar desktop dan bilah atas HP tetap menampilkan "SUNOVATE", dan peringatan `scroll-behavior` tidak muncul lagi di konsol.
+
 ## 2026-11-12 — Judul beranda dan kepala halaman satu identitas (arahan mentor)
 
 - Atas arahan mentor, judul beranda menjadi "SUNOVATE (SUN Organizational Values and Transformation through Experience)". Frasa "Sistem Manajemen Pengetahuan Direktorat Surat Utang Negara" dipindah ke paragraf deskripsi di bawahnya. Pengecekan judul di `e2e/smoke.spec.ts` disesuaikan.

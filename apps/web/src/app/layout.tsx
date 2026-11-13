@@ -21,7 +21,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   // a prerendered page would carry no nonce and its scripts would be blocked.
   await connection();
   return (
-    <html lang="id">
+    <html lang="id" data-scroll-behavior="smooth">
       <body>
         <a className="skip-link" href="#main-content">
           Langsung ke konten utama

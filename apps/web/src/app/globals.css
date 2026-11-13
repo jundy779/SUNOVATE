@@ -70,7 +70,6 @@ textarea { width: 100%; resize: vertical; }
 .sidebar-inner { position: sticky; top: 0; min-height: 100vh; display: flex; flex-direction: column; }
 .brand { min-height: 136px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 1.25rem 1.5rem; border-bottom: 1px solid rgb(216 221 227 / 22%); font: 700 1.02rem/1 var(--font-heading); letter-spacing: .09em; }
 .brand img { width: 142px; height: auto; margin-bottom: .85rem; }
-.brand small { display: block; max-width: 24ch; margin-top: .45rem; color: var(--line); font: 500 .63rem/1.35 var(--font-body); letter-spacing: .035em; }
 .sidebar nav { display: grid; padding: 1.25rem .75rem; gap: .2rem; }
 .sidebar nav a { position: relative; display: flex; align-items: center; gap: .75rem; min-height: 44px; padding: .65rem .8rem; border-radius: var(--radius); color: var(--paper); transition: background-color 150ms ease, color 150ms ease, transform 150ms ease; }
 .sidebar nav a:hover { background: rgb(255 255 255 / 7%); }
@@ -395,7 +394,6 @@ code { font-size: .8rem; background: var(--paper); padding: 0 .25rem; }
   .sidebar-inner { position: static; min-height: auto; }
   .brand { min-height: 96px; flex-direction: row; align-items: center; gap: 1rem; }
   .brand img { width: 116px; margin: 0; }
-  .brand small { display: none; }
   .sidebar nav { display: flex; overflow-x: auto; padding: .65rem; }
   .sidebar nav a { flex: 0 0 auto; }
   .sidebar-note { display: none; }
