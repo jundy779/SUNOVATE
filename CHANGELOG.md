@@ -6,13 +6,14 @@
 - Sidebar halaman kerja: logo DSUN dan tulisan "SUNOVATE" dipertahankan karena di dalam aplikasi tidak ada judul besar lain yang menunjukkan nama aplikasi; tulisan kecil "Ruang pengetahuan dan transformasi" dihapus beserta CSS-nya. Ini menyelesaikan catatan "menunggu keputusan" pada entri sebelumnya; keputusan diambil project lead atas rekomendasi tim.
 - Elemen `<html>` diberi `data-scroll-behavior="smooth"` sesuai saran Next.js 16, sehingga gulir halus untuk tautan di dalam halaman tetap berlaku tetapi perpindahan antarhalaman tidak ikut digulir halus.
 - Validasi aktual (Linux): TypeScript, ESLint, 52 test frontend, dan 17/17 skenario Playwright e2e lulus; beranda diperiksa visual di 1440, 390, dan 344 px tanpa luberan, sidebar desktop dan bilah atas HP tetap menampilkan "SUNOVATE", dan peringatan `scroll-behavior` tidak muncul lagi di konsol.
+- Validasi aktual (Windows 11, Git Bash, Python 3.12 via uv): patch 0036 diterapkan sebagai `56b71ae` (6 berkas, hanya frontend dan CHANGELOG). Dengan API menyala (`pnpm api:dev`), `pnpm validate` lulus (52 test frontend, 509 test backend lulus dan 41 dilewati, build produksi) dan `pnpm e2e` 17/17 lulus. Di server pengembangan: beranda 1440 px menampilkan "SUNOVATE" 53,3 px dengan kepanjangan 22,3 px di baris kedua, 390 px 35,2 px dan 16,8 px, tanpa luberan horizontal. Masuk sebagai sim.coordinator, sidebar menampilkan logo DSUN dan "SUNOVATE" tanpa "Ruang pengetahuan dan transformasi", `<html>` memuat `data-scroll-behavior="smooth"`, dan konsol beranda, login, serta Ringkasan tidak menampilkan peringatan atau error.
 
 ## 2026-11-12 — Judul beranda dan kepala halaman satu identitas (arahan mentor)
 
 - Atas arahan mentor, judul beranda menjadi "SUNOVATE (SUN Organizational Values and Transformation through Experience)". Frasa "Sistem Manajemen Pengetahuan Direktorat Surat Utang Negara" dipindah ke paragraf deskripsi di bawahnya. Pengecekan judul di `e2e/smoke.spec.ts` disesuaikan.
 - Mentor menilai logo DSUN yang berdampingan dengan tulisan "SUNOVATE / Direktorat Surat Utang Negara" di kepala halaman publik (beranda dan login) terkesan dua identitas. Tulisan itu dihapus, sehingga kepala halaman hanya menampilkan logo DSUN; aturan CSS `.site-wordmark` yang tidak terpakai ikut dihapus.
 - Perbaikan kecil: di layar di bawah 1100 px, ketika navigasi disembunyikan, tombol "Masuk" kembali rata kanan dan tidak lagi menempel ke logo.
-- Belum diubah: sidebar halaman kerja masih menampilkan logo DSUN bersama tulisan "SUNOVATE"; menunggu keputusan apakah dibuat sama.
+- Sidebar halaman kerja diselesaikan pada entri "2026-11-13 — Judul beranda dua tingkat, sidebar, dan gulir halus" (patch 0036, `56b71ae`): logo DSUN dan "SUNOVATE" dipertahankan, tulisan "Ruang pengetahuan dan transformasi" dihapus.
 - Validasi aktual (Windows 11, Git Bash, Python 3.12 via uv): `pnpm validate` lulus (52 test frontend, 509 test backend lulus dan 41 dilewati, build produksi) dan `pnpm e2e` 17/17 lulus.
 
 ## 0.3.0 - 2026-11-12 (pengembangan, belum siap produksi)
