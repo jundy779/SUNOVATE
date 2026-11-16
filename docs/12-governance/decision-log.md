@@ -304,6 +304,18 @@ Entri berikut mencatat jawaban knowledge owner atas delapan pertanyaan slide 24 
 - **ADR/BR terkait:** ADR-004
 - **Tindak lanjut:** template resmi nota dinas atau surat dan format notulen yang dipakai Direktorat SUN; pemilihan model AI lokal untuk tiga tugas berbasis teks.
 
+### DEC-20261113-01
+
+- **Open question:** Tidak ada (perluasan integrasi)
+- **Tanggal jawaban:** 2026-11-13
+- **Sumber:** Arahan mentor yang diteruskan project lead pada 2026-11-13: SUNOVATE mendukung ekosistem Microsoft. Dari empat tingkat yang ditawarkan tim, project lead memilih keempatnya: berkas Word dan Excel dari SAVI, masuk dengan akun Microsoft kantor, Outlook dan Teams (kalender dan rapat), serta SharePoint dan OneDrive (dokumen). Apakah kantor memakai Microsoft 365 online belum diketahui. Pada hari yang sama project lead juga menyetujui bahwa kemampuan tambahan SAVI dibangun di dalam SUNOVATE dengan izin dan audit sendiri, bukan lewat konektor, plugin, atau hook Hermes Agent.
+- **Jawaban:** Keempat tingkat dukungan Microsoft masuk lingkup.
+- **Keputusan:** Tingkat 1 (berkas Office yang dibuat SUNOVATE sendiri) dikerjakan sekarang karena tidak menyentuh akun atau data di luar SUNOVATE. Tingkat 2 (SSO Microsoft Entra ID) dan tingkat 3 (Microsoft Graph untuk Outlook, Teams, SharePoint, OneDrive) menunggu konfirmasi pemakaian Microsoft 365, pendaftaran aplikasi di tenant Kemenkeu dengan persetujuan admin TIK, dan kebijakan data karena SUNOVATE akan membaca email, rapat, dan dokumen pegawai. Integrasi dibangun di dalam SUNOVATE dengan otorisasi, audit, dan izin minimal.
+- **Status:** CONFIRMED (mentor, diteruskan project lead) untuk lingkup. Tingkat 2 dan 3: NEEDS TIK APPROVAL.
+- **Dampak:** FR-62, `savi_tasks` (unduh Word), integration-boundaries, hermes-agent-setup
+- **ADR/BR terkait:** ADR-004
+- **Tindak lanjut:** menanyakan ke TIK lewat mentor apakah Kemenkeu memakai Microsoft 365 dan bagaimana prosedur pendaftaran aplikasi di tenant; menyiapkan permohonan TIK berisi izin Microsoft Graph minimal yang diminta.
+
 ## Related Documents
 
 - [architecture-decisions](../03-architecture/architecture-decisions.md)

@@ -309,5 +309,12 @@ test.describe("SAVI administrative task approval", () => {
     const copied = await page.evaluate(() => navigator.clipboard.readText());
     // Windows stores line breaks as CRLF on the clipboard; the text itself must be identical.
     expect(copied.replace(/\r\n/g, "\n")).toBe(edited);
+
+    const [download] = await Promise.all([page.waitForEvent("download"), page.getByRole("button", { name: "Unduh Word" }).click()]);
+    expect(download.suggestedFilename()).toMatch(/^SUNOVATE-draf-laporan-pekerjaan-\d{8}\.docx$/);
+    const file = await download.path();
+    const { readFileSync } = await import("node:fs");
+    // A .docx is a ZIP archive; its first bytes are "PK".
+    expect(readFileSync(file).subarray(0, 2).toString()).toBe("PK");
   });
 });

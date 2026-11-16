@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-13 — Draf SAVI dapat diunduh sebagai Word; lingkup dukungan Microsoft
+
+- Arahan mentor DEC-20261113-01: SUNOVATE mendukung ekosistem Microsoft dalam empat tingkat, yaitu berkas Word dan Excel dari SAVI, masuk dengan akun Microsoft kantor, Outlook dan Teams, serta SharePoint dan OneDrive. Dicatat sebagai FR-62. Tingkat 2 dan 3 menunggu konfirmasi pemakaian Microsoft 365 dan persetujuan TIK. Kemampuan tambahan SAVI dibangun di dalam SUNOVATE, bukan lewat konektor, plugin, atau hook Hermes Agent.
+- Tingkat 1 dimulai: setelah pegawai menyetujui draf laporan pekerjaan, tombol "Unduh Word" membuat berkas `.docx` dari teks hasil riviu. `POST /api/v1/savi/tasks/documents/word` (memerlukan `hermes:query` dan `work:read`) menyusun berkas secara langsung tanpa menyimpannya: baris pertama menjadi judul, baris "- " menjadi butir, judul bagian berwarna navy DSUN, huruf Aptos. Karakter yang tidak dapat disimpan Word dibuang, panjang teks dibatasi 20.000 karakter, dan audit `SAVI_TASK_EXPORTED` mencatat jenis, format, dan jumlah karakter tanpa isi draf.
+- Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 52 test frontend, 513 test backend mode simulated (40 PostgreSQL dilewati), 553 test mode PostgreSQL, dan 17/17 skenario Playwright e2e lulus. Skenario e2e persetujuan draf kini juga mengunduh berkas Word dan memeriksa nama serta formatnya. Berkas contoh dibuka di LibreOffice untuk memeriksa judul, butir, dan warna judul bagian.
+
 ## 2026-11-13 — Judul beranda dua tingkat, sidebar, dan gulir halus
 
 - Judul beranda kini dua tingkat: "SUNOVATE" sebagai judul besar dan kepanjangannya "(SUN Organizational Values and Transformation through Experience)" sebagai baris kedua yang lebih kecil. Isinya tidak berubah. Di HP, judul turun dari 5-6 baris menjadi dua bagian ringkas sehingga tombol Akses SUNOVATE tampil lebih awal (390 px: dari sekitar 5 baris judul menjadi tinggi judul 93 px).

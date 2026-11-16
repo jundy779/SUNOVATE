@@ -8,11 +8,16 @@ never the text, so the audit trail cannot leak report content.
 
 from __future__ import annotations
 
+import re
 from datetime import timedelta
+from io import BytesIO
 from typing import Annotated, Any, Final, Literal
 from uuid import uuid4
 
+from docx import Document
+from docx.shared import Pt, RGBColor
 from fastapi import APIRouter, Depends
+from fastapi.responses import Response
 from pydantic import Field
 
 from ..authz.dependencies import Ctx, require
@@ -166,4 +171,81 @@ def review_task(
         )
     return envelope(
         {"draftId": body.draft_id, "decision": body.decision, "recordedBy": str(principal.user_id)}
+    )
+
+
+DOCX_MEDIA_TYPE: Final = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+MAX_EXPORT_CHARS: Final = 20_000
+# Characters Word's XML cannot hold (control characters other than tab and line breaks).
+_XML_UNSAFE = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\ufffe\uffff]")
+
+
+class WordExport(ApiModel):
+    draft_id: str = Field(pattern=r"^[0-9a-f-]{36}$")
+    kind: TaskKind
+    text: str = Field(min_length=1, max_length=MAX_EXPORT_CHARS)
+
+
+def render_docx(text: str) -> bytes:
+    """Word file from the employee-approved text: first line as title, "- " lines as bullets,
+    short lines without a colon as section headings, everything else as plain paragraphs."""
+    lines = [_XML_UNSAFE.sub("", line).rstrip() for line in text.replace("\r\n", "\n").split("\n")]
+    document = Document()
+    normal = document.styles["Normal"]
+    normal.font.name = "Aptos"
+    normal.font.size = Pt(11)
+    for name in ("Heading 1", "Heading 2"):  # DSUN navy instead of Word's default blue
+        heading = document.styles[name]
+        heading.font.name = "Aptos Display"
+        heading.font.color.rgb = RGBColor(0x0D, 0x2E, 0x5E)
+    document.core_properties.author = "SUNOVATE - SAVI AI"
+    document.core_properties.title = lines[0][:200] if lines else "Draf SAVI"
+    first = True
+    for line in lines:
+        if not line.strip():
+            continue
+        if first:
+            document.add_heading(line.strip(), level=1)
+            first = False
+        elif line.lstrip().startswith("- "):
+            document.add_paragraph(line.lstrip()[2:], style="List Bullet")
+        elif len(line) <= 60 and ":" not in line:
+            document.add_heading(line.strip(), level=2)
+        else:
+            document.add_paragraph(line.strip())
+    buffer = BytesIO()
+    document.save(buffer)
+    return buffer.getvalue()
+
+
+@router.post("/savi/tasks/documents/word", summary="Word file of an employee-approved draft")
+def export_word(
+    body: WordExport,
+    ctx: Ctx,
+    principal: Annotated[
+        Principal, Depends(require("hermes:query", "work:read", resource="savi_task"))
+    ],
+) -> Response:
+    """Built on the fly from the text the employee approved; nothing is stored on the server."""
+    content = render_docx(body.text)
+    with ctx.store.transaction():
+        ctx.store.audit(
+            actor_user_id=principal.user_id,
+            action="SAVI_TASK_EXPORTED",
+            entity_type="savi_task",
+            detail={
+                "kind": body.kind,
+                "draftId": body.draft_id,
+                "format": "DOCX",
+                "characters": len(body.text),
+            },
+        )
+    filename = f"SUNOVATE-draf-laporan-pekerjaan-{ctx.clock():%Y%m%d}.docx"
+    return Response(
+        content,
+        media_type=DOCX_MEDIA_TYPE,
+        headers={
+            "Content-Disposition": f'attachment; filename="{filename}"',
+            "Cache-Control": "no-store",
+        },
     )

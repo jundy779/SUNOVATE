@@ -21,6 +21,7 @@ export function SaviAdminTask() {
   const [draft, setDraft] = useState<Draft | null>(null);
   const [text, setText] = useState("");
   const [message, setMessage] = useState("");
+  const [downloading, setDownloading] = useState(false);
 
   async function generate() {
     setPhase("loading");
@@ -67,6 +68,31 @@ export function SaviAdminTask() {
     }
   }
 
+  async function downloadWord() {
+    if (!draft) return;
+    setDownloading(true);
+    try {
+      const response = await fetch("/api/savi/tasks/documents/word", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ draftId: draft.draftId, kind: draft.kind, text }),
+      });
+      if (!response.ok) throw new Error();
+      const disposition = response.headers.get("content-disposition") ?? "";
+      const filename = /filename="([^"]+)"/.exec(disposition)?.[1] ?? "SUNOVATE-draf.docx";
+      const url = URL.createObjectURL(await response.blob());
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      setMessage("Berkas Word belum dapat dibuat. Teks yang disetujui tetap dapat disalin.");
+    } finally {
+      setDownloading(false);
+    }
+  }
+
   return (
     <div className="savi-task">
       <div className="savi-task-intro">
@@ -92,6 +118,11 @@ export function SaviAdminTask() {
             <button className="button" type="button" onClick={() => decide("ACCEPTED")} disabled={phase !== "review"}>
               Setujui dan salin
             </button>
+            {phase === "accepted" ? (
+              <button className="button button-secondary" type="button" onClick={downloadWord} disabled={downloading}>
+                {downloading ? "Membuat berkas…" : "Unduh Word"}
+              </button>
+            ) : null}
             <button className="button button-secondary" type="button" onClick={() => decide("REJECTED")} disabled={phase !== "review"}>
               Tolak draf
             </button>

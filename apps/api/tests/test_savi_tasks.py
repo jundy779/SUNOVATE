@@ -75,3 +75,58 @@ def test_review_rejects_unknown_decisions_and_requires_permission() -> None:
     assert client.post(f"{API}/savi/tasks/reviews", json=bad, headers=staff).status_code == 422
     admin = login(client, "sim.admin")  # no hermes:query
     assert client.post(f"{API}/savi/tasks/work-report", headers=admin).status_code == 403
+
+
+def _approved_text(client, headers) -> tuple[str, str]:  # type: ignore[no-untyped-def]
+    draft = client.post(f"{API}/savi/tasks/work-report", headers=headers).json()["data"]
+    return draft["draftId"], draft["text"] + "\nCatatan pegawai: sudah diperiksa."
+
+
+def test_word_export_contains_the_approved_text_and_is_not_stored() -> None:
+    from io import BytesIO
+
+    from docx import Document
+
+    client = make_client()
+    staff = login(client, "sim.staff.pppsun")
+    draft_id, text = _approved_text(client, staff)
+    body = {"draftId": draft_id, "kind": "WORK_REPORT", "text": text}
+    response = client.post(f"{API}/savi/tasks/documents/word", json=body, headers=staff)
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith(
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    )
+    assert "no-store" in response.headers["cache-control"]
+    assert "attachment" in response.headers["content-disposition"]
+    document = Document(BytesIO(response.content))
+    paragraphs = [p.text for p in document.paragraphs]
+    assert paragraphs[0].startswith("Draf laporan pekerjaan per ")
+    assert document.paragraphs[0].style.name == "Heading 1"
+    assert "Catatan pegawai: sudah diperiksa." in paragraphs
+    assert any(p.style.name == "List Bullet" for p in document.paragraphs)
+    logs = client.get(
+        f"{API}/audit-logs?action=SAVI_TASK_EXPORTED", headers=login(client, "sim.auditor")
+    ).json()["data"]
+    assert logs[0]["detail"]["format"] == "DOCX"
+    assert "Catatan pegawai" not in str(logs), "the audit never holds the draft text"
+
+
+def test_word_export_strips_characters_word_cannot_hold_and_limits_size() -> None:
+    client = make_client()
+    staff = login(client, "sim.staff.pppsun")
+    draft_id, _ = _approved_text(client, staff)
+    unsafe = {"draftId": draft_id, "kind": "WORK_REPORT", "text": "Judul\nIsi\x00\x07 aman"}
+    assert (
+        client.post(f"{API}/savi/tasks/documents/word", json=unsafe, headers=staff).status_code
+        == 200
+    )
+    too_long = {"draftId": draft_id, "kind": "WORK_REPORT", "text": "x" * 20_001}
+    assert (
+        client.post(f"{API}/savi/tasks/documents/word", json=too_long, headers=staff).status_code
+        == 422
+    )
+    admin = login(client, "sim.admin")
+    assert (
+        client.post(f"{API}/savi/tasks/documents/word", json=unsafe, headers=admin).status_code
+        == 403
+    )
