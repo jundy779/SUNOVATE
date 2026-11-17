@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-17 — Perbaikan skrip cek komputer dan e2e SAVI pertama
+
+- Hasil uji Windows patch 0039 menemukan dua tampilan janggal di `scripts/ops/cek-komputer-server-savi.ps1`. Baris TPM tampil dengan nilai kosong saat dijalankan tanpa hak administrator; kini skrip memeriksa hak administrator lebih dulu dan menulis "tidak terbaca (jalankan PowerShell sebagai administrator...)". Baris status WSL tampil dengan spasi di antara setiap huruf karena `wsl.exe` menulis UTF-16; karakter NUL kini dibuang. Skrip juga menambahkan peringatan bila ruang kosong di drive C: kurang dari 20 GB, karena laptop uji hanya punya 3,8 GB bebas sementara model 7B butuh sekitar 5 GB.
+- Skenario e2e pertama sempat gagal sekali di Windows karena panggilan SAVI pertama mengompilasi rutenya di server pengembangan yang baru menyala dan melewati batas tunggu bawaan 5 detik. Langkah itu kini memakai batas 30 detik, sama dengan langkah lain di berkas yang sama yang menunggu halaman dikompilasi.
+- Validasi aktual (Linux): ESLint, TypeScript, dan 17/17 skenario Playwright e2e lulus dari server pengembangan yang baru dinyalakan tanpa cache build. Skrip PowerShell belum dapat dijalankan di lingkungan Linux; akhir baris CRLF dan BOM UTF-8 diperiksa.
+
 ## 2026-11-17 — Arahan mentor 13 November dan panduan uji coba server
 
 - DEC-20261113-02: validasi lima skenario lelang tidak lewat lembar periksa; skenario dicocokkan lebih dulu ke Buku Biru, lalu dibahas lewat wawancara bersama Rizka dengan Mas Ajib atau Mas Agni. `sme-question-validation.md` mendapat bagian Metode Validasi; OQ-43 mencatat izin pemindaian dan pemakaian Buku Biru. `sme_question_intake.json` belum diubah dan semua kasus tetap `BLOCKED`.

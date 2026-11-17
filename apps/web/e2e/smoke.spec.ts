@@ -22,7 +22,8 @@ test("staff logs in, sees scoped dashboard, and asks SAVI AI", async ({ page }) 
     .getByRole("button", { name: "Apa metadata wajib saat mendaftarkan dokumen?" })
     .click();
   await page.getByRole("button", { name: "Kirim pertanyaan" }).click();
-  await expect(page.getByText("Dijawab dengan sumber")).toBeVisible();
+  // The first SAVI call compiles its route on a cold development server; allow for that.
+  await expect(page.getByText("Dijawab dengan sumber")).toBeVisible({ timeout: 30_000 });
   await expect(page.getByRole("heading", { name: "Sumber yang digunakan" })).toBeVisible();
   await expect(page.getByText("1 rujukan digunakan")).toBeVisible();
 

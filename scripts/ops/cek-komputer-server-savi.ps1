@@ -33,11 +33,16 @@ $diskretNvidia = $gpus | Where-Object { $_.Name -match "NVIDIA" }
 
 $disk = Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='C:'"
 Tulis ("Disk C:      : " + (GB $disk.FreeSpace) + " GB bebas dari " + (GB $disk.Size) + " GB")
+if ((GB $disk.FreeSpace) -lt 20) {
+    Tulis "PERHATIAN    : ruang kosong di C: kurang dari 20 GB. Model 7B butuh sekitar 5 GB, Hermes Agent dan SUNOVATE beberapa GB lagi."
+}
 
 Tulis ""
 Tulis "--- Penyimpan kunci (TPM), butir 5 paket tinjauan mentor ---"
-$tpm = Get-Tpm
-if ($null -eq $tpm) {
+$isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+$tpm = $null
+if ($isAdmin) { $tpm = Get-Tpm }
+if ($null -eq $tpm -or $null -eq $tpm.TpmPresent) {
     Tulis "TPM          : tidak terbaca (jalankan PowerShell sebagai administrator untuk memeriksa)"
 } else {
     Tulis ("TPM          : ada=" + $tpm.TpmPresent + ", siap=" + $tpm.TpmReady + ", aktif=" + $tpm.TpmEnabled)
@@ -49,8 +54,9 @@ foreach ($nama in @("git", "node", "pnpm", "python", "uv", "ollama", "wsl")) {
     $cmd = Get-Command $nama
     Tulis ("{0,-12} : {1}" -f $nama, $(if ($cmd) { "ada" } else { "belum ada" }))
 }
-$wsl = (wsl --status 2>$null) -join " "
-if ($wsl) { Tulis ("WSL status   : " + (($wsl -replace "\s+", " ").Trim())) }
+# wsl.exe writes UTF-16; drop the NUL characters so the text reads normally.
+$wsl = ((wsl --status 2>$null) -join " ") -replace "`0", ""
+if ($wsl.Trim()) { Tulis ("WSL status   : " + (($wsl -replace "\s+", " ").Trim())) }
 
 Tulis ""
 Tulis "--- Port yang dipakai SUNOVATE ---"
