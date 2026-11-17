@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-17 — Pembaruan Next.js, pypdf, dan opentelemetry-api
+
+- Next.js dan `eslint-config-next` dinaikkan dari 16.4.2 ke 16.4.6 (rilis 2026-11-09) untuk GHSA-mfr8-8qww-v76h (moderate). Next.js 16.4.2 menghentikan `next build` dan `next dev` di Windows sekali dengan peringatan keamanan; pesannya meminta agen AI menjalankan perintah upgrade, dan instruksi dari keluaran alat itu sengaja tidak dijalankan.
+- pypdf dinaikkan ke 6.21.4 (rilis 2026-10-28; tujuh CVE baru pada 6.21.2) dan batas bawahnya di `pyproject.toml` ikut dinaikkan; opentelemetry-api ke 1.45.2 (rilis 2026-10-29). pypdf membaca berkas yang diunggah ke Basis Pengetahuan, jadi pembaruan ini diprioritaskan.
+- Tersisa satu temuan moderate pada minimatch milik alat lint. Perbaikannya baru ada di typescript-eslint 8.73.0 yang dirilis 2026-11-16, sehingga ditunda sampai lolos usia rilis tujuh hari dan dicatat sebagai keterbatasan (BUG-055).
+- Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 52 test frontend, 513 test backend mode simulated (40 PostgreSQL dilewati), 553 test mode PostgreSQL, `extraction:eval`, `savi:eval`, build produksi tanpa peringatan keamanan Next.js, dan 17/17 skenario Playwright e2e lulus. `pnpm deps:audit` tinggal melaporkan minimatch.
+
 ## 2026-11-13 — Draf SAVI dapat diunduh sebagai Word; lingkup dukungan Microsoft
 
 - Arahan mentor DEC-20261113-01: SUNOVATE mendukung ekosistem Microsoft dalam empat tingkat, yaitu berkas Word dan Excel dari SAVI, masuk dengan akun Microsoft kantor, Outlook dan Teams, serta SharePoint dan OneDrive. Dicatat sebagai FR-62. Tingkat 2 dan 3 menunggu konfirmasi pemakaian Microsoft 365 dan persetujuan TIK. Kemampuan tambahan SAVI dibangun di dalam SUNOVATE, bukan lewat konektor, plugin, atau hook Hermes Agent.
