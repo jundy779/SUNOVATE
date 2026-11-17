@@ -2,7 +2,7 @@
 
 **Status:** PROPOSED (siap dipakai saat model lokal ditetapkan)
 **Owner:** Tim pengembang SUNOVATE
-**Last Updated:** 2026-11-12
+**Last Updated:** 2026-11-17
 
 ## Purpose
 
@@ -15,9 +15,15 @@ SAVI (SUN AI Virtual Intelligence) memakai Hermes Agent dari Nous Research sebag
 - **IMPLEMENTED**: SUNOVATE menolak `HERMES_AGENT_BASE_URL` di luar loopback atau jaringan privat, mewajibkan `HERMES_AGENT_API_KEY` minimal 16 karakter, tidak pernah mengirim definisi alat, dan memeriksa setiap penanda sitasi `[n]` terhadap potongan yang diotorisasi. Jawaban tanpa sitasi yang sah tidak ditampilkan.
 - **OPERATIONAL CONTROL**: model yang dipakai Hermes Agent dikonfigurasi di Hermes, bukan di SUNOVATE. SUNOVATE tidak dapat memeriksa bahwa model itu lokal, sehingga konfigurasi di bawah wajib diterapkan dan diperiksa oleh pengelola server.
 
+## Syarat dari Dokumentasi Resmi Hermes Agent
+
+- Berjalan langsung di Windows lewat PowerShell; WSL2 tidak wajib. Pemasangnya ikut memasang Python, Node.js, dan beberapa alat lain, sehingga pemasangan di komputer kantor memerlukan izin.
+- Model wajib berkonteks **minimal 64.000 token**; model yang lebih kecil ditolak. Panjang konteks diatur di penyedia model (misalnya `PARAMETER num_ctx 65536` pada `Modelfile` Ollama), bukan di Hermes.
+- Folder pengaturan disebut `~/.hermes/`; di Windows letaknya `%LOCALAPPDATA%\hermes\`. Isinya `config.yaml`, `.env`, `SOUL.md` (biarkan bawaan), serta folder `memories\`, `skills\`, `hooks\`, `cron\`, `plugins\`, dan `logs\`.
+
 ## Konfigurasi Hermes Agent
 
-`~/.hermes/config.yaml` pada server yang menjalankan Hermes Agent:
+`config.yaml` di folder pengaturan Hermes pada server yang menjalankan Hermes Agent:
 
 ```yaml
 model:
@@ -67,6 +73,19 @@ API_SERVER_KEY=<acak, minimal 32 karakter; sama dengan HERMES_AGENT_API_KEY di S
 
 API server Hermes Agent mendengarkan di `127.0.0.1:8642` secara bawaan. Jangan membukanya ke jaringan lain.
 
+## Konektor, Plugin, dan Fitur Tambahan
+
+Untuk SAVI semuanya tidak dipakai (DEC-20261113-01). Kemampuan tambahan SAVI dibangun di dalam SUNOVATE dengan izin dan audit sendiri.
+
+| Fitur | Letak | Ketentuan | Pemeriksaan |
+| --- | --- | --- | --- |
+| Konektor MCP | `mcp_servers` di `config.yaml` | Tidak dipasang | `hermes mcp catalog`: tidak ada yang enabled |
+| Plugin | Folder `plugins\`, `plugins.enabled` | Tidak dipasang | `hermes plugins`: tidak ada yang dicentang |
+| Hook gateway | Folder `hooks\` | Harus kosong; hook di folder ini aktif tanpa persetujuan | Buka foldernya |
+| Platform pesan | Token di `.env` | Tidak ada token platform | `.env` hanya berisi `API_SERVER_ENABLED` dan `API_SERVER_KEY` |
+| Jadwal otomatis | Folder `cron\` | Harus kosong | Buka foldernya |
+| Impor dari agen lain | Pertanyaan saat `hermes setup` | Dilewati | Saat setup |
+
 ## Konfigurasi SUNOVATE
 
 ```bash
@@ -98,4 +117,5 @@ Hasil pemeriksaan dicatat di `CHANGELOG.md` sebelum mode `hermes_agent` dipakai 
 
 - [hermes-overview.md](hermes-overview.md)
 - [provider-abstraction.md](../03-architecture/provider-abstraction.md)
+- [office-server-trial.md](../11-operations/office-server-trial.md)
 - [decision-log.md](../12-governance/decision-log.md)

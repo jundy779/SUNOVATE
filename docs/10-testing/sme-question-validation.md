@@ -1,7 +1,7 @@
 # Validasi Pertanyaan SME untuk SAVI AI
 
 **Status:** NEEDS MENTOR VALIDATION
-**Last Updated:** 2026-10-13
+**Last Updated:** 2026-11-17
 
 ## Purpose
 
@@ -36,6 +36,10 @@ Mengatur penerimaan pertanyaan nyata dari mentor atau SME sebelum dipakai sebaga
 6. Kasus memakai data simulasi atau lingkungan uji data asli yang telah disetujui.
 7. Reviewer, tanggal validasi, dan versi sumber dicatat tanpa data pribadi di repository.
 8. Test retrieval, sitasi, keputusan, dan kebocoran akses lulus.
+
+## Metode Validasi (DEC-20261113-02)
+
+Isi jawaban tidak disahkan lewat lembar centang. Skenario dicocokkan lebih dulu ke Buku Biru, pedoman kerja internal Direktorat SUN; bagian yang tidak tercakup dibahas lewat wawancara bersama Rizka dengan Mas Ajib atau Mas Agni. Jawaban disusun ulang dari kedua sumber itu, dan narasumber dicatat sebagai pemeriksa (gerbang nomor 1 dan 7). Mentor menyebut penanganan data lelang yang berbeda (SME-001) diatur di Buku Biru, sehingga catatan "SOP rekonsiliasi belum tersedia" di bawah perlu diperbarui setelah Buku Biru dicek. Salinan Buku Biru tidak masuk repository (OQ-43).
 
 ## Temuan Awal
 

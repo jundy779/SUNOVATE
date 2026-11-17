@@ -69,6 +69,7 @@ Menjadi sumber status pekerjaan lintas sesi dan lintas AI agent. Setiap perubaha
 | TASK-047 | SAVI menyusun draf laporan pekerjaan dari Monitoring Kerja untuk diriviu pegawai (DEC-20261111-02, FR-61) | AI dan pengetahuan | DONE | Draf notulen, nota dinas atau surat, dan ringkasan dokumen menunggu model AI lokal serta template resmi. |
 | TASK-048 | Penghubung SAVI ke Hermes Agent (Nous Research): `HermesAgentClient` lewat API kompatibel OpenAI, nonaktif secara bawaan (`HERMES_MODE=hermes_agent`), endpoint hanya loopback atau jaringan privat, kunci API wajib, tanpa definisi alat, sitasi tetap divalidasi, dan kegagalan runtime dilaporkan jelas; panduan konfigurasi aman Hermes Agent | AI dan pengetahuan | DONE | Belum diuji dengan Hermes Agent dan model sungguhan; menunggu spesifikasi server (OQ-11). |
 | TASK-049 | Unduh Word untuk draf laporan pekerjaan SAVI setelah disetujui pegawai (DEC-20261113-01, FR-62 tingkat 1) | AI dan pengetahuan | DONE | SSO Microsoft dan integrasi Outlook, Teams, SharePoint, OneDrive menunggu konfirmasi Microsoft 365 dan persetujuan TIK. |
+| TASK-050 | Mencatat arahan mentor 13 November (validasi skenario lewat Buku Biru dan wawancara; uji coba server di komputer mentor), menambahkan panduan uji coba server dan skrip pengecekan komputer ke repository, serta memperbarui panduan Hermes Agent dengan syarat resmi (Windows, konteks 64.000 token, folder pengaturan, konektor dan plugin) | Dokumentasi | DONE | Hasil uji coba server dan pemindaian Buku Biru menyusul. |
 
 ## Urutan Eksekusi Terdekat
 

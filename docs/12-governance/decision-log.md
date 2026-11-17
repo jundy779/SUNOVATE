@@ -316,6 +316,30 @@ Entri berikut mencatat jawaban knowledge owner atas delapan pertanyaan slide 24 
 - **ADR/BR terkait:** ADR-004
 - **Tindak lanjut:** menanyakan ke TIK lewat mentor apakah Kemenkeu memakai Microsoft 365 dan bagaimana prosedur pendaftaran aplikasi di tenant; menyiapkan permohonan TIK berisi izin Microsoft Graph minimal yang diminta.
 
+### DEC-20261113-02
+
+- **Open question:** OQ-36, OQ-43
+- **Tanggal jawaban:** 2026-11-13
+- **Sumber:** Pesan mentor yang diteruskan project lead pada 2026-11-13. Sebelumnya, pada 2026-11-12, mentor menyebut Mas Ajib dapat membantu memeriksa lima skenario lelang, dan tim menyiapkan lembar periksa berisi jawaban draf untuk disetujui. Mentor kemudian menyatakan cara itu tidak tepat: soal data lelang yang berbeda sudah diatur di Buku Biru, skenario perlu dicek ke sana terlebih dahulu, lalu dibahas lewat wawancara bersama Rizka dengan Mas Ajib atau Mas Agni.
+- **Jawaban:** Validasi isi skenario lelang dilakukan dengan (1) mencocokkan ke Buku Biru, (2) wawancara bersama Rizka dengan Mas Ajib atau Mas Agni untuk bagian yang tidak tercakup Buku Biru.
+- **Keputusan:** Lembar periksa tidak dikirim. Jawaban skenario disusun ulang dari Buku Biru dan hasil wawancara; narasumber dicatat sebagai pemeriksa sesuai gerbang promosi di `sme-question-validation.md`. Buku Biru adalah dokumen internal yang belum dipindai; salinannya tidak boleh masuk repository publik dan penggunaannya sebagai bahan pengecekan dengan bantuan AI menunggu izin (OQ-43). Semua kasus tetap `BLOCKED` dari runtime.
+- **Status:** CONFIRMED (mentor, diteruskan project lead)
+- **Dampak:** `sme-question-validation.md`, `sme_question_intake.json` (belum diubah), OQ-36
+- **ADR/BR terkait:** ADR-004, ADR-014
+- **Tindak lanjut:** memindai bagian Buku Biru yang relevan setelah izin; panduan wawancara disusun setelah Buku Biru dicek agar tidak menanyakan hal yang sudah tertulis.
+
+### DEC-20261113-03
+
+- **Open question:** OQ-11
+- **Tanggal jawaban:** 2026-11-13
+- **Sumber:** Pesan mentor yang diteruskan project lead: spesifikasi rata-rata laptop kantor adalah Intel Core i5, dan uji coba dilakukan di komputer mentor yang dijadikan server.
+- **Jawaban:** Uji coba pertama SUNOVATE dan model AI lokal SAVI dilakukan di komputer mentor (laptop kelas i5).
+- **Keputusan:** Uji mengikuti `docs/11-operations/office-server-trial.md`: cek komputer dengan `scripts/ops/cek-komputer-server-savi.ps1` (hanya membaca), Jalur A (SUNOVATE langsung ke model lokal lewat Ollama) lebih dulu, lalu Jalur B (lewat Hermes Agent, syarat konteks 64.000 token) bila kecepatan memadai. Hanya data contoh; SUNOVATE hanya diakses dari komputer itu sendiri; pemasangan program atas izin mentor dan TIK.
+- **Status:** CONFIRMED (mentor, diteruskan project lead) untuk lokasi uji. Hasil uji: OPEN.
+- **Dampak:** OQ-11, hermes-agent-setup, office-server-trial
+- **ADR/BR terkait:** ADR-004
+- **Tindak lanjut:** mencatat hasil skrip pengecekan dan lima pertanyaan uji, lalu menetapkan model untuk demo akhir Desember 2026.
+
 ## Related Documents
 
 - [architecture-decisions](../03-architecture/architecture-decisions.md)

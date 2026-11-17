@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-17 — Arahan mentor 13 November dan panduan uji coba server
+
+- DEC-20261113-02: validasi lima skenario lelang tidak lewat lembar periksa; skenario dicocokkan lebih dulu ke Buku Biru, lalu dibahas lewat wawancara bersama Rizka dengan Mas Ajib atau Mas Agni. `sme-question-validation.md` mendapat bagian Metode Validasi; OQ-43 mencatat izin pemindaian dan pemakaian Buku Biru. `sme_question_intake.json` belum diubah dan semua kasus tetap `BLOCKED`.
+- DEC-20261113-03: uji coba pertama SUNOVATE dan model AI lokal dilakukan di komputer mentor kelas i5. Panduannya ditambahkan sebagai `docs/11-operations/office-server-trial.md` (salinan dari dokumen yang disunting bersama mentor), dan skrip pengecekan komputer yang hanya membaca ditambahkan sebagai `scripts/ops/cek-komputer-server-savi.ps1`.
+- `hermes-agent-setup.md` diperbarui dari dokumentasi resmi Hermes Agent: berjalan langsung di Windows, syarat konteks model minimal 64.000 token, folder pengaturan `%LOCALAPPDATA%\hermes\`, serta ketentuan konektor MCP, plugin, hook, platform pesan, jadwal otomatis, dan impor dari agen lain.
+- Hanya dokumentasi dan skrip; tidak ada perubahan kode aplikasi. Skrip PowerShell belum dijalankan di Windows.
+- Validasi aktual (Linux): ESLint, Ruff, 52 test frontend, dan 513 test backend mode simulated lulus; seluruh tautan relatif di tiga dokumen yang berubah atau baru mengarah ke berkas yang ada.
+
 ## 2026-11-17 — Pembaruan Next.js, pypdf, dan opentelemetry-api
 
 - Next.js dan `eslint-config-next` dinaikkan dari 16.4.2 ke 16.4.6 (rilis 2026-11-09) untuk GHSA-mfr8-8qww-v76h (moderate). Next.js 16.4.2 menghentikan `next build` dan `next dev` di Windows sekali dengan peringatan keamanan; pesannya meminta agen AI menjalankan perintah upgrade, dan instruksi dari keluaran alat itu sengaja tidak dijalankan.
