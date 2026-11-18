@@ -4,6 +4,7 @@
 
 - Saat dijalankan di komputer mentor, `pasang-server-uji-savi.ps1` tampak berhenti lama di langkah Ollama. Penyebabnya: `Start-Process -Wait` di Windows menunggu proses beserta seluruh turunannya, sedangkan pemasang Ollama menyalakan aplikasi Ollama yang terus berjalan di latar belakang, sehingga skrip menunggu tanpa akhir walaupun pemasangan sudah selesai. Ketiga pemasang (Git, Node.js, Ollama) kini ditunggu dengan `WaitForExit()` pada proses pemasangnya saja.
 - Validasi aktual (Linux): sintaks diperiksa dengan parser PowerShell 7.4.6; 225 baris berakhiran CRLF dengan BOM UTF-8. Belum dijalankan ulang di Windows.
+- Validasi Windows patch 0042 (laptop pengembang, Windows PowerShell 5.1.26100.9818): `git am` berhasil; `scripts/ops/pasang-server-uji-savi.ps1` di working tree 225 baris CRLF, 0 baris LF saja, ber-BOM UTF-8; `System.Management.Automation.Language.Parser::ParseFile` menghasilkan "sintaks OK". Pola `Start-Process -PassThru` lalu `WaitForExit()` dicoba dengan `cmd /c exit 3` dan kode keluar terbaca benar (3). Skrip pemasangan sengaja tidak dijalankan di laptop ini. Empat salinan untuk mentor di folder utama repo (`cek-komputer-server-savi.ps1.txt`, `cek-komputer-server-savi.zip`, `pasang-server-uji-savi.ps1.txt`, `pasang-server-uji-savi.zip`; tidak pernah di-commit) dihapus.
 
 ## 2026-11-18 — Hasil cek komputer mentor dan skrip pemasangan satu langkah
 
