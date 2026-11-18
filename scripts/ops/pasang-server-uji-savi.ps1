@@ -82,8 +82,9 @@ Langkah "Git" {
     if (-not $aset) { throw "berkas pemasang Git tidak ditemukan di rilis terbaru" }
     $berkas = Join-Path $tmp $aset.name
     Unduh $aset.browser_download_url $berkas
-    $p = Start-Process -FilePath $berkas -ArgumentList "/VERYSILENT", "/NORESTART", "/NOCANCEL", "/SP-" -Wait -PassThru
-    if ($p.ExitCode -ne 0) { throw ("pemasang Git keluar dengan kode " + $p.ExitCode) }
+    $p = Start-Process -FilePath $berkas -ArgumentList "/VERYSILENT", "/NORESTART", "/NOCANCEL", "/SP-" -PassThru
+    $p.WaitForExit()   # hanya proses pemasang; -Wait ikut menunggu aplikasi yang dinyalakan pemasang
+if ($p.ExitCode -ne 0) { throw ("pemasang Git keluar dengan kode " + $p.ExitCode) }
     Segarkan-Path
     if (-not (Ada "git")) { throw "git belum terdeteksi setelah dipasang" }
     return "dipasang: " + (git --version)
@@ -101,8 +102,9 @@ Langkah "Node.js 22" {
     $berkas = Join-Path $tmp $bagian[1]
     Unduh ("https://nodejs.org/dist/latest-v22.x/" + $bagian[1]) $berkas
     if ((Get-FileHash $berkas -Algorithm SHA256).Hash -ne $bagian[0].ToUpper()) { throw "sidik SHA-256 Node.js tidak cocok; berkas tidak dipasang" }
-    $p = Start-Process -FilePath "msiexec.exe" -ArgumentList ('/i "' + $berkas + '" /qn /norestart') -Wait -PassThru
-    if ($p.ExitCode -ne 0 -and $p.ExitCode -ne 3010) { throw ("pemasang Node.js keluar dengan kode " + $p.ExitCode) }
+    $p = Start-Process -FilePath "msiexec.exe" -ArgumentList ('/i "' + $berkas + '" /qn /norestart') -PassThru
+    $p.WaitForExit()   # hanya proses pemasang; -Wait ikut menunggu aplikasi yang dinyalakan pemasang
+if ($p.ExitCode -ne 0 -and $p.ExitCode -ne 3010) { throw ("pemasang Node.js keluar dengan kode " + $p.ExitCode) }
     Segarkan-Path
     return "dipasang: " + (node -v) + ", sidik SHA-256 cocok"
 }
@@ -130,8 +132,9 @@ Langkah "Ollama" {
     if (-not (Ada "ollama")) {
         $berkas = Join-Path $tmp "OllamaSetup.exe"
         Unduh "https://ollama.com/download/OllamaSetup.exe" $berkas
-        $p = Start-Process -FilePath $berkas -ArgumentList "/VERYSILENT", "/NORESTART", "/SUPPRESSMSGBOXES" -Wait -PassThru
-        if ($p.ExitCode -ne 0) { throw ("pemasang Ollama keluar dengan kode " + $p.ExitCode + " (Windows 10 versi 1909 mungkin terlalu lama)") }
+        $p = Start-Process -FilePath $berkas -ArgumentList "/VERYSILENT", "/NORESTART", "/SUPPRESSMSGBOXES" -PassThru
+        $p.WaitForExit()   # hanya proses pemasang; -Wait ikut menunggu aplikasi yang dinyalakan pemasang
+if ($p.ExitCode -ne 0) { throw ("pemasang Ollama keluar dengan kode " + $p.ExitCode + " (Windows 10 versi 1909 mungkin terlalu lama)") }
         Segarkan-Path
         if (-not (Ada "ollama")) { throw "ollama belum terdeteksi setelah dipasang" }
     }

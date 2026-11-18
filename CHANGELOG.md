@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-18 — Skrip pemasangan tidak lagi tertahan setelah Ollama terpasang
+
+- Saat dijalankan di komputer mentor, `pasang-server-uji-savi.ps1` tampak berhenti lama di langkah Ollama. Penyebabnya: `Start-Process -Wait` di Windows menunggu proses beserta seluruh turunannya, sedangkan pemasang Ollama menyalakan aplikasi Ollama yang terus berjalan di latar belakang, sehingga skrip menunggu tanpa akhir walaupun pemasangan sudah selesai. Ketiga pemasang (Git, Node.js, Ollama) kini ditunggu dengan `WaitForExit()` pada proses pemasangnya saja.
+- Validasi aktual (Linux): sintaks diperiksa dengan parser PowerShell 7.4.6; 225 baris berakhiran CRLF dengan BOM UTF-8. Belum dijalankan ulang di Windows.
+
 ## 2026-11-18 — Hasil cek komputer mentor dan skrip pemasangan satu langkah
 
 - Skrip pengecekan dijalankan di komputer mentor (DEC-20261113-03): Intel Core i5-6500 4 inti / 4 thread, RAM 7,9 GB (1,3 GB bebas saat dicek), Intel HD Graphics 530, disk C: 46,3 GB bebas, Windows 10 Pro versi 1909 (build 18363, sudah tidak mendapat pembaruan keamanan), TPM ada tetapi belum siap. Yang sudah terpasang hanya Python. Kesimpulan: Jalur A dengan model 3B atau 1,5B dapat dicoba; Jalur B (Hermes Agent, konteks 64.000 token) tidak realistis dengan RAM 8 GB. Mentor menyetujui pemasangan seluruh perangkat lunak yang dibutuhkan.
