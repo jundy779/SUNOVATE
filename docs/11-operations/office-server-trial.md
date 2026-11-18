@@ -2,13 +2,23 @@
 
 **Status:** PROPOSED (uji coba pertama di komputer mentor, DEC-20261113-03)
 **Owner:** Tim pengembang SUNOVATE
-**Last Updated:** 2026-11-17
+**Last Updated:** 2026-11-18
 
 ## Purpose
 
 Memastikan laptop kantor kelas i5 sanggup menjalankan SUNOVATE beserta model AI lokal untuk SAVI, dan mengukur kecepatan jawabannya. Seluruh uji memakai data contoh (`SIMULATED_DATA`); tidak ada dokumen kantor yang dimasukkan. Versi yang dapat disunting bersama mentor juga tersedia sebagai dokumen Claude "Panduan Uji Coba Server SUNOVATE dan SAVI AI"; berkas ini adalah salinan di repository.
 
 Perkiraan waktu: 2 sampai 3 jam, sebagian besar untuk mengunduh. Siapkan koneksi internet yang stabil.
+
+## Cara Cepat: Satu Skrip
+
+[`scripts/ops/pasang-server-uji-savi.ps1`](../../scripts/ops/pasang-server-uji-savi.ps1) menjalankan bagian 2 sampai 4 sekaligus: memasang Git, Node.js 22 (sidik SHA-256 diperiksa), pnpm 11.4.0, uv, dan Ollama bila belum ada; mengunduh model (bawaan `qwen2.5:3b`, konteks 8192); memasang SUNOVATE di `C:\SUNOVATE`; mengatur `.env` untuk Jalur A dengan kunci acak; lalu menyalakan API dan web. Langkah yang gagal dicatat dan langkah berikutnya tetap dicoba; skrip aman dijalankan ulang karena melewati yang sudah terpasang. Log tersimpan di Desktop. Jalankan di PowerShell "Run as administrator":
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\pasang-server-uji-savi.ps1
+```
+
+Untuk RAM 8 GB dengan sedikit memori bebas, tambahkan `-Model qwen2.5:1.5b`. Hermes Agent (Jalur B) tidak dipasang skrip ini.
 
 ## 0. Sebelum Mulai
 

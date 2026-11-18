@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-18 — Hasil cek komputer mentor dan skrip pemasangan satu langkah
+
+- Skrip pengecekan dijalankan di komputer mentor (DEC-20261113-03): Intel Core i5-6500 4 inti / 4 thread, RAM 7,9 GB (1,3 GB bebas saat dicek), Intel HD Graphics 530, disk C: 46,3 GB bebas, Windows 10 Pro versi 1909 (build 18363, sudah tidak mendapat pembaruan keamanan), TPM ada tetapi belum siap. Yang sudah terpasang hanya Python. Kesimpulan: Jalur A dengan model 3B atau 1,5B dapat dicoba; Jalur B (Hermes Agent, konteks 64.000 token) tidak realistis dengan RAM 8 GB. Mentor menyetujui pemasangan seluruh perangkat lunak yang dibutuhkan.
+- `scripts/ops/pasang-server-uji-savi.ps1` memasang semuanya sekaligus: Git (rilis terbaru Git for Windows), Node.js 22 dengan pemeriksaan sidik SHA-256 dari `SHASUMS256.txt`, pnpm 11.4.0, uv, Ollama, model (bawaan `qwen2.5:3b`) yang dibungkus sebagai `savi-uji` berkonteks 8192 beserta uji kecepatan, lalu SUNOVATE di `C:\SUNOVATE` dengan `.env` Jalur A (kunci acak, `DEV_AUTH_SECRET` acak 48 karakter, ditulis tanpa BOM) dan menyalakan API serta web. Skrip melewati yang sudah terpasang, mencatat langkah yang gagal tanpa berhenti, menyimpan log di Desktop, dan membuka jendela aplikasi dengan kebijakan eksekusi Bypass agar `pnpm` dapat berjalan. Hermes Agent tidak dipasang.
+- Validasi aktual (Linux): sintaks kedua skrip PowerShell diperiksa dengan parser PowerShell 7.4.6; fungsi pengubah `.env` dan pembuat kunci acak diuji dengan `.env.example` asli (nilai diganti tanpa baris ganda, tanpa BOM). Skrip pemasangan belum dijalankan di Windows.
+
 ## 2026-11-17 — Perbaikan skrip cek komputer dan e2e SAVI pertama
 
 - Hasil uji Windows patch 0039 menemukan dua tampilan janggal di `scripts/ops/cek-komputer-server-savi.ps1`. Baris TPM tampil dengan nilai kosong saat dijalankan tanpa hak administrator; kini skrip memeriksa hak administrator lebih dulu dan menulis "tidak terbaca (jalankan PowerShell sebagai administrator...)". Baris status WSL tampil dengan spasi di antara setiap huruf karena `wsl.exe` menulis UTF-16; karakter NUL kini dibuang. Skrip juga menambahkan peringatan bila ruang kosong di drive C: kurang dari 20 GB, karena laptop uji hanya punya 3,8 GB bebas sementara model 7B butuh sekitar 5 GB.
