@@ -84,7 +84,7 @@ Langkah "Git" {
     Unduh $aset.browser_download_url $berkas
     $p = Start-Process -FilePath $berkas -ArgumentList "/VERYSILENT", "/NORESTART", "/NOCANCEL", "/SP-" -PassThru
     $p.WaitForExit()   # hanya proses pemasang; -Wait ikut menunggu aplikasi yang dinyalakan pemasang
-if ($p.ExitCode -ne 0) { throw ("pemasang Git keluar dengan kode " + $p.ExitCode) }
+    if ($p.ExitCode -ne 0) { throw ("pemasang Git keluar dengan kode " + $p.ExitCode) }
     Segarkan-Path
     if (-not (Ada "git")) { throw "git belum terdeteksi setelah dipasang" }
     return "dipasang: " + (git --version)
@@ -104,7 +104,7 @@ Langkah "Node.js 22" {
     if ((Get-FileHash $berkas -Algorithm SHA256).Hash -ne $bagian[0].ToUpper()) { throw "sidik SHA-256 Node.js tidak cocok; berkas tidak dipasang" }
     $p = Start-Process -FilePath "msiexec.exe" -ArgumentList ('/i "' + $berkas + '" /qn /norestart') -PassThru
     $p.WaitForExit()   # hanya proses pemasang; -Wait ikut menunggu aplikasi yang dinyalakan pemasang
-if ($p.ExitCode -ne 0 -and $p.ExitCode -ne 3010) { throw ("pemasang Node.js keluar dengan kode " + $p.ExitCode) }
+    if ($p.ExitCode -ne 0 -and $p.ExitCode -ne 3010) { throw ("pemasang Node.js keluar dengan kode " + $p.ExitCode) }
     Segarkan-Path
     return "dipasang: " + (node -v) + ", sidik SHA-256 cocok"
 }
@@ -134,7 +134,7 @@ Langkah "Ollama" {
         Unduh "https://ollama.com/download/OllamaSetup.exe" $berkas
         $p = Start-Process -FilePath $berkas -ArgumentList "/VERYSILENT", "/NORESTART", "/SUPPRESSMSGBOXES" -PassThru
         $p.WaitForExit()   # hanya proses pemasang; -Wait ikut menunggu aplikasi yang dinyalakan pemasang
-if ($p.ExitCode -ne 0) { throw ("pemasang Ollama keluar dengan kode " + $p.ExitCode + " (Windows 10 versi 1909 mungkin terlalu lama)") }
+    if ($p.ExitCode -ne 0) { throw ("pemasang Ollama keluar dengan kode " + $p.ExitCode + " (Windows 10 versi 1909 mungkin terlalu lama)") }
         Segarkan-Path
         if (-not (Ada "ollama")) { throw "ollama belum terdeteksi setelah dipasang" }
     }
@@ -189,6 +189,7 @@ Langkah "SUNOVATE" {
     } else {
         Atur-Env $envFile "HERMES_MODE" "development"
     }
+    [IO.File]::WriteAllText((Join-Path $InstallDir "apps\web\.env.local"), "SUNOVATE_API_URL=http://127.0.0.1:8000`r`n", (New-Object Text.UTF8Encoding $false))
     Push-Location $InstallDir
     try {
         pnpm install | Out-Host
@@ -202,16 +203,16 @@ Langkah "SUNOVATE" {
 
 if (-not $NoStart -and $hasil["SUNOVATE"] -like "OK*") {
     Langkah "Menyalakan aplikasi" {
-        Start-Process powershell -ArgumentList "-NoExit", "-ExecutionPolicy", "Bypass", "-Command", ("Set-Location '" + $InstallDir + "'; pnpm api:dev")
+        Start-Process powershell -ArgumentList "-NoExit", "-ExecutionPolicy", "Bypass", "-Command", ("Set-Location '" + $InstallDir + "'; uv run --directory apps/api --extra dev uvicorn sunovate_api.main:app --port 8000")
         Start-Process powershell -ArgumentList "-NoExit", "-ExecutionPolicy", "Bypass", "-Command", ("Set-Location '" + $InstallDir + "'; pnpm dev")
         $siap = $false
         for ($i = 0; $i -lt 90 -and -not $siap; $i++) {
             Start-Sleep -Seconds 2
-            try { Invoke-WebRequest -Uri "http://127.0.0.1:3000/login" -UseBasicParsing -TimeoutSec 10 | Out-Null; $siap = $true } catch { }
+            try { Invoke-WebRequest -Uri "http://localhost:3000/login" -UseBasicParsing -TimeoutSec 10 | Out-Null; $siap = $true } catch { }
         }
         if (-not $siap) { throw "halaman belum terbuka dalam 3 menit; periksa dua jendela PowerShell yang baru terbuka" }
-        Start-Process "http://127.0.0.1:3000"
-        return "terbuka di http://127.0.0.1:3000"
+        Start-Process "http://localhost:3000/login"
+        return "terbuka di http://localhost:3000"
     }
 }
 

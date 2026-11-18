@@ -20,6 +20,8 @@ powershell -ExecutionPolicy Bypass -File .\pasang-server-uji-savi.ps1
 
 Untuk RAM 8 GB dengan sedikit memori bebas, tambahkan `-Model qwen2.5:1.5b`. Hermes Agent (Jalur B) tidak dipasang skrip ini.
 
+Untuk menyalakan ulang SUNOVATE kapan saja (misalnya setelah komputer dinyalakan ulang), jalankan [`scripts/ops/nyalakan-sunovate.ps1`](../../scripts/ops/nyalakan-sunovate.ps1). SUNOVATE dibuka di `http://localhost:3000`; server pengembangan Next.js 16 memblokir sumber daya pengembangan yang diminta lewat nama host lain, sehingga `127.0.0.1:3000` dapat membuat tombol Masuk tidak aktif.
+
 ## 0. Sebelum Mulai
 
 1. **Izin.** Pemasangan program di komputer kantor dilakukan atas persetujuan mentor dan, bila disyaratkan, TIK. Pemasang Hermes Agent ikut memasang Python, Node.js, dan beberapa alat lain.
@@ -61,7 +63,7 @@ pnpm install
 pnpm api:setup
 ```
 
-Nyalakan `pnpm api:dev` (API, port 8000) dan `pnpm dev` (web, port 3000) di dua jendela PowerShell. Buka `http://127.0.0.1:3000`, masuk sebagai `sim.staff.pppsun@sunovate.local`, dan pastikan halaman SAVI AI terbuka. SUNOVATE hanya bisa dibuka dari komputer itu sendiri; akses dari komputer lain memerlukan izin TIK.
+Nyalakan `pnpm api:dev` (API, port 8000) dan `pnpm dev` (web, port 3000) di dua jendela PowerShell. Buka `http://localhost:3000`, masuk sebagai `sim.staff.pppsun@sunovate.local`, dan pastikan halaman SAVI AI terbuka. SUNOVATE hanya bisa dibuka dari komputer itu sendiri; akses dari komputer lain memerlukan izin TIK.
 
 ## 4. Jalur A: SUNOVATE Langsung ke Model Lokal
 

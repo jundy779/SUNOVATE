@@ -198,11 +198,16 @@ tbody tr:hover { background: var(--paper); }
 .savi-starter-questions button { width: 100%; border: 1px solid var(--line); border-radius: 2px; background: var(--white); padding: .58rem .7rem; color: var(--navy); font: 700 .7rem/1.35 var(--font-body); text-align: left; cursor: pointer; }
 .savi-starter-questions button:hover, .savi-starter-questions button:focus-visible { border-color: var(--gold); background: #fffdf6; }
 .savi-starter-questions button:disabled { cursor: not-allowed; opacity: .55; }
-.chat-question { justify-self: end; max-width: 80ch; margin: 0; background: var(--navy); color: var(--white); padding: .75rem 1rem; border-radius: 2px; }
-.chat-answer { width: min(100%, 90ch); border: 1px solid var(--line); border-left: 4px solid var(--navy); background: var(--white); padding: .9rem 1rem; }
-.savi-answer-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-bottom: .7rem; border-bottom: 1px solid var(--line); }
+/* Question and answer read as one formal record, full width and left-aligned, not chat bubbles. */
+.chat-turn { gap: 0; border: 1px solid var(--line); }
+.chat-label { display: block; color: var(--muted); font: 700 .66rem/1.2 var(--font-body); letter-spacing: .08em; text-transform: uppercase; }
+.chat-question { margin: 0; background: var(--paper); border-left: 4px solid var(--gold); padding: .85rem 1.25rem; }
+.chat-question p { max-width: 80ch; margin: .3rem 0 0; color: var(--navy); font: 600 .95rem/1.5 var(--font-heading); }
+.chat-answer { border-left: 4px solid var(--navy); background: var(--white); padding: 1rem 1.25rem 1.1rem; }
+.savi-answer-header { display: flex; align-items: center; gap: .9rem; padding-bottom: .7rem; border-bottom: 1px solid var(--line); }
+.savi-answer-header > span:last-child { margin-left: auto; }
 .savi-answer-header > span:last-child { color: var(--muted); font-size: .68rem; }
-.answer-text { white-space: pre-line; }
+.answer-text { max-width: 80ch; margin: .85rem 0 0; color: #1f2937; font-size: .92rem; line-height: 1.7; white-space: pre-line; }
 .savi-follow-up { margin-top: .75rem; padding: .75rem .85rem; border: 1px solid var(--line); border-left: 3px solid var(--gold); background: var(--paper); }
 .savi-follow-up h3 { margin: 0 0 .35rem; color: var(--navy); font-size: .95rem; }
 .savi-follow-up p { margin: .25rem 0; }
@@ -213,7 +218,9 @@ tbody tr:hover { background: var(--paper); }
 .citations li > span:last-child { display: grid; gap: .15rem; }
 .citations small { color: var(--muted); font-size: .66rem; }
 .cite-index { font-weight: 700; color: var(--navy); }
-.feedback { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .5rem; }
+.feedback { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; margin-top: 1rem; padding-top: .8rem; border-top: 1px solid var(--line); }
+.feedback-prompt { margin-right: .25rem; color: var(--muted); font-size: .78rem; }
+.feedback .button { min-height: 0; padding: .45rem .9rem; font-size: .78rem; }
 .chat-form { display: grid; gap: .5rem; }
 .savi-form-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .text-button { border: 0; background: transparent; padding: .25rem 0; color: var(--navy); font: 700 .7rem/1 var(--font-body); text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: .2em; cursor: pointer; }

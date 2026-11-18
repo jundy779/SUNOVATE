@@ -121,12 +121,13 @@ export function HermesChat() {
         ) : null}
         {turns.map(({ question, answer }) => (
           <article className="chat-turn" key={answer.messageId}>
-            <p className="chat-question">
-              <span className="sr-only">Pertanyaan: </span>
-              {question}
-            </p>
+            <div className="chat-question">
+              <span className="chat-label">Pertanyaan</span>
+              <p>{question}</p>
+            </div>
             <div className="chat-answer">
               <header className="savi-answer-header">
+                <span className="chat-label">Jawaban SAVI AI</span>
                 <StatusTag tone={decisionTone(answer.decision)}>
                   {HERMES_DECISION_LABELS[answer.decision]}
                 </StatusTag>
@@ -188,6 +189,7 @@ export function HermesChat() {
                 </p>
               ) : null}
               <div className="feedback" role="group" aria-label="Penilaian jawaban">
+                {rated[answer.messageId] ? null : <span className="feedback-prompt">Apakah jawaban ini membantu?</span>}
                 {rated[answer.messageId] ? (
                   <span className="muted">Terima kasih, penilaian Anda telah dicatat.</span>
                 ) : (

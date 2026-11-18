@@ -18,7 +18,7 @@
     "web:typecheck": "pnpm --filter @sunovate/web typecheck",
     "web:test": "pnpm --filter @sunovate/web test",
     "api:setup": "uv sync --directory apps/api --extra dev",
-    "api:dev": "uv run --directory apps/api --extra dev uvicorn sunovate_api.main:app --reload --port 8000",
+    "api:dev": "uv run --directory apps/api --extra dev uvicorn sunovate_api.main:app --reload --reload-dir sunovate_api --port 8000",
     "api:lint": "uv run --directory apps/api --extra dev ruff check . ../../tests ../../scripts",
     "api:typecheck": "uv run --directory apps/api --extra dev mypy sunovate_api",
     "api:test": "uv run --directory apps/api --extra dev pytest -q",

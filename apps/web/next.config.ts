@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   // Shown in the public footer so testers can tell which release they are using.
   env: { NEXT_PUBLIC_APP_VERSION: packageJson.version },
+  // Next.js 16 blocks dev resources requested from another host name; 127.0.0.1 and localhost
+  // are the same machine, so the dev server answers both (found in the office server trial).
+  allowedDevOrigins: ["127.0.0.1", "localhost"],
   async headers() {
     return [
       {

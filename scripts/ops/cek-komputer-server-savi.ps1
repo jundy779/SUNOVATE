@@ -4,6 +4,8 @@
 # Pemeriksaan TPM butuh PowerShell "Run as administrator"; tanpa itu bagian TPM dilewati.
 
 $ErrorActionPreference = "SilentlyContinue"
+# Baca PATH terbaru dari Windows agar program yang baru dipasang ikut terdeteksi.
+$env:Path = [Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [Environment]::GetEnvironmentVariable("Path", "User") + ";" + (Join-Path $HOME ".local\bin")
 $lines = New-Object System.Collections.Generic.List[string]
 function Tulis($teks) { Write-Host $teks; $lines.Add($teks) }
 function GB($bytes) { [math]::Round($bytes / 1GB, 1) }
@@ -45,7 +47,9 @@ if ($isAdmin) { $tpm = Get-Tpm }
 if ($null -eq $tpm -or $null -eq $tpm.TpmPresent) {
     Tulis "TPM          : tidak terbaca (jalankan PowerShell sebagai administrator untuk memeriksa)"
 } else {
-    Tulis ("TPM          : ada=" + $tpm.TpmPresent + ", siap=" + $tpm.TpmReady + ", aktif=" + $tpm.TpmEnabled)
+    $info = "ada=" + $tpm.TpmPresent + ", siap=" + $tpm.TpmReady
+    if ($null -ne $tpm.TpmEnabled) { $info += ", aktif=" + $tpm.TpmEnabled }
+    Tulis ("TPM          : " + $info)
 }
 
 Tulis ""
