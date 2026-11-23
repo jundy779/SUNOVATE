@@ -20,7 +20,7 @@ powershell -ExecutionPolicy Bypass -File .\pasang-server-uji-savi.ps1
 
 Untuk RAM 8 GB dengan sedikit memori bebas, tambahkan `-Model qwen2.5:1.5b`. Hermes Agent (Jalur B) tidak dipasang skrip ini.
 
-Untuk menyalakan ulang SUNOVATE kapan saja (misalnya setelah komputer dinyalakan ulang), jalankan [`scripts/ops/nyalakan-sunovate.ps1`](../../scripts/ops/nyalakan-sunovate.ps1). SUNOVATE dibuka di `http://localhost:3000`; server pengembangan Next.js 16 memblokir sumber daya pengembangan yang diminta lewat nama host lain, sehingga `127.0.0.1:3000` dapat membuat tombol Masuk tidak aktif.
+Untuk menyalakan ulang SUNOVATE kapan saja (misalnya setelah komputer dinyalakan ulang), jalankan [`scripts/ops/nyalakan-sunovate.ps1`](../../scripts/ops/nyalakan-sunovate.ps1). Tambahkan `-Perbarui` untuk mengambil versi terbaru dari GitHub lebih dulu; pustaka dipasang ulang hanya bila `package.json`, `pnpm-lock.yaml`, `apps/api/uv.lock`, atau `apps/api/pyproject.toml` berubah. SUNOVATE dibuka di `http://localhost:3000`; server pengembangan Next.js 16 memblokir sumber daya pengembangan yang diminta lewat nama host lain, sehingga `127.0.0.1:3000` dapat membuat tombol Masuk tidak aktif.
 
 ## 0. Sebelum Mulai
 

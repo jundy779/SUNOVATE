@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-20 — Pembaruan satu perintah untuk server uji dan ikon pengembangan disembunyikan
+
+- `scripts/ops/nyalakan-sunovate.ps1` mendapat pilihan `-Perbarui`: setelah mematikan API dan web, skrip menjalankan `git pull --ff-only`, memasang ulang pustaka web hanya bila `package.json` atau `pnpm-lock.yaml` berubah dan pustaka API hanya bila `apps/api/uv.lock` atau `apps/api/pyproject.toml` berubah, lalu menyalakan semuanya. Tanpa pilihan itu skrip tetap hanya menyalakan ulang. Sebelumnya pembaruan di komputer mentor perlu beberapa perintah terpisah dan pemasangan ulang pustaka mudah terlupa.
+- Ikon bulat "N" milik server pengembangan Next.js disembunyikan (`devIndicators: false`) karena menutupi teks di kaki sidebar, dan demo di komputer mentor berjalan di server pengembangan. Layar error pengembangan tetap muncul bila ada error.
+- Validasi aktual (Linux): sintaks skrip lolos parser PowerShell 7.4.6 dengan akhiran CRLF dan BOM; blok `-Perbarui` dijalankan pada salinan repository yang dimundurkan ke `5c79814` (memperbarui ke `dd448d0` dan memasang ulang pustaka web karena `package.json` berubah) lalu dijalankan lagi (melaporkan sudah versi terbaru tanpa memasang ulang); TypeScript, ESLint, dan 17/17 skenario Playwright e2e lulus; kaki sidebar diperiksa visual tanpa ikon pengembangan.
+
 ## 2026-11-18 — Tampilan SAVI lebih resmi dan perbaikan dari uji coba server mentor
 
 - Uji coba di komputer mentor (DEC-20261113-03): skrip pemasangan berhasil memasang Git 2.56.1, Node.js 22.23.5, pnpm 11.4.0, uv 0.13.9, Ollama 0.40.16, dan model `qwen2.5:3b` (dibungkus `savi-uji`) walaupun Windows-nya versi 1909; kecepatan model 11,4 sampai 11,6 token per detik di Core i5-6500 tanpa kartu grafis khusus, RAM bebas 2,9 GB saat SUNOVATE, Ollama, dan browser berjalan. Hermes Agent v0.23.2 juga dipasang atas persetujuan mentor, setelah dukungan jalur panjang Windows diaktifkan (salah satu berkasnya beralamat tepat 260 karakter), dengan Blank Slate dan endpoint Ollama lokal; konfigurasi amannya masih ditinjau dan belum dihubungkan ke SUNOVATE. Uji lima pertanyaan SAVI masih berjalan.

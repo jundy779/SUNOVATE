@@ -11,6 +11,8 @@ const nextConfig: NextConfig = {
   // Next.js 16 blocks dev resources requested from another host name; 127.0.0.1 and localhost
   // are the same machine, so the dev server answers both (found in the office server trial).
   allowedDevOrigins: ["127.0.0.1", "localhost"],
+  // The round "N" indicator covers the sidebar footer, and demos run on the dev server.
+  devIndicators: false,
   async headers() {
     return [
       {

@@ -1,12 +1,47 @@
 ﻿# Nyalakan ulang SUNOVATE di server uji: matikan API dan web lama, pastikan Ollama berjalan,
 # lalu nyalakan API (tanpa mulai-ulang otomatis) dan web di dua jendela, dan buka browser.
 # Jalankan:  powershell -ExecutionPolicy Bypass -File .\scripts\ops\nyalakan-sunovate.ps1
-param([string]$InstallDir = "C:\SUNOVATE")
+# Tambahkan -Perbarui untuk mengambil versi terbaru dari GitHub lebih dulu; pustaka dipasang ulang
+# hanya bila berkas daftar pustakanya berubah.
+param([string]$InstallDir = "C:\SUNOVATE", [switch]$Perbarui)
 
 Write-Host "Mematikan API dan web lama..."
 Get-NetTCPConnection -LocalPort 3000,8000 -State Listen -ErrorAction SilentlyContinue |
     ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }
 Start-Sleep -Seconds 2
+
+if ($Perbarui) {
+    Write-Host "Mengambil versi terbaru dari GitHub..."
+    Push-Location $InstallDir
+    try {
+        $sebelum = (git rev-parse HEAD).Trim()
+        git pull --ff-only | Out-Host
+        if ($LASTEXITCODE -ne 0) { throw "git pull gagal. Pastikan tidak ada berkas SUNOVATE yang diubah manual di komputer ini." }
+        $sesudah = (git rev-parse HEAD).Trim()
+        if ($sebelum -eq $sesudah) {
+            Write-Host "Sudah versi terbaru."
+        } else {
+            $berubah = @(git diff --name-only $sebelum $sesudah)
+            if ($berubah | Where-Object { $_ -match '(^|/)(package\.json|pnpm-lock\.yaml)$' }) {
+                Write-Host "Daftar pustaka web berubah, memasang ulang..."
+                pnpm install | Out-Host
+                if ($LASTEXITCODE -ne 0) { throw "pnpm install gagal." }
+            }
+            if ($berubah | Where-Object { $_ -match '^apps/api/(uv\.lock|pyproject\.toml)$' }) {
+                Write-Host "Daftar pustaka API berubah, memasang ulang..."
+                pnpm api:setup | Out-Host
+                if ($LASTEXITCODE -ne 0) { throw "pnpm api:setup gagal." }
+            }
+            Write-Host ("Diperbarui: " + $sebelum.Substring(0, 7) + " -> " + $sesudah.Substring(0, 7)) -ForegroundColor Green
+        }
+    } catch {
+        Write-Host $_.Exception.Message -ForegroundColor Red
+        Pop-Location
+        exit 1
+    }
+    Pop-Location
+}
+
 [IO.File]::WriteAllText((Join-Path $InstallDir "apps\web\.env.local"), "SUNOVATE_API_URL=http://127.0.0.1:8000`r`n", (New-Object Text.UTF8Encoding $false))
 
 try { Invoke-RestMethod http://127.0.0.1:11434/api/tags -TimeoutSec 3 | Out-Null }
