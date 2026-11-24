@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-24 — minimatch diperbarui; audit dependency nol temuan
+
+- typescript-eslint dan seluruh paket `@typescript-eslint/*` (turunan `eslint-config-next`) dinaikkan dari 8.71.0 ke 8.73.0 (rilis 2026-11-16 17.07 UTC), sehingga minimatch yang dipakai alat lint naik dari 10.2.6 ke 11.0.9 dan menutup GHSA-g3hv-75wg-m249 (KL-28, BUG-055). Pembaruan sengaja ditunda sampai usia rilis tujuh hari terpenuhi.
+- Pembaruan pertama ikut mengambil `@babel/runtime@7.29.15` (3,3 hari) dan `ignore@7.0.16` (6,8 hari); keduanya dibatalkan dengan menjalankan ulang pembaruan memakai `--config.minimum-release-age=10080`. Seluruh 15 versi paket yang berubah di `pnpm-lock.yaml` diperiksa satu per satu; yang termuda minimatch 11.0.9 (7,14 hari). Hanya `pnpm-lock.yaml` yang berubah; tidak ada perubahan kode.
+- Validasi aktual (Linux): `pnpm deps:audit` PASSED dengan 0 temuan (npm dan PyPI), ESLint dengan typescript-eslint 8.73.0, Ruff, TypeScript, mypy strict, 52 test frontend, 513 test backend mode simulated (40 PostgreSQL dilewati), dan build produksi lulus.
+
 ## 2026-11-20 — Pembaruan satu perintah untuk server uji dan ikon pengembangan disembunyikan
 
 - `scripts/ops/nyalakan-sunovate.ps1` mendapat pilihan `-Perbarui`: setelah mematikan API dan web, skrip menjalankan `git pull --ff-only`, memasang ulang pustaka web hanya bila `package.json` atau `pnpm-lock.yaml` berubah dan pustaka API hanya bila `apps/api/uv.lock` atau `apps/api/pyproject.toml` berubah, lalu menyalakan semuanya. Tanpa pilihan itu skrip tetap hanya menyalakan ulang. Sebelumnya pembaruan di komputer mentor perlu beberapa perintah terpisah dan pemasangan ulang pustaka mudah terlupa.
