@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-24 — Data contoh milestone memakai "direviu"
+
+- Validasi Windows patch 0048 mencatat satu data contoh milestone yang masih berjudul "SIMULASI - Draf playbook siap direview" dan tampil di Monitoring Kerja. Judulnya diseragamkan menjadi "SIMULASI - Draf playbook siap direviu" sesuai DEC-20261124-01. Hanya data contoh (`store/dataset.py`); tidak ada test atau dokumen yang merujuk judul lama.
+- Validasi aktual (Linux): Ruff dan 513 test backend mode simulated (40 PostgreSQL dilewati) lulus.
+
 ## 2026-11-24 — Istilah antarmuka sesuai lingkungan Kemenkeu
 
 - Pemindaian sekitar 700 teks antarmuka menemukan sisa istilah bahasa Inggris atau tidak baku. Atas arahan mentor (DEC-20261124-01), "Output", "Milestone", dan "Yield" tetap dipakai karena lazim di Kemenkeu dan DJPPR.

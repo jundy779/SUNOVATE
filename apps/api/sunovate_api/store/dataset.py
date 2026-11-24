@@ -604,7 +604,7 @@ def build_dataset() -> Dataset:  # noqa: PLR0915 - linear dataset definition
             )
         )
     for key, wo, title, due in [
-        ("M1", "WO1", "SIMULASI - Draf playbook siap direview", date(2026, 10, 31)),
+        ("M1", "WO1", "SIMULASI - Draf playbook siap direviu", date(2026, 10, 31)),
         ("M2", "WO2", "SIMULASI - Metadata regulasi tervalidasi", date(2026, 10, 15)),
         ("M3", "WO4", "SIMULASI - Daftar template final", date(2026, 10, 25)),
     ]:
