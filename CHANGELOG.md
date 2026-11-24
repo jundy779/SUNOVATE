@@ -3,6 +3,7 @@
 ## 2026-11-24 — Data contoh milestone memakai "direviu"
 
 - Validasi Windows patch 0048 mencatat satu data contoh milestone yang masih berjudul "SIMULASI - Draf playbook siap direview" dan tampil di Monitoring Kerja. Judulnya diseragamkan menjadi "SIMULASI - Draf playbook siap direviu" sesuai DEC-20261124-01. Hanya data contoh (`store/dataset.py`); tidak ada test atau dokumen yang merujuk judul lama.
+- Validasi aktual (Windows 11, 2026-11-24): sebelum mulai, proses pemegang port 8000 (uvicorn `pnpm api:dev` dari sesi sebelumnya) dan worker `multiprocessing.spawn`-nya dihentikan; port 3000 dan 8000 kosong. `git am` patch 0049 bersih di atas `44a3bdc` sebagai `e1ad511` (2 berkas). `pnpm validate` lulus dalam 153 detik (52 test frontend; 512 test backend lulus dan 41 dilewati; build produksi berhasil). Dengan `pnpm api:dev` menyala, `pnpm e2e` 17/17 lulus pada putaran pertama (1,0 menit). Cek dengan `pnpm dev` pada 1310 x 740 piksel sebagai sim.coordinator: tab Milestone di Monitoring Kerja berisi tiga baris, salah satunya "SIMULASI - Draf playbook siap direviu"; teks "direview" tidak ada lagi di halaman; tanpa error di konsol.
 - Validasi aktual (Linux): Ruff dan 513 test backend mode simulated (40 PostgreSQL dilewati) lulus.
 
 ## 2026-11-24 — Istilah antarmuka sesuai lingkungan Kemenkeu
