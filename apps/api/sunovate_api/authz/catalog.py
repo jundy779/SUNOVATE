@@ -26,7 +26,7 @@ PERMISSIONS: dict[str, str] = {
     "secure_document:manage_all": "Menentukan pembaca dokumen rahasia seluruh tim",
     "secure_document:manage_team": "Menentukan pembaca dokumen rahasia milik tim sendiri",
     "search:query": "Melakukan pencarian",
-    "work:read": "Melihat hasil kerja, tugas, dan tahapan penting",
+    "work:read": "Melihat hasil kerja, tugas, dan milestone",
     "work:create": "Membuat hasil kerja dan tugas",
     "work:update": "Memperbarui hasil kerja dan tugas",
     "pending:read": "Melihat hal yang perlu ditindaklanjuti",

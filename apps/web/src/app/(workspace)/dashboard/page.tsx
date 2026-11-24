@@ -11,7 +11,7 @@ import { apiGet } from "@/lib/api";
 import { formatDate, formatDateTime } from "@/lib/format";
 import { classificationLabel, knowledgeTypeLabel } from "@/lib/ui-labels";
 
-export const metadata: Metadata = { title: "Dashboard" };
+export const metadata: Metadata = { title: "Ringkasan" };
 
 type Tone = "plain" | "attention" | "done";
 

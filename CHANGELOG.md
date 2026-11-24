@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-24 — Istilah antarmuka sesuai lingkungan Kemenkeu
+
+- Pemindaian sekitar 700 teks antarmuka menemukan sisa istilah bahasa Inggris atau tidak baku. Atas arahan mentor (DEC-20261124-01), "Output", "Milestone", dan "Yield" tetap dipakai karena lazim di Kemenkeu dan DJPPR.
+- Diperbaiki tanpa mengubah makna: judul tab halaman Ringkasan sebelumnya "Dashboard"; "review" dan "reviewer" pada formulir keputusan mentor menjadi "reviu" dan "pereviu"; "Ketua Tim/PIC" menjadi "Ketua Tim atau penanggung jawab"; keterangan di halaman masuk "Login organisasi belum tersedia" menjadi "Masuk dengan akun kantor belum tersedia". Sesuai keputusan yang sama, label "Tahapan penting" di Monitoring Kerja, panduan, daftar kewenangan, serta nama lembar dan berkas unduhan Excel diganti "Milestone" (berkas unduhan kini `milestone`). Tabel padanan di `content-language.md` diperbarui, termasuk "milestone" yang sebelumnya dipadankan dengan "tahapan penting".
+- Validasi aktual (Linux): ESLint, Ruff, TypeScript, mypy strict, 52 test frontend, 513 test backend mode simulated (40 PostgreSQL dilewati), dan 17/17 skenario Playwright e2e lulus.
+
 ## 2026-11-24 — Pemberitahuan versi pnpm dimatikan saat `-Perbarui` memasang pustaka
 
 - Validasi Windows patch 0046 mencatat bahwa baris `ERR_PNPM_BROKEN_METADATA_JSON terminated` pada patch 0045 muncul tepat sebelum pemberitahuan "Update available! 11.4.0 → 12.21.0", sehingga kemungkinan berasal dari pengecekan versi pnpm ke internet, bukan dari pemasangan. Karena `-Perbarui` menganggap keluaran yang memuat `ERR_PNPM` sebagai kegagalan, pemeriksaan itu dapat membuatnya berhenti padahal pemasangan berhasil. `pnpm install` di `-Perbarui` kini dijalankan dengan `--config.update-notifier=false`; versi pnpm proyek memang dikunci di 11.4.0.

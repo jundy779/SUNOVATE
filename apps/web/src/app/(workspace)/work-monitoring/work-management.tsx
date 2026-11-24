@@ -15,7 +15,7 @@ type InitialData = Record<Entity, WorkItem[]>;
 const CONFIG: Record<Entity, { label: string; singular: string; path: string; permission: string }> = {
   outputs: { label: "Output kerja", singular: "output", path: "/work-outputs", permission: "work:create" },
   tasks: { label: "Tugas", singular: "tugas", path: "/tasks", permission: "work:create" },
-  milestones: { label: "Tahapan penting", singular: "tahapan penting", path: "/milestones", permission: "work:create" },
+  milestones: { label: "Milestone", singular: "milestone", path: "/milestones", permission: "work:create" },
   pending: { label: "Perlu tindak lanjut", singular: "hal yang perlu ditindaklanjuti", path: "/pending-matters", permission: "pending:manage" },
   followUps: { label: "Tindak lanjut", singular: "tindak lanjut", path: "/follow-ups", permission: "pending:manage" },
 };

@@ -36,7 +36,7 @@ _KINDS: Final[dict[str, tuple[type[Governed], str, str, str]]] = {
     # kind: (record type, permission, sheet title, file slug)
     "outputs": (WorkOutput, "work:read", "Output kerja", "output-kerja"),
     "tasks": (Task, "work:read", "Tugas", "tugas"),
-    "milestones": (Milestone, "work:read", "Tahapan penting", "tahapan-penting"),
+    "milestones": (Milestone, "work:read", "Milestone", "milestone"),
     "pending": (PendingMatter, "pending:read", "Perlu tindak lanjut", "perlu-tindak-lanjut"),
     "followUps": (FollowUp, "pending:read", "Tindak lanjut", "tindak-lanjut"),
 }

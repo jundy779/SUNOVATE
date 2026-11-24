@@ -40,12 +40,12 @@ const FIELD_GROUPS: Array<{
       {
         name: "substantiveValidator",
         label: "Siapa validator substansi untuk setiap topik SUN?",
-        placeholder: "Contoh format: Ketua Tim/PIC sesuai topik, perlu dikonfirmasi mentor",
+        placeholder: "Contoh format: Ketua Tim atau penanggung jawab sesuai topik, perlu dikonfirmasi mentor",
       },
       {
         name: "legalReviewer",
         label: "Siapa yang memeriksa ketepatan dasar hukum?",
-        placeholder: "Jabatan atau unit reviewer hukum yang berwenang",
+        placeholder: "Jabatan atau unit pereviu hukum yang berwenang",
       },
       {
         name: "finalApprover",
@@ -55,12 +55,12 @@ const FIELD_GROUPS: Array<{
     ],
   },
   {
-    title: "Urutan dan bukti review",
+    title: "Urutan dan bukti reviu",
     description: "Pastikan sistem tidak menyamakan pemeriksaan substansi, hukum, dan persetujuan akhir.",
     fields: [
       {
         name: "reviewSequence",
-        label: "Bagaimana urutan review dan kondisi pengembalian untuk revisi?",
+        label: "Bagaimana urutan reviu dan kondisi pengembalian untuk revisi?",
         placeholder: "Urutan tahap, pemisahan tugas, dan alasan revisi/penolakan",
       },
       {
@@ -92,7 +92,7 @@ const FIELD_GROUPS: Array<{
       {
         name: "reviewValidity",
         label: "Kapan jawaban wajib ditinjau ulang?",
-        placeholder: "Pemicu perubahan regulasi/SOP, masa berlaku, dan jadwal review",
+        placeholder: "Pemicu perubahan regulasi/SOP, masa berlaku, dan jadwal reviu",
       },
     ],
   },

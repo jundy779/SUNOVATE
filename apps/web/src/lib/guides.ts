@@ -54,7 +54,7 @@ export const GUIDES: Guide[] = [
     href: "/work-monitoring",
     linkLabel: "Buka Monitoring Kerja",
     steps: [
-      { title: "Pilih jenis data", detail: "Di Monitoring Kerja, pilih tab Output kerja, Tugas, Tahapan penting, Perlu tindak lanjut, atau Tindak lanjut." },
+      { title: "Pilih jenis data", detail: "Di Monitoring Kerja, pilih tab Output kerja, Tugas, Milestone, Perlu tindak lanjut, atau Tindak lanjut." },
       { title: "Cari, saring, dan urutkan", detail: "Ketik sebagian judul di Cari judul, pilih Saring status atau Saring tim, dan klik judul kolom untuk mengurutkan, seperti di Excel." },
       { title: "Perbarui status", detail: "Bila Anda berwenang, klik Ubah pada baris pekerjaan lalu pilih status baru. Setiap perubahan tercatat dalam riwayat aktivitas." },
       { title: "Unduh ke Excel bila perlu", detail: "Tombol Unduh Excel menghasilkan berkas berisi data yang boleh Anda lihat, lengkap dengan filter. Jangan teruskan berkas kepada pihak yang tidak berwenang." },

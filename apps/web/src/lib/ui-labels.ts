@@ -91,7 +91,7 @@ const AUDIT_ENTITY_LABELS: Record<string, string> = {
   document_version: "Versi dokumen",
   work_output: "Output kerja",
   task: "Tugas",
-  milestone: "Tahapan penting",
+  milestone: "Milestone",
   pending_matter: "Hal yang perlu ditindaklanjuti",
   follow_up: "Tindak lanjut",
   approval_request: "Permintaan persetujuan",

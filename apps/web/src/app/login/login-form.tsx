@@ -53,7 +53,7 @@ export function LoginForm() {
           </option>
         ))}
       </datalist>
-      <small id="email-hint">Daftar akun muncul saat kolom dipilih. Login organisasi belum tersedia pada tahap ini.</small>
+      <small id="email-hint">Daftar akun muncul saat kolom dipilih. Masuk dengan akun kantor belum tersedia pada tahap ini.</small>
       {errors.email ? (
         <p className="field-error" id="email-error" role="alert">
           {errors.email.message}

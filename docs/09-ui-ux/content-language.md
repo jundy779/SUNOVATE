@@ -30,7 +30,7 @@ Aturan ini berlaku untuk halaman publik, halaman masuk, ruang kerja, pesan kesal
 | clearance | batas akses informasi |
 | Knowledge Hub | Basis Pengetahuan |
 | pending matter | hal yang perlu ditindaklanjuti |
-| milestone | tahapan penting |
+| milestone | Milestone (dipertahankan atas arahan mentor, DEC-20261124-01) |
 | approval | persetujuan |
 | feedback | penilaian atau masukan |
 | audit log | riwayat aktivitas |
@@ -39,6 +39,12 @@ Aturan ini berlaku untuk halaman publik, halaman masuk, ruang kerja, pesan kesal
 | SME validation | pemeriksaan substansi |
 | legal validation | pemeriksaan dasar hukum |
 | escalation | diteruskan kepada pegawai berwenang |
+| output | Output (dipertahankan, DEC-20261124-01; lazim di Kemenkeu, misalnya Rincian Output) |
+| yield | Yield (dipertahankan, DEC-20261124-01) |
+| review / reviewer | reviu / pereviu (bentuk baku KBBI yang juga dipakai Kemenkeu) |
+| PIC | penanggung jawab |
+| login | masuk |
+| dashboard | Ringkasan |
 
 ## Larangan
 

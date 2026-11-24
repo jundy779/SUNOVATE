@@ -340,6 +340,18 @@ Entri berikut mencatat jawaban knowledge owner atas delapan pertanyaan slide 24 
 - **ADR/BR terkait:** ADR-004
 - **Tindak lanjut:** mencatat hasil skrip pengecekan dan lima pertanyaan uji, lalu menetapkan model untuk demo akhir Desember 2026.
 
+### DEC-20261124-01
+
+- **Open question:** Tidak ada (istilah antarmuka)
+- **Tanggal jawaban:** 2026-11-24
+- **Sumber:** Jawaban mentor melalui WhatsApp pada 2026-11-24 pukul 14.12, diteruskan project lead, atas pertanyaan pilihan istilah "Output kerja" atau "Keluaran kerja", "Milestone" atau "Target antara", dan "Yield SUN" atau "Imbal hasil (yield) SUN".
+- **Jawaban:** Output, Milestone, Yield.
+- **Keputusan:** Ketiga istilah tetap dipakai di antarmuka SUNOVATE sebagaimana lazim di lingkungan Kemenkeu dan DJPPR. Istilah yang dibakukan tim tanpa perubahan makna: "reviu" dan "pereviu" (bukan review/reviewer), "penanggung jawab" (bukan PIC), "masuk" (bukan login), dan "Ringkasan" untuk halaman utama setelah masuk. Kutipan peraturan tetap memakai istilah sah pada sumbernya, misalnya "imbal hasil" dalam PMK.
+- **Status:** CONFIRMED (mentor, diteruskan project lead)
+- **Dampak:** `content-language.md`, teks antarmuka
+- **ADR/BR terkait:** Tidak ada
+- **Tindak lanjut:** Tidak ada
+
 ## Related Documents
 
 - [architecture-decisions](../03-architecture/architecture-decisions.md)
