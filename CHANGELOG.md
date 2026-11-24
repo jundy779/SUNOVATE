@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-24 — Pemberitahuan versi pnpm dimatikan saat `-Perbarui` memasang pustaka
+
+- Validasi Windows patch 0046 mencatat bahwa baris `ERR_PNPM_BROKEN_METADATA_JSON terminated` pada patch 0045 muncul tepat sebelum pemberitahuan "Update available! 11.4.0 → 12.21.0", sehingga kemungkinan berasal dari pengecekan versi pnpm ke internet, bukan dari pemasangan. Karena `-Perbarui` menganggap keluaran yang memuat `ERR_PNPM` sebagai kegagalan, pemeriksaan itu dapat membuatnya berhenti padahal pemasangan berhasil. `pnpm install` di `-Perbarui` kini dijalankan dengan `--config.update-notifier=false`; versi pnpm proyek memang dikunci di 11.4.0.
+- Validasi aktual (Linux): pnpm 11.4.0 menerima `--config.update-notifier=false` (`pnpm install --frozen-lockfile` selesai normal); sintaks skrip lolos parser PowerShell 7.4.6 dengan akhiran CRLF dan BOM.
+
 ## 2026-11-24 — `-Perbarui` tidak lagi tertipu "Already up to date" dari pnpm
 
 - Saat patch 0045 diterapkan di Windows, `pnpm install` melapor "Already up to date" dengan kode keluar 0 dan baris `ERR_PNPM_BROKEN_METADATA_JSON terminated`, padahal `node_modules` masih berisi typescript-eslint 8.72.2 dan minimatch 10.2.6; penyebabnya catatan status `node_modules/.pnpm-workspace-state-v1.json` yang basi. Pilihan `-Perbarui` di `scripts/ops/nyalakan-sunovate.ps1` menjalankan perintah yang sama sehingga dapat diam-diam meninggalkan versi lama di komputer mentor.

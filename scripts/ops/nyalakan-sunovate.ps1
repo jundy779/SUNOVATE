@@ -29,7 +29,9 @@ if ($Perbarui) {
                 # disisihkan agar pnpm memeriksa ulang terhadap pnpm-lock.yaml.
                 $state = Join-Path $InstallDir "node_modules\.pnpm-workspace-state-v1.json"
                 if (Test-Path $state) { Move-Item $state ($state + ".lama") -Force }
-                pnpm install --frozen-lockfile 2>&1 | Tee-Object -Variable keluaran | Out-Host
+                # Pemberitahuan versi pnpm dimatikan: pengecekannya ke internet dapat mencetak ERR_PNPM
+                # sendiri walaupun pemasangan berhasil, dan versi pnpm proyek memang dikunci.
+                pnpm install --frozen-lockfile --config.update-notifier=false 2>&1 | Tee-Object -Variable keluaran | Out-Host
                 if ($LASTEXITCODE -ne 0 -or (($keluaran | Out-String) -match "ERR_PNPM")) { throw "pnpm install gagal atau melaporkan error ERR_PNPM; lihat pesan di atas." }
             }
             if ($berubah | Where-Object { $_ -match '^apps/api/(uv\.lock|pyproject\.toml)$' }) {
