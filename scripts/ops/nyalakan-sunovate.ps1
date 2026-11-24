@@ -24,8 +24,13 @@ if ($Perbarui) {
             $berubah = @(git diff --name-only $sebelum $sesudah)
             if ($berubah | Where-Object { $_ -match '(^|/)(package\.json|pnpm-lock\.yaml)$' }) {
                 Write-Host "Daftar pustaka web berubah, memasang ulang..."
-                pnpm install | Out-Host
-                if ($LASTEXITCODE -ne 0) { throw "pnpm install gagal." }
+                # pnpm dapat melapor "Already up to date" dari catatan status yang basi padahal
+                # node_modules masih berisi versi lama (ditemukan saat patch 0045). Catatan itu
+                # disisihkan agar pnpm memeriksa ulang terhadap pnpm-lock.yaml.
+                $state = Join-Path $InstallDir "node_modules\.pnpm-workspace-state-v1.json"
+                if (Test-Path $state) { Move-Item $state ($state + ".lama") -Force }
+                pnpm install --frozen-lockfile 2>&1 | Tee-Object -Variable keluaran | Out-Host
+                if ($LASTEXITCODE -ne 0 -or (($keluaran | Out-String) -match "ERR_PNPM")) { throw "pnpm install gagal atau melaporkan error ERR_PNPM; lihat pesan di atas." }
             }
             if ($berubah | Where-Object { $_ -match '^apps/api/(uv\.lock|pyproject\.toml)$' }) {
                 Write-Host "Daftar pustaka API berubah, memasang ulang..."

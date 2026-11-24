@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-24 — `-Perbarui` tidak lagi tertipu "Already up to date" dari pnpm
+
+- Saat patch 0045 diterapkan di Windows, `pnpm install` melapor "Already up to date" dengan kode keluar 0 dan baris `ERR_PNPM_BROKEN_METADATA_JSON terminated`, padahal `node_modules` masih berisi typescript-eslint 8.72.2 dan minimatch 10.2.6; penyebabnya catatan status `node_modules/.pnpm-workspace-state-v1.json` yang basi. Pilihan `-Perbarui` di `scripts/ops/nyalakan-sunovate.ps1` menjalankan perintah yang sama sehingga dapat diam-diam meninggalkan versi lama di komputer mentor.
+- Bila daftar pustaka web berubah, `-Perbarui` kini menyisihkan catatan status itu (diganti nama menjadi `.lama`, tidak dihapus), memasang dengan `pnpm install --frozen-lockfile`, dan menganggap pemasangan gagal bila kode keluarnya bukan 0 atau keluarannya memuat `ERR_PNPM`.
+- Validasi aktual (Linux): sintaks lolos parser PowerShell 7.4.6 dengan akhiran CRLF dan BOM; pemeriksaan `ERR_PNPM` diuji dengan keluaran yang dilaporkan dari Windows (dianggap gagal) dan keluaran normal (diterima); blok `-Perbarui` dijalankan pada salinan repository di `36c05ca` dengan catatan status basi: pembaruan ke `a98f563` mendeteksi perubahan `pnpm-lock.yaml`, menyisihkan catatan status, dan menjalankan `pnpm install --frozen-lockfile`. Saat menyiapkan uji untuk Linux, penggantian garis miring yang terlalu luas sempat merusak pola pencarian di alat uji (bukan di skrip) dan diperbaiki sebelum uji diulang.
+
 ## 2026-11-24 — minimatch diperbarui; audit dependency nol temuan
 
 - typescript-eslint dan seluruh paket `@typescript-eslint/*` (turunan `eslint-config-next`) dinaikkan dari 8.71.0 ke 8.73.0 (rilis 2026-11-16 17.07 UTC), sehingga minimatch yang dipakai alat lint naik dari 10.2.6 ke 11.0.9 dan menutup GHSA-g3hv-75wg-m249 (KL-28, BUG-055). Pembaruan sengaja ditunda sampai usia rilis tujuh hari terpenuhi.
