@@ -23,6 +23,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import os
 import random
 import statistics
 import time
@@ -234,11 +235,15 @@ async def jalankan(args: argparse.Namespace) -> int:
         "layak": layak,
         "per_aksi": ringkasan,
     }
-    folder = (
-        Path(args.keluaran)
-        if args.keluaran
-        else (Path.home() / "Desktop" if (Path.home() / "Desktop").is_dir() else Path.cwd())
-    )
+    if args.keluaran:
+        # pnpm menjalankan skrip dari apps/api (uv --directory); folder relatif dihitung dari
+        # folder tempat perintah diketik, yang disimpan pnpm di INIT_CWD.
+        folder = Path(args.keluaran)
+        if not folder.is_absolute():
+            folder = Path(os.environ.get("INIT_CWD", Path.cwd())) / folder
+    else:
+        desktop = Path.home() / "Desktop"
+        folder = desktop if desktop.is_dir() else Path(os.environ.get("INIT_CWD", Path.cwd()))
     berkas = folder / f"SUNOVATE-uji-beban-{datetime.now():%Y%m%d-%H%M%S}.json"
     berkas.write_text(json.dumps(laporan, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"Laporan disimpan di: {berkas}")

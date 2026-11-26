@@ -26,9 +26,16 @@ API harus menyala lebih dulu (`pnpm api:dev`). Gunakan `--tanpa-laju` untuk mele
 | SAVI AI | Permintaan tanpa token ditolak; walau diperintah mengabaikan aturan dan membuka RAHASIA, SAVI menolak (`REFUSED_POLICY`) dan tidak mengutip sumber di atas clearance penanya. |
 | Pembatas laju | Upaya masuk berlebih dari satu alamat ditolak 429. |
 
-## Hasil 2026-11-26 (laptop pengembangan, Linux, backend simulasi)
+## Hasil 2026-11-26
 
-32 pemeriksaan lulus, 0 gagal. Model AII memakai mode pengembangan ekstraktif; SAVI menolak perintah jahat dengan keputusan `REFUSED_POLICY`.
+Skrip berisi 33 pemeriksaan bila semua bagian berjalan (6 token, 6 hak akses, 4 BOLA/clearance, 6 masukan jahat, 7 header dan kebocoran, 3 SAVI, 1 pembatas laju); dengan `--tanpa-laju` jumlahnya 32.
+
+| Tempat | Hasil |
+|---|---|
+| Laptop pengembangan (Linux, backend simulasi), `--tanpa-laju` | 32 lulus, 0 gagal |
+| Laptop project lead (Windows, backend simulasi), lengkap | 33 lulus, 0 gagal; 429 pada upaya masuk ke-13 |
+
+Upaya ke berapa yang terkena 429 bergantung pada jumlah masuk sebelumnya dalam menit yang sama (batas 20 per menit). SAVI berjalan dalam mode pengembangan ekstraktif dan menolak perintah jahat dengan keputusan `REFUSED_POLICY`.
 
 Yang masih harus diuji ulang di komputer kantor: perilaku penolakan SAVI dan batas clearance sitasi dengan **model AI sungguhan** (Ollama/Hermes), bukan hanya mode ekstraktif. Jalankan `pnpm security:selftest` di sana setelah SUNOVATE menyala.
 

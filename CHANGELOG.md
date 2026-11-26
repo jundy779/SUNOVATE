@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-26 — Jumlah pemeriksaan uji keamanan dan folder laporan uji beban
+
+- Validasi Windows patch 0051 menghasilkan 33 lulus, sedangkan `docs/10-testing/security-selftest.md` menyebut 32. Penyebabnya: skrip berisi 33 pemeriksaan bila semua bagian berjalan; angka 32 berasal dari putaran Linux dengan `--tanpa-laju` (tanpa uji pembatas laju), dan satu-satunya putaran Linux lengkap dijalankan sebelum bagian SAVI ditambah dari dua menjadi tiga pemeriksaan. Dokumen kini memuat rincian 33 pemeriksaan, hasil Linux (`--tanpa-laju`, 32 lulus), dan hasil Windows (lengkap, 33 lulus), serta menghapus salah ketik "Model AII".
+- `pnpm demo:workload --keluaran <folder relatif>` sebelumnya menyimpan laporan di `apps/api`, karena `uv run --directory apps/api` mengganti folder kerja. Folder relatif kini dihitung dari `INIT_CWD` (folder tempat perintah diketik, disediakan pnpm); folder absolut dan bawaan Desktop tidak berubah.
+- Validasi aktual (Linux): `pnpm demo:workload --pengguna 5 --durasi 15 --keluaran .` dari root repository menyimpan laporan di root repository; Ruff lulus.
+
 ## 2026-11-26 — Uji keamanan mandiri (`pnpm security:selftest`)
 
 - Skrip baru `scripts/validation/security_selftest.py` menyerang API lokal sendiri dengan akun simulasi berprivilegsi rendah dan memastikan setiap pertahanan menolak: penolakan token palsu/diubah/tanpa tanda tangan, pencegahan naik hak akses, BOLA/IDOR dan batas clearance (termasuk dokumen rahasia yang mensyaratkan persetujuan kerahasiaan 428), penolakan masukan jahat tanpa galat 500, header keamanan, tidak ada kebocoran jejak di pesan galat, penolakan prompt injection SAVI dengan batas clearance sitasi, dan pembatas laju upaya masuk. Target dibatasi loopback (`validate_target`, sama dengan probe beban); tidak ada data yang diubah karena permintaan pengubah hanya dikirim dengan akun yang harus ditolak. Panduan `docs/10-testing/security-selftest.md`, termasuk catatan penyadapan/transport (TLS, bearer token, tunnel OQ-34).
