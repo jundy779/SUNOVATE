@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-26 — Uji alur kerja 25 pengguna dan temuan batas laju gabungan
+
+- `pnpm demo:workload` (`scripts/validation/demo_workload_test.py`) menguji pemakaian kerja sungguhan, melengkapi `pnpm demo:load` yang hanya memeriksa `/health` tanpa masuk: pengguna virtual masuk dengan akun simulasi, membuka Ringkasan, Basis Pengetahuan, Pencarian, dan Monitoring Kerja dengan jeda acak, dan sebagian bertanya ke SAVI AI. Skrip melaporkan median, P95, maksimum, gagal, ditolak hak akses, dan ditolak pembatas laju per aksi, menyimpan laporan JSON, dan memakai aturan target yang sama dengan probe lama (`validate_target`): loopback secara bawaan, IP privat dengan `--izinkan-ip-privat`, alamat publik dan nama host lain ditolak.
+- Temuan (KL-29): batas gabungan `API_GLOBAL_RATE_LIMIT` (600 per menit per alamat IP) dibagi seluruh pegawai karena semuanya terbaca sebagai alamat server web. Dengan 25 pengguna yang sibuk, 449 dari 986 permintaan (45%) ditolak 429 walaupun API menjawab dengan P95 8 ms. Nilainya belum diubah; penetapan untuk server kantor menunggu pengukuran di komputer mentor dan keputusan mentor serta TIK.
+- Validasi aktual (Linux, backend simulasi, tanpa model AI): 25 pengguna selama 60 detik dengan jeda 2 sampai 5 detik menghasilkan 395 permintaan per menit, P95 9 ms, 0 gagal, 0 ditolak 429, dan tiga pertanyaan SAVI terjawab; 25 pengguna dengan jeda 0,5 sampai 1,5 detik menghasilkan 1.434 permintaan per menit dan 449 ditolak 429. Target `https://example.com` ditolak. Ruff lulus. Nama laporan kini memuat detik setelah dua uji dalam menit yang sama sempat memakai nama berkas yang sama.
+
 ## 2026-11-24 — Data contoh milestone memakai "direviu"
 
 - Validasi Windows patch 0048 mencatat satu data contoh milestone yang masih berjudul "SIMULASI - Draf playbook siap direview" dan tampil di Monitoring Kerja. Judulnya diseragamkan menjadi "SIMULASI - Draf playbook siap direviu" sesuai DEC-20261124-01. Hanya data contoh (`store/dataset.py`); tidak ada test atau dokumen yang merujuk judul lama.

@@ -47,6 +47,23 @@ Probe dijalankan langsung ke FastAPI lokal pada port sementara menggunakan backe
 
 Hasil ini hanya memvalidasi alat probe dan baseline API pada mesin pengembangan. Hasil tersebut bukan SLA, bukan benchmark aplikasi penuh, dan bukan bukti kapasitas 25 pengguna pada komputer kantor.
 
+## Uji alur kerja (`pnpm demo:workload`, 2026-11-26)
+
+`scripts/validation/demo_workload_test.py` melengkapi probe di atas dengan skenario steady pada nomor 3: setiap pengguna virtual masuk dengan akun simulasi (lima akun dipakai bergiliran), lalu berulang kali membuka Ringkasan, Basis Pengetahuan, Pencarian, dan Monitoring Kerja dengan jeda acak (bawaan 2 sampai 5 detik); sebagian pengguna bertanya satu kali ke SAVI AI. Skrip mencetak median, P95, dan maksimum per aksi, jumlah gagal, jumlah ditolak hak akses, dan jumlah ditolak pembatas laju (429), lalu menyimpan laporan JSON (bawaan di Desktop). Target dibatasi seperti probe: loopback secara bawaan, IP privat hanya dengan `--izinkan-ip-privat`. Kriteria layak: P95 halaman biasa paling lama 1.500 ms, gagal kurang dari 1%, dan tidak ada 429.
+
+```bash
+pnpm demo:workload --pengguna 25 --durasi 120
+```
+
+Permintaan sengaja dikirim dari satu komputer, karena di server kantor semua pegawai menghubungi API lewat server web yang sama sehingga API melihat satu alamat. Hasil di laptop pengembangan (Linux, backend simulasi, tanpa model AI):
+
+| Skenario | Permintaan per menit | P95 halaman biasa | Gagal | Ditolak 429 |
+|---|---:|---:|---:|---:|
+| 25 pengguna, jeda 2 sampai 5 detik, 3 bertanya ke SAVI | 395 | 9 ms | 0 | 0 |
+| 25 pengguna, jeda 0,5 sampai 1,5 detik | 1.434 | 8 ms | 0 | 449 dari 986 (45%) |
+
+API sendiri cepat; penolakan pada skenario kedua seluruhnya berasal dari batas gabungan `API_GLOBAL_RATE_LIMIT` (bawaan 600 per menit per alamat IP), yang dibagi seluruh pegawai karena semuanya terbaca sebagai alamat server web. Lihat KL-29. Angka di komputer kantor masih harus diukur.
+
 ## Skenario host aktual yang masih wajib
 
 1. Smoke: 1 pengguna, 10 request.
